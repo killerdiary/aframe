@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="theme">#222222</color>
+    <color name="theme_bg">#F5F5F5</color>
+    <color name="theme_title">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#FE7F00</color>
+    <color name="black">#000000</color>
+    <color name="dimgray">#696969</color>
+    <color name="purple">#BD30AE</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#01ABE8</color>
+    <color name="green">#679C26</color>
+    <color name="transparent">#00000000</color>
+    <color name="translucence">#40000000</color>
+    <color name="fragment_bg">#E6E6E6</color>
+    <color name="default_bg">#52CACB</color>
+    <color name="gray_white">#CCCCCC</color>
+    <color name="notify_bg">#E1E6EA</color>
+    <color name="white_yellow">#E6FCCE</color>
+    <color name="link_border">#50FBF8DE</color>
+    <color name="gray_dark">#5E5E5E</color>
+    <color name="bg_black">#333333</color>
+    <color name="bg_gray">#4D4D4D</color>
+    <color name="txt_black">#454545</color>
+    <color name="txt_blue">#52CACB</color>
+    <color name="txt_gray">#787878</color>
+    <color name="txt_gray_light">#B3B3B3</color>
+    <color name="txt_white_pressed">#60FFFFFF</color>
+    <color name="main_tab">#52CACC</color>
+    <color name="main_tab_pressed">#296566</color>
+    <color name="btn_default">#52CACB</color>
+    <color name="btn_pressed">#337E80</color>
+    <color name="btn_red">#F36070</color>
+    <color name="btn_red_pressed">#80333C</color>
+    <color name="btn_yellow">#FF970D</color>
+    <color name="btn_cancel">#FF6565</color>
+    <color name="btn_cancel_pressed">#993D3D</color>
+    <color name="btn_green">#16C369</color>
+    <color name="btn_green_pressed">#0E8045</color>
+    <color name="game_sort_bg">#3D9798</color>
+    <color name="game_sort_slider">#FEB859</color>
+    <color name="game_item_gray">#F2F2F2</color>
+    <color name="viewfinder_frame">#ff000000</color>
+    <color name="viewfinder_laser">#ff01abe8</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="result_image_border">#ffffffff</color>
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c000ff00</color>
+    <color name="result_text">#ffffffff</color>
+    <color name="result_view">#b0000000</color>
+    <color name="divider_gray">#AAacacac</color>
+
+</resources>

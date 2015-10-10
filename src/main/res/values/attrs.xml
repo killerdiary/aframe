@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomTheme">
+        <attr name="titlebarBackground" format="reference|color" />
+        <attr name="titlebarLeftBack" format="reference|color" />
+        <attr name="titlebarTextSize" format="dimension" />
+        <attr name="titlebarTextColor" format="color" />
+        <attr name="titlebarTextBold" format="boolean" />
+    </declare-styleable>
+
+</resources>

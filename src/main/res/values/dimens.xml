@@ -1,0 +1,87 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- START 常用 -->
+    <dimen name="btn_height_small">28dip</dimen>
+    <dimen name="btn_height">35dip</dimen>
+    <dimen name="btn_height_er">45dip</dimen>
+    <dimen name="btn_margin_top">20dip</dimen>
+    <dimen name="btn_padding_vertical">6dip</dimen>
+    <dimen name="btn_padding_horizontal">10dip</dimen>
+    <dimen name="btn_min_width">61dip</dimen>
+    <dimen name="edit_height">35dip</dimen>
+    <dimen name="edit_height_defult">70dip</dimen>
+    <dimen name="edit_height_smaller">30dip</dimen>
+    <dimen name="edit_height_small">45dip</dimen>
+    <dimen name="edit_height_medium">50dip</dimen>
+    <dimen name="edit_margin_top">20dip</dimen>
+    <dimen name="edit_padding_left">45dip</dimen>
+    <dimen name="edit_key_padding_left">4dip</dimen>
+    <dimen name="edit_colon_padding_left">28dip</dimen>
+    <dimen name="edit_padding_three_left">80dip</dimen>
+    <dimen name="edit_colon_padding_three_left">60dip</dimen>
+    <dimen name="header_height">45dip</dimen>
+    <dimen name="header_func_width">60dip</dimen>
+    <dimen name="header_split">40dip</dimen>
+    <dimen name="header_title_left">50dip</dimen>
+    <dimen name="header_act_padding">4dip</dimen>
+    <dimen name="key_two_left">50dip</dimen>
+    <dimen name="key_three_left">65dip</dimen>
+    <dimen name="margin_normal">10dip</dimen>
+    <dimen name="margin_default">20dip</dimen>
+    <dimen name="margin_big">40dip</dimen>
+    <dimen name="padding_normal">4dip</dimen>
+    <dimen name="padding_default">8dip</dimen>
+    <dimen name="web_refresh_progressbar_width">20dip</dimen>
+    <dimen name="web_refresh_progressbar_left">20dip</dimen>
+    <dimen name="shadow_width">20dip</dimen>
+    <dimen name="shadow_width_left">14dip</dimen>
+    <dimen name="txt_default">14sp</dimen>
+    <dimen name="txt_medium">16sp</dimen>
+    <dimen name="txt_big">20sp</dimen>
+    <dimen name="txt_small">12sp</dimen>
+    <dimen name="txt_smaller">10sp</dimen>
+    <dimen name="ico_width">20dip</dimen>
+    <!-- END 常用 -->
+    <!-- Add -->
+
+    <dimen name="txt_btn_box">276dip</dimen>
+    <dimen name="get_btn_height">48dip</dimen>
+    <dimen name="txt_top_height">78dip</dimen>
+    <dimen name="right_txt_box">123dip</dimen>
+    <dimen name="txt_font_size">21sp</dimen>
+    <dimen name="font_size">13sp</dimen>
+    <dimen name="btn_login_left">38dp</dimen>
+    <dimen name="txt_btn_left">240dip</dimen>
+    <dimen name="txt_btn_width">320dip</dimen>
+    <dimen name="edit_height_box">70dip</dimen>
+    <dimen name="btn_width">140dp</dimen>
+    <dimen name="edit_width_input">245dip</dimen>
+    <!-- END -->
+    <!-- END -->
+    <dimen name="left_menu_item_height">44dip</dimen>
+    <dimen name="left_menu_item_ico_width">20dip</dimen>
+    <dimen name="main_tab_item_height">55dip</dimen>
+    <dimen name="main_tab_item_ico_width">30dip</dimen>
+    <dimen name="padding_left_right">10dp</dimen>
+    <dimen name="edit_padding_lefts">60dp</dimen>
+    <dimen name="edit_left_padding">5dp</dimen>
+    <dimen name="rela_height">198dip</dimen>
+    <dimen name="left_padding_edit">100dip</dimen>
+    <dimen name="padding_tops">15dp</dimen>
+    <dimen name="layout_width_heith">25dp</dimen>
+    <dimen name="about_logo_width">70dp</dimen>
+    <dimen name="user_head_frame_width">106dip</dimen>
+    <dimen name="user_head_width">100dip</dimen>
+    <dimen name="savenum_item_ico_width">55dip</dimen>
+    <dimen name="game_item_ico_width">55dip</dimen>
+    <dimen name="home_activity_msg_item_heigth">60dip</dimen>
+    <dimen name="webgame_headline_item_heigth">45dip</dimen>
+    <dimen name="lv_heigth">60dip</dimen>
+    <dimen name="sort_item_heigth">120dip</dimen>
+    <dimen name="small_sort_item_heigth">60dip</dimen>
+    <dimen name="gallery_point_height">25dip</dimen>
+
+</resources>
