@@ -151,12 +151,12 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
             isDrag = true;
         if (state == ViewPager.SCROLL_STATE_IDLE)
             isDrag = false;
-        MyLog.e("onPageScrollStateChanged " + state);
+        //MyLog.e("onPageScrollStateChanged " + state);
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        MyLog.e("onPageScrolled " + position + "|" + positionOffset + "|" + positionOffsetPixels);
+        //MyLog.e("onPageScrolled " + position + "|" + positionOffset + "|" + positionOffsetPixels);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         if (!isShown() || getCount() <= 1)
             return;
         int pager = vPager.getCurrentItem();
-        MyLog.e("pager:" + pager + "| getCount:" + getCount());
+        //MyLog.e("pager:" + pager + "| getCount:" + getCount());
         if (pager < getCount() - 1)
             vPager.setCurrentItem(pager + 1);
         else
