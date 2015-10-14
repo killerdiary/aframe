@@ -1,13 +1,7 @@
 package com.hy.frame.view;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import android.content.Context;
-import android.gesture.Gesture;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,12 +21,16 @@ import com.hy.frame.util.HyUtil;
 import com.hy.frame.view.swipe.SwipeMenu;
 import com.hy.frame.view.swipe.SwipeMenuLayout;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * @author heyan
  * @title 自定义ListView(下拉刷新，点击查看更多)
  * @time 2013-6-27 下午2:59:52
  */
-public class MyListView extends ListView implements OnScrollListener {
+public class NewMyListView extends ListView implements OnScrollListener {
 
     private final static int FLAG_DONE = 0;// 完成
     private final static int FLAG_PULLING = 1;// 拉...
@@ -90,12 +88,12 @@ public class MyListView extends ListView implements OnScrollListener {
      */
     private final static int TO_LEFT = 3;
 
-    public MyListView(Context context) {
+    public NewMyListView(Context context) {
         super(context);
         init(context);
     }
 
-    public MyListView(Context context, AttributeSet attrs) {
+    public NewMyListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
@@ -180,6 +178,19 @@ public class MyListView extends ListView implements OnScrollListener {
     public void onScrollStateChanged(AbsListView arg0, int arg1) {
     }
 
+    /**
+     * 是否在顶部
+     * @return
+     */
+    private boolean isTop() {
+        int top = getAdapter().getCount();
+        if (top > 0) {
+            if(getFirstVisiblePosition()>0)
+                return  false;
+        }
+        return true;
+    }
+
     public boolean onTouchEvent(MotionEvent event) {
         //GestureDetector
         if (pullDownRefresh || pullUpRefresh || sideSlip) {
@@ -188,8 +199,10 @@ public class MyListView extends ListView implements OnScrollListener {
                     //if (!(scrollTop || scrollBottom))
                     //break;
                     // MyLog.e("ACTION_DOWN");
-                    if (isRecored){
-                        //未正常结束
+                    //未正常结束
+                    if (isRecored) {
+                        isRecored = false;
+                        return super.onTouchEvent(event);
                     }
                     if (!isRecored) {
                         // 开始检测
@@ -197,7 +210,6 @@ public class MyListView extends ListView implements OnScrollListener {
                         startY = (int) event.getY();
                         direction = 0;
                         // MyLog.e("ACTION_DOWN 记录当前位置:" + startY);
-
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -314,8 +326,8 @@ public class MyListView extends ListView implements OnScrollListener {
                             else if (state == FLAG_RELEASE) {
                                 state = FLAG_REFRESHING;
                                 updateHeaderUI();
-                                if (pullDownRefreshListener != null)
-                                    pullDownRefreshListener.onRefresh(this, false);
+                                if (listener != null)
+                                    listener.onMlvRefresh(this, false);
                             }
                         } else if (direction == TO_UP) {
 
@@ -332,12 +344,12 @@ public class MyListView extends ListView implements OnScrollListener {
                                 state = FLAG_REFRESHING;
                                 changeViewByState();
                                 if (direction == TO_DOWN) {
-                                    if (pullDownRefreshListener != null) {
-                                        pullDownRefreshListener.onRefresh(this, false);
+                                    if (listener != null) {
+                                        listener.onMlvRefresh(this, false);
                                     }
                                 } else if (direction == TO_UP) {
-                                    if (pullUpRefreshListener != null) {
-                                        pullUpRefreshListener.onRefresh(this, false);
+                                    if (listener != null) {
+                                        listener.onMlvRefresh(this, false);
                                     }
                                 }
                             }
@@ -353,7 +365,9 @@ public class MyListView extends ListView implements OnScrollListener {
         }
         return super.onTouchEvent(event);
     }
+    private void changeViewByState(){
 
+    }
     /**
      * 改变header状态
      */
@@ -487,6 +501,7 @@ public class MyListView extends ListView implements OnScrollListener {
         }
         updateHeaderUI();
     }
+
     /**
      * 获取当前时间Date
      *
@@ -591,14 +606,14 @@ public class MyListView extends ListView implements OnScrollListener {
          * @param lv
          * @param first 是否是第一次调用
          */
-        void onMlvRefresh(MyListView lv, boolean first);
+        void onMlvRefresh(NewMyListView lv, boolean first);
 
         /**
          * 加载更多
          *
          * @param lv
          */
-        void onMlvLoadMore(MyListView lv);
+        void onMlvLoadMore(NewMyListView lv);
     }
 
     public interface OnMlvSwipeListener extends OnMlvListener {
@@ -611,6 +626,7 @@ public class MyListView extends ListView implements OnScrollListener {
          */
         void onMlvSwipeClick(int position, SwipeMenu menu, int index);
     }
+
     /**
      * 设置监听事件
      *
