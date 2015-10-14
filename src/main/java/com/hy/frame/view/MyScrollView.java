@@ -27,7 +27,7 @@ import com.hy.frame.util.MyLog;
  * @author HeYan
  * @time 2014年9月4日 下午2:37:10
  */
-public class MyScrollView extends RelativeLayout implements OnPageChangeListener, Runnable {
+public class MyScrollView extends RelativeLayout implements OnPageChangeListener, Runnable{
     private final static int DEFAULT_INTERVAL = 3000;// 间隔时间3秒
     private boolean isOpenAuto;
     private long timer;// 间隔时间
@@ -76,6 +76,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         img.setScaleType(ScaleType.FIT_XY);
         img.setImageResource(drawId);
         img.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        img.setOnClickListener(clickListener);
         addPage(img);
 
     }
@@ -89,7 +90,13 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         img.setScaleType(ScaleType.FIT_XY);
         img.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         fb.display(img, path);
+        img.setOnClickListener(clickListener);
         addPage(img);
+    }
+    private OnClickListener clickListener;
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        this.clickListener = l;
     }
 
     /**
@@ -158,7 +165,12 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         //MyLog.e("onPageScrolled " + position + "|" + positionOffset + "|" + positionOffsetPixels);
     }
-
+    public int getPostion(){
+        if(vPager!=null){
+            return vPager.getCurrentItem();
+        }
+        return 0;
+    }
     @Override
     public void onPageSelected(int positon) {
         isDrag = false;
