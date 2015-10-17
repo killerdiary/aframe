@@ -11,7 +11,7 @@ import com.hy.frame.R;
 
 /**
  * 自定义Toast
- * 
+ *
  * @author HeYan
  * @time 2014-7-21 上午9:44:27
  */
@@ -21,7 +21,7 @@ public class MyToast {
         Toast toast = new Toast(context);
         View v = LayoutInflater.from(context).inflate(R.layout.toast, null);
         TextView txtMsg = (TextView) v.findViewById(R.id.txtMsg);
-        txtMsg.setText(msg);
+        txtMsg.setText(msg == null ? "错误" : msg);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(v);
