@@ -98,9 +98,9 @@ public abstract class MyHttpClient {
     }
 
     /**
-     * @param context 上下文
+     * @param context  上下文
      * @param listener 舰艇
-     * @param host 域名
+     * @param host     域名
      * @param verify   开启验证
      */
     public MyHttpClient(Context context, IMyHttpListener listener, String host, boolean verify) {
@@ -192,6 +192,7 @@ public abstract class MyHttpClient {
         result.setRequestCode(requestCode);
         result.setQid(qid);
         result.setErrorCode(ResultInfo.CODE_ERROR_DEFAULT);
+        qid = 0;
         if (!HyUtil.isNetworkConnected(context)) {
             result.setErrorCode(ResultInfo.CODE_ERROR_NET);
             result.setMsg(getString(R.string.API_FLAG_NET_FAIL));
