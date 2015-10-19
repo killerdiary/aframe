@@ -1,17 +1,19 @@
 package com.hy.frame.http;
 
+import com.hy.frame.bean.ResultInfo;
+
 import net.tsz.afinal.http.AjaxCallBack;
 
 public abstract class MyAjaxCallBack extends AjaxCallBack<String> {
-    private int requestCode;
 
-    public MyAjaxCallBack(int requestCode) {
+    private ResultInfo result;
+
+    public MyAjaxCallBack(ResultInfo result) {
         super();
-        this.requestCode = requestCode;
+        this.result = result;
     }
 
-    public int getRequestCode() {
-        return requestCode;
+    public ResultInfo getResult() {
+        return result;
     }
-
 }

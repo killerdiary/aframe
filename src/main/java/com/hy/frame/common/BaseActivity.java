@@ -476,6 +476,18 @@ public abstract class BaseActivity extends Activity implements android.view.View
     }
 
     /**
+     * 获取当前布局中的控件
+     *
+     * @param id
+     *            行布局中某个组件的id
+     * @return
+     */
+    public <T extends View> T getCViewAndClick(int id) {
+        View v = getView(contentView, id);
+        v.setOnClickListener(this);
+        return (T) v;
+    }
+    /**
      * 头-左边图标点击
      */
     protected void onLeftClick() {

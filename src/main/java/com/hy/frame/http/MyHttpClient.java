@@ -1,6 +1,7 @@
 package com.hy.frame.http;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -9,6 +10,7 @@ import java.util.Map.Entry;
 
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxParams;
+import net.tsz.afinal.utils.FieldUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +22,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.hy.frame.R;
+import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
@@ -27,7 +30,7 @@ import com.hy.frame.view.LoadingDialog;
 /**
  * 网络请求，不能直接使用<br/>
  * 只能继承
- * 
+ *
  * @author HeYan
  * @time 2014年8月9日 下午3:43:44
  */
@@ -42,6 +45,7 @@ public abstract class MyHttpClient {
     private final static int TIME_OUT = 60 * 1000;
     private String contentType, userAgent, accept;
     private Map<String, String> maps;
+    private int qid;//队列ID
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
         this(context, listener, host, null, null, null);
@@ -49,7 +53,7 @@ public abstract class MyHttpClient {
 
     /**
      * 初始化
-     * 
+     *
      * @param context
      * @param listener
      * @param host
@@ -85,13 +89,19 @@ public abstract class MyHttpClient {
     }
 
     /**
-     * 
-     * @param context
-     * @param listener
-     * @param host
-     * @param verify
-     *            开启验证
-     * @throws Exception
+     * 设置队列ID
+     *
+     * @param qid 队列ID
+     */
+    public void setQid(int qid) {
+        this.qid = qid;
+    }
+
+    /**
+     * @param context  上下文
+     * @param listener 舰艇
+     * @param host     域名
+     * @param verify   开启验证
      */
     public MyHttpClient(Context context, IMyHttpListener listener, String host, boolean verify) {
         this(context, listener, host);
@@ -106,8 +116,8 @@ public abstract class MyHttpClient {
 
     /**
      * 显示加载对话框
-     * 
-     * @param showDialog
+     *
+     * @param showDialog 是否显示加载对话框
      */
     public void setShowDialog(boolean showDialog) {
         this.showDialog = showDialog;
@@ -152,7 +162,7 @@ public abstract class MyHttpClient {
      * @see #post(int, String, AjaxParams, Class, boolean)
      */
     protected String getPath(int resId) {
-        String path = context.getString(resId);
+        String path = getString(resId);
         if (path.startsWith("http"))
             return path;
         StringBuilder sb = new StringBuilder();
@@ -170,21 +180,23 @@ public abstract class MyHttpClient {
 
     /**
      * 请求方法
-     * 
-     * @param requestCode
-     *            请求码
-     * @param url
-     *            请求地址
-     * @param params
-     *            请求参数
-     * @param cls
-     *            类<泛型> (例如：Version.class) 如果为空则直接返回json字符串
-     * @param list
-     *            结果是否是List
+     *
+     * @param requestCode 请求码
+     * @param url         请求地址
+     * @param params      请求参数
+     * @param cls         类<泛型> (例如：Version.class) 如果为空则直接返回json字符串
+     * @param list        结果是否是List
      */
     public <T> void request(boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
+        final ResultInfo result = new ResultInfo();
+        result.setRequestCode(requestCode);
+        result.setQid(qid);
+        result.setErrorCode(ResultInfo.CODE_ERROR_DEFAULT);
+        qid = 0;
         if (!HyUtil.isNetworkConnected(context)) {
-            onRequestError(requestCode, R.string.API_FLAG_NET_FAIL, getString(R.string.API_FLAG_NET_FAIL));
+            result.setErrorCode(ResultInfo.CODE_ERROR_NET);
+            result.setMsg(getString(R.string.API_FLAG_NET_FAIL));
+            onRequestError(result);
             return;
         }
         showLoading();
@@ -207,7 +219,7 @@ public abstract class MyHttpClient {
                 fh.addHeader(map.getKey(), map.getValue());
             }
         }
-        MyAjaxCallBack callback = new MyAjaxCallBack(requestCode) {
+        MyAjaxCallBack callback = new MyAjaxCallBack(result) {
 
             @Override
             public void onSuccess(String json) {
@@ -215,19 +227,23 @@ public abstract class MyHttpClient {
                 MyLog.d("onSuccess | " + json);
                 if (HyUtil.isNoEmpty(json)) {
                     json = json.trim();
-                    if (cls == null)
-                        onRequestSuccess(getRequestCode(), json, null);
-                    else if (!TextUtils.equals(json.substring(0, 1), "{") || !TextUtils.equals(json.substring(json.length() - 1), "}"))
-                        onRequestError(getRequestCode(), R.string.API_FLAG_DATA_ERROR, context.getString(R.string.API_FLAG_DATA_ERROR));
-                    else {
-                        if (json.indexOf("[]") > -1)
+                    if (cls == null) {
+                        getResult().setObj(json);
+                        onRequestSuccess(getResult());
+                    } else if (!TextUtils.equals(json.substring(0, 1), "{") || !TextUtils.equals(json.substring(json.length() - 1), "}")) {
+                        getResult().setMsg(getString(R.string.API_FLAG_DATA_ERROR));
+                        onRequestError(getResult());
+                    } else {
+                        if (json.contains("[]"))
                             json = json.replaceAll("\\[\\]", "null");
-                        if (json.indexOf("\"\"") > -1)
+                        if (json.contains("\"\""))
                             json = json.replaceAll("\"\"", "null");
-                        doSuccess(json, getRequestCode(), cls, list);
+                        doSuccess(getResult(), json, cls, list);
                     }
-                } else
-                    onRequestError(getRequestCode(), R.string.API_FLAG_NO_RESPONSE, context.getString(R.string.API_FLAG_NO_RESPONSE));
+                } else {
+                    getResult().setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
+                    onRequestError(getResult());
+                }
             }
 
             @Override
@@ -235,22 +251,20 @@ public abstract class MyHttpClient {
                 hideLoading();
                 MyLog.e("onFailure | " + t.toString() + " | " + errorNo + " | " + strMsg);
                 int code = R.string.API_FLAG_CON_EXCEPTION;
-                if (errorNo == 401) {
-                    onRequestError(getRequestCode(), errorNo, "用户令牌过期");
-                } else if (strMsg != null) {
-                    if (strMsg.indexOf("Broken pipe") > -1)
+                if (strMsg != null) {
+                    if (strMsg.contains("Broken pipe"))
                         code = R.string.API_FLAG_CON_BROKEN;
-                    else if (strMsg.indexOf("timed out") > -1)
+                    else if (strMsg.contains("timed out"))
                         code = R.string.API_FLAG_CON_TIMEOUT;
-                    onRequestError(getRequestCode(), code, context.getString(code));
                 } else {
                     String thr = t.toString().toLowerCase(Locale.CHINA);
-                    if (thr.indexOf("brokenpipe") > -1)
+                    if (thr.contains("brokenpipe"))
                         code = R.string.API_FLAG_CON_BROKEN;
-                    else if (thr.indexOf("timedout") > -1)
+                    else if (thr.contains("timedout"))
                         code = R.string.API_FLAG_CON_TIMEOUT;
-                    onRequestError(getRequestCode(), code, context.getString(code));
                 }
+                result.setMsg(getString(code));
+                onRequestError(result);
                 hideLoading();
             }
         };
@@ -260,17 +274,18 @@ public abstract class MyHttpClient {
             fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
     }
 
-    protected <T> void doSuccess(String json, int requestCode, Class<T> cls, boolean list) {
+    protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {
         JSONObject obj;
         try {
             obj = new JSONObject(json);
             int flag = 0;
             if (obj.has("state")) {
                 flag = obj.getInt("state");
+                result.setErrorCode(flag);
             }
-            String msg = null;
             if (obj.has("msg")) {
-                msg = obj.getString("msg");
+                String msg = obj.getString("msg");
+                result.setMsg(msg);
             }
             String data = null;
             if (obj.has("result")) {
@@ -279,18 +294,14 @@ public abstract class MyHttpClient {
             // 成功
             if (flag == 1) {
                 if (!HyUtil.isEmpty(data)) {
-                    if (cls == null || cls.getSimpleName().equals(String.class.getSimpleName())) {
-                        onRequestSuccess(requestCode, data, msg);
-                    } else if (list) {
-                        // List<T> rlt = gson.fromJson(data, new
-                        // TypeToken<T>() {
-                        // }.getType());
+                    if (list) {
+                        // List<T> rlt = gson.fromJson(data, newTypeToken<T>() {}.getType());
                         List<T> beans = null;
                         if (data.indexOf("[]") != 0) {
                             JSONArray rlt = new JSONArray(data);
-                            if (rlt != null && rlt.length() > 0) {
+                            if (rlt.length() > 0) {
                                 int size = rlt.length();
-                                beans = new ArrayList<T>();
+                                beans = new ArrayList<>();
                                 for (int i = 0; i < size; i++) {
                                     // String str = gson.toJson(rlt.get(i));
                                     String str = rlt.getString(i);
@@ -298,33 +309,54 @@ public abstract class MyHttpClient {
                                     beans.add(t);
                                 }
                             }
+                            result.setObj(beans);
                         }
-                        onRequestSuccess(requestCode, beans, msg);
+                        onRequestSuccess(result);
                     } else {
-                        T t = gson.fromJson(data, cls);
-                        onRequestSuccess(requestCode, t, msg);
+                        if (cls == String.class) {
+                            result.setObj(data);
+                        } else if (cls == int.class || cls == Integer.class) {
+                            result.setObj(Integer.parseInt(data));
+                        } else if (cls == float.class || cls == Float.class) {
+                            result.setObj(Float.parseFloat(data));
+                        } else if (cls == double.class || cls == Double.class) {
+                            result.setObj(Double.parseDouble(data));
+                        } else if (cls == long.class || cls == Long.class) {
+                            result.setObj(Long.parseLong(data));
+                        } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
+                            result.setObj(FieldUtils.stringToDateTime(data));
+                        } else if (cls == boolean.class || cls == Boolean.class) {
+                            result.setObj(Boolean.parseBoolean(data));
+                        } else {
+                            T t = gson.fromJson(data, cls);
+                            result.setObj(t);
+                        }
+                        onRequestSuccess(result);
                     }
                 } else
-                    onRequestSuccess(requestCode, null, msg);
+                    onRequestSuccess(result);
                 return;
-            } else if (msg != null) {
-                onRequestError(requestCode, flag, msg);
+            } else {
+                onRequestError(result);
                 return;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        onRequestError(requestCode, R.string.API_FLAG_ANALYSIS_ERROR, context.getString(R.string.API_FLAG_ANALYSIS_ERROR));
+        result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
+        result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
+        onRequestError(result);
     }
 
-    protected void onRequestError(int requestCode, int errorCode, String msg) {
+    protected void onRequestError(ResultInfo result) {
         if (listener != null)
-            listener.onRequestError(requestCode, errorCode, msg);
+            listener.onRequestError(result);
     }
 
-    protected void onRequestSuccess(int requestCode, Object obj, String msg) {
+    protected void onRequestSuccess(ResultInfo result) {
+        result.setErrorCode(0);
         if (listener != null)
-            listener.onRequestSuccess(requestCode, obj, msg);
+            listener.onRequestSuccess(result);
     }
 
     /**
