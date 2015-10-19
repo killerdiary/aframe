@@ -54,8 +54,8 @@ public class ResultInfo {
     /**
      * 返回结果
      */
-    public Object getObj() {
-        return obj;
+    public <T> T getObj() {
+        return (T) obj;
     }
 
     /**
