@@ -83,5 +83,5 @@
     <dimen name="sort_item_heigth">120dip</dimen>
     <dimen name="small_sort_item_heigth">60dip</dimen>
     <dimen name="gallery_point_height">25dip</dimen>
-
+    <dimen name="btn_radius">5dip</dimen>
 </resources>

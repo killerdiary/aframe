@@ -10,10 +10,12 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.hy.frame.R;
+
 public class RoundImageView extends ImageView {
 
     /** 圆角的大小 */
-    private float radius;
+    private float radius=15;
     private final RectF roundRect = new RectF();
     private final Paint maskPaint = new Paint();
     private final Paint zonePaint = new Paint();
@@ -41,6 +43,7 @@ public class RoundImageView extends ImageView {
     }
 
     private void init() {
+        radius = getResources().getDimensionPixelSize(R.dimen.btn_radius);
         maskPaint.setAntiAlias(true);
         maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         zonePaint.setAntiAlias(true);
