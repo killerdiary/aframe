@@ -155,8 +155,19 @@ public class AudioPlayer implements IPlayComplete {
 
     private void releaseAudioTrack() {
         if (mAudioTrack != null) {
-            mAudioTrack.stop();
-            mAudioTrack.release();
+            if (mAudioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
+                if (mAudioTrack.getPlayState() != AudioTrack.PLAYSTATE_STOPPED) {
+
+                    try{
+                        mAudioTrack.stop();
+                    }catch (IllegalStateException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+                mAudioTrack.release();
+            }
             mAudioTrack = null;
         }
 
@@ -211,13 +222,21 @@ public class AudioPlayer implements IPlayComplete {
                 }
 
             }
+            if (mAudioTrack!=null && mAudioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
+                if (mAudioTrack.getPlayState() != AudioTrack.PLAYSTATE_STOPPED) {
 
-            mAudioTrack.stop();
+                    try{
+                        mAudioTrack.stop();
+                    }catch (IllegalStateException e)
+                    {
+                        e.printStackTrace();
+                    }
 
+                }
+                mAudioTrack.release();
+            }
             Log.d(TAG, "PlayAudioThread complete...");
-
         }
-
     }
 
     @Override
