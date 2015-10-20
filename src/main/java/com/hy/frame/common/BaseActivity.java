@@ -88,7 +88,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
         txtTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, HyUtil.floatToSpDimension(theme.getTitleSize(), context));
         txtTitle.getPaint().setFakeBoldText(theme.isTitleBold());
         rlyMain.setBackgroundColor(theme.getThemeBackground());
-        contentView = getLayoutInflater().inflate(layout, null);
+        contentView = View.inflate(context,layout, null);
         if (loadView != null)
             resetLayout(loadView);
         else if (contentView != null)
@@ -110,7 +110,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
      * @see #customAct(int, int)
      */
     protected void customLoadAct(int layout) {
-        loadView = getLayoutInflater().inflate(R.layout.loading_act, null);
+        loadView = View.inflate(context, R.layout.loading_act, null);
         proLoading = getView(loadView, R.id.loading_proLoading);
         imgMessage = getView(loadView, R.id.loading_imgMessage);
         txtMessage = getView(loadView, R.id.loading_txtMessage);
