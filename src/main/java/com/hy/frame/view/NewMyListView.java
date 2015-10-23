@@ -1,7 +1,9 @@
 package com.hy.frame.view;
 
 import android.content.Context;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,10 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Scroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hy.frame.R;
 import com.hy.frame.util.HyUtil;
+import com.hy.frame.util.MyLog;
 import com.hy.frame.view.swipe.SwipeMenu;
 import com.hy.frame.view.swipe.SwipeMenuLayout;
 
@@ -98,6 +103,8 @@ public class NewMyListView extends ListView implements OnScrollListener {
         init(context);
     }
 
+    private GestureDetectorCompat detector;
+
     /**
      * 初始化头部和底部
      *
@@ -113,6 +120,56 @@ public class NewMyListView extends ListView implements OnScrollListener {
         state = FLAG_DONE;
         pullDownRefresh = false;
         pullUpRefresh = false;
+        detector = new GestureDetectorCompat(context, new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                MyLog.e("onDown");
+                return true;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+                MyLog.e("onShowPress");
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                MyLog.e("onSingleTapUp");
+                return false;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                MyLog.e("onScroll: distanceX:" + distanceX + "|distanceY:" + distanceY);
+                return false;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                MyLog.e("onLongPress");
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                MyLog.e("onFling: velocityX:" + velocityX + "|velocityY:" + velocityY);
+                int verticalMinistance =5;
+                int minVelocity =5;
+                if (e1.getX() - e2.getX() > verticalMinistance &&
+                        Math.abs(velocityX) > minVelocity) {
+                    MyLog.e("onFling: turn left");
+                } else if (e2.getX() - e1.getX() > verticalMinistance &&
+                        Math.abs(velocityX) > minVelocity) {
+                    MyLog.e("onFling: turn right");
+                } else if (e1.getY() - e2.getY() > 20 && Math.abs(velocityY) >
+                        10) {
+                    MyLog.e("onFling: turn up");
+                } else if (e2.getY() - e1.getY() > 20 && Math.abs(velocityY) >
+                        10) {
+                    MyLog.e("onFling: turn down");
+                }
+                return false;
+            }
+        });
     }
 
     private void initHeader() {
@@ -180,18 +237,22 @@ public class NewMyListView extends ListView implements OnScrollListener {
 
     /**
      * 是否在顶部
+     *
      * @return
      */
     private boolean isTop() {
         int top = getAdapter().getCount();
         if (top > 0) {
-            if(getFirstVisiblePosition()>0)
-                return  false;
+            if (getFirstVisiblePosition() > 0)
+                return false;
         }
         return true;
     }
 
     public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        if (true)
+            return super.onTouchEvent(event);
         //GestureDetector
         if (pullDownRefresh || pullUpRefresh || sideSlip) {
             switch (event.getAction()) {
@@ -203,8 +264,7 @@ public class NewMyListView extends ListView implements OnScrollListener {
                     if (isRecored) {
                         isRecored = false;
                         return super.onTouchEvent(event);
-                    }
-                    if (!isRecored) {
+                    } else {
                         // 开始检测
                         isRecored = true;
                         startY = (int) event.getY();
@@ -365,9 +425,11 @@ public class NewMyListView extends ListView implements OnScrollListener {
         }
         return super.onTouchEvent(event);
     }
-    private void changeViewByState(){
+
+    private void changeViewByState() {
 
     }
+
     /**
      * 改变header状态
      */

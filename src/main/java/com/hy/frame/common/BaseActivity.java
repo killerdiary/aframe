@@ -22,7 +22,7 @@ import com.hy.frame.util.HyUtil;
 
 /**
  * 父类Activity
- * 
+ *
  * @author HeYan
  * @time 2014-7-18 下午2:53:55
  */
@@ -63,7 +63,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 获取上一级的Activity名
-     * 
+     *
      * @return
      */
     public String getLastSkipAct() {
@@ -72,9 +72,8 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 使用统一布局
-     * 
-     * @param layout
-     *            内容布局(除标题外)
+     *
+     * @param layout 内容布局(除标题外)
      */
     protected void customAct(int layout) {
         if (layout < 1)
@@ -83,12 +82,14 @@ public abstract class BaseActivity extends Activity implements android.view.View
         rlyHead = getView(R.id.rlyHead);
         txtTitle = getView(R.id.head_vTitle);
         rlyMain = getView(R.id.rlyMain);
-        setTitlebarBackground();
-        txtTitle.setTextColor(theme.getTitleColor());
-        txtTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, HyUtil.floatToSpDimension(theme.getTitleSize(), context));
-        txtTitle.getPaint().setFakeBoldText(theme.isTitleBold());
-        rlyMain.setBackgroundColor(theme.getThemeBackground());
-        contentView = View.inflate(context,layout, null);
+        if (theme != null) {
+            setTitlebarBackground();
+            txtTitle.setTextColor(theme.getTitleColor());
+            txtTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, HyUtil.floatToSpDimension(theme.getTitleSize(), context));
+            txtTitle.getPaint().setFakeBoldText(theme.isTitleBold());
+            rlyMain.setBackgroundColor(theme.getThemeBackground());
+        }
+        contentView = View.inflate(context, layout, null);
         if (loadView != null)
             resetLayout(loadView);
         else if (contentView != null)
@@ -106,8 +107,8 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 使用统一布局,带加载布局<br/>
-     * 
-     * @see #customAct(int, int)
+     *
+     * @see #customAct(int)
      */
     protected void customLoadAct(int layout) {
         loadView = View.inflate(context, R.layout.loading_act, null);
@@ -216,7 +217,8 @@ public abstract class BaseActivity extends Activity implements android.view.View
                 TextView txt = getView(v, R.id.head_vLeft);
                 txt.setOnClickListener(this);
                 txt.setText(left);
-                txt.setTextColor(theme.getTitleColor());
+                if (theme != null)
+                    txt.setTextColor(theme.getTitleColor());
             } else {
                 TextView txt = getView(rlyHead, R.id.head_vLeft);
                 txt.setText(left);
@@ -245,7 +247,8 @@ public abstract class BaseActivity extends Activity implements android.view.View
                 TextView txt = getView(v, R.id.head_vRight);
                 txt.setOnClickListener(this);
                 txt.setText(right);
-                txt.setTextColor(theme.getTitleColor());
+                if (theme != null)
+                    txt.setTextColor(theme.getTitleColor());
             } else {
                 TextView txt = getView(rlyHead, R.id.head_vRight);
                 txt.setText(right);
@@ -255,7 +258,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 头部
-     * 
+     *
      * @return
      */
     protected View getHeader() {
@@ -276,10 +279,11 @@ public abstract class BaseActivity extends Activity implements android.view.View
     // return getLayoutInflater().inflate(layout, rlyMain);
     // }
     //
+
     /**
      * 初始化布局(用customAct方法时使用)
-     * 
-     * @param layout
+     *
+     * @param v
      */
     private void resetLayout(View v) {
         rlyMain.removeAllViews();
@@ -335,7 +339,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 启动Activity
-     * 
+     *
      * @param cls
      */
     protected void startActExit(Class<?> cls) {
@@ -344,7 +348,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 启动Activity
-     * 
+     *
      * @param cls
      */
     protected void startActExit(Intent intent, Class<?> cls) {
@@ -354,7 +358,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 启动Activity并关闭当前Activity
-     * 
+     *
      * @param cls
      */
     protected void startActFinish(Class<?> cls) {
@@ -423,11 +427,9 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 获取 控件
-     * 
-     * @param view
-     *            布局
-     * @param id
-     *            行布局中某个组件的id
+     *
+     * @param view 布局
+     * @param id   行布局中某个组件的id
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -438,11 +440,9 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 获取 控件
-     * 
-     * @param view
-     *            布局
-     * @param id
-     *            行布局中某个组件的id
+     *
+     * @param view 布局
+     * @param id   行布局中某个组件的id
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -453,7 +453,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 获取并绑定点击
-     * 
+     *
      * @param id
      * @return
      */
@@ -466,9 +466,8 @@ public abstract class BaseActivity extends Activity implements android.view.View
 
     /**
      * 获取当前布局中的控件
-     * 
-     * @param id
-     *            行布局中某个组件的id
+     *
+     * @param id 行布局中某个组件的id
      * @return
      */
     public <T extends View> T getCView(int id) {
@@ -478,8 +477,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
     /**
      * 获取当前布局中的控件
      *
-     * @param id
-     *            行布局中某个组件的id
+     * @param id 行布局中某个组件的id
      * @return
      */
     public <T extends View> T getCViewAndClick(int id) {
@@ -487,6 +485,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
         v.setOnClickListener(this);
         return (T) v;
     }
+
     /**
      * 头-左边图标点击
      */

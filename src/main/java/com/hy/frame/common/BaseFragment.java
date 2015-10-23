@@ -85,16 +85,17 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 使用统一布局
-     * 
-     * @param layout
-     *            内容布局(除标题外)
+     *
+     * @param layout 内容布局(除标题外)
      */
     protected void customAct(int layout) {
-        setTitlebarBackground();
-        txtTitle.setTextColor(theme.getTitleColor());
-        txtTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, HyUtil.floatToSpDimension(theme.getTitleSize(), context));
-        txtTitle.getPaint().setFakeBoldText(theme.isTitleBold());
-        rlyMain.setBackgroundColor(theme.getThemeBackground());
+        if (theme != null) {
+            setTitlebarBackground();
+            txtTitle.setTextColor(theme.getTitleColor());
+            txtTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, HyUtil.floatToSpDimension(theme.getTitleSize(), context));
+            txtTitle.getPaint().setFakeBoldText(theme.isTitleBold());
+            rlyMain.setBackgroundColor(theme.getThemeBackground());
+        }
         contentView = getActivity().getLayoutInflater().inflate(layout, null);
         if (loadView != null)
             resetLayout(loadView);
@@ -113,8 +114,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 使用统一布局,带加载布局<br/>
-     * 
-     * @see #customAct(int, int)
+     *
+     * @see #customAct(int)
      */
     protected void customLoadAct(int layout) {
         loadView = getActivity().getLayoutInflater().inflate(R.layout.loading_act, null);
@@ -217,7 +218,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
                 TextView txt = getView(v, R.id.head_vLeft);
                 txt.setOnClickListener(this);
                 txt.setText(left);
-                txt.setTextColor(theme.getTitleColor());
+                if (theme != null)
+                    txt.setTextColor(theme.getTitleColor());
             } else {
                 TextView txt = getView(rlyHead, R.id.head_vLeft);
                 txt.setText(left);
@@ -246,7 +248,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
                 TextView txt = getView(v, R.id.head_vRight);
                 txt.setOnClickListener(this);
                 txt.setText(right);
-                txt.setTextColor(theme.getTitleColor());
+                if (theme != null)
+                    txt.setTextColor(theme.getTitleColor());
             } else {
                 TextView txt = getView(rlyHead, R.id.head_vRight);
                 txt.setText(right);
@@ -256,8 +259,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 初始化布局(用customAct方法时使用)
-     * 
-     * @param layout
+     *
+     * @param v 布局
      */
     private void resetLayout(View v) {
         rlyMain.removeAllViews();
@@ -314,12 +317,9 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 获取 控件
-     * 
-     * @param view
-     *            布局
-     * @param id
-     *            行布局中某个组件的id
-     * @return
+     *
+     * @param view 布局
+     * @param id   行布局中某个组件的id
      */
     @SuppressWarnings("unchecked")
     public <T extends View> T getView(View view, int id) {
@@ -329,9 +329,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 获取并绑定点击
-     * 
-     * @param id
-     * @return
+     *
+     * @param id 组件的id
      */
     @SuppressWarnings("unchecked")
     protected <T extends View> T getViewAndClick(View view, int id) {
@@ -342,12 +341,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 获取 控件
-     * 
-     * @param view
-     *            布局
-     * @param id
-     *            行布局中某个组件的id
-     * @return
+     *
+     * @param id 行布局中某个组件的id
      */
     public <T extends View> T getView(int id) {
         return getView(getView(), id);
@@ -355,9 +350,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 获取并绑定点击
-     * 
-     * @param id
-     * @return
+     *
+     * @param id 组件的id
      */
     public <T extends View> T getViewAndClick(int id) {
         return getViewAndClick(getView(), id);
@@ -365,10 +359,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 获取当前布局中的控件
-     * 
-     * @param id
-     *            行布局中某个组件的id
-     * @return
+     *
+     * @param id 行布局中某个组件的id
      */
     public <T extends View> T getCView(int id) {
         return getView(contentView, id);

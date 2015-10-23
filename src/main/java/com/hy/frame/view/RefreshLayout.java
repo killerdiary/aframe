@@ -176,7 +176,7 @@ public class RefreshLayout extends SwipeRefreshLayout implements OnScrollListene
     }
 
     /**
-     * @param loadListener
+     * @param listener
      */
     public void setOnLoadListener(LoadMoreListener listener) {
         this.listener = listener;
