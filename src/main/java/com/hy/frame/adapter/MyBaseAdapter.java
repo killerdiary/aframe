@@ -2,6 +2,7 @@ package com.hy.frame.adapter;
 
 import java.util.List;
 import android.content.Context;
+import android.view.View;
 
 public abstract class MyBaseAdapter<T> extends BaseAdapter<T> {
 	private List<T> datas;
@@ -33,5 +34,10 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter<T> {
 	@Override
 	public long getItemId(int position) {
 		return position;
+	}
+
+	public void setOnClickListener(View v,int position) {
+		if (getListener() != null)
+			v.setOnClickListener(new ViewOnClick(getListener(), getItem(position), position));
 	}
 }

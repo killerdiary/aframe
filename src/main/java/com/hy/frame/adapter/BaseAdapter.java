@@ -5,45 +5,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
-	private Context context;
-	private IAdapterListener listener;
+    private Context context;
+    private IAdapterListener listener;
 
-	public BaseAdapter(Context context) {
-		this.context = context;
-	}
+    public BaseAdapter(Context context) {
+        this.context = context;
+    }
 
-	protected void setContext(Context context) {
-		this.context = context;
-	}
+    protected void setContext(Context context) {
+        this.context = context;
+    }
 
-	protected Context getContext() {
-		return context;
-	}
+    protected Context getContext() {
+        return context;
+    }
 
-	protected IAdapterListener getListener() {
-		return listener;
-	}
+    protected IAdapterListener getListener() {
+        return listener;
+    }
 
-	protected View inflate(int resId) {
-		return LayoutInflater.from(context).inflate(resId, null);
-	}
+    protected View inflate(int resId) {
+        return LayoutInflater.from(context).inflate(resId, null);
+    }
 
-	public void setListener(IAdapterListener listener) {
-		this.listener = listener;
-	}
+    public void setListener(IAdapterListener listener) {
+        this.listener = listener;
+    }
 
-	public void setOnClickListener(View v, T t, int position) {
-		if (getListener() != null)
-			v.setOnClickListener(new ViewOnClick(getListener(), t, position));
-	}
+    @Deprecated
+    public void setOnClickListener(View v, T t, int position) {
+        if (getListener() != null)
+            v.setOnClickListener(new ViewOnClick(getListener(), t, position));
+    }
 
-	public void setOnLongClickListener(View v, T t, int position) {
-		if (getListener() != null)
-			v.setOnLongClickListener(new ViewOnLongClick(getListener(), t, position));
-	}
+    public void setOnLongClickListener(View v, T t, int position) {
+        if (getListener() != null)
+            v.setOnLongClickListener(new ViewOnLongClick(getListener(), t, position));
+    }
 
-	@SuppressWarnings("unchecked")
-	protected <V> V getView(View v, int resId) {
-		return (V) v.findViewById(resId);
-	}
+    @SuppressWarnings("unchecked")
+    protected <V> V getView(View v, int resId) {
+        return (V) v.findViewById(resId);
+    }
 }
