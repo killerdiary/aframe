@@ -363,12 +363,20 @@ public abstract class BaseActivity extends Activity implements android.view.View
      */
     protected void startActFinish(Class<?> cls) {
         startAct(cls);
-        super.finish();
+        finish();
     }
 
     protected void actFinish() {
         if (lastAct != null && !lastAct.getSimpleName().equals(lastSkipAct)) {
             startAct(lastAct);
+        }
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        if (app != null) {
+            app.remove(this);
         }
         super.finish();
     }

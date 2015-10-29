@@ -20,14 +20,18 @@ import com.hy.frame.util.MyShare;
 
 /**
  * 应用
- * 
+ *
  * @author HeYan
  * @time 2014年12月17日 下午4:19:29
  */
 public class BaseApplication extends Application {
-    /** Activity栈 */
+    /**
+     * Activity栈
+     */
     private List<Activity> acts;
-    /** 全局数据 */
+    /**
+     * 全局数据
+     */
     private HashMap<String, Object> hashMap;
     private IntentFilter filter;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -80,7 +84,7 @@ public class BaseApplication extends Application {
 
     /**
      * 添加Activity到容器中
-     * 
+     *
      * @param activity
      */
     public void addActivity(Activity activity) {
@@ -94,20 +98,30 @@ public class BaseApplication extends Application {
         clear();
         System.exit(0);
     }
+    /**
+     * 清理activity栈
+     */
+    public void remove(Activity activity) {
+        if (acts != null && !acts.isEmpty()) {
+            acts.remove(activity);
+        }
+    }
 
     /**
      * 清理activity栈
      */
     public void clear() {
-        if (acts != null && !acts.isEmpty())
+        if (acts != null && !acts.isEmpty()) {
             for (Activity activity : acts) {
                 activity.finish();
             }
+            acts.clear();
+        }
     }
 
     /**
      * 存数据
-     * 
+     *
      * @param key
      * @param value
      */
@@ -120,7 +134,7 @@ public class BaseApplication extends Application {
 
     /**
      * 取数据
-     * 
+     *
      * @param key
      * @return
      */
