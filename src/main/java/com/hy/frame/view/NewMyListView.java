@@ -1,6 +1,8 @@
 package com.hy.frame.view;
 
 import android.content.Context;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -60,10 +62,7 @@ public class NewMyListView extends ListView implements OnScrollListener {
     private RotateAnimation animation;
     private RotateAnimation reverseAnimation;
 
-    private boolean isRecored;
-    private int startY;
-    private int state;
-    private boolean isBack;
+
     private OnMlvListener listener;
 
     /**
@@ -92,6 +91,14 @@ public class NewMyListView extends ListView implements OnScrollListener {
      * 向左
      */
     private final static int TO_LEFT = 3;
+    /**
+     * 向右
+     */
+    private final static int TO_RIGHT = 4;
+    /**
+     * 最小距离
+     */
+    private static final int MIN_DISTANCE = 10;
 
     public NewMyListView(Context context) {
         super(context);
@@ -123,7 +130,23 @@ public class NewMyListView extends ListView implements OnScrollListener {
         detector = new GestureDetectorCompat(context, new GestureDetector.OnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
-                MyLog.e("onDown");
+                if (!pullDownRefresh && !pullUpRefresh && !sideSlip)
+                    return false;
+                start.left = 0;
+                start.top = 0;
+                direction = 0;
+                //未正常结束
+                if (isRecored) {
+                    isRecored = false;
+                    MyLog.e("onDown 未正常结束:");
+                    return false;
+                } else {
+                    // 开始检测
+                    isRecored = true;
+                    start.left = e.getX();
+                    start.top = e.getY();
+                    MyLog.e("onDown 记录当前位置:" + start.left + "x" + start.top);
+                }
                 return true;
             }
 
@@ -140,7 +163,83 @@ public class NewMyListView extends ListView implements OnScrollListener {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                MyLog.e("onScroll: distanceX:" + distanceX + "|distanceY:" + distanceY);
+                //MyLog.e("onScroll: distanceX:" + distanceX + "|distanceY:" + distanceY);
+                if (!isRecored)
+                    return true;
+                if (direction == 0) {
+                    if (Math.abs(distanceX) > MIN_DISTANCE || Math.abs(distanceY) > MIN_DISTANCE) {
+                        if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                            //水平移动
+                            if (distanceX > 0) {
+                                if (sideSlip)
+                                    direction = TO_LEFT;
+                                //向左
+                                MyLog.e("onFling: turn left 向左");
+                            } else {
+                                //direction = TO_RIGHT;
+                                //向右
+                                MyLog.e("onFling: turn right 向右");
+                            }
+                        } else if (Math.abs(distanceX) < Math.abs(distanceY)) {
+                            //上下移动
+                            if (distanceY > 0) {
+                                if (pullUpRefresh && isBottom())
+                                    direction = TO_UP;
+                                //上拉
+                                MyLog.e("onFling: turn up 上拉");
+                            } else {
+                                if (pullDownRefresh && isTop())
+                                    direction = TO_DOWN;
+                                //下拉
+                                MyLog.e("onFling: turn down 下拉");
+                            }
+                        } else {
+                            MyLog.e("onScroll 万中无一");
+                        }
+                    }
+                } else {
+                    int abs = 0;
+                    switch (direction) {
+                        case TO_UP:
+                            abs = (int) Math.abs(distanceX);
+                            switch (state) {
+                                case FLAG_DONE:
+                                    //判断是否可进入上拉
+                                    if (isBottom()) {
+                                        MyLog.e("onScroll isBottom");
+                                        state = FLAG_PULLING;
+                                        updateFooterUI();
+                                    }
+                                    break;
+                                case FLAG_PULLING:
+                                    pppppp++;
+                                    footView.setPadding(0, 0, 0,pppppp);
+                                    break;
+                                case FLAG_REFRESHING:
+                                    break;
+                                case FLAG_RELEASE:
+                                    break;
+                            }
+                            break;
+                        case TO_DOWN:
+                            if (state == 0) {
+                                //判断是否可进入下拉
+                                if (isTop()) {
+                                    state = FLAG_PULLING;
+
+                                }
+                            }
+                            break;
+                        case TO_LEFT:
+                            if (state == 0) {
+                                //判断是否可进入左滑
+                                state = FLAG_PULLING;
+                            }
+                            break;
+                        case TO_RIGHT:
+                            break;
+                    }
+                }
                 return false;
             }
 
@@ -151,27 +250,29 @@ public class NewMyListView extends ListView implements OnScrollListener {
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                MyLog.e("onFling: velocityX:" + velocityX + "|velocityY:" + velocityY);
-                int verticalMinistance =5;
-                int minVelocity =5;
-                if (e1.getX() - e2.getX() > verticalMinistance &&
-                        Math.abs(velocityX) > minVelocity) {
-                    MyLog.e("onFling: turn left");
-                } else if (e2.getX() - e1.getX() > verticalMinistance &&
-                        Math.abs(velocityX) > minVelocity) {
-                    MyLog.e("onFling: turn right");
-                } else if (e1.getY() - e2.getY() > 20 && Math.abs(velocityY) >
-                        10) {
-                    MyLog.e("onFling: turn up");
-                } else if (e2.getY() - e1.getY() > 20 && Math.abs(velocityY) >
-                        10) {
-                    MyLog.e("onFling: turn down");
-                }
+//                MyLog.e("onFling: velocityX:" + velocityX + "|velocityY:" + velocityY);
+//                int verticalMinistance = 5;
+//                int minVelocity = 5;
+//                if (e1.getX() - e2.getX() > verticalMinistance &&
+//                        Math.abs(velocityX) > minVelocity) {
+//                    MyLog.e("onFling: turn left");
+//                } else if (e2.getX() - e1.getX() > verticalMinistance &&
+//                        Math.abs(velocityX) > minVelocity) {
+//                    MyLog.e("onFling: turn right");
+//                } else if (e1.getY() - e2.getY() > 20 && Math.abs(velocityY) >
+//                        10) {
+//                    MyLog.e("onFling: turn up");
+//                } else if (e2.getY() - e1.getY() > 20 && Math.abs(velocityY) >
+//                        10) {
+//                    MyLog.e("onFling: turn down");
+//                }
                 return false;
             }
-        });
-    }
+        }
 
+        );
+    }
+private int pppppp;
     private void initHeader() {
         headView = (LinearLayout) inflater.inflate(R.layout.lv_header, null);
         imgHeadArrow = HyUtil.getView(headView, R.id.lv_imgHeadArrow);
@@ -237,17 +338,38 @@ public class NewMyListView extends ListView implements OnScrollListener {
 
     /**
      * 是否在顶部
-     *
-     * @return
      */
     private boolean isTop() {
-        int top = getAdapter().getCount();
-        if (top > 0) {
+        if (getAdapter() != null && getAdapter().getCount() > 0) {
             if (getFirstVisiblePosition() > 0)
                 return false;
         }
         return true;
     }
+
+    /**
+     * 是否显示了最后一项
+     */
+    private boolean isBottom() {
+        if (getAdapter() != null && getAdapter().getCount() > 0) {
+            //final View child = getChildAt(i);
+            MyLog.e("getCount():" + getCount());
+            MyLog.e("getAdapter().getCount():" + getAdapter().getCount());
+            MyLog.e("getChildCount():" + getChildCount());
+            MyLog.e("getLastVisiblePosition:" + getLastVisiblePosition());
+            if (getLastVisiblePosition() + 1 == getAdapter().getCount()){
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isRecored;
+    //private int startY;
+    private int state;
+    private boolean isBack;
+    private RectF start = new RectF();
 
     public boolean onTouchEvent(MotionEvent event) {
         detector.onTouchEvent(event);
@@ -257,113 +379,117 @@ public class NewMyListView extends ListView implements OnScrollListener {
         if (pullDownRefresh || pullUpRefresh || sideSlip) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    //if (!(scrollTop || scrollBottom))
-                    //break;
-                    // MyLog.e("ACTION_DOWN");
+                    start.left = 0;
+                    start.top = 0;
+                    direction = 0;
                     //未正常结束
                     if (isRecored) {
                         isRecored = false;
+                        MyLog.e("ACTION_DOWN 未正常结束:");
                         return super.onTouchEvent(event);
                     } else {
                         // 开始检测
                         isRecored = true;
-                        startY = (int) event.getY();
-                        direction = 0;
-                        // MyLog.e("ACTION_DOWN 记录当前位置:" + startY);
+                        start.left = event.getX();
+                        start.top = event.getY();
+                        MyLog.e("ACTION_DOWN 记录当前位置:" + start.left + "x" + start.top);
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (!(scrollTop || scrollBottom))
-                        break;
-                    int tempY = (int) event.getY();
-                    // MyLog.e("ACTION_MOVE");
                     if (!isRecored) {
-                        isRecored = true;
-                        startY = tempY;
+                        start.left = 0;
+                        start.top = 0;
                         direction = 0;
-                        // MyLog.e("ACTION_MOVE 记录当前位置:" + startY);
+                        MyLog.e("ACTION_MOVE 未正常开始:");
+                        return super.onTouchEvent(event);
                     }
+                    int minVelocity = 5;
+                    int tempY = (int) event.getY();
                     // 检测开启，没有刷新，没有加载
-                    if (state != FLAG_REFRESHING && isRecored) {
-                        // 保证在设置padding的过程中，当前的位置一直是在head，否则如果当列表超出屏幕的话，当在上推的时候，列表会同时进行滚动
-                        int distance = tempY - startY;
-                        int abs = Math.abs(distance);
-                        if (state == FLAG_DONE) {
-                            if (distance != 0) {
-                                if (distance > 0)
-                                    direction = TO_DOWN;
-                                else
-                                    direction = TO_UP;
-                                state = FLAG_PULLING;
-                                changeViewByState();
-                            }
-                            // MyLog.e("ACTION_MOVE FLAG_DONE" + direction);
-                        }
-                        if (direction == TO_DOWN && !pullDownRefresh) {
-                            state = FLAG_DONE;
-                            break;
-                        }
-                        if (direction == TO_UP && !pullUpRefresh) {
-                            state = FLAG_DONE;
-                            break;
-                        }
-                        if (state == FLAG_PULLING) {
-                            // MyLog.e("ACTION_MOVE FLAG_PULLING " + direction);
-                            if (direction == TO_DOWN) {
-                                if (distance / RATIO >= headerHeight) {
-                                    state = FLAG_RELEASE;
-                                    isBack = true;
-                                    changeViewByState();
-                                } else if (distance <= 0) {
-                                    state = FLAG_DONE;
-                                    changeViewByState();
-                                }
-                                headView.setPadding(0, distance / RATIO
-                                        - headerHeight, 0, 0);
-                            } else if (direction == TO_UP) {
-                                if (abs / RATIO >= footerHeight) {
-                                    state = FLAG_RELEASE;
-                                    isBack = true;
-                                    changeViewByState();
-                                } else if (distance >= 0) {
-                                    state = FLAG_DONE;
-                                    changeViewByState();
-                                }
-                                footView.setPadding(0, 0, 0, abs / RATIO - 1
-                                        * footerHeight);
-                            }
-                        }
-                        // 可以松手去刷新了
-                        if (state == FLAG_RELEASE) {
-                            // MyLog.e("ACTION_MOVE 可以松手去刷新了");
-                            if (direction == TO_DOWN) {
-                                // setSelection(0);
-                                // 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
-                                if ((distance / RATIO < headerHeight)
-                                        && distance > 0) {
-                                    state = FLAG_PULLING;
-                                    changeViewByState();
-                                } else if (distance <= 0) {
-                                    state = FLAG_DONE;
-                                    changeViewByState();
-                                }
-                                headView.setPadding(0, distance / RATIO
-                                        - headerHeight, 0, 0);
-                            } else if (direction == TO_UP) {
-                                if ((abs / RATIO < footerHeight) && distance < 0) {
-                                    state = FLAG_PULLING;
-                                    changeViewByState();
-                                } else if (distance >= 0) {
-                                    state = FLAG_DONE;
-                                    changeViewByState();
-                                }
-                                footView.setPadding(0, 0, 0, abs / RATIO - 1
-                                        * footerHeight);
-                            }
-                        }
-                    }
+//                    if (state != FLAG_REFRESHING && isRecored) {
+//                        // 保证在设置padding的过程中，当前的位置一直是在head，否则如果当列表超出屏幕的话，当在上推的时候，列表会同时进行滚动
+//                        int distance = tempY - startY;
+//                        int abs = Math.abs(distance);
+//                        if (state == FLAG_DONE) {
+//                            if (distance != 0) {
+//                                if (distance > 0)
+//                                    direction = TO_DOWN;
+//                                else
+//                                    direction = TO_UP;
+//                                state = FLAG_PULLING;
+//                                changeViewByState();
+//                            }
+//                            // MyLog.e("ACTION_MOVE FLAG_DONE" + direction);
+//                        }
+//                        if (direction == TO_DOWN && !pullDownRefresh) {
+//                            state = FLAG_DONE;
+//                            break;
+//                        }
+//                        if (direction == TO_UP && !pullUpRefresh) {
+//                            state = FLAG_DONE;
+//                            break;
+//                        }
+//                        if (state == FLAG_PULLING) {
+//                            // MyLog.e("ACTION_MOVE FLAG_PULLING " + direction);
+//                            if (direction == TO_DOWN) {
+//                                if (distance / RATIO >= headerHeight) {
+//                                    state = FLAG_RELEASE;
+//                                    isBack = true;
+//                                    changeViewByState();
+//                                } else if (distance <= 0) {
+//                                    state = FLAG_DONE;
+//                                    changeViewByState();
+//                                }
+//                                headView.setPadding(0, distance / RATIO
+//                                        - headerHeight, 0, 0);
+//                            } else if (direction == TO_UP) {
+//                                if (abs / RATIO >= footerHeight) {
+//                                    state = FLAG_RELEASE;
+//                                    isBack = true;
+//                                    changeViewByState();
+//                                } else if (distance >= 0) {
+//                                    state = FLAG_DONE;
+//                                    changeViewByState();
+//                                }
+//                                footView.setPadding(0, 0, 0, abs / RATIO - 1
+//                                        * footerHeight);
+//                            }
+//                        }
+//                        // 可以松手去刷新了
+//                        if (state == FLAG_RELEASE) {
+//                            // MyLog.e("ACTION_MOVE 可以松手去刷新了");
+//                            if (direction == TO_DOWN) {
+//                                // setSelection(0);
+//                                // 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
+//                                if ((distance / RATIO < headerHeight)
+//                                        && distance > 0) {
+//                                    state = FLAG_PULLING;
+//                                    changeViewByState();
+//                                } else if (distance <= 0) {
+//                                    state = FLAG_DONE;
+//                                    changeViewByState();
+//                                }
+//                                headView.setPadding(0, distance / RATIO
+//                                        - headerHeight, 0, 0);
+//                            } else if (direction == TO_UP) {
+//                                if ((abs / RATIO < footerHeight) && distance < 0) {
+//                                    state = FLAG_PULLING;
+//                                    changeViewByState();
+//                                } else if (distance >= 0) {
+//                                    state = FLAG_DONE;
+//                                    changeViewByState();
+//                                }
+//                                footView.setPadding(0, 0, 0, abs / RATIO - 1
+//                                        * footerHeight);
+//                            }
+//                        }
+//                    }
                     break;
                 case MotionEvent.ACTION_UP:
+                    if (!isRecored) {
+                        MyLog.e("ACTION_UP 未正常结束:");
+                        return super.onTouchEvent(event);
+                    }
                     if (direction > 0) {
                         if (direction == TO_LEFT) {
                             if (mTouchView != null) {
@@ -687,6 +813,7 @@ public class NewMyListView extends ListView implements OnScrollListener {
          * @param index
          */
         void onMlvSwipeClick(int position, SwipeMenu menu, int index);
+
     }
 
     /**
