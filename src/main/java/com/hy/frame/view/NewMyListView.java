@@ -1,7 +1,6 @@
 package com.hy.frame.view;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
@@ -18,13 +17,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Scroller;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hy.frame.R;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
+import com.hy.frame.util.MyToast;
 import com.hy.frame.view.swipe.SwipeMenu;
 import com.hy.frame.view.swipe.SwipeMenuLayout;
 
@@ -37,12 +35,13 @@ import java.util.Locale;
  * @title 自定义ListView(下拉刷新，点击查看更多)
  * @time 2013-6-27 下午2:59:52
  */
-public class NewMyListView extends ListView implements OnScrollListener {
+public class NewMyListView extends ListView {
 
     private final static int FLAG_DONE = 0;// 完成
     private final static int FLAG_PULLING = 1;// 拉...
-    private final static int FLAG_REFRESHING = 2;// 正在刷新
-    private final static int FLAG_RELEASE = 3;// 请释放
+    private final static int FLAG_RELEASE = 2;// 请释放
+    private final static int FLAG_REFRESHING = 3;// 正在刷新
+
     // private final static int FLAG_LOADING = 4;// 加载中
     private final static int RATIO = 3;// 移动的比例
     private LayoutInflater inflater;
@@ -123,50 +122,34 @@ public class NewMyListView extends ListView implements OnScrollListener {
         initHeader();
         initFooter();
         initAnim();
-        setOnScrollListener(this);
         state = FLAG_DONE;
         pullDownRefresh = false;
         pullUpRefresh = false;
-        detector = new GestureDetectorCompat(context, new GestureDetector.OnGestureListener() {
+        detector = new GestureDetectorCompat(context, new GestureDetector.SimpleOnGestureListener() {
+
             @Override
             public boolean onDown(MotionEvent e) {
+                MyLog.e("onDown");
                 if (!pullDownRefresh && !pullUpRefresh && !sideSlip)
                     return false;
-                start.left = 0;
-                start.top = 0;
-                direction = 0;
-                //未正常结束
-                if (isRecored) {
-                    isRecored = false;
-                    MyLog.e("onDown 未正常结束:");
-                    return false;
-                } else {
+                if (direction == FLAG_DONE && state == FLAG_DONE) {
                     // 开始检测
                     isRecored = true;
-                    start.left = e.getX();
-                    start.top = e.getY();
-                    MyLog.e("onDown 记录当前位置:" + start.left + "x" + start.top);
+                    startEvent = e;
+                    MyLog.e("onDown 记录当前位置:" + e.getX() + "x" + e.getY());
                 }
                 return true;
             }
 
             @Override
-            public void onShowPress(MotionEvent e) {
-                MyLog.e("onShowPress");
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                MyLog.e("onSingleTapUp");
-                return false;
-            }
-
-            @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                //MyLog.e("onScroll: distanceX:" + distanceX + "|distanceY:" + distanceY);
-                if (!isRecored)
+                //MyLog.e("onScroll: distanceX:" + distanceX + "|distanceY:" + distanceY + "|e2:" + e2.getAction());
+                //MyLog.e("onScroll: e1:" + e1.getX() + "x" + e1.getY() + "|e2:" + e2.getX() + "x" + e2.getY());
+                if (!isRecored) {
+                    MyLog.e("onScroll: isRecored:" + isRecored);
                     return true;
-                if (direction == 0) {
+                }
+                if (direction == FLAG_DONE) {
                     if (Math.abs(distanceX) > MIN_DISTANCE || Math.abs(distanceY) > MIN_DISTANCE) {
                         if (Math.abs(distanceX) > Math.abs(distanceY)) {
                             //水平移动
@@ -174,11 +157,11 @@ public class NewMyListView extends ListView implements OnScrollListener {
                                 if (sideSlip)
                                     direction = TO_LEFT;
                                 //向左
-                                MyLog.e("onFling: turn left 向左");
+                                MyLog.e("onScroll: turn left 向左");
                             } else {
                                 //direction = TO_RIGHT;
                                 //向右
-                                MyLog.e("onFling: turn right 向右");
+                                MyLog.e("onScroll: turn right 向右");
                             }
                         } else if (Math.abs(distanceX) < Math.abs(distanceY)) {
                             //上下移动
@@ -186,22 +169,24 @@ public class NewMyListView extends ListView implements OnScrollListener {
                                 if (pullUpRefresh && isBottom())
                                     direction = TO_UP;
                                 //上拉
-                                MyLog.e("onFling: turn up 上拉");
+                                MyLog.e("onScroll: turn up 上拉");
                             } else {
                                 if (pullDownRefresh && isTop())
                                     direction = TO_DOWN;
                                 //下拉
-                                MyLog.e("onFling: turn down 下拉");
+                                MyLog.e("onScroll: turn down 下拉");
                             }
                         } else {
                             MyLog.e("onScroll 万中无一");
                         }
                     }
                 } else {
-                    int abs = 0;
+                    //int abs = 0;
+                    int mX = (int) (e2.getX() - e1.getX());
+                    int mY = (int) (e2.getY() - e1.getY());
                     switch (direction) {
                         case TO_UP:
-                            abs = (int) Math.abs(distanceX);
+                            //abs = (int) Math.abs(distanceX);
                             switch (state) {
                                 case FLAG_DONE:
                                     //判断是否可进入上拉
@@ -212,22 +197,50 @@ public class NewMyListView extends ListView implements OnScrollListener {
                                     }
                                     break;
                                 case FLAG_PULLING:
-                                    pppppp++;
-                                    footView.setPadding(0, 0, 0,pppppp);
+                                    footView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
+                                    if (footView.getPaddingBottom() > footerHeight / 2) {
+                                        state = FLAG_RELEASE;
+                                        isBack = true;
+                                        updateFooterUI();
+                                    }
+                                    break;
+                                case FLAG_RELEASE:
+                                    footView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
+                                    if (footView.getPaddingBottom() < footerHeight / 2) {
+                                        state = FLAG_PULLING;
+                                        isBack = false;
+                                        updateFooterUI();
+                                    }
                                     break;
                                 case FLAG_REFRESHING:
                                     break;
-                                case FLAG_RELEASE:
-                                    break;
+
                             }
                             break;
                         case TO_DOWN:
-                            if (state == 0) {
-                                //判断是否可进入下拉
-                                if (isTop()) {
-                                    state = FLAG_PULLING;
+                            switch (state) {
+                                case FLAG_DONE:
+                                    //判断是否可进入下拉
+                                    if (isTop()) {
+                                        MyLog.e("onScroll isTop");
+                                        state = FLAG_PULLING;
+                                        updateHeaderUI();
+                                    }
+                                    break;
+                                case FLAG_PULLING:
+                                    headView.setPadding(0, Math.abs(mY / RATIO) - headerHeight, 0, 0);
+                                    //MyLog.e("headView.getPaddingTop():" + headView.getPaddingTop());
+                                    if (headView.getPaddingTop() > headerHeight / 2) {
+                                        state = FLAG_RELEASE;
+                                        isBack = true;
+                                        updateHeaderUI();
+                                    }
+                                case FLAG_RELEASE:
 
-                                }
+                                    break;
+                                case FLAG_REFRESHING:
+                                    break;
+
                             }
                             break;
                         case TO_LEFT:
@@ -244,35 +257,16 @@ public class NewMyListView extends ListView implements OnScrollListener {
             }
 
             @Override
-            public void onLongPress(MotionEvent e) {
-                MyLog.e("onLongPress");
-            }
-
-            @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                MyLog.e("onFling: velocityX:" + velocityX + "|velocityY:" + velocityY);
-//                int verticalMinistance = 5;
-//                int minVelocity = 5;
-//                if (e1.getX() - e2.getX() > verticalMinistance &&
-//                        Math.abs(velocityX) > minVelocity) {
-//                    MyLog.e("onFling: turn left");
-//                } else if (e2.getX() - e1.getX() > verticalMinistance &&
-//                        Math.abs(velocityX) > minVelocity) {
-//                    MyLog.e("onFling: turn right");
-//                } else if (e1.getY() - e2.getY() > 20 && Math.abs(velocityY) >
-//                        10) {
-//                    MyLog.e("onFling: turn up");
-//                } else if (e2.getY() - e1.getY() > 20 && Math.abs(velocityY) >
-//                        10) {
-//                    MyLog.e("onFling: turn down");
-//                }
-                return false;
+                MyLog.e("onFling:" + velocityX + "x" + velocityY);
+                pullComplete(e1, e2);
+                return true;
             }
         }
 
         );
     }
-private int pppppp;
+
     private void initHeader() {
         headView = (LinearLayout) inflater.inflate(R.layout.lv_header, null);
         imgHeadArrow = HyUtil.getView(headView, R.id.lv_imgHeadArrow);
@@ -282,7 +276,7 @@ private int pppppp;
         // measureView(headView);
         // headerHeight = headView.getMeasuredHeight();
         headerHeight = getResources().getDimensionPixelSize(R.dimen.lv_heigth);
-        headView.setPadding(0, -1 * headerHeight, 0, 0);
+        headView.setPadding(0, -headerHeight, 0, 0);
         headView.invalidate();
         addHeaderView(headView, null, false);
     }
@@ -296,7 +290,7 @@ private int pppppp;
         // measureView(footView);
         // footerHeight = footView.getMeasuredHeight();
         footerHeight = getResources().getDimensionPixelSize(R.dimen.lv_heigth);
-        footView.setPadding(0, 0, 0, -1 * headerHeight);
+        footView.setPadding(0, 0, 0, -headerHeight);
         footView.invalidate();
         addFooterView(footView, null, false);
     }
@@ -316,26 +310,6 @@ private int pppppp;
         reverseAnimation.setFillAfter(true);
     }
 
-    public void onScroll(AbsListView arg0, int firstVisiableItem,
-                         int visibleItemCount, int totalItemCount) {
-        if (state == FLAG_DONE) {
-            if (firstVisiableItem == 0) {
-                scrollTop = true;
-            } else {
-                scrollTop = false;
-            }
-            // MyLog.d("最后位置: " + getLastVisiblePosition() + " 总：" + totalItemCount);
-            if (getLastVisiblePosition() == totalItemCount - 1) {
-                scrollBottom = true;
-            } else {
-                scrollBottom = false;
-            }
-        }
-    }
-
-    public void onScrollStateChanged(AbsListView arg0, int arg1) {
-    }
-
     /**
      * 是否在顶部
      */
@@ -347,19 +321,26 @@ private int pppppp;
         return true;
     }
 
+    private static final int ERROR_RANGE = 10;
+
     /**
      * 是否显示了最后一项
      */
     private boolean isBottom() {
         if (getAdapter() != null && getAdapter().getCount() > 0) {
-            //final View child = getChildAt(i);
+            //View child = getChildAt(i);
             MyLog.e("getCount():" + getCount());
             MyLog.e("getAdapter().getCount():" + getAdapter().getCount());
             MyLog.e("getChildCount():" + getChildCount());
             MyLog.e("getLastVisiblePosition:" + getLastVisiblePosition());
-            if (getLastVisiblePosition() + 1 == getAdapter().getCount()){
-
-                return true;
+            if (getLastVisiblePosition() == getAdapter().getCount() - getFooterViewsCount()) {
+                View child = getChildAt(getChildCount() - getFooterViewsCount() - 1);
+                if (child != null) {
+                    int differ = getHeight() - (child.getTop() + child.getHeight());
+                    if (differ > -ERROR_RANGE) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -369,191 +350,69 @@ private int pppppp;
     //private int startY;
     private int state;
     private boolean isBack;
-    private RectF start = new RectF();
+    private MotionEvent startEvent;
 
-    public boolean onTouchEvent(MotionEvent event) {
-        detector.onTouchEvent(event);
-        if (true)
-            return super.onTouchEvent(event);
-        //GestureDetector
-        if (pullDownRefresh || pullUpRefresh || sideSlip) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    start.left = 0;
-                    start.top = 0;
-                    direction = 0;
-                    //未正常结束
-                    if (isRecored) {
-                        isRecored = false;
-                        MyLog.e("ACTION_DOWN 未正常结束:");
-                        return super.onTouchEvent(event);
-                    } else {
-                        // 开始检测
-                        isRecored = true;
-                        start.left = event.getX();
-                        start.top = event.getY();
-                        MyLog.e("ACTION_DOWN 记录当前位置:" + start.left + "x" + start.top);
-                    }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if (!isRecored) {
-                        start.left = 0;
-                        start.top = 0;
-                        direction = 0;
-                        MyLog.e("ACTION_MOVE 未正常开始:");
-                        return super.onTouchEvent(event);
-                    }
-                    int minVelocity = 5;
-                    int tempY = (int) event.getY();
-                    // 检测开启，没有刷新，没有加载
-//                    if (state != FLAG_REFRESHING && isRecored) {
-//                        // 保证在设置padding的过程中，当前的位置一直是在head，否则如果当列表超出屏幕的话，当在上推的时候，列表会同时进行滚动
-//                        int distance = tempY - startY;
-//                        int abs = Math.abs(distance);
-//                        if (state == FLAG_DONE) {
-//                            if (distance != 0) {
-//                                if (distance > 0)
-//                                    direction = TO_DOWN;
-//                                else
-//                                    direction = TO_UP;
-//                                state = FLAG_PULLING;
-//                                changeViewByState();
-//                            }
-//                            // MyLog.e("ACTION_MOVE FLAG_DONE" + direction);
-//                        }
-//                        if (direction == TO_DOWN && !pullDownRefresh) {
-//                            state = FLAG_DONE;
-//                            break;
-//                        }
-//                        if (direction == TO_UP && !pullUpRefresh) {
-//                            state = FLAG_DONE;
-//                            break;
-//                        }
-//                        if (state == FLAG_PULLING) {
-//                            // MyLog.e("ACTION_MOVE FLAG_PULLING " + direction);
-//                            if (direction == TO_DOWN) {
-//                                if (distance / RATIO >= headerHeight) {
-//                                    state = FLAG_RELEASE;
-//                                    isBack = true;
-//                                    changeViewByState();
-//                                } else if (distance <= 0) {
-//                                    state = FLAG_DONE;
-//                                    changeViewByState();
-//                                }
-//                                headView.setPadding(0, distance / RATIO
-//                                        - headerHeight, 0, 0);
-//                            } else if (direction == TO_UP) {
-//                                if (abs / RATIO >= footerHeight) {
-//                                    state = FLAG_RELEASE;
-//                                    isBack = true;
-//                                    changeViewByState();
-//                                } else if (distance >= 0) {
-//                                    state = FLAG_DONE;
-//                                    changeViewByState();
-//                                }
-//                                footView.setPadding(0, 0, 0, abs / RATIO - 1
-//                                        * footerHeight);
-//                            }
-//                        }
-//                        // 可以松手去刷新了
-//                        if (state == FLAG_RELEASE) {
-//                            // MyLog.e("ACTION_MOVE 可以松手去刷新了");
-//                            if (direction == TO_DOWN) {
-//                                // setSelection(0);
-//                                // 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
-//                                if ((distance / RATIO < headerHeight)
-//                                        && distance > 0) {
-//                                    state = FLAG_PULLING;
-//                                    changeViewByState();
-//                                } else if (distance <= 0) {
-//                                    state = FLAG_DONE;
-//                                    changeViewByState();
-//                                }
-//                                headView.setPadding(0, distance / RATIO
-//                                        - headerHeight, 0, 0);
-//                            } else if (direction == TO_UP) {
-//                                if ((abs / RATIO < footerHeight) && distance < 0) {
-//                                    state = FLAG_PULLING;
-//                                    changeViewByState();
-//                                } else if (distance >= 0) {
-//                                    state = FLAG_DONE;
-//                                    changeViewByState();
-//                                }
-//                                footView.setPadding(0, 0, 0, abs / RATIO - 1
-//                                        * footerHeight);
-//                            }
-//                        }
-//                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if (!isRecored) {
-                        MyLog.e("ACTION_UP 未正常结束:");
-                        return super.onTouchEvent(event);
-                    }
-                    if (direction > 0) {
-                        if (direction == TO_LEFT) {
-                            if (mTouchView != null) {
-                                mTouchView.onSwipe(event);
-                                if (!mTouchView.isOpen()) {
-                                    mTouchPosition = -1;
-                                    mTouchView = null;
-                                }
-                            }
-                            if (mOnSwipeListener != null) {
-                                mOnSwipeListener.onSwipeEnd(mTouchPosition);
-                            }
-                        } else if (direction == TO_DOWN) {
-                            //取消下拉
-                            if (state == FLAG_PULLING) {
-                                state = FLAG_DONE;
-                                updateHeaderUI();
-                            }
-                            //等待释放
-                            else if (state == FLAG_RELEASE) {
-                                state = FLAG_REFRESHING;
-                                updateHeaderUI();
-                                if (listener != null)
-                                    listener.onMlvRefresh(this, false);
-                            }
-                        } else if (direction == TO_UP) {
+    private void pullComplete(MotionEvent e1, MotionEvent e2) {
+        int mX = (int) (e2.getX() - e1.getX());
+        int mY = (int) (e2.getY() - e1.getY());
+        if (direction > FLAG_DONE) {
+            if (state == FLAG_PULLING) {
+                state = FLAG_DONE;
+                switch (direction) {
+                    case TO_DOWN:
+                        updateHeaderUI();
+                        break;
+                    case TO_UP:
+                        updateFooterUI();
+                        break;
+                    case TO_LEFT:
 
+                        break;
+                    case TO_RIGHT:
+                        break;
+                }
+                direction = FLAG_DONE;
+            } else if (state == FLAG_RELEASE) {
+                //state = FLAG_REFRESHING;
+                switch (direction) {
+                    case TO_DOWN:
+                        updateHeaderUI();
+                        if (listener != null)
+                            listener.onMlvRefresh(NewMyListView.this, false);
+                        break;
+                    case TO_UP:
+                        footView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
+                        if (footView.getPaddingBottom() > footerHeight / 2) {
+                            state = FLAG_REFRESHING;
+                            isBack = false;
+                            if (listener != null)
+                                listener.onMlvLoadMore(NewMyListView.this);
+                        } else {
+                            state = FLAG_DONE;
+                            isBack = false;
                         }
-                        if (state != FLAG_REFRESHING) {
-                            if (state == FLAG_DONE) {
+                        updateFooterUI();
+                        break;
+                    case TO_LEFT:
 
-                            }
-                            if (state == FLAG_PULLING) {
-                                state = FLAG_DONE;
-                                changeViewByState();
-                            }
-                            if (state == FLAG_RELEASE) {
-                                state = FLAG_REFRESHING;
-                                changeViewByState();
-                                if (direction == TO_DOWN) {
-                                    if (listener != null) {
-                                        listener.onMlvRefresh(this, false);
-                                    }
-                                } else if (direction == TO_UP) {
-                                    if (listener != null) {
-                                        listener.onMlvRefresh(this, false);
-                                    }
-                                }
-                            }
-                        }
-                        isRecored = false;
-                        isBack = false;
-                        event.setAction(MotionEvent.ACTION_CANCEL);
-                        super.onTouchEvent(event);
-                        return true;
-                    }
-                    break;
+                        break;
+                    case TO_RIGHT:
+                        break;
+                }
             }
         }
-        return super.onTouchEvent(event);
     }
 
-    private void changeViewByState() {
-
+    public boolean onTouchEvent(MotionEvent event) {
+        if (detector != null)
+            detector.onTouchEvent(event);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                pullComplete(startEvent, event);
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 
     /**
@@ -561,18 +420,6 @@ private int pppppp;
      */
     private void updateHeaderUI() {
         switch (state) {
-            case FLAG_RELEASE:
-                imgHeadArrow.setVisibility(View.VISIBLE);
-                proHead.setVisibility(View.GONE);
-                txtHeadHint.setVisibility(View.VISIBLE);
-                txtHeadUpdateTime.setVisibility(View.VISIBLE);
-                imgHeadArrow.clearAnimation();
-                // imgHeadArrow.setImageResource(R.drawable.refresh_arrow_get);
-                imgHeadArrow.startAnimation(animation);
-                txtHeadHint.setText("请释放 刷新");
-                // Log.i("HyLog", "RELEASE_To_REFRESH 这是第  " + i++ + "步" + 12 +
-                // "请释放 刷新");
-                break;
             case FLAG_PULLING:
                 proHead.setVisibility(View.GONE);
                 txtHeadHint.setVisibility(View.VISIBLE);
@@ -583,30 +430,38 @@ private int pppppp;
                     isBack = false;
                     imgHeadArrow.clearAnimation();
                     imgHeadArrow.startAnimation(reverseAnimation);
-                    txtHeadHint.setText("下拉刷新");
-                } else {
-                    txtHeadHint.setText("下拉刷新");
                 }
+                txtHeadHint.setText(R.string.refresh_down_text);
+                break;
+            case FLAG_RELEASE:
+                imgHeadArrow.setVisibility(View.VISIBLE);
+                proHead.setVisibility(View.GONE);
+                txtHeadHint.setVisibility(View.VISIBLE);
+                txtHeadUpdateTime.setVisibility(View.VISIBLE);
+                imgHeadArrow.clearAnimation();
+                imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
+                imgHeadArrow.startAnimation(animation);
+                txtHeadHint.setText(R.string.refresh_release_text);
+                // Log.i("HyLog", "RELEASE_To_REFRESH 这是第  " + i++ + "步" + 12 +
+                // "请释放 刷新");
                 break;
             case FLAG_REFRESHING:
                 headView.setPadding(0, 0, 0, 0);
                 proHead.setVisibility(View.VISIBLE);
                 imgHeadArrow.clearAnimation();
                 imgHeadArrow.setVisibility(View.GONE);
-                txtHeadHint.setText("正在加载中 ...");
+                txtHeadHint.setText(R.string.refresh_load_ing);
                 txtHeadUpdateTime.setVisibility(View.VISIBLE);
                 break;
             case FLAG_DONE:
-                headView.setPadding(0, -1 * headerHeight, 0, 0);
+                headView.setPadding(0, -headerHeight, 0, 0);
                 proHead.setVisibility(View.GONE);
                 imgHeadArrow.clearAnimation();
                 imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
-                txtHeadHint.setText("已经加载完毕 ");
+                txtHeadHint.setText(R.string.refresh_load_complete);
                 txtHeadUpdateTime.setVisibility(View.VISIBLE);
                 break;
         }
-
-
     }
 
     /**
@@ -614,16 +469,6 @@ private int pppppp;
      */
     private void updateFooterUI() {
         switch (state) {
-            case FLAG_RELEASE:
-                imgFootArrow.setVisibility(View.VISIBLE);
-                proFoot.setVisibility(View.GONE);
-                txtFootHint.setVisibility(View.VISIBLE);
-                txtFootUpdateTime.setVisibility(View.VISIBLE);
-                imgFootArrow.clearAnimation();
-                // imgFootArrow.setImageResource(R.drawable.refresh_arrow_get);
-                imgFootArrow.startAnimation(animation);
-                txtFootHint.setText("请释放 加载更多");
-                break;
             case FLAG_PULLING:
                 proFoot.setVisibility(View.GONE);
                 txtFootHint.setVisibility(View.VISIBLE);
@@ -634,17 +479,25 @@ private int pppppp;
                     isBack = false;
                     imgFootArrow.clearAnimation();
                     imgFootArrow.startAnimation(reverseAnimation);
-                    txtFootHint.setText("上拉加载更多");
-                } else {
-                    txtFootHint.setText("上拉加载更多");
                 }
+                txtFootHint.setText(R.string.refresh_load_more);
+                break;
+            case FLAG_RELEASE:
+                imgFootArrow.setVisibility(View.VISIBLE);
+                proFoot.setVisibility(View.GONE);
+                txtFootHint.setVisibility(View.VISIBLE);
+                txtFootUpdateTime.setVisibility(View.VISIBLE);
+                imgFootArrow.clearAnimation();
+                //imgFootArrow.setImageResource(R.drawable.refresh_arrow_get);
+                imgFootArrow.startAnimation(animation);
+                txtFootHint.setText(R.string.refresh_load_more_release);
                 break;
             case FLAG_REFRESHING:
-                // footView.setPadding(0, 0, 0, 0);
+                footView.setPadding(0, 0, 0, 0);
                 proFoot.setVisibility(View.VISIBLE);
                 imgFootArrow.clearAnimation();
                 imgFootArrow.setVisibility(View.GONE);
-                txtFootHint.setText("正在加载中 ...");
+                txtFootHint.setText(R.string.refresh_load_ing);
                 txtFootUpdateTime.setVisibility(View.VISIBLE);
                 break;
             case FLAG_DONE:
@@ -652,17 +505,15 @@ private int pppppp;
                 proFoot.setVisibility(View.GONE);
                 imgFootArrow.clearAnimation();
                 imgFootArrow.setImageResource(R.drawable.refresh_arrow_top);
-                txtFootHint.setText("已经加载完毕 ");
+                txtFootHint.setText(R.string.refresh_load_complete);
                 txtFootUpdateTime.setVisibility(View.VISIBLE);
                 break;
         }
-
-
     }
 
     public void setAdapter(BaseAdapter adapter) {
-        txtHeadUpdateTime.setText("更新时间：" + getNowTime());
-        txtFootUpdateTime.setText("更新时间：" + getNowTime());
+        txtHeadUpdateTime.setText(getResources().getString(R.string.refresh_last_time, getNowTime()));
+        txtFootUpdateTime.setText(getResources().getString(R.string.refresh_last_time, getNowTime()));
         super.setAdapter(adapter);
     }
 
@@ -682,12 +533,22 @@ private int pppppp;
      */
     public void onRefreshComplete() {
         state = FLAG_DONE;
-        if (direction == TO_DOWN) {
-            txtHeadUpdateTime.setText("上次更新: " + getNowTime());
-        } else if (direction == TO_UP) {
-            txtFootUpdateTime.setText("上次更新: " + getNowTime());
+        switch (direction) {
+            case TO_DOWN:
+                txtHeadUpdateTime.setText(getResources().getString(R.string.refresh_last_time, getNowTime()));
+                updateHeaderUI();
+                break;
+            case TO_UP:
+                txtFootUpdateTime.setText(getResources().getString(R.string.refresh_last_time, getNowTime()));
+                updateFooterUI();
+                break;
+            case TO_LEFT:
+
+                break;
+            case TO_RIGHT:
+                break;
         }
-        updateHeaderUI();
+        direction = FLAG_DONE;
     }
 
     /**
