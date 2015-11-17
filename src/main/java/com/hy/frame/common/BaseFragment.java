@@ -150,7 +150,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
             imgMessage.setVisibility(View.VISIBLE);
             txtMessage.setVisibility(View.VISIBLE);
             txtMessage.setText(msg);
-            imgMessage.setImageResource(R.drawable.hint_net_fail);
+            imgMessage.setImageResource(R.drawable.img_hint_net_fail);
         }
     }
 
@@ -159,7 +159,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     }
 
     protected void showNoData(String msg) {
-        showNoData(msg, R.drawable.hint_nodata);
+        showNoData(msg, R.drawable.img_hint_nodata);
     }
 
     protected void showNoData(String msg, int drawId) {

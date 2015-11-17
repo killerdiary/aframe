@@ -2,27 +2,24 @@ package com.hy.frame.view;
 
 import android.content.Context;
 import android.graphics.RectF;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hy.frame.R;
+import com.hy.frame.adapter.SwipeAdapter;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
-import com.hy.frame.util.MyToast;
 import com.hy.frame.view.swipe.SwipeMenu;
 import com.hy.frame.view.swipe.SwipeMenuLayout;
 
@@ -41,8 +38,6 @@ public class NewMyListView extends ListView {
     private final static int FLAG_PULLING = 1;// 拉...
     private final static int FLAG_RELEASE = 2;// 请释放
     private final static int FLAG_REFRESHING = 3;// 正在刷新
-
-    // private final static int FLAG_LOADING = 4;// 加载中
     private final static int RATIO = 3;// 移动的比例
     private LayoutInflater inflater;
 
@@ -57,23 +52,21 @@ public class NewMyListView extends ListView {
     private ProgressBar proFoot;
     private TextView txtFootHint, txtFootUpdateTime;
     private int footerHeight;
-
-    private RotateAnimation animation;
-    private RotateAnimation reverseAnimation;
-
-
+    private int swipeMenuLayouId;
     private OnMlvListener listener;
-
+    private OnMlvSwipeListener swipeListener;
     /**
-     * 是否滚动到顶部
+     * 是否开启下拉刷新
      */
-    private boolean scrollTop;
+    private boolean refresh;
     /**
-     * 是否滚动到底部
+     * 是否开启上拉加载更多
      */
-    private boolean scrollBottom;
-
-
+    private boolean loadMore;
+    /**
+     * 是否开启侧滑
+     */
+    private boolean slipToLeft;
     /**
      * 滚动的方向
      */
@@ -109,12 +102,10 @@ public class NewMyListView extends ListView {
         init(context);
     }
 
-    private GestureDetectorCompat detector;
-
     /**
      * 初始化头部和底部
      *
-     * @param context
+     * @param context Context
      */
     private void init(Context context) {
         // setCacheColorHint(android.R.color.transparent);
@@ -122,149 +113,6 @@ public class NewMyListView extends ListView {
         initHeader();
         initFooter();
         initAnim();
-        state = FLAG_DONE;
-        pullDownRefresh = false;
-        pullUpRefresh = false;
-        detector = new GestureDetectorCompat(context, new GestureDetector.SimpleOnGestureListener() {
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                MyLog.e("onDown");
-                if (!pullDownRefresh && !pullUpRefresh && !sideSlip)
-                    return false;
-                if (direction == FLAG_DONE && state == FLAG_DONE) {
-                    // 开始检测
-                    isRecored = true;
-                    startEvent = e;
-                    MyLog.e("onDown 记录当前位置:" + e.getX() + "x" + e.getY());
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                //MyLog.e("onScroll: distanceX:" + distanceX + "|distanceY:" + distanceY + "|e2:" + e2.getAction());
-                //MyLog.e("onScroll: e1:" + e1.getX() + "x" + e1.getY() + "|e2:" + e2.getX() + "x" + e2.getY());
-                if (!isRecored) {
-                    MyLog.e("onScroll: isRecored:" + isRecored);
-                    return true;
-                }
-                if (direction == FLAG_DONE) {
-                    if (Math.abs(distanceX) > MIN_DISTANCE || Math.abs(distanceY) > MIN_DISTANCE) {
-                        if (Math.abs(distanceX) > Math.abs(distanceY)) {
-                            //水平移动
-                            if (distanceX > 0) {
-                                if (sideSlip)
-                                    direction = TO_LEFT;
-                                //向左
-                                MyLog.e("onScroll: turn left 向左");
-                            } else {
-                                //direction = TO_RIGHT;
-                                //向右
-                                MyLog.e("onScroll: turn right 向右");
-                            }
-                        } else if (Math.abs(distanceX) < Math.abs(distanceY)) {
-                            //上下移动
-                            if (distanceY > 0) {
-                                if (pullUpRefresh && isBottom())
-                                    direction = TO_UP;
-                                //上拉
-                                MyLog.e("onScroll: turn up 上拉");
-                            } else {
-                                if (pullDownRefresh && isTop())
-                                    direction = TO_DOWN;
-                                //下拉
-                                MyLog.e("onScroll: turn down 下拉");
-                            }
-                        } else {
-                            MyLog.e("onScroll 万中无一");
-                        }
-                    }
-                } else {
-                    //int abs = 0;
-                    int mX = (int) (e2.getX() - e1.getX());
-                    int mY = (int) (e2.getY() - e1.getY());
-                    switch (direction) {
-                        case TO_UP:
-                            //abs = (int) Math.abs(distanceX);
-                            switch (state) {
-                                case FLAG_DONE:
-                                    //判断是否可进入上拉
-                                    if (isBottom()) {
-                                        MyLog.e("onScroll isBottom");
-                                        state = FLAG_PULLING;
-                                        updateFooterUI();
-                                    }
-                                    break;
-                                case FLAG_PULLING:
-                                    footView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
-                                    if (footView.getPaddingBottom() > footerHeight / 2) {
-                                        state = FLAG_RELEASE;
-                                        isBack = true;
-                                        updateFooterUI();
-                                    }
-                                    break;
-                                case FLAG_RELEASE:
-                                    footView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
-                                    if (footView.getPaddingBottom() < footerHeight / 2) {
-                                        state = FLAG_PULLING;
-                                        isBack = false;
-                                        updateFooterUI();
-                                    }
-                                    break;
-                                case FLAG_REFRESHING:
-                                    break;
-
-                            }
-                            break;
-                        case TO_DOWN:
-                            switch (state) {
-                                case FLAG_DONE:
-                                    //判断是否可进入下拉
-                                    if (isTop()) {
-                                        MyLog.e("onScroll isTop");
-                                        state = FLAG_PULLING;
-                                        updateHeaderUI();
-                                    }
-                                    break;
-                                case FLAG_PULLING:
-                                    headView.setPadding(0, Math.abs(mY / RATIO) - headerHeight, 0, 0);
-                                    //MyLog.e("headView.getPaddingTop():" + headView.getPaddingTop());
-                                    if (headView.getPaddingTop() > headerHeight / 2) {
-                                        state = FLAG_RELEASE;
-                                        isBack = true;
-                                        updateHeaderUI();
-                                    }
-                                case FLAG_RELEASE:
-
-                                    break;
-                                case FLAG_REFRESHING:
-                                    break;
-
-                            }
-                            break;
-                        case TO_LEFT:
-                            if (state == 0) {
-                                //判断是否可进入左滑
-                                state = FLAG_PULLING;
-                            }
-                            break;
-                        case TO_RIGHT:
-                            break;
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                MyLog.e("onFling:" + velocityX + "x" + velocityY);
-                pullComplete(e1, e2);
-                return true;
-            }
-        }
-
-        );
     }
 
     private void initHeader() {
@@ -295,20 +143,7 @@ public class NewMyListView extends ListView {
         addFooterView(footView, null, false);
     }
 
-    private void initAnim() {
-        animation = new RotateAnimation(0, -180,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        animation.setInterpolator(new LinearInterpolator());
-        animation.setDuration(250);
-        animation.setFillAfter(true);
-        reverseAnimation = new RotateAnimation(-180, 0,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        reverseAnimation.setInterpolator(new LinearInterpolator());
-        reverseAnimation.setDuration(200);
-        reverseAnimation.setFillAfter(true);
-    }
+    private static final int ERROR_RANGE = 10;
 
     /**
      * 是否在顶部
@@ -317,11 +152,13 @@ public class NewMyListView extends ListView {
         if (getAdapter() != null && getAdapter().getCount() > 0) {
             if (getFirstVisiblePosition() > 0)
                 return false;
+            View child = getChildAt(getHeaderViewsCount());
+            if (child != null && child.getTop() < ERROR_RANGE)
+                return true;
+            return false;
         }
         return true;
     }
-
-    private static final int ERROR_RANGE = 10;
 
     /**
      * 是否显示了最后一项
@@ -349,12 +186,226 @@ public class NewMyListView extends ListView {
     private boolean isRecored;
     //private int startY;
     private int state;
-    private boolean isBack;
-    private MotionEvent startEvent;
+    private RectF startRect;
+    private RectF lastRect;
+    /**
+     * 触摸的Position
+     */
+    private int touchPosition;
+    /**
+     * 触摸View
+     */
+    private SwipeView touchView;
 
-    private void pullComplete(MotionEvent e1, MotionEvent e2) {
-        int mX = (int) (e2.getX() - e1.getX());
-        int mY = (int) (e2.getY() - e1.getY());
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        if (direction != FLAG_DONE && state != FLAG_DONE)
+//            return true;
+//        return super.onInterceptTouchEvent(ev);
+//    }
+//
+//    @Override
+//    public boolean onInterceptHoverEvent(MotionEvent event) {
+//        if (direction != FLAG_DONE && state != FLAG_DONE)
+//            return true;
+//        return super.onInterceptHoverEvent(event);
+//    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        if (!isRefresh() && !isLoadMore() && !isSlipToLeft())
+            return super.onTouchEvent(event);
+        if (direction != FLAG_DONE && state == FLAG_REFRESHING) {
+            switch (direction) {
+                case TO_DOWN:
+                case TO_UP:
+                    return true;
+                case TO_LEFT:
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        direction = FLAG_DONE;
+                        state = FLAG_DONE;
+                        int oldPos = touchPosition;
+                        touchPosition = pointToPosition((int) event.getX(), (int) event.getY());
+                        if (touchPosition == oldPos && touchView != null && touchView.isOpen()) {
+                            touchView.closeMenu();
+                            return true;
+                        }
+                        if (touchView != null && touchView.isOpen()) {
+                            touchView.smoothCloseMenu();
+                            touchView = null;
+                            return true;
+                        }
+                        View v = getChildAt(touchPosition - getFirstVisiblePosition());
+                        if (v instanceof SwipeView) touchView = (SwipeView) v;
+                        if (touchView != null && touchView.isOpen()) {
+                            touchView.smoothCloseMenu();
+                            touchView = null;
+                            return true;
+                        }
+                    }
+                    break;
+            }
+            return false;
+        }
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                MyLog.e("onDown | direction=" + direction + " | state=" + state);
+                if (direction == FLAG_DONE && state == FLAG_DONE) {
+                    // 开始检测
+                    isRecored = true;
+                    startRect = null;
+                    startRect = new RectF();
+                    startRect.left = event.getX();
+                    startRect.top = event.getY();
+                    MyLog.e("onDown 记录当前位置:" + event.getX() + "x" + event.getY());
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (!isRecored || null == startRect)
+                    return super.onTouchEvent(event);
+                float distanceX = event.getX() - startRect.left;
+                float distanceY = event.getY() - startRect.top;
+                MyLog.e("distance :" + distanceX + " x " + distanceY);
+                //if (true)
+                //   return super.onTouchEvent(event);
+                if (direction == FLAG_DONE) {
+                    if (Math.abs(distanceX) > MIN_DISTANCE || Math.abs(distanceY) > MIN_DISTANCE) {
+                        if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                            //水平移动
+                            if (distanceX < 0) {
+                                if (isSlipToLeft()) {
+                                    direction = TO_LEFT;
+                                    //向左
+                                    MyLog.e("onScroll: turn left 向左");
+                                }
+                            } else {
+                                //direction = TO_RIGHT;
+                                //向右
+                                MyLog.e("onScroll: turn right 向右");
+                            }
+                        } else if (Math.abs(distanceX) < Math.abs(distanceY)) {
+                            //上下移动
+                            if (distanceY > 0) {
+                                //下拉
+                                if (isRefresh() && isTop()) {
+                                    direction = TO_DOWN;
+                                    MyLog.e("onScroll: turn down 下拉");
+                                }
+                            } else {
+                                if (isLoadMore() && isBottom()) {
+                                    direction = TO_UP;
+                                    //上拉
+                                    MyLog.e("onScroll: turn up 上拉");
+                                }
+                            }
+                        } else {
+                            MyLog.e("onScroll 万中无一");
+                        }
+                    }
+                    if (direction > FLAG_DONE) {
+                        startRect.left = event.getX();
+                        startRect.top = event.getY();
+                        return true;
+                    }
+                    return super.onTouchEvent(event);
+                }
+                //int abs = 0;
+                int mX = (int) distanceX;
+                int mY = (int) distanceY;
+                if (direction > FLAG_DONE) {
+                    switch (direction) {
+                        case TO_UP:
+                            if (state == FLAG_DONE) {
+                                state = FLAG_PULLING;
+                                updateFooterUI();
+                            } else if (state == FLAG_PULLING || state == FLAG_RELEASE) {
+                                footView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
+                                //footView.setPadding(0, 0, 0, Math.abs(mY) - footerHeight);
+                                if (lastRect != null && event.getY() - lastRect.top > 0)
+                                    smoothScrollToPosition(getCount() - 1);
+                                if (state == FLAG_PULLING && footView.getPaddingBottom() > footerHeight / 2) {
+                                    state = FLAG_RELEASE;
+                                    updateFooterUI();
+                                } else if (state == FLAG_RELEASE && footView.getPaddingBottom() < 0) {
+                                    state = FLAG_PULLING;
+                                    updateFooterUI();
+                                }
+                            }
+                            break;
+                        case TO_DOWN:
+                            if (state == FLAG_DONE) {
+                                state = FLAG_PULLING;
+                                updateHeaderUI();
+                            } else if (state == FLAG_PULLING || state == FLAG_RELEASE) {
+                                headView.setPadding(0, Math.abs(mY / RATIO) - headerHeight, 0, 0);
+                                setSelection(0);
+                                if (state == FLAG_PULLING && headView.getPaddingTop() > headerHeight / 2) {
+                                    state = FLAG_RELEASE;
+                                    updateHeaderUI();
+                                } else if (state == FLAG_RELEASE && headView.getPaddingTop() < 0) {
+                                    state = FLAG_PULLING;
+                                    updateHeaderUI();
+                                }
+                            }
+                            break;
+                        case TO_LEFT:
+                            if (state == FLAG_DONE) {
+                                state = FLAG_PULLING;
+                                touchPosition = pointToPosition((int) event.getX(), (int) event.getY());
+                                View v = getChildAt(touchPosition - getFirstVisiblePosition());
+                                if (v instanceof SwipeView) touchView = (SwipeView) v;
+                                if (touchView != null) {
+                                    touchView.swipe(Math.abs(mX));
+                                    //touchView.smoothOpenMenu();
+                                    MyLog.e("touchView.openMenu");
+                                    //touchView.openMenu();
+                                }
+                                return true;
+                            } else if (state == FLAG_PULLING || state == FLAG_RELEASE) {
+                                if (touchView != null && mX <= 0) {
+                                    touchView.swipe(Math.abs(mX));
+                                    if (state == FLAG_PULLING && touchView.isCanOpen()) {
+                                        state = FLAG_RELEASE;
+                                    } else if (state == FLAG_RELEASE && !touchView.isCanOpen()) {
+                                        state = FLAG_PULLING;
+                                    }
+                                }
+                                return true;
+                            }
+                            break;
+                        case TO_RIGHT:
+                            break;
+                    }
+                    if (lastRect == null)
+                        lastRect = new RectF(event.getX(), event.getY(), 0, 0);
+                    else {
+                        lastRect.left = event.getX();
+                        lastRect.top = event.getY();
+                    }
+                    if (state == FLAG_PULLING) {
+                        super.onTouchEvent(event);
+                        return true;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                RectF endRect = new RectF();
+                endRect.left = event.getX();
+                endRect.top = event.getY();
+                pullComplete(startRect, endRect);
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    private void pullComplete(RectF startRect, RectF endRect) {
+        if (startRect == null || endRect == null)
+            return;
+        int mX = (int) (endRect.left - startRect.left);
+        int mY = (int) (endRect.top - startRect.top);
+        MyLog.e("pullComplete:e1 " + startRect.left + " x " + startRect.top);
+        MyLog.e("pullComplete:e2 " + endRect.left + " x " + endRect.top);
+        MyLog.e("pullComplete:" + mX + " x " + mY);
         if (direction > FLAG_DONE) {
             if (state == FLAG_PULLING) {
                 state = FLAG_DONE;
@@ -366,7 +417,8 @@ public class NewMyListView extends ListView {
                         updateFooterUI();
                         break;
                     case TO_LEFT:
-
+                        if (touchView != null)
+                            touchView.smoothCloseMenu();
                         break;
                     case TO_RIGHT:
                         break;
@@ -376,25 +428,39 @@ public class NewMyListView extends ListView {
                 //state = FLAG_REFRESHING;
                 switch (direction) {
                     case TO_DOWN:
+                        headView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
+                        if (headView.getPaddingBottom() > footerHeight / 2) {
+                            smoothScrollToPosition(0);
+                            state = FLAG_REFRESHING;
+                            if (listener != null)
+                                listener.onMlvRefresh(NewMyListView.this, false);
+                        } else {
+                            state = FLAG_DONE;
+                        }
                         updateHeaderUI();
-                        if (listener != null)
-                            listener.onMlvRefresh(NewMyListView.this, false);
                         break;
                     case TO_UP:
                         footView.setPadding(0, 0, 0, Math.abs(mY / RATIO) - footerHeight);
                         if (footView.getPaddingBottom() > footerHeight / 2) {
+                            smoothScrollToPosition(getCount() - 1);
                             state = FLAG_REFRESHING;
-                            isBack = false;
                             if (listener != null)
                                 listener.onMlvLoadMore(NewMyListView.this);
                         } else {
                             state = FLAG_DONE;
-                            isBack = false;
                         }
                         updateFooterUI();
                         break;
                     case TO_LEFT:
-
+                        if (touchView != null) {
+                            if (touchView.isCanOpen()) {
+                                touchView.smoothOpenMenu();
+                                state = FLAG_REFRESHING;
+                            } else {
+                                state = FLAG_DONE;
+                                touchView.smoothCloseMenu();
+                            }
+                        }
                         break;
                     case TO_RIGHT:
                         break;
@@ -403,33 +469,44 @@ public class NewMyListView extends ListView {
         }
     }
 
-    public boolean onTouchEvent(MotionEvent event) {
-        if (detector != null)
-            detector.onTouchEvent(event);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                pullComplete(startEvent, event);
-                break;
-        }
-        return super.onTouchEvent(event);
+    private RotateAnimation animation;
+    private RotateAnimation reverseAnimation;
+
+    private void initAnim() {
+        animation = new RotateAnimation(0, -180,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setDuration(250);
+        animation.setFillAfter(true);
+        reverseAnimation = new RotateAnimation(-180, 0,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        reverseAnimation.setInterpolator(new LinearInterpolator());
+        reverseAnimation.setDuration(200);
+        reverseAnimation.setFillAfter(true);
     }
 
     /**
      * 改变header状态
      */
     private void updateHeaderUI() {
+        boolean isBack = false;
         switch (state) {
             case FLAG_PULLING:
                 proHead.setVisibility(View.GONE);
                 txtHeadHint.setVisibility(View.VISIBLE);
                 txtHeadUpdateTime.setVisibility(View.VISIBLE);
-                imgHeadArrow.clearAnimation();
                 imgHeadArrow.setVisibility(View.VISIBLE);
+                if (null != imgHeadArrow.getTag())
+                    isBack = (Boolean) imgHeadArrow.getTag();
                 if (isBack) {
-                    isBack = false;
+                    MyLog.e("isBack: " + isBack);
+                    imgHeadArrow.setTag(false);
                     imgHeadArrow.clearAnimation();
                     imgHeadArrow.startAnimation(reverseAnimation);
+                } else {
+
                 }
                 txtHeadHint.setText(R.string.refresh_down_text);
                 break;
@@ -438,9 +515,14 @@ public class NewMyListView extends ListView {
                 proHead.setVisibility(View.GONE);
                 txtHeadHint.setVisibility(View.VISIBLE);
                 txtHeadUpdateTime.setVisibility(View.VISIBLE);
-                imgHeadArrow.clearAnimation();
-                imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
-                imgHeadArrow.startAnimation(animation);
+                if (null != imgHeadArrow.getTag())
+                    isBack = (Boolean) imgHeadArrow.getTag();
+                if (!isBack) {
+                    MyLog.e("isBack: " + isBack);
+                    imgHeadArrow.setTag(true);
+                    imgHeadArrow.clearAnimation();
+                    imgHeadArrow.startAnimation(animation);
+                }
                 txtHeadHint.setText(R.string.refresh_release_text);
                 // Log.i("HyLog", "RELEASE_To_REFRESH 这是第  " + i++ + "步" + 12 +
                 // "请释放 刷新");
@@ -457,7 +539,6 @@ public class NewMyListView extends ListView {
                 headView.setPadding(0, -headerHeight, 0, 0);
                 proHead.setVisibility(View.GONE);
                 imgHeadArrow.clearAnimation();
-                imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
                 txtHeadHint.setText(R.string.refresh_load_complete);
                 txtHeadUpdateTime.setVisibility(View.VISIBLE);
                 break;
@@ -468,15 +549,17 @@ public class NewMyListView extends ListView {
      * 改变footer状态
      */
     private void updateFooterUI() {
+        boolean isBack = false;
         switch (state) {
             case FLAG_PULLING:
                 proFoot.setVisibility(View.GONE);
                 txtFootHint.setVisibility(View.VISIBLE);
                 txtFootUpdateTime.setVisibility(View.VISIBLE);
-                imgFootArrow.clearAnimation();
                 imgFootArrow.setVisibility(View.VISIBLE);
+                if (null != imgFootArrow.getTag())
+                    isBack = (Boolean) imgFootArrow.getTag();
                 if (isBack) {
-                    isBack = false;
+                    imgFootArrow.setTag(false);
                     imgFootArrow.clearAnimation();
                     imgFootArrow.startAnimation(reverseAnimation);
                 }
@@ -487,9 +570,14 @@ public class NewMyListView extends ListView {
                 proFoot.setVisibility(View.GONE);
                 txtFootHint.setVisibility(View.VISIBLE);
                 txtFootUpdateTime.setVisibility(View.VISIBLE);
-                imgFootArrow.clearAnimation();
-                //imgFootArrow.setImageResource(R.drawable.refresh_arrow_get);
-                imgFootArrow.startAnimation(animation);
+                if (null != imgFootArrow.getTag())
+                    isBack = (Boolean) imgFootArrow.getTag();
+                if (!isBack) {
+                    MyLog.e("isBack: " + isBack);
+                    imgFootArrow.setTag(true);
+                    imgFootArrow.clearAnimation();
+                    imgFootArrow.startAnimation(animation);
+                }
                 txtFootHint.setText(R.string.refresh_load_more_release);
                 break;
             case FLAG_REFRESHING:
@@ -504,17 +592,40 @@ public class NewMyListView extends ListView {
                 footView.setPadding(0, -1 * footerHeight, 0, 0);
                 proFoot.setVisibility(View.GONE);
                 imgFootArrow.clearAnimation();
-                imgFootArrow.setImageResource(R.drawable.refresh_arrow_top);
                 txtFootHint.setText(R.string.refresh_load_complete);
                 txtFootUpdateTime.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    public void setAdapter(BaseAdapter adapter) {
+    public void setSwipeMenuLayouId(int swipeMenuLayouId) {
+        this.swipeMenuLayouId = swipeMenuLayouId;
+    }
+
+    public void setAdapter(ListAdapter adapter) {
+        if (swipeMenuLayouId == 0) {
+            MyLog.e("Please Called setSwipeMenuLayouId()");
+            super.setAdapter(adapter);
+            return;
+        }
         txtHeadUpdateTime.setText(getResources().getString(R.string.refresh_last_time, getNowTime()));
         txtFootUpdateTime.setText(getResources().getString(R.string.refresh_last_time, getNowTime()));
-        super.setAdapter(adapter);
+        super.setAdapter(new SwipeAdapter(getContext(), adapter, swipeMenuLayouId, new OnMlvSwipeListener() {
+            @Override
+            public void onMlvSwipeClick(int position, SwipeMenu menu, int index) {
+
+            }
+
+            @Override
+            public void onMlvRefresh(NewMyListView lv, boolean first) {
+
+            }
+
+            @Override
+            public void onMlvLoadMore(NewMyListView lv) {
+
+            }
+        }));
     }
 
     /**
@@ -565,89 +676,32 @@ public class NewMyListView extends ListView {
     }
 
     //*********************************************
-    /**
-     * 触摸的Position
-     */
-    private int mTouchPosition;
-    /**
-     * 触摸View
-     */
-    private SwipeMenuLayout mTouchView;
 
-    /**
-     * 打开侧滑
-     *
-     * @param position
-     */
-    public void smoothOpenMenu(int position) {
-        if (isSideSlip() && position >= getFirstVisiblePosition() && position <= getLastVisiblePosition()) {
-            View view = getChildAt(position - getFirstVisiblePosition());
-            if (view instanceof SwipeMenuLayout) {
-                mTouchPosition = position;
-                if (mTouchView != null && mTouchView.isOpen()) {
-                    mTouchView.smoothCloseMenu();
-                }
-                mTouchView = (SwipeMenuLayout) view;
-                mTouchView.smoothOpenMenu();
-            }
-        }
+    public boolean isSlipToLeft() {
+        return slipToLeft;
     }
 
-    private OnSwipeListener mOnSwipeListener;
-
-    /**
-     * 监听侧滑开始结束
-     *
-     * @param onSwipeListener
-     */
-    public void setOnSwipeListener(OnSwipeListener onSwipeListener) {
-        this.mOnSwipeListener = onSwipeListener;
+    public void setSlipToLeft(boolean slipToLeft) {
+        this.slipToLeft = slipToLeft;
     }
 
-    public interface OnSwipeListener {
-        void onSwipeStart(int position);
+    public boolean isLoadMore() {
+        return loadMore;
+    }
 
-        void onSwipeEnd(int position);
+    public void setLoadMore(boolean loadMore) {
+        this.loadMore = loadMore;
+    }
+
+    public boolean isRefresh() {
+        return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+        this.refresh = refresh;
     }
 
     //*******************************************************************
-    /**
-     * 是否开启下拉刷新
-     */
-    private boolean pullDownRefresh;
-    /**
-     * 是否开启上拉加载更多
-     */
-    private boolean pullUpRefresh;
-    /**
-     * 是否开启侧滑
-     */
-    private boolean sideSlip;
-
-    public boolean isPullDownRefresh() {
-        return pullDownRefresh;
-    }
-
-    public void setPullDownRefresh(boolean pullDownRefresh) {
-        this.pullDownRefresh = pullDownRefresh;
-    }
-
-    public boolean isPullUpRefresh() {
-        return pullUpRefresh;
-    }
-
-    public void setPullUpRefresh(boolean pullUpRefresh) {
-        this.pullUpRefresh = pullUpRefresh;
-    }
-
-    public boolean isSideSlip() {
-        return sideSlip;
-    }
-
-    public void setSideSlip(boolean sideSlip) {
-        this.sideSlip = sideSlip;
-    }
-
     public interface OnMlvListener {
         /**
          * 下拉刷新
@@ -674,7 +728,6 @@ public class NewMyListView extends ListView {
          * @param index
          */
         void onMlvSwipeClick(int position, SwipeMenu menu, int index);
-
     }
 
     /**
@@ -685,4 +738,6 @@ public class NewMyListView extends ListView {
     public void setListener(OnMlvListener listener) {
         this.listener = listener;
     }
+
+
 }
