@@ -20,15 +20,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.text.TextUtils;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.hy.frame.R;
 import com.hy.frame.bean.ResultInfo;
@@ -281,26 +272,26 @@ public abstract class MyHttpClient {
             fh.get(url, params, contentType, callback);
         else
             fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
-        Volley.newRequestQueue(context);
-        RequestQueue queue = Volley.newRequestQueue(context);
-        //queue.cancelAll();
-        StringRequest request = new StringRequest("", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return super.getParams();
-            }
-        };
-        queue.add(request);
+//        Volley.newRequestQueue(context);
+//        RequestQueue queue = Volley.newRequestQueue(context);
+//        //queue.cancelAll();
+//        StringRequest request = new StringRequest("", new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                return super.getParams();
+//            }
+//        };
+//        queue.add(request);
     }
 
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {

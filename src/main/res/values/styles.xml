@@ -1,8 +1,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <item name="android:windowNoTitle">true</item>
+    <style name="AppBaseTheme" parent="Base.Theme.AppCompat">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/theme_bg</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="titleTextSize">@dimen/txt_big</item>
     </style>
 
     <style name="txtDefaultStyle">

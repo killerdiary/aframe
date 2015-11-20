@@ -58,8 +58,8 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MyLog.d(getClass(), "Application start!");
-        acts = new LinkedList<Activity>();
-        hashMap = new HashMap<String, Object>();
+        acts = new LinkedList<>();
+        hashMap = new HashMap<>();
         initNetListener();
     }
 
@@ -88,6 +88,8 @@ public class BaseApplication extends Application {
      * @param activity
      */
     public void addActivity(Activity activity) {
+        //防止重复添加
+        remove(activity);
         acts.add(activity);
     }
 

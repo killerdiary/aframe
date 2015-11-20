@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.drawable.DrawableUtils;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,18 +29,17 @@ import com.hy.frame.util.HyUtil;
  * @author HeYan
  * @time 2014-7-18 下午2:53:55
  */
-public abstract class BaseActivity extends Activity implements android.view.View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements android.view.View.OnClickListener, IBaseActivity {
 
     private BaseApplication app;
     protected Context context = this;
     private Class<?> lastAct;// 上一级 Activity
     private String lastSkipAct;// 跳转过来的Activity
     private TextView txtTitle, txtMessage;
-    private RelativeLayout rlyHead, rlyMain;
+    private RelativeLayout rlyMain;
     private ImageView imgMessage;
     private View loadView, contentView;
     private ProgressBar proLoading;
-    private ThemeInfo theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,18 @@ public abstract class BaseActivity extends Activity implements android.view.View
         lastSkipAct = getIntent().getStringExtra(Constant.LAST_ACT);// 获取上一级Activity的Name
         app = (BaseApplication) getApplication();
         app.addActivity(this);
-    }
-
-    protected void initTheme(ThemeInfo theme) {
-        this.theme = theme;
+        setContentView(R.layout.act_base);
+        Toolbar toolbar = getView(R.id.head_toolBar);
+        toolbar.setTitle("");
+        txtTitle = getView(R.id.head_vTitle);
+        setSupportActionBar(toolbar);
+        int layout = initLayoutId();
+        if (layout < 1)
+            return;
+        rlyMain = getView(R.id.rlyMain);
+        contentView = View.inflate(context, layout, null);
+        if (contentView != null)
+            resetLayout(contentView);
     }
 
     public BaseApplication getApp() {
@@ -70,52 +80,26 @@ public abstract class BaseActivity extends Activity implements android.view.View
         return lastSkipAct;
     }
 
-    /**
-     * 使用统一布局
-     *
-     * @param layout 内容布局(除标题外)
-     */
-    protected void customAct(int layout) {
-        if (layout < 1)
-            return;
-        setContentView(R.layout.base);
-        rlyHead = getView(R.id.rlyHead);
-        txtTitle = getView(R.id.head_vTitle);
-        rlyMain = getView(R.id.rlyMain);
-        if (theme != null) {
-            setTitlebarBackground();
-            txtTitle.setTextColor(theme.getTitleColor());
-            txtTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, HyUtil.floatToSpDimension(theme.getTitleSize(), context));
-            txtTitle.getPaint().setFakeBoldText(theme.isTitleBold());
-            rlyMain.setBackgroundColor(theme.getThemeBackground());
-        }
-        contentView = View.inflate(context, layout, null);
-        if (loadView != null)
-            resetLayout(loadView);
-        else if (contentView != null)
-            resetLayout(contentView);
-    }
 
-    @SuppressLint("NewApi")
-    private void setTitlebarBackground() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            rlyHead.setBackground(theme.getDrawTitleBar());
-        } else {
-            rlyHead.setBackgroundDrawable(theme.getDrawTitleBar());
-        }
-    }
+//    @SuppressLint("NewApi")
+//    private void setTitlebarBackground() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            rlyHead.setBackground(theme.getDrawTitleBar());
+//        } else {
+//            rlyHead.setBackgroundDrawable(theme.getDrawTitleBar());
+//        }
+//    }
 
     /**
-     * 使用统一布局,带加载布局<br/>
-     *
-     * @see #customAct(int)
+     * 加载布局
      */
-    protected void customLoadAct(int layout) {
-        loadView = View.inflate(context, R.layout.loading_act, null);
-        proLoading = getView(loadView, R.id.loading_proLoading);
-        imgMessage = getView(loadView, R.id.loading_imgMessage);
-        txtMessage = getView(loadView, R.id.loading_txtMessage);
-        customAct(layout);
+    private void initLoadView() {
+        if (null == loadView) {
+            loadView = View.inflate(context, R.layout.loading_act, null);
+            proLoading = getView(loadView, R.id.loading_proLoading);
+            imgMessage = getView(loadView, R.id.loading_imgMessage);
+            txtMessage = getView(loadView, R.id.loading_txtMessage);
+        }
     }
 
     protected void showLoading() {
@@ -123,13 +107,12 @@ public abstract class BaseActivity extends Activity implements android.view.View
     }
 
     protected void showLoading(String msg) {
-        if (loadView != null) {
-            resetLayout(loadView);
-            proLoading.setVisibility(View.VISIBLE);
-            imgMessage.setVisibility(View.GONE);
-            txtMessage.setVisibility(View.VISIBLE);
-            txtMessage.setText(msg);
-        }
+        initLoadView();
+        resetLayout(loadView);
+        proLoading.setVisibility(View.VISIBLE);
+        imgMessage.setVisibility(View.GONE);
+        txtMessage.setVisibility(View.VISIBLE);
+        txtMessage.setText(msg);
     }
 
     protected void showNetFail() {
@@ -137,14 +120,13 @@ public abstract class BaseActivity extends Activity implements android.view.View
     }
 
     protected void showNetFail(String msg) {
-        if (loadView != null) {
-            resetLayout(loadView);
-            proLoading.setVisibility(View.GONE);
-            imgMessage.setVisibility(View.VISIBLE);
-            txtMessage.setVisibility(View.VISIBLE);
-            txtMessage.setText(msg);
-            imgMessage.setImageResource(R.drawable.hint_net_fail);
-        }
+        initLoadView();
+        resetLayout(loadView);
+        proLoading.setVisibility(View.GONE);
+        imgMessage.setVisibility(View.VISIBLE);
+        txtMessage.setVisibility(View.VISIBLE);
+        txtMessage.setText(msg);
+        imgMessage.setImageResource(R.drawable.hint_net_fail);
     }
 
     protected void showNoData() {
@@ -156,17 +138,16 @@ public abstract class BaseActivity extends Activity implements android.view.View
     }
 
     protected void showNoData(String msg, int drawId) {
-        if (loadView != null) {
-            resetLayout(loadView);
-            proLoading.setVisibility(View.GONE);
-            imgMessage.setVisibility(View.VISIBLE);
-            txtMessage.setVisibility(View.VISIBLE);
-            if (msg == null)
-                txtMessage.setText(R.string.hint_nodata);
-            else
-                txtMessage.setText(msg);
-            imgMessage.setImageResource(drawId);
-        }
+        initLoadView();
+        resetLayout(loadView);
+        proLoading.setVisibility(View.GONE);
+        imgMessage.setVisibility(View.VISIBLE);
+        txtMessage.setVisibility(View.VISIBLE);
+        if (msg == null)
+            txtMessage.setText(R.string.hint_nodata);
+        else
+            txtMessage.setText(msg);
+        imgMessage.setImageResource(drawId);
     }
 
     protected void showCView() {
@@ -196,78 +177,78 @@ public abstract class BaseActivity extends Activity implements android.view.View
             super.setTitle(titleId);
     }
 
-    protected void setHeaderLeft(int left) {
-        if (left > 0) {
-            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_left, rlyHead);
-                ImageView img = getView(v, R.id.head_vLeft);
-                img.setOnClickListener(this);
-                img.setImageResource(left);
-            } else {
-                ImageView img = getView(rlyHead, R.id.head_vLeft);
-                img.setImageResource(left);
-            }
-        }
-    }
-
-    protected void setHeaderLeftTxt(int left) {
-        if (left > 0) {
-            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_tleft, rlyHead);
-                TextView txt = getView(v, R.id.head_vLeft);
-                txt.setOnClickListener(this);
-                txt.setText(left);
-                if (theme != null)
-                    txt.setTextColor(theme.getTitleColor());
-            } else {
-                TextView txt = getView(rlyHead, R.id.head_vLeft);
-                txt.setText(left);
-            }
-        }
-    }
-
-    protected void setHeaderRight(int right) {
-        if (right > 0) {
-            if (rlyHead.findViewById(R.id.head_vRight) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_right, rlyHead);
-                ImageView img = getView(v, R.id.head_vRight);
-                img.setOnClickListener(this);
-                img.setImageResource(right);
-            } else {
-                ImageView img = getView(rlyHead, R.id.head_vRight);
-                img.setImageResource(right);
-            }
-        }
-    }
-
-    protected void setHeaderRightTxt(int right) {
-        if (right > 0) {
-            if (rlyHead.findViewById(R.id.head_vRight) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_tright, rlyHead);
-                TextView txt = getView(v, R.id.head_vRight);
-                txt.setOnClickListener(this);
-                txt.setText(right);
-                if (theme != null)
-                    txt.setTextColor(theme.getTitleColor());
-            } else {
-                TextView txt = getView(rlyHead, R.id.head_vRight);
-                txt.setText(right);
-            }
-        }
-    }
-
-    /**
-     * 头部
-     *
-     * @return
-     */
-    protected View getHeader() {
-        return rlyHead;
-    }
-
-    protected View getHeaderRight() {
-        return rlyHead.findViewById(R.id.head_vRight);
-    }
+//    protected void setHeaderLeft(int left) {
+//        if (left > 0) {
+//            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
+//                View v = getLayoutInflater().inflate(R.layout.in_head_left, rlyHead);
+//                ImageView img = getView(v, R.id.head_vLeft);
+//                img.setOnClickListener(this);
+//                img.setImageResource(left);
+//            } else {
+//                ImageView img = getView(rlyHead, R.id.head_vLeft);
+//                img.setImageResource(left);
+//            }
+//        }
+//    }
+//
+//    protected void setHeaderLeftTxt(int left) {
+//        if (left > 0) {
+//            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
+//                View v = getLayoutInflater().inflate(R.layout.in_head_tleft, rlyHead);
+//                TextView txt = getView(v, R.id.head_vLeft);
+//                txt.setOnClickListener(this);
+//                txt.setText(left);
+//                if (theme != null)
+//                    txt.setTextColor(theme.getTitleColor());
+//            } else {
+//                TextView txt = getView(rlyHead, R.id.head_vLeft);
+//                txt.setText(left);
+//            }
+//        }
+//    }
+//
+//    protected void setHeaderRight(int right) {
+//        if (right > 0) {
+//            if (rlyHead.findViewById(R.id.head_vRight) == null) {
+//                View v = getLayoutInflater().inflate(R.layout.in_head_right, rlyHead);
+//                ImageView img = getView(v, R.id.head_vRight);
+//                img.setOnClickListener(this);
+//                img.setImageResource(right);
+//            } else {
+//                ImageView img = getView(rlyHead, R.id.head_vRight);
+//                img.setImageResource(right);
+//            }
+//        }
+//    }
+//
+//    protected void setHeaderRightTxt(int right) {
+//        if (right > 0) {
+//            if (rlyHead.findViewById(R.id.head_vRight) == null) {
+//                View v = getLayoutInflater().inflate(R.layout.in_head_tright, rlyHead);
+//                TextView txt = getView(v, R.id.head_vRight);
+//                txt.setOnClickListener(this);
+//                txt.setText(right);
+//                if (theme != null)
+//                    txt.setTextColor(theme.getTitleColor());
+//            } else {
+//                TextView txt = getView(rlyHead, R.id.head_vRight);
+//                txt.setText(right);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * 头部
+//     *
+//     * @return
+//     */
+//    protected View getHeader() {
+//        return rlyHead;
+//    }
+//
+//    protected View getHeaderRight() {
+//        return rlyHead.findViewById(R.id.head_vRight);
+//    }
 
     // /**
     // * 初始化布局(用customAct方法时使用)
@@ -406,21 +387,6 @@ public abstract class BaseActivity extends Activity implements android.view.View
         return "";
     }
 
-    /**
-     * 初始化布局
-     */
-    protected abstract void initView();
-
-    /**
-     * 初始化数据
-     */
-    protected abstract void initData();
-
-    /**
-     * 控件点击事件
-     */
-    protected abstract void onViewClick(View v);
-
     @Override
     public void onClick(View v) {
         if (HyUtil.isFastClick())
@@ -449,7 +415,6 @@ public abstract class BaseActivity extends Activity implements android.view.View
     /**
      * 获取 控件
      *
-     * @param view 布局
      * @param id   行布局中某个组件的id
      * @return
      */
@@ -497,14 +462,14 @@ public abstract class BaseActivity extends Activity implements android.view.View
     /**
      * 头-左边图标点击
      */
-    protected void onLeftClick() {
+    public void onLeftClick() {
         actFinish();
     }
 
     /**
      * 头-右边图标点击
      */
-    protected void onRightClick() {
+    public void onRightClick() {
 
     }
 

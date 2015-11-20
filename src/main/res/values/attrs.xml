@@ -3,4 +3,5 @@
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>
+    <attr format="dimension" name="titleTextSize"/>
 </resources>

@@ -20,7 +20,7 @@ import com.hy.frame.bean.ThemeInfo;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 
-public abstract class BaseFragment extends Fragment implements android.view.View.OnClickListener, IFragmentListener {
+public abstract class BaseFragment extends Fragment implements android.view.View.OnClickListener, IFragmentListener,IBaseActivity {
     // private boolean custom;
     private BaseApplication app;
     protected Context context;
@@ -78,6 +78,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         super.onStart();
         if (!init) {
             init = true;
+            initView();
             initView();
             initData();
         }
@@ -283,25 +284,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         return "";
     }
 
-    /**
-     * 初始化布局
-     */
-    protected abstract void initView();
 
-    /**
-     * 初始化数据
-     */
-    protected abstract void initData();
-
-    /**
-     * 初始化数据
-     */
-    public abstract void onStartData();
-
-    /**
-     * 控件点击事件
-     */
-    protected abstract void onViewClick(View v);
 
     @Override
     public void onClick(View v) {
@@ -369,20 +352,19 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     /**
      * 头-左边图标点击
      */
-    protected void onLeftClick() {
+    public void onLeftClick() {
     }
 
     /**
      * 头-右边图标点击
      */
-    protected void onRightClick() {
+    public void onRightClick() {
     }
 
     /**
      * 启动Activity
      */
     protected void startAct(Class<?> cls) {
-
         Intent intent = new Intent();
         intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
         intent.setClass(getActivity(), cls);
