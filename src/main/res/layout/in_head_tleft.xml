@@ -8,5 +8,6 @@
     android:background="@drawable/default_selector"
     android:drawableLeft="@drawable/btn_back"
     android:gravity="center"
+    android:layout_gravity="left"
     android:padding="@dimen/padding_default"
     android:text="@string/back" />

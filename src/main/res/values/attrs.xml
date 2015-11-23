@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="titleTextSize" format="dimension" />
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>
-    <attr name="titleTextSize" format="dimension" />
     <declare-styleable name="TintImageView">
         <attr name="tint" format="reference|color" />
     </declare-styleable>

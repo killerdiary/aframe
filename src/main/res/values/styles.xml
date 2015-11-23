@@ -3,9 +3,16 @@
     <style name="AppBaseTheme" parent="Base.Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/theme_bg</item>
+        <item name="android:windowBackground">?attr/background</item>
         <item name="titleTextColor">@color/white</item>
         <item name="titleTextSize">@dimen/txt_big</item>
+        <item name="contentInsetStart">0dip</item>
+        <item name="contentInsetEnd">0dip</item>
+        <item name="toolbarStyle">@style/CurToolbar</item>
+    </style>
+
+    <style name="CurToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item><!-- 设置该属性解决空白部分-->
     </style>
 
     <style name="txtDefaultStyle">

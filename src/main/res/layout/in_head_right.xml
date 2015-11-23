@@ -4,7 +4,10 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_alignParentRight="true"
+    android:layout_gravity="right"
     android:background="@drawable/default_selector"
     android:contentDescription="@string/app_name"
+    android:minWidth="?attr/actionBarSize"
     android:padding="@dimen/padding_default"
+    android:scaleType="center"
     android:src="@drawable/btn_help" />

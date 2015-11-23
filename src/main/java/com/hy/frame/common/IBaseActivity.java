@@ -1,5 +1,6 @@
 package com.hy.frame.common;
 
+import android.support.annotation.LayoutRes;
 import android.view.View;
 
 /**
@@ -11,6 +12,7 @@ public abstract interface IBaseActivity {
     /**
      * 初始化布局
      */
+    @LayoutRes
     int initLayoutId();
 
     /**

@@ -9,9 +9,7 @@
         android:id="@+id/head_toolBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:collapseIcon="@drawable/btn_back"
-        app:navigationIcon="?attr/homeAsUpIndicator">
+        android:background="?attr/colorPrimary">
 
         <TextView
             android:id="@+id/head_vTitle"

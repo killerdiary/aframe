@@ -1,15 +1,13 @@
 package com.hy.frame.common;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.drawable.DrawableUtils;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -17,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hy.frame.R;
-import com.hy.frame.bean.ThemeInfo;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 
@@ -35,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     protected Context context = this;
     private Class<?> lastAct;// 上一级 Activity
     private String lastSkipAct;// 跳转过来的Activity
+    private Toolbar toolbar;
     private TextView txtTitle, txtMessage;
     private RelativeLayout rlyMain;
     private ImageView imgMessage;
@@ -54,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         app = (BaseApplication) getApplication();
         app.addActivity(this);
         setContentView(R.layout.act_base);
-        Toolbar toolbar = getView(R.id.head_toolBar);
+        toolbar = getView(R.id.head_toolBar);
         toolbar.setTitle("");
         txtTitle = getView(R.id.head_vTitle);
         setSupportActionBar(toolbar);
@@ -81,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
 
-//    @SuppressLint("NewApi")
+    //    @SuppressLint("NewApi")
 //    private void setTitlebarBackground() {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 //            rlyHead.setBackground(theme.getDrawTitleBar());
@@ -89,6 +87,13 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 //            rlyHead.setBackgroundDrawable(theme.getDrawTitleBar());
 //        }
 //    }
+    @Deprecated
+    protected void showNavigation(int drawId) {
+        if (drawId > 0)
+            toolbar.setNavigationIcon(drawId);
+        else
+            toolbar.setNavigationIcon(null);
+    }
 
     /**
      * 加载布局
@@ -170,96 +175,87 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * 设置标题
      */
     @Override
-    public void setTitle(int titleId) {
-        if (txtTitle != null)
-            txtTitle.setText(titleId);
-        else
-            super.setTitle(titleId);
+    public void setTitle(@StringRes int titleId) {
+        setTitle(getString(titleId));
     }
 
-//    protected void setHeaderLeft(int left) {
-//        if (left > 0) {
-//            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
-//                View v = getLayoutInflater().inflate(R.layout.in_head_left, rlyHead);
-//                ImageView img = getView(v, R.id.head_vLeft);
-//                img.setOnClickListener(this);
-//                img.setImageResource(left);
-//            } else {
-//                ImageView img = getView(rlyHead, R.id.head_vLeft);
-//                img.setImageResource(left);
-//            }
-//        }
-//    }
-//
-//    protected void setHeaderLeftTxt(int left) {
-//        if (left > 0) {
-//            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
-//                View v = getLayoutInflater().inflate(R.layout.in_head_tleft, rlyHead);
-//                TextView txt = getView(v, R.id.head_vLeft);
-//                txt.setOnClickListener(this);
-//                txt.setText(left);
-//                if (theme != null)
-//                    txt.setTextColor(theme.getTitleColor());
-//            } else {
-//                TextView txt = getView(rlyHead, R.id.head_vLeft);
-//                txt.setText(left);
-//            }
-//        }
-//    }
-//
-//    protected void setHeaderRight(int right) {
-//        if (right > 0) {
-//            if (rlyHead.findViewById(R.id.head_vRight) == null) {
-//                View v = getLayoutInflater().inflate(R.layout.in_head_right, rlyHead);
-//                ImageView img = getView(v, R.id.head_vRight);
-//                img.setOnClickListener(this);
-//                img.setImageResource(right);
-//            } else {
-//                ImageView img = getView(rlyHead, R.id.head_vRight);
-//                img.setImageResource(right);
-//            }
-//        }
-//    }
-//
-//    protected void setHeaderRightTxt(int right) {
-//        if (right > 0) {
-//            if (rlyHead.findViewById(R.id.head_vRight) == null) {
-//                View v = getLayoutInflater().inflate(R.layout.in_head_tright, rlyHead);
-//                TextView txt = getView(v, R.id.head_vRight);
-//                txt.setOnClickListener(this);
-//                txt.setText(right);
-//                if (theme != null)
-//                    txt.setTextColor(theme.getTitleColor());
-//            } else {
-//                TextView txt = getView(rlyHead, R.id.head_vRight);
-//                txt.setText(right);
-//            }
-//        }
-//    }
-//
-//    /**
-//     * 头部
-//     *
-//     * @return
-//     */
-//    protected View getHeader() {
-//        return rlyHead;
-//    }
-//
-//    protected View getHeaderRight() {
-//        return rlyHead.findViewById(R.id.head_vRight);
-//    }
+    protected void hideHeader() {
+        if (toolbar != null)
+            toolbar.setVisibility(View.GONE);
+    }
 
-    // /**
-    // * 初始化布局(用customAct方法时使用)
-    // *
-    // * @param layout
-    // */
-    // protected View initLayout(int layout) {
-    // rlyMain.removeAllViews();
-    // return getLayoutInflater().inflate(layout, rlyMain);
-    // }
-    //
+    protected void setHeaderLeft(@DrawableRes int left) {
+        if (left > 0) {
+            if (toolbar.findViewById(R.id.head_vLeft) == null) {
+                View v = View.inflate(context, R.layout.in_head_left, toolbar);
+                ImageView img = getView(v, R.id.head_vLeft);
+                img.setOnClickListener(this);
+                img.setImageResource(left);
+            } else {
+                ImageView img = getView(toolbar, R.id.head_vLeft);
+                img.setImageResource(left);
+            }
+        }
+    }
+
+    protected void setHeaderLeftTxt(@StringRes int left) {
+        if (left > 0) {
+            if (toolbar.findViewById(R.id.head_vLeft) == null) {
+                View v = View.inflate(context, R.layout.in_head_tleft, toolbar);
+                TextView txt = getView(v, R.id.head_vLeft);
+                txt.setOnClickListener(this);
+                txt.setText(left);
+                if (txtTitle != null)
+                    txt.setTextColor(txtTitle.getTextColors());
+            } else {
+                TextView txt = getView(toolbar, R.id.head_vLeft);
+                txt.setText(left);
+            }
+        }
+    }
+
+    protected void setHeaderRight(@DrawableRes int right) {
+        if (right > 0) {
+            if (toolbar.findViewById(R.id.head_vRight) == null) {
+                View v = View.inflate(context, R.layout.in_head_right, toolbar);
+                ImageView img = getView(v, R.id.head_vRight);
+                img.setOnClickListener(this);
+                img.setImageResource(right);
+            } else {
+                ImageView img = getView(toolbar, R.id.head_vRight);
+                img.setImageResource(right);
+            }
+        }
+    }
+
+    protected void setHeaderRightTxt(@StringRes int right) {
+        if (right > 0) {
+            if (toolbar.findViewById(R.id.head_vRight) == null) {
+                View v = View.inflate(context, R.layout.in_head_tright, toolbar);
+                TextView txt = getView(v, R.id.head_vRight);
+                txt.setOnClickListener(this);
+                txt.setText(right);
+                if (txtTitle != null)
+                    txt.setTextColor(txtTitle.getTextColors());
+            } else {
+                TextView txt = getView(toolbar, R.id.head_vRight);
+                txt.setText(right);
+            }
+        }
+    }
+
+    /**
+     * 头部
+     *
+     * @return
+     */
+    protected View getHeader() {
+        return toolbar;
+    }
+
+    protected View getHeaderRight() {
+        return toolbar.findViewById(R.id.head_vRight);
+    }
 
     /**
      * 初始化布局(用customAct方法时使用)
@@ -275,26 +271,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     protected View getMainView() {
         return rlyMain;
     }
-
-    //
-    // /**
-    // * 重置布局(用customAct方法时使用)
-    // *
-    // * @param layout
-    // */
-    // protected void addLayout(int layout) {
-    //
-    // getLayoutInflater().inflate(layout, rlyMain);
-    // }
-    //
-    // /**
-    // * 重置布局(用customAct方法时使用)
-    // *
-    // * @param layout
-    // */
-    // protected void addLayout(View v) {
-    // rlyMain.addView(v);
-    // }
 
     protected void setLastAct(Class<?> cls) {
         this.lastAct = cls;
@@ -362,20 +338,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         super.finish();
     }
 
-    protected void clearText(TextView tv) {
-        tv.setText("");
-    }
-
-    protected void setText(TextView tv, String value) {
-        if (value == null)
-            value = "";
-        tv.setText(value);
-    }
-
-    protected void setText(TextView tv, int value) {
-        tv.setText(value);
-    }
-
     protected String getStrings(Integer... ids) {
         if (ids.length > 0) {
             StringBuilder sb = new StringBuilder();
@@ -407,21 +369,19 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(View view, int id) {
-        View v = view.findViewById(id);
-        return (T) v;
+    public <T extends View> T getView(View view,@IdRes int id) {
+        return (T) view.findViewById(id);
     }
 
     /**
      * 获取 控件
      *
-     * @param id   行布局中某个组件的id
+     * @param id 行布局中某个组件的id
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(int id) {
-        View v = findViewById(id);
-        return (T) v;
+    public <T extends View> T getView(@IdRes int id) {
+        return (T) findViewById(id);
     }
 
     /**
@@ -431,13 +391,13 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * @return
      */
     @SuppressWarnings("unchecked")
-    protected <T extends View> T getViewAndClick(int id) {
-        View v = findViewById(id);
+    protected <T extends View> T getViewAndClick(@IdRes int id) {
+        T v = getView(id);
         v.setOnClickListener(this);
-        return (T) v;
+        return v;
     }
 
-    protected void setOnClickListener(int id){
+    protected void setOnClickListener(@IdRes int id) {
         findViewById(id).setOnClickListener(this);
     }
 
@@ -447,7 +407,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * @param id 行布局中某个组件的id
      * @return
      */
-    public <T extends View> T getCView(int id) {
+    public <T extends View> T getCView(@IdRes int id) {
         return getView(contentView, id);
     }
 
@@ -457,10 +417,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * @param id 行布局中某个组件的id
      * @return
      */
-    public <T extends View> T getCViewAndClick(int id) {
-        View v = getView(contentView, id);
+    public <T extends View> T getCViewAndClick(@IdRes int id) {
+        T v = getView(contentView,id);
         v.setOnClickListener(this);
-        return (T) v;
+        return v;
     }
 
     /**
@@ -474,7 +434,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * 头-右边图标点击
      */
     public void onRightClick() {
-
     }
 
 }

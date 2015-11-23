@@ -1,8 +1,11 @@
 package com.hy.frame.common;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.app.Activity;
 import android.app.Application;
@@ -58,7 +61,7 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MyLog.d(getClass(), "Application start!");
-        acts = new LinkedList<>();
+        acts = new CopyOnWriteArrayList<>();
         hashMap = new HashMap<>();
         initNetListener();
     }
