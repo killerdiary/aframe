@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dip"
-            android:src="@drawable/refresh_arrow_top" />
+            android:src="@drawable/refresh_arrow_bottom" />
 
         <!-- 进度条 -->
 
