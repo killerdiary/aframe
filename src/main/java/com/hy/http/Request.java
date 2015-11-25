@@ -18,7 +18,8 @@ import java.net.URLEncoder;
  * @title
  * @time 2015/11/18 18:27
  */
-public abstract class Request {
+public class Request {
+    private static int socketTimeout = 10 * 1000; // 超时时间，默认10秒
 
     public interface Method {
         int GET = 0;
@@ -53,16 +54,18 @@ public abstract class Request {
             con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
             // 设定请求的方法为"POST"，默认是GET
             con.setRequestMethod(METHODS[method]);
+            con.setConnectTimeout(socketTimeout);
             // 连接，上面对urlConn的所有配置必须要在connect之前完成，
             con.connect();
-            if (method > 0) {
+            if (method > 0 && params != null) {
+                String query = params.getParamString();
                 // 此处getOutputStream会隐含的进行connect (即：如同调用上面的connect()方法，
                 // 所以在开发中不调用上述的connect()也可以)。
                 OutputStream out = con.getOutputStream();
                 // 现在通过输出流对象构建对象输出流对象，以实现输出可序列化的对象。
                 ObjectOutputStream oos = new ObjectOutputStream(out);
                 // 向对象输出流写出数据，这些数据将存到内存缓冲区中
-                oos.writeObject(new String("id=1"));
+                oos.writeObject(query);
                 // 刷新对象输出流，将任何字节都写入潜在的流中（些处为ObjectOutputStream）
                 oos.flush();
                 // 关闭流对象。此时，不能再向对象输出流写入任何数据，先前写入的数据存在于内存缓冲区中,
@@ -84,14 +87,10 @@ public abstract class Request {
             e.printStackTrace(); //URL连接异常
         }
     }
-    private String params;
 
-    public void setParams(String params) {
+    private AjaxParams params;
+
+    public void setParams(AjaxParams params) {
         this.params = params;
-    }
-
-    private String getParamString() {
-
-        return null;
     }
 }
