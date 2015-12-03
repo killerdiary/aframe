@@ -2,6 +2,7 @@ package com.hy.frame.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
@@ -51,18 +52,32 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         lastSkipAct = getIntent().getStringExtra(Constant.LAST_ACT);// 获取上一级Activity的Name
         app = (BaseApplication) getApplication();
         app.addActivity(this);
+        int layout = initLayoutId();
+        if (layout < 1)
+            return;
         setContentView(R.layout.act_base);
         toolbar = getView(R.id.head_toolBar);
         toolbar.setTitle("");
         txtTitle = getView(R.id.head_vTitle);
+        int statusBarHeight = getStatusBarHeight();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+            toolbar.setPadding(0, statusBarHeight, 0, 0);
+            //toolbar.setMinimumHeight();
+        }
         setSupportActionBar(toolbar);
-        int layout = initLayoutId();
-        if (layout < 1)
-            return;
         rlyMain = getView(R.id.rlyMain);
         contentView = View.inflate(context, layout, null);
         if (contentView != null)
             resetLayout(contentView);
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     public BaseApplication getApp() {
@@ -369,7 +384,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(View view,@IdRes int id) {
+    public <T extends View> T getView(View view, @IdRes int id) {
         return (T) view.findViewById(id);
     }
 
@@ -418,7 +433,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * @return
      */
     public <T extends View> T getCViewAndClick(@IdRes int id) {
-        T v = getView(contentView,id);
+        T v = getView(contentView, id);
         v.setOnClickListener(this);
         return v;
     }

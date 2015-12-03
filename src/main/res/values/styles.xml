@@ -1,13 +1,13 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppBaseTheme" parent="Base.Theme.AppCompat">
+        <item name="android:windowTranslucentStatus" tools:targetApi="19">true</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">?attr/background</item>
         <item name="titleTextColor">@color/white</item>
         <item name="titleTextSize">@dimen/txt_big</item>
-        <item name="contentInsetStart">0dip</item>
-        <item name="contentInsetEnd">0dip</item>
         <item name="toolbarStyle">@style/CurToolbar</item>
     </style>
 

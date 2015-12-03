@@ -68,6 +68,11 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         View v = inflater.inflate(R.layout.act_base, container, false);
         toolbar = getView(v, R.id.head_toolBar);
         toolbar.setTitle("");
+        int statusBarHeight = getStatusBarHeight();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+            toolbar.setPadding(0, statusBarHeight, 0, 0);
+            //toolbar.setMinimumHeight();
+        }
         txtTitle = getView(v, R.id.head_vTitle);
         int layout = initLayoutId();
         if (layout > 0) {
@@ -78,6 +83,15 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         }
         init = false;
         return v;
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     public BaseApplication getApp() {
@@ -306,7 +320,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(View view,@IdRes int id) {
+    public <T extends View> T getView(View view, @IdRes int id) {
         return (T) view.findViewById(id);
     }
 
@@ -318,7 +332,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
      */
     @SuppressWarnings("unchecked")
     public <T extends View> T getView(@IdRes int id) {
-        return getView(getView(),id);
+        return getView(getView(), id);
     }
 
     /**
@@ -355,7 +369,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
      * @return
      */
     public <T extends View> T getCViewAndClick(@IdRes int id) {
-        T v = getView(contentView,id);
+        T v = getView(contentView, id);
         v.setOnClickListener(this);
         return v;
     }
