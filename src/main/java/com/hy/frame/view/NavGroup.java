@@ -114,7 +114,8 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
     private void setCheckedId(@IdRes int id) {
         mCheckedId = id;
         if (mOnCheckedChangeListener != null) {
-            mOnCheckedChangeListener.onCheckedChanged(this, mCheckedId);
+            NavView nav = (NavView) findViewById(id);
+            mOnCheckedChangeListener.onCheckedChanged(this, nav, mCheckedId);
         }
     }
 
@@ -167,10 +168,11 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
         /**
          * <p>Called when the checked NavView has changed. When the selection is cleared, checkedId is -1.</p>
          *
-         * @param group     the group in which the checked NavView has changed
+         * @param group     the group
+         * @param nav       the group in which the checked NavView has changed
          * @param checkedId the unique identifier of the newly checked NavView
          */
-        public void onCheckedChanged(NavGroup group, @IdRes int checkedId);
+        public void onCheckedChanged(NavGroup group, NavView nav, @IdRes int checkedId);
     }
 
     /**

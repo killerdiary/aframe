@@ -39,6 +39,15 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     private ImageView imgMessage;
     private View loadView, contentView;
     private ProgressBar proLoading;
+    private boolean translucentStatus;
+
+    public boolean isTranslucentStatus() {
+        return translucentStatus;
+    }
+
+    public void setTranslucentStatus(boolean translucentStatus) {
+        this.translucentStatus = translucentStatus;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         toolbar.setTitle("");
         txtTitle = getView(R.id.head_vTitle);
         int statusBarHeight = getStatusBarHeight();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+        if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
             toolbar.setPadding(0, statusBarHeight, 0, 0);
             //toolbar.setMinimumHeight();
         }

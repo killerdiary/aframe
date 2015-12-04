@@ -1,6 +1,5 @@
 package com.hy.frame.common;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -10,7 +9,6 @@ import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hy.frame.R;
-import com.hy.frame.bean.ThemeInfo;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 
@@ -47,6 +44,16 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         return showCount;
     }
 
+    private boolean translucentStatus;
+
+    public boolean isTranslucentStatus() {
+        return translucentStatus;
+    }
+
+    public void setTranslucentStatus(boolean translucentStatus) {
+        this.translucentStatus = translucentStatus;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -69,7 +76,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         toolbar = getView(v, R.id.head_toolBar);
         toolbar.setTitle("");
         int statusBarHeight = getStatusBarHeight();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+        if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
             toolbar.setPadding(0, statusBarHeight, 0, 0);
             //toolbar.setMinimumHeight();
         }
