@@ -13,7 +13,7 @@ import com.hy.frame.bean.MenuInfo;
 
 /**
  * 菜单加载器
- * 
+ *
  * @author HeYan
  * @time 2014-7-21 下午3:22:06
  */
@@ -23,9 +23,8 @@ public class MenuUtil {
 
     /**
      * 获取菜单列表
-     * 
-     * @param res
-     *            菜单xml文件的ResourceId
+     *
+     * @param res 菜单xml文件的ResourceId
      * @return
      */
     public static List<MenuInfo> get(Context context, int res) {
@@ -35,6 +34,7 @@ public class MenuUtil {
             MenuInfo menu = null;
             // 判断是否到了文件的结尾
             try {
+                String val;
                 while (xrp.getEventType() != XmlResourceParser.END_DOCUMENT) {
                     // 文件的内容的起始标签开始，注意这里的起始标签是test.xml文件里面<resources>标签下面的第一个标签
                     if (xrp.getEventType() == XmlResourceParser.START_TAG) {
@@ -52,7 +52,7 @@ public class MenuUtil {
                                 } else if (key.contains("title")) {
                                     menu.setTitle(Integer.parseInt(value.replace("@", "")));
                                 } else {
-                                    menu.putValue(key, xrp.getAttributeValue(i));
+                                    menu.putValue(key, value.replace("@", ""));
                                 }
                             }
                             menus.add(menu);

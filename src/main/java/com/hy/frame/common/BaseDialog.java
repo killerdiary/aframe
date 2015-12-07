@@ -25,6 +25,7 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(initLayoutId());
+        initWindow();
         initView();
         initData();
     }
@@ -81,7 +82,7 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
         }
         params.verticalMargin = -0.1f;
         window.setAttributes(params); // 设置生效
-        window.setGravity(gravity);
+        getWindow().setGravity(gravity);
         // getWindow().setGravity(Gravity.LEFT | Gravity.TOP);
         setCanceledOnTouchOutside(false);// 设置触摸对话框意外的地方取消对话框
         setCancelable(false);

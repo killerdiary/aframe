@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -86,6 +88,18 @@ public class NavView extends LinearLayout implements Checkable {
     @Override
     public void toggle() {
         setChecked(!mChecked);
+    }
+
+    public void setText(CharSequence text) {
+        txtKey.setText(text);
+    }
+
+    public void setText(@StringRes int resId) {
+        setText(getContext().getResources().getText(resId));
+    }
+
+    public void setImageResource(@DrawableRes int resId) {
+        icoKey.setImageResource(resId);
     }
 
     /**
