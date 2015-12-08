@@ -12,12 +12,14 @@
     </style>
 
     <style name="CurToolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="contentInsetStart">0dp</item><!-- 设置该属性解决空白部分-->
+        <item name="contentInsetStart">0dp</item>
+        <!-- 设置该属性解决空白部分-->
     </style>
 
     <style name="txtDefaultStyle">
         <item name="android:textColor">@color/txt_black</item>
         <item name="android:textSize">@dimen/txt_default</item>
+
     </style>
 
     <style name="txtBlueStyle">
@@ -28,6 +30,10 @@
     <style name="txtMediumStyle">
         <item name="android:textColor">@color/txt_black</item>
         <item name="android:textSize">@dimen/txt_medium</item>
+    </style>
+    <style name="txtBigStyle">
+        <item name="android:textColor">@color/txt_black</item>
+        <item name="android:textSize">@dimen/txt_big</item>
     </style>
 
     <style name="txtSmallStyle">
