@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Checkable;
@@ -46,6 +47,7 @@ public class NavView extends LinearLayout implements Checkable {
         CharSequence key = a.getText(R.styleable.NavView_navText);
         ColorStateList textColor = a.getColorStateList(R.styleable.NavView_navTextColor);
         ColorStateList drawTint = a.getColorStateList(R.styleable.NavView_navDrawTint);
+        float textSize = a.getDimension(R.styleable.NavView_navTextSize, 0);
         boolean checked = a.getBoolean(R.styleable.NavView_navChecked, false);
         a.recycle();
         icoKey = new TintImageView(getContext());
@@ -64,6 +66,8 @@ public class NavView extends LinearLayout implements Checkable {
         txtKey.setGravity(Gravity.CENTER);
         if (textColor != null)
             txtKey.setTextColor(textColor);
+        if (textSize > 0)
+            txtKey.setTextSize(textSize);
         addView(txtKey, tllp);
         if (checked)
             setChecked(checked);

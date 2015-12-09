@@ -11,6 +11,7 @@
         <attr name="navChecked" format="boolean" />
         <attr name="navText" format="string" />
         <attr name="navTextColor" format="reference|color" />
+        <attr name="navTextSize" format="dimension" />
         <attr name="navDraw" format="reference|color" />
         <attr name="navDrawTint" format="reference|color" />
     </declare-styleable>
