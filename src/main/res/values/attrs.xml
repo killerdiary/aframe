@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="titleTextSize" format="dimension" />
+    <attr name="appBackground" format="reference|color" />
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>
