@@ -272,6 +272,26 @@ public abstract class MyHttpClient {
             fh.get(url, params, contentType, callback);
         else
             fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
+//        Volley.newRequestQueue(context);
+//        RequestQueue queue = Volley.newRequestQueue(context);
+//        //queue.cancelAll();
+//        StringRequest request = new StringRequest("", new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                return super.getParams();
+//            }
+//        };
+//        queue.add(request);
     }
 
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {

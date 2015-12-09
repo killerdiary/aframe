@@ -1,12 +1,14 @@
 package com.hy.frame.common;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -14,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hy.frame.R;
-import com.hy.frame.bean.ThemeInfo;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 
@@ -26,18 +27,27 @@ import com.hy.frame.util.HyUtil;
  * @author HeYan
  * @time 2014-7-18 下午2:53:55
  */
-public abstract class BaseActivity extends Activity implements android.view.View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements android.view.View.OnClickListener, IBaseActivity {
 
     private BaseApplication app;
     protected Context context = this;
     private Class<?> lastAct;// 上一级 Activity
     private String lastSkipAct;// 跳转过来的Activity
+    private Toolbar toolbar;
     private TextView txtTitle, txtMessage;
-    private RelativeLayout rlyHead, rlyMain;
+    private RelativeLayout rlyMain;
     private ImageView imgMessage;
     private View loadView, contentView;
     private ProgressBar proLoading;
-    private ThemeInfo theme;
+    private boolean translucentStatus;
+
+    public boolean isTranslucentStatus() {
+        return translucentStatus;
+    }
+
+    public void setTranslucentStatus(boolean translucentStatus) {
+        this.translucentStatus = translucentStatus;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +61,32 @@ public abstract class BaseActivity extends Activity implements android.view.View
         lastSkipAct = getIntent().getStringExtra(Constant.LAST_ACT);// 获取上一级Activity的Name
         app = (BaseApplication) getApplication();
         app.addActivity(this);
+        int layout = initLayoutId();
+        if (layout < 1)
+            return;
+        setContentView(R.layout.act_base);
+        toolbar = getView(R.id.head_toolBar);
+        toolbar.setTitle("");
+        txtTitle = getView(R.id.head_vTitle);
+        int statusBarHeight = getStatusBarHeight();
+        if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+            toolbar.setPadding(0, statusBarHeight, 0, 0);
+            //toolbar.setMinimumHeight();
+        }
+        setSupportActionBar(toolbar);
+        rlyMain = getView(R.id.rlyMain);
+        contentView = View.inflate(context, layout, null);
+        if (contentView != null)
+            resetLayout(contentView);
     }
 
-    protected void initTheme(ThemeInfo theme) {
-        this.theme = theme;
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     public BaseApplication getApp() {
@@ -70,52 +102,33 @@ public abstract class BaseActivity extends Activity implements android.view.View
         return lastSkipAct;
     }
 
-    /**
-     * 使用统一布局
-     *
-     * @param layout 内容布局(除标题外)
-     */
-    protected void customAct(int layout) {
-        if (layout < 1)
-            return;
-        setContentView(R.layout.base);
-        rlyHead = getView(R.id.rlyHead);
-        txtTitle = getView(R.id.head_vTitle);
-        rlyMain = getView(R.id.rlyMain);
-        if (theme != null) {
-            setTitlebarBackground();
-            txtTitle.setTextColor(theme.getTitleColor());
-            txtTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, HyUtil.floatToSpDimension(theme.getTitleSize(), context));
-            txtTitle.getPaint().setFakeBoldText(theme.isTitleBold());
-            rlyMain.setBackgroundColor(theme.getThemeBackground());
-        }
-        contentView = View.inflate(context, layout, null);
-        if (loadView != null)
-            resetLayout(loadView);
-        else if (contentView != null)
-            resetLayout(contentView);
-    }
 
-    @SuppressLint("NewApi")
-    private void setTitlebarBackground() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            rlyHead.setBackground(theme.getDrawTitleBar());
-        } else {
-            rlyHead.setBackgroundDrawable(theme.getDrawTitleBar());
-        }
+    //    @SuppressLint("NewApi")
+//    private void setTitlebarBackground() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            rlyHead.setBackground(theme.getDrawTitleBar());
+//        } else {
+//            rlyHead.setBackgroundDrawable(theme.getDrawTitleBar());
+//        }
+//    }
+    @Deprecated
+    protected void showNavigation(int drawId) {
+        if (drawId > 0)
+            toolbar.setNavigationIcon(drawId);
+        else
+            toolbar.setNavigationIcon(null);
     }
 
     /**
-     * 使用统一布局,带加载布局<br/>
-     *
-     * @see #customAct(int)
+     * 加载布局
      */
-    protected void customLoadAct(int layout) {
-        loadView = View.inflate(context, R.layout.loading_act, null);
-        proLoading = getView(loadView, R.id.loading_proLoading);
-        imgMessage = getView(loadView, R.id.loading_imgMessage);
-        txtMessage = getView(loadView, R.id.loading_txtMessage);
-        customAct(layout);
+    private void initLoadView() {
+        if (null == loadView) {
+            loadView = View.inflate(context, R.layout.loading_act, null);
+            proLoading = getView(loadView, R.id.loading_proLoading);
+            imgMessage = getView(loadView, R.id.loading_imgMessage);
+            txtMessage = getView(loadView, R.id.loading_txtMessage);
+        }
     }
 
     protected void showLoading() {
@@ -123,13 +136,12 @@ public abstract class BaseActivity extends Activity implements android.view.View
     }
 
     protected void showLoading(String msg) {
-        if (loadView != null) {
-            resetLayout(loadView);
-            proLoading.setVisibility(View.VISIBLE);
-            imgMessage.setVisibility(View.GONE);
-            txtMessage.setVisibility(View.VISIBLE);
-            txtMessage.setText(msg);
-        }
+        initLoadView();
+        resetLayout(loadView);
+        proLoading.setVisibility(View.VISIBLE);
+        imgMessage.setVisibility(View.GONE);
+        txtMessage.setVisibility(View.VISIBLE);
+        txtMessage.setText(msg);
     }
 
     protected void showNetFail() {
@@ -137,14 +149,13 @@ public abstract class BaseActivity extends Activity implements android.view.View
     }
 
     protected void showNetFail(String msg) {
-        if (loadView != null) {
-            resetLayout(loadView);
-            proLoading.setVisibility(View.GONE);
-            imgMessage.setVisibility(View.VISIBLE);
-            txtMessage.setVisibility(View.VISIBLE);
-            txtMessage.setText(msg);
-            imgMessage.setImageResource(R.drawable.hint_net_fail);
-        }
+        initLoadView();
+        resetLayout(loadView);
+        proLoading.setVisibility(View.GONE);
+        imgMessage.setVisibility(View.VISIBLE);
+        txtMessage.setVisibility(View.VISIBLE);
+        txtMessage.setText(msg);
+        imgMessage.setImageResource(R.drawable.img_hint_net_fail);
     }
 
     protected void showNoData() {
@@ -152,21 +163,20 @@ public abstract class BaseActivity extends Activity implements android.view.View
     }
 
     protected void showNoData(String msg) {
-        showNoData(msg, R.drawable.hint_nodata);
+        showNoData(msg, R.drawable.img_hint_nodata);
     }
 
     protected void showNoData(String msg, int drawId) {
-        if (loadView != null) {
-            resetLayout(loadView);
-            proLoading.setVisibility(View.GONE);
-            imgMessage.setVisibility(View.VISIBLE);
-            txtMessage.setVisibility(View.VISIBLE);
-            if (msg == null)
-                txtMessage.setText(R.string.hint_nodata);
-            else
-                txtMessage.setText(msg);
-            imgMessage.setImageResource(drawId);
-        }
+        initLoadView();
+        resetLayout(loadView);
+        proLoading.setVisibility(View.GONE);
+        imgMessage.setVisibility(View.VISIBLE);
+        txtMessage.setVisibility(View.VISIBLE);
+        if (msg == null)
+            txtMessage.setText(R.string.hint_nodata);
+        else
+            txtMessage.setText(msg);
+        imgMessage.setImageResource(drawId);
     }
 
     protected void showCView() {
@@ -189,68 +199,70 @@ public abstract class BaseActivity extends Activity implements android.view.View
      * 设置标题
      */
     @Override
-    public void setTitle(int titleId) {
-        if (txtTitle != null)
-            txtTitle.setText(titleId);
-        else
-            super.setTitle(titleId);
+    public void setTitle(@StringRes int titleId) {
+        setTitle(getString(titleId));
     }
 
-    protected void setHeaderLeft(int left) {
+    protected void hideHeader() {
+        if (toolbar != null)
+            toolbar.setVisibility(View.GONE);
+    }
+
+    protected void setHeaderLeft(@DrawableRes int left) {
         if (left > 0) {
-            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_left, rlyHead);
+            if (toolbar.findViewById(R.id.head_vLeft) == null) {
+                View v = View.inflate(context, R.layout.in_head_left, toolbar);
                 ImageView img = getView(v, R.id.head_vLeft);
                 img.setOnClickListener(this);
                 img.setImageResource(left);
             } else {
-                ImageView img = getView(rlyHead, R.id.head_vLeft);
+                ImageView img = getView(toolbar, R.id.head_vLeft);
                 img.setImageResource(left);
             }
         }
     }
 
-    protected void setHeaderLeftTxt(int left) {
+    protected void setHeaderLeftTxt(@StringRes int left) {
         if (left > 0) {
-            if (rlyHead.findViewById(R.id.head_vLeft) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_tleft, rlyHead);
+            if (toolbar.findViewById(R.id.head_vLeft) == null) {
+                View v = View.inflate(context, R.layout.in_head_tleft, toolbar);
                 TextView txt = getView(v, R.id.head_vLeft);
                 txt.setOnClickListener(this);
                 txt.setText(left);
-                if (theme != null)
-                    txt.setTextColor(theme.getTitleColor());
+                if (txtTitle != null)
+                    txt.setTextColor(txtTitle.getTextColors());
             } else {
-                TextView txt = getView(rlyHead, R.id.head_vLeft);
+                TextView txt = getView(toolbar, R.id.head_vLeft);
                 txt.setText(left);
             }
         }
     }
 
-    protected void setHeaderRight(int right) {
+    protected void setHeaderRight(@DrawableRes int right) {
         if (right > 0) {
-            if (rlyHead.findViewById(R.id.head_vRight) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_right, rlyHead);
+            if (toolbar.findViewById(R.id.head_vRight) == null) {
+                View v = View.inflate(context, R.layout.in_head_right, toolbar);
                 ImageView img = getView(v, R.id.head_vRight);
                 img.setOnClickListener(this);
                 img.setImageResource(right);
             } else {
-                ImageView img = getView(rlyHead, R.id.head_vRight);
+                ImageView img = getView(toolbar, R.id.head_vRight);
                 img.setImageResource(right);
             }
         }
     }
 
-    protected void setHeaderRightTxt(int right) {
+    protected void setHeaderRightTxt(@StringRes int right) {
         if (right > 0) {
-            if (rlyHead.findViewById(R.id.head_vRight) == null) {
-                View v = getLayoutInflater().inflate(R.layout.in_head_tright, rlyHead);
+            if (toolbar.findViewById(R.id.head_vRight) == null) {
+                View v = View.inflate(context, R.layout.in_head_tright, toolbar);
                 TextView txt = getView(v, R.id.head_vRight);
                 txt.setOnClickListener(this);
                 txt.setText(right);
-                if (theme != null)
-                    txt.setTextColor(theme.getTitleColor());
+                if (txtTitle != null)
+                    txt.setTextColor(txtTitle.getTextColors());
             } else {
-                TextView txt = getView(rlyHead, R.id.head_vRight);
+                TextView txt = getView(toolbar, R.id.head_vRight);
                 txt.setText(right);
             }
         }
@@ -262,23 +274,12 @@ public abstract class BaseActivity extends Activity implements android.view.View
      * @return
      */
     protected View getHeader() {
-        return rlyHead;
+        return toolbar;
     }
 
     protected View getHeaderRight() {
-        return rlyHead.findViewById(R.id.head_vRight);
+        return toolbar.findViewById(R.id.head_vRight);
     }
-
-    // /**
-    // * 初始化布局(用customAct方法时使用)
-    // *
-    // * @param layout
-    // */
-    // protected View initLayout(int layout) {
-    // rlyMain.removeAllViews();
-    // return getLayoutInflater().inflate(layout, rlyMain);
-    // }
-    //
 
     /**
      * 初始化布局(用customAct方法时使用)
@@ -294,26 +295,6 @@ public abstract class BaseActivity extends Activity implements android.view.View
     protected View getMainView() {
         return rlyMain;
     }
-
-    //
-    // /**
-    // * 重置布局(用customAct方法时使用)
-    // *
-    // * @param layout
-    // */
-    // protected void addLayout(int layout) {
-    //
-    // getLayoutInflater().inflate(layout, rlyMain);
-    // }
-    //
-    // /**
-    // * 重置布局(用customAct方法时使用)
-    // *
-    // * @param layout
-    // */
-    // protected void addLayout(View v) {
-    // rlyMain.addView(v);
-    // }
 
     protected void setLastAct(Class<?> cls) {
         this.lastAct = cls;
@@ -363,28 +344,22 @@ public abstract class BaseActivity extends Activity implements android.view.View
      */
     protected void startActFinish(Class<?> cls) {
         startAct(cls);
-        super.finish();
+        finish();
     }
 
     protected void actFinish() {
         if (lastAct != null && !lastAct.getSimpleName().equals(lastSkipAct)) {
             startAct(lastAct);
         }
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        if (app != null) {
+            app.remove(this);
+        }
         super.finish();
-    }
-
-    protected void clearText(TextView tv) {
-        tv.setText("");
-    }
-
-    protected void setText(TextView tv, String value) {
-        if (value == null)
-            value = "";
-        tv.setText(value);
-    }
-
-    protected void setText(TextView tv, int value) {
-        tv.setText(value);
     }
 
     protected String getStrings(Integer... ids) {
@@ -397,21 +372,6 @@ public abstract class BaseActivity extends Activity implements android.view.View
         }
         return "";
     }
-
-    /**
-     * 初始化布局
-     */
-    protected abstract void initView();
-
-    /**
-     * 初始化数据
-     */
-    protected abstract void initData();
-
-    /**
-     * 控件点击事件
-     */
-    protected abstract void onViewClick(View v);
 
     @Override
     public void onClick(View v) {
@@ -433,22 +393,19 @@ public abstract class BaseActivity extends Activity implements android.view.View
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(View view, int id) {
-        View v = view.findViewById(id);
-        return (T) v;
+    public <T extends View> T getView(View view, @IdRes int id) {
+        return (T) view.findViewById(id);
     }
 
     /**
      * 获取 控件
      *
-     * @param view 布局
-     * @param id   行布局中某个组件的id
+     * @param id 行布局中某个组件的id
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(int id) {
-        View v = findViewById(id);
-        return (T) v;
+    public <T extends View> T getView(@IdRes int id) {
+        return (T) findViewById(id);
     }
 
     /**
@@ -458,10 +415,14 @@ public abstract class BaseActivity extends Activity implements android.view.View
      * @return
      */
     @SuppressWarnings("unchecked")
-    protected <T extends View> T getViewAndClick(int id) {
-        View v = findViewById(id);
+    protected <T extends View> T getViewAndClick(@IdRes int id) {
+        T v = getView(id);
         v.setOnClickListener(this);
-        return (T) v;
+        return v;
+    }
+
+    protected void setOnClickListener(@IdRes int id) {
+        findViewById(id).setOnClickListener(this);
     }
 
     /**
@@ -470,7 +431,7 @@ public abstract class BaseActivity extends Activity implements android.view.View
      * @param id 行布局中某个组件的id
      * @return
      */
-    public <T extends View> T getCView(int id) {
+    public <T extends View> T getCView(@IdRes int id) {
         return getView(contentView, id);
     }
 
@@ -480,24 +441,23 @@ public abstract class BaseActivity extends Activity implements android.view.View
      * @param id 行布局中某个组件的id
      * @return
      */
-    public <T extends View> T getCViewAndClick(int id) {
-        View v = getView(contentView, id);
+    public <T extends View> T getCViewAndClick(@IdRes int id) {
+        T v = getView(contentView, id);
         v.setOnClickListener(this);
-        return (T) v;
+        return v;
     }
 
     /**
      * 头-左边图标点击
      */
-    protected void onLeftClick() {
+    public void onLeftClick() {
         actFinish();
     }
 
     /**
      * 头-右边图标点击
      */
-    protected void onRightClick() {
-
+    public void onRightClick() {
     }
 
 }

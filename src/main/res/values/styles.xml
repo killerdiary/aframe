@@ -1,13 +1,25 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="Base.Theme.AppCompat">
+        <item name="android:windowTranslucentStatus" tools:targetApi="19">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/theme_bg</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">?attr/background</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="titleTextSize">@dimen/txt_big</item>
+        <item name="toolbarStyle">@style/CurToolbar</item>
+    </style>
+
+    <style name="CurToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <!-- 设置该属性解决空白部分-->
     </style>
 
     <style name="txtDefaultStyle">
         <item name="android:textColor">@color/txt_black</item>
         <item name="android:textSize">@dimen/txt_default</item>
+
     </style>
 
     <style name="txtBlueStyle">
@@ -18,6 +30,10 @@
     <style name="txtMediumStyle">
         <item name="android:textColor">@color/txt_black</item>
         <item name="android:textSize">@dimen/txt_medium</item>
+    </style>
+    <style name="txtBigStyle">
+        <item name="android:textColor">@color/txt_black</item>
+        <item name="android:textSize">@dimen/txt_big</item>
     </style>
 
     <style name="txtSmallStyle">

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="titleTextSize" format="dimension" />
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="TintImageView">
+        <attr name="tint" format="reference|color" />
+    </declare-styleable>
+    <declare-styleable name="NavView">
+        <attr name="navChecked" format="boolean" />
+        <attr name="navText" format="string" />
+        <attr name="navTextColor" format="reference|color" />
+        <attr name="navDraw" format="reference|color" />
+        <attr name="navDrawTint" format="reference|color" />
     </declare-styleable>
 </resources>

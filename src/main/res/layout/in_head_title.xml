@@ -8,6 +8,6 @@
     android:layout_marginRight="@dimen/header_func_width"
     android:singleLine="true"
     android:text="@string/app_name"
-    android:textColor="@color/white"
-    android:textSize="@dimen/txt_big"
+    android:textColor="?attr/titleTextColor"
+    android:textSize="?attr/titleTextSize"
     android:textStyle="normal" />
