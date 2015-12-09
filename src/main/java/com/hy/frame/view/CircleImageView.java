@@ -27,6 +27,13 @@ public class CircleImageView extends ImageView {
         super(context, attrs, defStyle);
         init();
     }
+    
+    private void init() {
+        maskPaint.setAntiAlias(true);
+        maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        zonePaint.setAntiAlias(true);
+        zonePaint.setColor(Color.WHITE);
+    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -40,13 +47,6 @@ public class CircleImageView extends ImageView {
         canvas.saveLayer(roundRect, maskPaint, Canvas.ALL_SAVE_FLAG);
         super.draw(canvas);
         canvas.restore();
-    }
-
-    private void init() {
-        maskPaint.setAntiAlias(true);
-        maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        zonePaint.setAntiAlias(true);
-        zonePaint.setColor(Color.WHITE);
     }
 
     @Override
