@@ -9,7 +9,7 @@
         android:id="@+id/head_toolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/appTitleBarBg"
         android:fitsSystemWindows="false"
         android:minHeight="?attr/actionBarSize">
 

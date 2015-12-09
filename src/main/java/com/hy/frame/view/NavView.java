@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hy.frame.R;
+import com.hy.frame.util.HyUtil;
 
 /**
  * 主页 Nav
@@ -67,10 +68,9 @@ public class NavView extends LinearLayout implements Checkable {
         if (textColor != null)
             txtKey.setTextColor(textColor);
         if (textSize > 0)
-            txtKey.setTextSize(textSize);
+            txtKey.setTextSize(HyUtil.floatToSpDimension(textSize, context));
         addView(txtKey, tllp);
-        if (checked)
-            setChecked(checked);
+        setChecked(checked);
     }
 
     @Override

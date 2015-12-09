@@ -6,6 +6,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="appBackground">@color/theme_bg</item>
+        <item name="appTitleBarBg">@color/theme</item>
         <item name="android:windowBackground">?attr/appBackground</item>
         <item name="titleTextColor">@color/white</item>
         <item name="titleTextSize">@dimen/txt_big</item>

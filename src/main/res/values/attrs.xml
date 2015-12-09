@@ -2,6 +2,7 @@
 <resources>
     <attr name="titleTextSize" format="dimension" />
     <attr name="appBackground" format="reference|color" />
+    <attr name="appTitleBarBg" format="reference|color" />
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>
