@@ -8,6 +8,7 @@
     android:layout_gravity="right"
     android:background="@drawable/default_selector"
     android:gravity="center"
+    android:textColor="?attr/appTitleColor"
     android:minWidth="?attr/actionBarSize"
     android:padding="@dimen/padding_default"
     android:text="@string/confirm" />

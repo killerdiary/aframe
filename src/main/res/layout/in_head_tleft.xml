@@ -9,5 +9,6 @@
     android:drawableLeft="@drawable/btn_back"
     android:gravity="center"
     android:layout_gravity="left"
+    android:textColor="?attr/appTitleColor"
     android:padding="@dimen/padding_default"
     android:text="@string/back" />

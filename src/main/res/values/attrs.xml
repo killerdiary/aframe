@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="titleTextSize" format="dimension" />
     <attr name="appBackground" format="reference|color" />
+    <attr name="appThemeColor" format="reference|color" />
+    <attr name="appTitleSize" format="dimension" />
+    <attr name="appTitleColor" format="reference|color" />
     <attr name="appTitleBarBg" format="reference|color" />
+    <attr name="appLoadingDraw" format="reference" />
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>
