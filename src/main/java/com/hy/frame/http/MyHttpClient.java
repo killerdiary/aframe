@@ -379,13 +379,18 @@ public abstract class MyHttpClient {
             listener.onRequestSuccess(result);
     }
 
+    public void setLoadingDialog(LoadingDialog loadingDialog) {
+        this.loadingDialog = loadingDialog;
+        //this.showDialog = true;
+    }
+
     /**
      * 显示加载框
      */
     protected void showLoading() {
         if (showDialog) {
             if (loadingDialog == null) {
-                loadingDialog = new LoadingDialog(context);
+                loadingDialog = new LoadingDialog(context,null);
             }
             loadingDialog.show();
         }
@@ -406,8 +411,7 @@ public abstract class MyHttpClient {
         }
         showDialog = true;
         if (loadingDialog == null) {
-            loadingDialog = new LoadingDialog(context);
-            loadingDialog.init(msg);
+            loadingDialog = new LoadingDialog(context, msg);
         } else {
             loadingDialog.updateMsg(msg);
         }

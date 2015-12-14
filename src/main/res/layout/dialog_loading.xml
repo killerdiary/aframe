@@ -12,10 +12,11 @@
     android:paddingTop="10dip" >
 
     <ProgressBar
+        android:id="@+id/loading_proLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="false"
-        android:indeterminateDrawable="@drawable/rotate_loading_circle" />
+        android:indeterminateDrawable="?attr/appLoadingDraw" />
 
     <TextView
         android:id="@+id/txtLoadMsg"
