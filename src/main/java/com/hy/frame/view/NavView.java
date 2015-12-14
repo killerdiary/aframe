@@ -22,9 +22,8 @@ import com.hy.frame.util.HyUtil;
 
 /**
  * 主页 Nav
- *
- * @author HeYan
- * @time 2015-8-17 下午1:31:27
+ * author HeYan
+ * time 2015/12/14 14:14
  */
 public class NavView extends FrameLayout implements Checkable {
     private LinearLayout llyContainer;
@@ -43,9 +42,6 @@ public class NavView extends FrameLayout implements Checkable {
 
     private void init(Context context, AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.NavView, 0, 0);
-        llyContainer = new LinearLayout(context);
-        llyContainer.setOrientation(LinearLayout.VERTICAL);
-        llyContainer.setGravity(Gravity.CENTER);
         if (a == null)
             return;
         Drawable draw = a.getDrawable(R.styleable.NavView_navDraw);
@@ -56,44 +52,42 @@ public class NavView extends FrameLayout implements Checkable {
         float textSize = a.getDimension(R.styleable.NavView_navTextSize, 0);
         boolean checked = a.getBoolean(R.styleable.NavView_navChecked, false);
         boolean horizontal = a.getBoolean(R.styleable.NavView_navHorizontal, false);
+        boolean textRight = a.getBoolean(R.styleable.NavView_navTextRight, false);
         a.recycle();
-        if (horizontal) {
-            llyContainer.setOrientation(LinearLayout.HORIZONTAL);
-            llyContainer.setGravity(Gravity.CENTER_VERTICAL);
-        }
+        llyContainer = new LinearLayout(context);
+        llyContainer.setOrientation(horizontal ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
+        llyContainer.setGravity(Gravity.CENTER);
         icoKey = new TintImageView(context);
-        LinearLayout.LayoutParams illp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         if (draw != null)
             icoKey.setImageDrawable(draw);
         if (drawTint != null)
             icoKey.setColorFilter(drawTint);
-        llyContainer.addView(icoKey, illp);
-
+        llyContainer.addView(icoKey, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         txtKey = new TextView(context);
-        LinearLayout.LayoutParams tllp;
-        if (horizontal) {
-            tllp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            tllp.leftMargin = getResources().getDimensionPixelSize(R.dimen.margin_normal);
-            txtKey.setGravity(Gravity.CENTER_VERTICAL);
-        } else {
-            tllp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            tllp.topMargin = getResources().getDimensionPixelSize(R.dimen.padding_normal);
-            txtKey.setGravity(Gravity.CENTER);
-        }
         if (key != null)
             txtKey.setText(key);
-        //txtKey.setGravity(Gravity.CENTER);
         if (textColor != null)
             txtKey.setTextColor(textColor);
         if (textSize > 0)
             txtKey.setTextSize(HyUtil.floatToSpDimension(textSize, context));
-        llyContainer.addView(txtKey, tllp);
-        addView(llyContainer, new LayoutParams(horizontal ? LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT, horizontal ? LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
+        if (horizontal && textRight) {
+            LayoutParams txtFlp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            txtFlp.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
+            addView(txtKey, txtFlp);
+        } else {
+            LinearLayout.LayoutParams txtLlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            if (horizontal)
+                txtLlp.leftMargin = getResources().getDimensionPixelSize(R.dimen.margin_normal);
+            else
+                txtLlp.topMargin = getResources().getDimensionPixelSize(R.dimen.padding_normal);
+            txtKey.setGravity(Gravity.CENTER);
+            llyContainer.addView(txtKey, txtLlp);
+        }
+        addView(llyContainer, new LayoutParams(horizontal ? LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT, horizontal ? LayoutParams.MATCH_PARENT : LayoutParams.MATCH_PARENT));
         if (horizontal && drawRight != null) {
             ImageView imgRight = new ImageView(getContext());
             LayoutParams rllp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            if (draw != null)
-                imgRight.setImageDrawable(drawRight);
+            imgRight.setImageDrawable(drawRight);
             rllp.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
             addView(imgRight, rllp);
         }
