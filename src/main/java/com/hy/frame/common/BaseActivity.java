@@ -425,6 +425,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         findViewById(id).setOnClickListener(this);
     }
 
+    protected void setOnClickListener(View v, @IdRes int id) {
+        v.findViewById(id).setOnClickListener(this);
+    }
+
     /**
      * 获取当前布局中的控件
      *

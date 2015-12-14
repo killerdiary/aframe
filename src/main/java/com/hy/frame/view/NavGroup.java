@@ -217,6 +217,20 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        onChildClick(v);
+    }
+
+    public void setCheckedChildByPosition(int position) {
+        View v = getChildAt(position);
+        onChildClick(v);
+    }
+
+    public void setCheckedChildById(int id) {
+        View v = findViewById(id);
+        onChildClick(v);
+    }
+
+    private void onChildClick(View v) {
         if (v.getId() != View.NO_ID && v instanceof NavView) {
             if (!((NavView) v).isChecked()) {
                 int size = getChildCount();
@@ -229,6 +243,5 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
                 check(v.getId());
             }
         }
-
     }
 }
