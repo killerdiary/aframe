@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/llyLoading"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_dialog_bg"
     android:gravity="center"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingBottom="10dip"
     android:paddingLeft="20dip"
     android:paddingRight="20dip"
@@ -13,8 +13,8 @@
 
     <ProgressBar
         android:id="@+id/loading_proLoading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
         android:indeterminate="false"
         android:indeterminateDrawable="?attr/appLoadingDraw" />
 
@@ -23,7 +23,7 @@
         style="@style/txtDefaultStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
+        android:layout_marginTop="@dimen/margin_normal"
         android:text="加载中..." />
 
 </LinearLayout>
