@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 
+import com.hy.frame.R;
+
 /**
  * 倒计时按钮
- * 
+ *
  * @author HeYan
  * @time 2015年1月6日 下午5:11:46
  */
@@ -42,12 +44,12 @@ public class TimerButton extends Button implements Runnable {
      */
     public void end() {
         this.status = UPDATE_END;
-        this.setText("重新发送");
+        this.setText(R.string.timer_send_re);
         this.setClickable(true);
     }
 
     private void update(int time) {
-        this.setText(time + "秒");
+        this.setText(String.format(getHint().toString(), time));
         // this.setText(time + "秒后重新获取");
     }
 
@@ -55,15 +57,14 @@ public class TimerButton extends Button implements Runnable {
      * 准备倒计时
      */
     public void prepare() {
-        this.setText("发送中...");
+        this.setText(R.string.timer_sending);
         this.setClickable(false);
     }
 
     /**
      * 开启倒计时
-     * 
-     * @param interval
-     *            倒计时时间(秒)
+     *
+     * @param interval 倒计时时间(秒)
      */
     public void start(int interval) {
         if (status == UPDATE_DOING)

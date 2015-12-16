@@ -78,6 +78,10 @@ public abstract class MyHttpClient {
         this.gson = new Gson();
     }
 
+    public Context getContext() {
+        return context;
+    }
+
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
