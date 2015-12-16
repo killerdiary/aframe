@@ -305,7 +305,7 @@ public class MyWheelView extends ScrollView {
     public void setBackgroundDrawable(Drawable background) {
 
         if (viewWidth == 0) {
-            viewWidth = ((Activity) context).getWindowManager().getDefaultDisplay().getWidth();
+            viewWidth = (int) context.getResources().getDisplayMetrics().xdpi;
             Log.d(TAG, "viewWidth: " + viewWidth);
         }
 
