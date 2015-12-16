@@ -64,20 +64,26 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         int layout = initLayoutId();
         if (layout < 1)
             return;
-        setContentView(R.layout.act_base);
+        setContentView(layout);
         toolbar = getView(R.id.head_toolBar);
+        boolean custumHeader = true;
+        if (toolbar == null) {
+            custumHeader = false;
+            setContentView(R.layout.act_base);
+            toolbar = getView(R.id.head_toolBar);
+        }
         toolbar.setTitle("");
         txtTitle = getView(R.id.head_vTitle);
         int statusBarHeight = getStatusBarHeight();
         if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
             toolbar.setPadding(0, statusBarHeight, 0, 0);
-            //toolbar.setMinimumHeight();
         }
         setSupportActionBar(toolbar);
         rlyMain = getView(R.id.rlyMain);
-        contentView = View.inflate(context, layout, null);
-        if (contentView != null)
-            resetLayout(contentView);
+        if (!custumHeader) {
+            contentView = View.inflate(context, layout, null);
+            if (contentView != null) resetLayout(contentView);
+        }
     }
 
     public int getStatusBarHeight() {

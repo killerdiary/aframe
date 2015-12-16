@@ -5,27 +5,7 @@
     android:background="?attr/appBackground"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/head_toolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/appTitleBarBg"
-        android:fitsSystemWindows="false"
-        android:minHeight="?attr/actionBarSize">
-
-        <TextView
-            android:id="@+id/head_vTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/app_name"
-            android:textColor="?attr/appTitleColor"
-            android:textSize="?attr/appTitleSize"
-            android:textStyle="normal" />
-    </android.support.v7.widget.Toolbar>
-
+    <include layout="@layout/in_header" />
 
     <RelativeLayout
         android:id="@+id/rlyMain"

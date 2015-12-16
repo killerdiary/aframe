@@ -42,15 +42,6 @@
     <color name="game_sort_bg">#3D9798</color>
     <color name="game_sort_slider">#FEB859</color>
     <color name="game_item_gray">#F2F2F2</color>
-    <color name="viewfinder_frame">#ff000000</color>
-    <color name="viewfinder_laser">#ff01abe8</color>
-    <color name="viewfinder_mask">#60000000</color>
-    <color name="possible_result_points">#c0ffff00</color>
-    <color name="result_image_border">#ffffffff</color>
-    <color name="result_minor_text">#ffc0c0c0</color>
-    <color name="result_points">#c000ff00</color>
-    <color name="result_text">#ffffffff</color>
-    <color name="result_view">#b0000000</color>
     <color name="divider_gray">#AAacacac</color>
 
 </resources>

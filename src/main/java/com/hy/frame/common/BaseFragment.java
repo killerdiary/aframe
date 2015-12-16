@@ -72,17 +72,26 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         context = getActivity();
         app = (BaseApplication) getActivity().getApplication();
         // custom = true;
-        View v = inflater.inflate(R.layout.act_base, container, false);
+        boolean custumHeader = true;
+        int layout = initLayoutId();
+        View v = null;
+        if (layout > 0) {
+            v = inflater.inflate(layout, container, false);
+            toolbar = getView(v, R.id.head_toolBar);
+        }
+        if (toolbar == null) {
+            custumHeader = false;
+            v = inflater.inflate(R.layout.act_base, container, false);
+            toolbar = getView(v,R.id.head_toolBar);
+        }
         toolbar = getView(v, R.id.head_toolBar);
         toolbar.setTitle("");
         int statusBarHeight = getStatusBarHeight();
         if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
             toolbar.setPadding(0, statusBarHeight, 0, 0);
-            //toolbar.setMinimumHeight();
         }
         txtTitle = getView(v, R.id.head_vTitle);
-        int layout = initLayoutId();
-        if (layout > 0) {
+        if (!custumHeader) {
             rlyMain = getView(v, R.id.rlyMain);
             contentView = View.inflate(context, layout, null);
             if (contentView != null)
