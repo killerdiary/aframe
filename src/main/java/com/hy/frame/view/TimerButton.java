@@ -45,7 +45,7 @@ public class TimerButton extends Button implements Runnable {
     public void end() {
         this.status = UPDATE_END;
         this.setText(R.string.timer_send_re);
-        this.setClickable(true);
+        this.setEnabled(true);
     }
 
     private void update(int time) {
@@ -58,7 +58,7 @@ public class TimerButton extends Button implements Runnable {
      */
     public void prepare() {
         this.setText(R.string.timer_sending);
-        this.setClickable(false);
+        this.setEnabled(false);
     }
 
     /**
@@ -70,7 +70,7 @@ public class TimerButton extends Button implements Runnable {
         if (status == UPDATE_DOING)
             return;
         this.status = UPDATE_DOING;
-        this.setClickable(false);
+        this.setEnabled(false);
         this.timer = interval;
         run();
     }
