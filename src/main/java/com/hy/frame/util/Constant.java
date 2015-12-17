@@ -144,26 +144,7 @@ public class Constant {
      * 每页的条数
      */
     public static final int PAGE_SIZE = 10;
-    /**
-     * 主页Footer隐藏
-     */
-    public static final int MAIN_FOOTER_HIDE = 100;
-    /**
-     * 主页跳转
-     */
-    public static final int MAIN_CHANGE_PAGER = 104;
-    /**
-     * 主页Footer显示
-     */
-    public static final int MAIN_FOOTER_SHOW = 101;
-    /**
-     * 主页Footer显示
-     */
-    public static final int MAIN_FOOTER_DISMISS = 102;
-    /**
-     * 隐藏子页面Footer
-     */
-    public static final int CHILD_FOOTER_HIDE = 103;
+
     /**
      * 上次记录的手机号
      */

@@ -13,6 +13,7 @@
     <string name="API_FLAG_CON_EXCEPTION">服务器连接异常，请重试</string>
     <string name="API_FLAG_CON_BROKEN">服务器连接中断，请重试</string>
     <string name="API_FLAG_CON_TIMEOUT">服务器连接超时，请重试</string>
+    <string name="API_FLAG_CON_UNKNOWNHOSTEXCEPTION">服务器解析异常，请重试</string>
     <string name="API_FLAG_NO_RESPONSE">服务器没有数据返回，请重试</string>
     <string name="API_FLAG_DATA_ERROR">服务器返回数据错误，请重试</string>
     <string name="API_FLAG_ANALYSIS_ERROR">服务器返回数据解析错误，请重试</string>

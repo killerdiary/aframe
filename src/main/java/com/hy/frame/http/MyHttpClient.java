@@ -256,10 +256,13 @@ public abstract class MyHttpClient {
                 MyLog.e("onFailure | " + t.toString() + " | " + errorNo + " | " + strMsg);
                 int code = R.string.API_FLAG_CON_EXCEPTION;
                 if (strMsg != null) {
-                    if (strMsg.contains("Broken pipe"))
+                    String thr = strMsg.toLowerCase(Locale.CHINA);
+                    if (strMsg.contains("broken pipe"))
                         code = R.string.API_FLAG_CON_BROKEN;
                     else if (strMsg.contains("timed out"))
                         code = R.string.API_FLAG_CON_TIMEOUT;
+                    else if (strMsg.contains("unknownhostexception"))
+                        code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
                 } else {
                     String thr = t.toString().toLowerCase(Locale.CHINA);
                     if (thr.contains("brokenpipe"))

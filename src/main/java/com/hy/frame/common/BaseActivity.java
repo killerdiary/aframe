@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.hy.frame.R;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
+import com.hy.frame.util.MyLog;
 
 ;
 
@@ -59,7 +60,12 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 
     private void init() {
         lastSkipAct = getIntent().getStringExtra(Constant.LAST_ACT);// 获取上一级Activity的Name
-        app = (BaseApplication) getApplication();
+        try {
+            app = (BaseApplication) getApplication();
+        } catch (Exception e) {
+            MyLog.e(getClass(), "BaseApplication Exception");
+            return;
+        }
         app.addActivity(this);
         int layout = initLayoutId();
         if (layout < 1)
@@ -339,7 +345,8 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      * @param cls
      */
     protected void startActExit(Intent intent, Class<?> cls) {
-        app.clear();
+        if (app != null)
+            app.clear();
         startAct(intent, cls);
     }
 
