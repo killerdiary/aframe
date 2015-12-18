@@ -60,7 +60,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         if (!init) {
             init = true;
             initView();
-            initView();
             initData();
         }
     }
