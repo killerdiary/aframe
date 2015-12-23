@@ -178,6 +178,15 @@ public abstract class MyHttpClient {
         return sb.toString();
     }
 
+    /**
+     * 请求方法
+     *
+     * @param requestCode 请求码
+     * @param url         请求地址
+     * @param params      请求参数
+     * @param cls         类<泛型> (例如：Version.class) 如果为空则直接返回json字符串
+     * @param list        结果是否是List
+     */
     public <T> void post(int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
         request(false, requestCode, url, params, cls, list);
     }
@@ -185,6 +194,7 @@ public abstract class MyHttpClient {
     /**
      * 请求方法
      *
+     * @param isGet 是否是GET请求
      * @param requestCode 请求码
      * @param url         请求地址
      * @param params      请求参数

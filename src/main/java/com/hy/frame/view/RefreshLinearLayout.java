@@ -67,7 +67,7 @@ public class RefreshLinearLayout extends LinearLayout {
     private void init(Context context) {
         setOrientation(VERTICAL);
         scroller = new Scroller(context);
-        headView = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.lv_header, null);
+        headView = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.in_lv_header, null);
         imgHeadArrow = HyUtil.getView(headView, R.id.lv_imgHeadArrow);
         proHead = HyUtil.getView(headView, R.id.lv_proHead);
         txtHeadHint = HyUtil.getView(headView, R.id.lv_txtHeadHint);

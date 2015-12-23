@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/llyLoading"
-    android:layout_width="match_parent"
+    android:id="@+id/loading_llyLoading"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_dialog_bg"
     android:gravity="center"
-    android:orientation="horizontal"
+    android:minHeight="100dip"
+    android:minWidth="160dip"
+    android:orientation="vertical"
     android:paddingBottom="10dip"
     android:paddingLeft="20dip"
     android:paddingRight="20dip"
-    android:paddingTop="10dip" >
+    android:paddingTop="10dip">
 
     <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/loading_proLoad"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
         android:indeterminate="false"
-        android:indeterminateDrawable="@drawable/rotate_loading_circle" />
+        android:indeterminateDrawable="?attr/appLoadingDraw" />
 
     <TextView
-        android:id="@+id/txtLoadMsg"
+        android:id="@+id/loading_txtLoadMsg"
         style="@style/txtDefaultStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
+        android:layout_marginTop="@dimen/margin_normal"
         android:text="加载中..." />
 
 </LinearLayout>

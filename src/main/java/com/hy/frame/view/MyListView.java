@@ -111,7 +111,7 @@ public class MyListView extends ListView implements OnScrollListener {
     }
 
     private void initHeader() {
-        headView = (LinearLayout) inflater.inflate(R.layout.lv_header, null);
+        headView = (LinearLayout) inflater.inflate(R.layout.in_lv_header, null);
         imgHeadArrow = HyUtil.getView(headView, R.id.lv_imgHeadArrow);
         proHead = HyUtil.getView(headView, R.id.lv_proHead);
         txtHeadHint = HyUtil.getView(headView, R.id.lv_txtHeadHint);
@@ -125,7 +125,7 @@ public class MyListView extends ListView implements OnScrollListener {
     }
 
     private void initFooter() {
-        footView = (LinearLayout) inflater.inflate(R.layout.lv_footer, null);
+        footView = (LinearLayout) inflater.inflate(R.layout.in_lv_footer, null);
         imgFootArrow = HyUtil.getView(footView, R.id.lv_imgFootArrow);
         proFoot = HyUtil.getView(footView, R.id.lv_proFoot);
         txtFootHint = HyUtil.getView(footView, R.id.lv_txtFootHint);
