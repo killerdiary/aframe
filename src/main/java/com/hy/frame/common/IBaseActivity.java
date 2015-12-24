@@ -10,7 +10,7 @@ import android.view.View;
  */
 public abstract interface IBaseActivity {
     /**
-     * 初始化布局
+     * 初始化布局 可空,可以包含 Toolbar 否则 使用默认的 Toolbar
      */
     @LayoutRes
     int initLayoutId();

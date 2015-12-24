@@ -9,23 +9,22 @@ import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hy.frame.R;
+import com.hy.frame.bean.LoadCache;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
-
-;
+import com.hy.frame.util.MyLog;
 
 /**
  * 父类Activity
- *
- * @author HeYan
- * @time 2014-7-18 下午2:53:55
+ * author HeYan
+ * time 2015/12/23 16:40
  */
 public abstract class BaseActivity extends AppCompatActivity implements android.view.View.OnClickListener, IBaseActivity {
 
@@ -34,16 +33,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     private Class<?> lastAct;// 上一级 Activity
     private String lastSkipAct;// 跳转过来的Activity
     private Toolbar toolbar;
-    private TextView txtTitle, txtMessage;
-    private RelativeLayout rlyMain;
-    private ImageView imgMessage;
-    private View loadView, contentView;
-    private ProgressBar proLoading;
+    private TextView txtTitle;
+    private FrameLayout flyMain;
+    private LoadCache loadCache;
     private boolean translucentStatus;
-
-    public boolean isTranslucentStatus() {
-        return translucentStatus;
-    }
 
     public void setTranslucentStatus(boolean translucentStatus) {
         this.translucentStatus = translucentStatus;
@@ -59,11 +52,16 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 
     private void init() {
         lastSkipAct = getIntent().getStringExtra(Constant.LAST_ACT);// 获取上一级Activity的Name
-        app = (BaseApplication) getApplication();
+        try {
+            app = (BaseApplication) getApplication();
+        } catch (Exception e) {
+            MyLog.e(getClass(), "BaseApplication Exception");
+            System.exit(0);
+            return;
+        }
         app.addActivity(this);
         int layout = initLayoutId();
-        if (layout < 1)
-            return;
+        if (layout < 1) return;
         setContentView(layout);
         toolbar = getView(R.id.head_toolBar);
         boolean custumHeader = true;
@@ -73,16 +71,15 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             toolbar = getView(R.id.head_toolBar);
         }
         toolbar.setTitle("");
-        txtTitle = getView(R.id.head_vTitle);
         int statusBarHeight = getStatusBarHeight();
         if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
             toolbar.setPadding(0, statusBarHeight, 0, 0);
         }
         setSupportActionBar(toolbar);
-        rlyMain = getView(R.id.rlyMain);
-        if (!custumHeader) {
-            contentView = View.inflate(context, layout, null);
-            if (contentView != null) resetLayout(contentView);
+        txtTitle = getView(R.id.head_vTitle);
+        flyMain = getView(R.id.base_flyMain);
+        if (!custumHeader && flyMain != null) {
+            View.inflate(context, layout, flyMain);
         }
     }
 
@@ -101,15 +98,13 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 
     /**
      * 获取上一级的Activity名
-     *
-     * @return
      */
     public String getLastSkipAct() {
         return lastSkipAct;
     }
 
 
-    //    @SuppressLint("NewApi")
+//    @SuppressLint("NewApi")
 //    private void setTitlebarBackground() {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 //            rlyHead.setBackground(theme.getDrawTitleBar());
@@ -117,6 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 //            rlyHead.setBackgroundDrawable(theme.getDrawTitleBar());
 //        }
 //    }
+
     @Deprecated
     protected void showNavigation(int drawId) {
         if (drawId > 0)
@@ -128,13 +124,27 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     /**
      * 加载布局
      */
-    private void initLoadView() {
-        if (null == loadView) {
-            loadView = View.inflate(context, R.layout.loading_act, null);
-            proLoading = getView(loadView, R.id.loading_proLoading);
-            imgMessage = getView(loadView, R.id.loading_imgMessage);
-            txtMessage = getView(loadView, R.id.loading_txtMessage);
+    private boolean initLoadView() {
+        if (flyMain == null) {
+            MyLog.e(getClass(), "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!");
+            return false;
         }
+        if (loadCache != null) return true;
+        View loadView = getView(R.id.base_llyLoad);
+        //You need to add the layout
+        if (loadView == null) {
+            if (flyMain.getChildCount() > 0) {
+                loadView = View.inflate(context, R.layout.in_loading, null);
+                flyMain.addView(loadView, 0);
+            } else
+                View.inflate(context, R.layout.in_loading, flyMain);
+        }
+        loadCache = new LoadCache();
+        loadCache.llyLoad = getView(R.id.base_llyLoad);
+        loadCache.proLoading = getView(R.id.base_proLoading);
+        loadCache.imgMessage = getView(R.id.base_imgMessage);
+        loadCache.txtMessage = getView(R.id.base_txtMessage);
+        return true;
     }
 
     protected void showLoading() {
@@ -142,26 +152,14 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     protected void showLoading(String msg) {
-        initLoadView();
-        resetLayout(loadView);
-        proLoading.setVisibility(View.VISIBLE);
-        imgMessage.setVisibility(View.GONE);
-        txtMessage.setVisibility(View.VISIBLE);
-        txtMessage.setText(msg);
-    }
-
-    protected void showNetFail() {
-        showNetFail(getString(R.string.hint_net_fail));
-    }
-
-    protected void showNetFail(String msg) {
-        initLoadView();
-        resetLayout(loadView);
-        proLoading.setVisibility(View.GONE);
-        imgMessage.setVisibility(View.VISIBLE);
-        txtMessage.setVisibility(View.VISIBLE);
-        txtMessage.setText(msg);
-        imgMessage.setImageResource(R.drawable.img_hint_net_fail);
+        if (initLoadView()) {
+            int count = flyMain.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View v = flyMain.getChildAt(i);
+                if (i > 0) v.setVisibility(View.GONE);
+            }
+            loadCache.showLoading(msg);
+        }
     }
 
     protected void showNoData() {
@@ -172,22 +170,38 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         showNoData(msg, R.drawable.img_hint_nodata);
     }
 
+    //R.drawable.img_hint_net_fail
     protected void showNoData(String msg, int drawId) {
-        initLoadView();
-        resetLayout(loadView);
-        proLoading.setVisibility(View.GONE);
-        imgMessage.setVisibility(View.VISIBLE);
-        txtMessage.setVisibility(View.VISIBLE);
-        if (msg == null)
-            txtMessage.setText(R.string.hint_nodata);
-        else
-            txtMessage.setText(msg);
-        imgMessage.setImageResource(drawId);
+        if (initLoadView()) {
+            int count = flyMain.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View v = flyMain.getChildAt(i);
+                if (i > 0) v.setVisibility(View.GONE);
+            }
+            loadCache.showNoData(msg, drawId);
+        }
     }
 
+    /**
+     * 显示内容View
+     */
     protected void showCView() {
-        if (contentView != null)
-            resetLayout(contentView);
+        if (initLoadView()) {
+            int count = flyMain.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View v = flyMain.getChildAt(i);
+                if (i == 0) v.setVisibility(View.GONE);
+                else v.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    /**
+     * 设置标题
+     */
+    @Override
+    public void setTitle(@StringRes int titleId) {
+        setTitle(getString(titleId));
     }
 
     /**
@@ -201,17 +215,8 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             super.setTitle(title);
     }
 
-    /**
-     * 设置标题
-     */
-    @Override
-    public void setTitle(@StringRes int titleId) {
-        setTitle(getString(titleId));
-    }
-
     protected void hideHeader() {
-        if (toolbar != null)
-            toolbar.setVisibility(View.GONE);
+        if (toolbar != null) toolbar.setVisibility(View.GONE);
     }
 
     protected void setHeaderLeft(@DrawableRes int left) {
@@ -276,8 +281,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 
     /**
      * 头部
-     *
-     * @return
      */
     protected View getHeader() {
         return toolbar;
@@ -287,19 +290,8 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         return toolbar.findViewById(R.id.head_vRight);
     }
 
-    /**
-     * 初始化布局(用customAct方法时使用)
-     *
-     * @param v
-     */
-    private void resetLayout(View v) {
-        rlyMain.removeAllViews();
-        RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        rlyMain.addView(v, rlp);
-    }
-
     protected View getMainView() {
-        return rlyMain;
+        return flyMain;
     }
 
     protected void setLastAct(Class<?> cls) {
@@ -307,7 +299,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     /**
-     * 启动Activity
+     * @see #startAct(Intent, Class)
      */
     protected void startAct(Class<?> cls) {
         startAct(null, cls);
@@ -325,47 +317,28 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     /**
-     * 启动Activity
-     *
-     * @param cls
+     * @see #startActClear(Intent, Class)
      */
-    protected void startActExit(Class<?> cls) {
-        startActExit(null, cls);
+    @Deprecated
+    protected void startActClear(Class<?> cls) {
+        startActClear(null, cls);
     }
 
     /**
-     * 启动Activity
-     *
-     * @param cls
+     * 启动Activity，清空栈 并添加到栈顶，慎用
      */
-    protected void startActExit(Intent intent, Class<?> cls) {
-        app.clear();
+    @Deprecated
+    protected void startActClear(Intent intent, Class<?> cls) {
+        if (app != null) app.clear();
         startAct(intent, cls);
-    }
-
-    /**
-     * 启动Activity并关闭当前Activity
-     *
-     * @param cls
-     */
-    protected void startActFinish(Class<?> cls) {
-        startAct(cls);
-        finish();
-    }
-
-    protected void actFinish() {
-        if (lastAct != null && !lastAct.getSimpleName().equals(lastSkipAct)) {
-            startAct(lastAct);
-        }
-        finish();
     }
 
     @Override
     public void finish() {
-        if (app != null) {
-            app.remove(this);
-        }
-        super.finish();
+        if (app != null) app.remove(this);
+        if (lastAct != null && TextUtils.equals(lastAct.getSimpleName(), lastSkipAct)) {
+            startActClear(lastAct);
+        } else super.finish();
     }
 
     protected String getStrings(Integer... ids) {
@@ -394,20 +367,18 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     /**
      * 获取 控件
      *
-     * @param view 布局
-     * @param id   行布局中某个组件的id
-     * @return
+     * @param v  布局
+     * @param id 行布局中某个组件的id
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(View view, @IdRes int id) {
-        return (T) view.findViewById(id);
+    public <T extends View> T getView(View v, @IdRes int id) {
+        return (T) v.findViewById(id);
     }
 
     /**
      * 获取 控件
      *
      * @param id 行布局中某个组件的id
-     * @return
      */
     @SuppressWarnings("unchecked")
     public <T extends View> T getView(@IdRes int id) {
@@ -417,12 +388,23 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     /**
      * 获取并绑定点击
      *
-     * @param id
-     * @return
+     * @param id id
      */
     @SuppressWarnings("unchecked")
     protected <T extends View> T getViewAndClick(@IdRes int id) {
         T v = getView(id);
+        v.setOnClickListener(this);
+        return v;
+    }
+
+    /**
+     * 获取并绑定点击
+     *
+     * @param id id
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends View> T getViewAndClick(View view, @IdRes int id) {
+        T v = getView(view, id);
         v.setOnClickListener(this);
         return v;
     }
@@ -436,32 +418,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     /**
-     * 获取当前布局中的控件
-     *
-     * @param id 行布局中某个组件的id
-     * @return
-     */
-    public <T extends View> T getCView(@IdRes int id) {
-        return getView(contentView, id);
-    }
-
-    /**
-     * 获取当前布局中的控件
-     *
-     * @param id 行布局中某个组件的id
-     * @return
-     */
-    public <T extends View> T getCViewAndClick(@IdRes int id) {
-        T v = getView(contentView, id);
-        v.setOnClickListener(this);
-        return v;
-    }
-
-    /**
      * 头-左边图标点击
      */
     public void onLeftClick() {
-        actFinish();
+        finish();
     }
 
     /**
@@ -470,4 +430,8 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     public void onRightClick() {
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

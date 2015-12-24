@@ -63,7 +63,7 @@ public class RefreshLayout extends SwipeRefreshLayout implements OnScrollListene
     public RefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        vFooter = LayoutInflater.from(context).inflate(R.layout.lv_footer, null, false);
+        vFooter = LayoutInflater.from(context).inflate(R.layout.in_lv_footer, null, false);
     }
 
     @Override

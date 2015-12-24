@@ -28,7 +28,7 @@ public class LoadingDialog extends BaseDialog {
 
     @Override
     protected int initLayoutId() {
-        return R.layout.dialog_loading;
+        return R.layout.dlg_loading;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class LoadingDialog extends BaseDialog {
 
     @Override
     protected void initView() {
-        txtLoadMsg = getView(R.id.txtLoadMsg);
+        txtLoadMsg = getView(R.id.loading_txtLoadMsg);
     }
 
     @Override

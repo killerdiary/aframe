@@ -12,27 +12,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hy.frame.R;
+import com.hy.frame.bean.LoadCache;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
+import com.hy.frame.util.MyLog;
 
+/**
+ * 父类Fragment
+ * author HeYan
+ * time 2015/12/23 17:12
+ */
 public abstract class BaseFragment extends Fragment implements android.view.View.OnClickListener, IFragmentListener, IBaseActivity {
     // private boolean custom;
     private BaseApplication app;
     protected Context context;
-
     private Toolbar toolbar;
-    private TextView txtTitle, txtMessage;
-    private RelativeLayout rlyMain;
-    private ImageView imgMessage;
-    private View loadView, contentView;
-    private ProgressBar proLoading;
-
+    private TextView txtTitle;
+    private FrameLayout flyMain;
+    private LoadCache loadCache;
     private int showCount;
     private boolean init;
 
@@ -46,10 +48,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     private boolean translucentStatus;
 
-    public boolean isTranslucentStatus() {
-        return translucentStatus;
-    }
-
     public void setTranslucentStatus(boolean translucentStatus) {
         this.translucentStatus = translucentStatus;
     }
@@ -59,7 +57,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         super.onStart();
         if (!init) {
             init = true;
-            initView();
             initView();
             initData();
         }
@@ -82,7 +79,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         if (toolbar == null) {
             custumHeader = false;
             v = inflater.inflate(R.layout.act_base, container, false);
-            toolbar = getView(v,R.id.head_toolBar);
+            toolbar = getView(v, R.id.head_toolBar);
         }
         toolbar = getView(v, R.id.head_toolBar);
         toolbar.setTitle("");
@@ -91,11 +88,9 @@ public abstract class BaseFragment extends Fragment implements android.view.View
             toolbar.setPadding(0, statusBarHeight, 0, 0);
         }
         txtTitle = getView(v, R.id.head_vTitle);
-        if (!custumHeader) {
-            rlyMain = getView(v, R.id.rlyMain);
-            contentView = View.inflate(context, layout, null);
-            if (contentView != null)
-                resetLayout(contentView);
+        flyMain = getView(v, R.id.base_flyMain);
+        if (!custumHeader && flyMain != null) {
+            View.inflate(context, layout, flyMain);
         }
         init = false;
         return v;
@@ -117,13 +112,27 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     /**
      * 加载布局
      */
-    private void initLoadView() {
-        if (null == loadView) {
-            loadView = View.inflate(context, R.layout.loading_act, null);
-            proLoading = getView(loadView, R.id.loading_proLoading);
-            imgMessage = getView(loadView, R.id.loading_imgMessage);
-            txtMessage = getView(loadView, R.id.loading_txtMessage);
+    private boolean initLoadView() {
+        if (flyMain == null) {
+            MyLog.e(getClass(), "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!");
+            return false;
         }
+        if (loadCache != null) return true;
+        View loadView = getView(R.id.base_llyLoad);
+        //You need to add the layout
+        if (loadView == null) {
+            if (flyMain.getChildCount() > 0) {
+                loadView = View.inflate(context, R.layout.in_loading, null);
+                flyMain.addView(loadView, 0);
+            } else
+                View.inflate(context, R.layout.in_loading, flyMain);
+        }
+        loadCache = new LoadCache();
+        loadCache.llyLoad = getView(R.id.base_llyLoad);
+        loadCache.proLoading = getView(R.id.base_proLoading);
+        loadCache.imgMessage = getView(R.id.base_imgMessage);
+        loadCache.txtMessage = getView(R.id.base_txtMessage);
+        return true;
     }
 
     protected void showLoading() {
@@ -131,26 +140,14 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     }
 
     protected void showLoading(String msg) {
-        initLoadView();
-        resetLayout(loadView);
-        proLoading.setVisibility(View.VISIBLE);
-        imgMessage.setVisibility(View.GONE);
-        txtMessage.setVisibility(View.VISIBLE);
-        txtMessage.setText(msg);
-    }
-
-    protected void showNetFail() {
-        showNetFail(getString(R.string.hint_net_fail));
-    }
-
-    protected void showNetFail(String msg) {
-        initLoadView();
-        resetLayout(loadView);
-        proLoading.setVisibility(View.GONE);
-        imgMessage.setVisibility(View.VISIBLE);
-        txtMessage.setVisibility(View.VISIBLE);
-        txtMessage.setText(msg);
-        imgMessage.setImageResource(R.drawable.img_hint_net_fail);
+        if (initLoadView()) {
+            int count = flyMain.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View v = flyMain.getChildAt(i);
+                if (i > 0) v.setVisibility(View.GONE);
+            }
+            loadCache.showLoading(msg);
+        }
     }
 
     protected void showNoData() {
@@ -161,30 +158,30 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         showNoData(msg, R.drawable.img_hint_nodata);
     }
 
+    //R.drawable.img_hint_net_fail
     protected void showNoData(String msg, int drawId) {
-        initLoadView();
-        resetLayout(loadView);
-        proLoading.setVisibility(View.GONE);
-        imgMessage.setVisibility(View.VISIBLE);
-        txtMessage.setVisibility(View.VISIBLE);
-        if (msg == null)
-            txtMessage.setText(R.string.hint_nodata);
-        else
-            txtMessage.setText(msg);
-        imgMessage.setImageResource(drawId);
-    }
-
-    protected void showCView() {
-        if (contentView != null)
-            resetLayout(contentView);
+        if (initLoadView()) {
+            int count = flyMain.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View v = flyMain.getChildAt(i);
+                if (i > 0) v.setVisibility(View.GONE);
+            }
+            loadCache.showNoData(msg, drawId);
+        }
     }
 
     /**
-     * 设置标题
+     * 显示内容View
      */
-    public void setTitle(CharSequence title) {
-        if (txtTitle != null)
-            txtTitle.setText(title);
+    protected void showCView() {
+        if (initLoadView()) {
+            int count = flyMain.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View v = flyMain.getChildAt(i);
+                if (i == 0) v.setVisibility(View.GONE);
+                else v.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     /**
@@ -194,9 +191,15 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         setTitle(getString(titleId));
     }
 
+    /**
+     * 设置标题
+     */
+    public void setTitle(CharSequence title) {
+        if (txtTitle != null) txtTitle.setText(title);
+    }
+
     protected void hideHeader() {
-        if (toolbar != null)
-            toolbar.setVisibility(View.GONE);
+        if (toolbar != null) toolbar.setVisibility(View.GONE);
     }
 
     protected void setHeaderLeft(@DrawableRes int left) {
@@ -261,8 +264,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
 
     /**
      * 头部
-     *
-     * @return
      */
     protected View getHeader() {
         return toolbar;
@@ -272,23 +273,12 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         return toolbar.findViewById(R.id.head_vRight);
     }
 
-    /**
-     * 初始化布局(用customAct方法时使用)
-     *
-     * @param v
-     */
-    private void resetLayout(View v) {
-        rlyMain.removeAllViews();
-        RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        rlyMain.addView(v, rlp);
-    }
-
     protected View getMainView() {
-        return rlyMain;
+        return flyMain;
     }
 
     /**
-     * 启动Activity
+     * @see #startAct(Intent, Class)
      */
     protected void startAct(Class<?> cls) {
         startAct(null, cls);
@@ -331,20 +321,18 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     /**
      * 获取 控件
      *
-     * @param view 布局
-     * @param id   行布局中某个组件的id
-     * @return
+     * @param v  布局
+     * @param id 行布局中某个组件的id
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(View view, @IdRes int id) {
-        return (T) view.findViewById(id);
+    public <T extends View> T getView(View v, @IdRes int id) {
+        return (T) v.findViewById(id);
     }
 
     /**
      * 获取 控件
      *
      * @param id 行布局中某个组件的id
-     * @return
      */
     @SuppressWarnings("unchecked")
     public <T extends View> T getView(@IdRes int id) {
@@ -354,8 +342,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     /**
      * 获取并绑定点击
      *
-     * @param id
-     * @return
+     * @param id id
      */
     @SuppressWarnings("unchecked")
     protected <T extends View> T getViewAndClick(@IdRes int id) {
@@ -364,34 +351,24 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         return v;
     }
 
+    /**
+     * 获取并绑定点击
+     *
+     * @param id id
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends View> T getViewAndClick(View view, @IdRes int id) {
+        T v = getView(view, id);
+        v.setOnClickListener(this);
+        return v;
+    }
+
     protected void setOnClickListener(@IdRes int id) {
-        getView().findViewById(id).setOnClickListener(this);
+        if (getView() != null) getView().findViewById(id).setOnClickListener(this);
     }
 
     protected void setOnClickListener(View v, @IdRes int id) {
         v.findViewById(id).setOnClickListener(this);
-    }
-
-    /**
-     * 获取当前布局中的控件
-     *
-     * @param id 行布局中某个组件的id
-     * @return
-     */
-    public <T extends View> T getCView(@IdRes int id) {
-        return getView(contentView, id);
-    }
-
-    /**
-     * 获取当前布局中的控件
-     *
-     * @param id 行布局中某个组件的id
-     * @return
-     */
-    public <T extends View> T getCViewAndClick(@IdRes int id) {
-        T v = getView(contentView, id);
-        v.setOnClickListener(this);
-        return v;
     }
 
     /**
@@ -408,15 +385,4 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     }
 
 
-    /**
-     * 获取并绑定点击
-     *
-     * @param id 组件的id
-     */
-    @SuppressWarnings("unchecked")
-    protected <T extends View> T getViewAndClick(View view, int id) {
-        View v = view.findViewById(id);
-        v.setOnClickListener(this);
-        return (T) v;
-    }
 }

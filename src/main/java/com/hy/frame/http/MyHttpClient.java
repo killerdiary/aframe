@@ -178,6 +178,15 @@ public abstract class MyHttpClient {
         return sb.toString();
     }
 
+    /**
+     * 请求方法
+     *
+     * @param requestCode 请求码
+     * @param url         请求地址
+     * @param params      请求参数
+     * @param cls         类<泛型> (例如：Version.class) 如果为空则直接返回json字符串
+     * @param list        结果是否是List
+     */
     public <T> void post(int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
         request(false, requestCode, url, params, cls, list);
     }
@@ -185,6 +194,7 @@ public abstract class MyHttpClient {
     /**
      * 请求方法
      *
+     * @param isGet 是否是GET请求
      * @param requestCode 请求码
      * @param url         请求地址
      * @param params      请求参数
@@ -256,10 +266,13 @@ public abstract class MyHttpClient {
                 MyLog.e("onFailure | " + t.toString() + " | " + errorNo + " | " + strMsg);
                 int code = R.string.API_FLAG_CON_EXCEPTION;
                 if (strMsg != null) {
-                    if (strMsg.contains("Broken pipe"))
+                    String thr = strMsg.toLowerCase(Locale.CHINA);
+                    if (strMsg.contains("broken pipe"))
                         code = R.string.API_FLAG_CON_BROKEN;
                     else if (strMsg.contains("timed out"))
                         code = R.string.API_FLAG_CON_TIMEOUT;
+                    else if (strMsg.contains("unknownhostexception"))
+                        code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
                 } else {
                     String thr = t.toString().toLowerCase(Locale.CHINA);
                     if (thr.contains("brokenpipe"))
