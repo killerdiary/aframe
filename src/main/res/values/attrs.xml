@@ -29,4 +29,27 @@
         <attr name="civBorderOverlay" format="boolean" />
         <attr name="civFillColor" format="color" />
     </declare-styleable>
+    <declare-styleable name="KeyValueView">
+        <attr name="kvEdit" format="boolean" />
+        <attr name="kvDrawRight" format="reference" />
+        <attr name="kvKey" format="string" />
+        <attr name="kvKeyColor" format="reference|color" />
+        <attr name="kvKeySize" format="dimension" />
+        <attr name="kvKeySign" format="string" />
+        <attr name="kvValue" format="string" />
+        <attr name="kvValueColor" format="reference|color" />
+        <attr name="kvValueSize" format="dimension" />
+        <attr name="kvValueHint" format="string" />
+        <attr name="kvValueHintColor" format="reference|color" />
+        <attr name="kvValuePadding" format="dimension" />
+        <attr name="kvValuePaddingLeft" format="dimension" />
+        <attr name="kvValuePaddingRight" format="dimension" />
+        <attr name="kvValuePaddingTop" format="dimension" />
+        <attr name="kvValuePaddingBottom" format="dimension" />
+        <attr name="kvValueMargin" format="dimension" />
+        <attr name="kvValueMarginLeft" format="dimension" />
+        <attr name="kvValueMarginRight" format="dimension" />
+        <attr name="kvValueMarginTop" format="dimension" />
+        <attr name="kvValueMarginBottom" format="dimension" />
+    </declare-styleable>
 </resources>
