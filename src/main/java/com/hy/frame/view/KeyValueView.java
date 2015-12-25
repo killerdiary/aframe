@@ -105,6 +105,7 @@ public class KeyValueView extends LinearLayout {
             editValue.setPadding(valuePaddingLeft, valuePaddingTop, valuePaddingRight, valuePaddingBottom);
             editValue.setBackgroundResource(R.color.transparent);
             editValue.setLineSpacing(lineSpacing, 1);
+            editValue.setSingleLine(true);
             addView(editValue, valueLp);
         } else {
             txtValue = new TextView(context);
@@ -138,7 +139,7 @@ public class KeyValueView extends LinearLayout {
 
     public void setValue(CharSequence sequence) {
         if (txtValue != null) txtValue.setText(sequence);
-        editValue.setText(sequence);
+        else editValue.setText(sequence);
     }
 
     public CharSequence getValue() {

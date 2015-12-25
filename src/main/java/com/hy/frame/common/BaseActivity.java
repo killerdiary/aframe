@@ -333,6 +333,12 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         startAct(intent, cls);
     }
 
+    public void startActivityForResult(Class<?> cls, int requestCode) {
+        Intent intent = new Intent(this, cls);
+        intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
+        startActivityForResult(intent, requestCode);
+    }
+
     @Override
     public void finish() {
         if (app != null) app.remove(this);
