@@ -295,6 +295,12 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         startActivity(intent);
     }
 
+    public void startActivityForResult(Class<?> cls, int requestCode) {
+        Intent intent = new Intent(getActivity(), cls);
+        intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
+        startActivityForResult(intent, requestCode);
+    }
+
     protected String getStrings(Integer... ids) {
         if (ids.length > 0) {
             StringBuilder sb = new StringBuilder();

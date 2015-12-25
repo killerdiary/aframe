@@ -10,9 +10,7 @@ public class Constant {
     /**
      * 权限
      */
-    public static final String PERMISSION = "android.permission.THYDSFT";
-    // /** 消息页是否允许 */
-    // public static final String APP_MSG_RUNNING = "APP_MSG_RUNNING";
+    public static final String PERMISSION = "android.permission.THYD";
     /**
      * 是否是首次进入
      */
@@ -25,14 +23,6 @@ public class Constant {
      * 用户信息
      */
     public static final String USER_INFO = "USER_INFO";
-    /**
-     * 广告信息
-     */
-    public static final String AD_LIST = "AD_LIST";
-    /**
-     * 用户登录信息
-     */
-    public static final String USER_LOGIN_INFO = "USER_LOGIN_INFO";
     /**
      * 用户是否登录
      */
@@ -50,13 +40,9 @@ public class Constant {
      */
     public static final String LAST_VERSION = "LAST_VERSION";
     /**
-     * 数据库名
+     * 内部消息-网络改变
      */
-    public static final String DB_NAME = "DB_SFT";
-    /**
-     * 数据库版本
-     */
-    public static final int DB_VERSION = 1;
+    public static final String ACTION_RECEIVE_NET_CHANGE = "com.hy.frame.ACTION_NET_CHANGE";
     /**
      * 网络状态
      */
@@ -90,6 +76,10 @@ public class Constant {
      */
     public static final String FLAG_TITLE = "FLAG_TITLE";
     /**
+     * 默认请求码
+     */
+    public static final int FLAG_REQUESTCODE = 999;
+    /**
      * 登录
      */
     public static final int FLAG_USER_LOGIN = 100;
@@ -98,69 +88,14 @@ public class Constant {
      */
     public static final int FLAG_USER_REGIST = 101;
     /**
-     * QQ注册
-     */
-    public static final int FLAG_USER_REGIST_QQ = 102;
-    /**
-     * 修改登录密码
-     */
-    public static final int FLAG_USER_UPD_PWD = 103;
-    /**
-     * 类别请求
-     */
-    public static final String REQUEST_KIND = "REQUEST_KIND";
-    /**
-     * 类别请求 间隔
-     */
-    public static final long REQUEST_KIND_SPLIT = 60 * 60 * 1000;
-    // /** 接口地址 */
-    // public static final String API_HOST = "";
-    // --------------布局类型----------------
-    /**
-     * 左图标
-     */
-    public static final int HEADER_LEFT = 1;
-    /**
-     * 左文本
-     */
-    public static final int HEADER_LEFT_TXT = 100;
-    /**
-     * 标题
-     */
-    public static final int HEADER_TITLE = 0;
-    /**
-     * 自定义标题,需要手动填充View
-     */
-    public static final int HEADER_TITLE_CUSTOM = 500;
-    /**
-     * 右图标
-     */
-    public static final int HEADER_RIGHT = 2;
-    /**
-     * 右文本
-     */
-    public static final int HEADER_RIGHT_TXT = 200;
-    /**
      * 每页的条数
      */
     public static final int PAGE_SIZE = 10;
-
     /**
      * 上次记录的手机号
      */
     public static final String LAST_PHONE = "LAST_PHONE";
-    /**
-     * 类型-医生
-     */
-    public static final int TYPE_DOCTOR = 2;
-    /**
-     * 类型-病人
-     */
-    public static final int TYPE_SICK = 1;
-    /**
-     * 内部消息-网络改变
-     */
-    public static final String ACTION_RECEIVE_NET_CHANGE = "com.hy.frame.ACTION_NET_CHANGE";
+
     /**
      * 接受到推送消息，ID
      */
@@ -212,4 +147,6 @@ public class Constant {
      * 剪切
      */
     public static final int FLAG_UPLOAD_IMAGE_CUT = 13;
+
+
 }
