@@ -139,4 +139,12 @@ public class NavView extends FrameLayout implements Checkable {
          */
         void onCheckedChanged(NavView nav, boolean isChecked);
     }
+
+    public TintImageView getIcoKey() {
+        return icoKey;
+    }
+
+    public TextView getTxtKey() {
+        return txtKey;
+    }
 }
