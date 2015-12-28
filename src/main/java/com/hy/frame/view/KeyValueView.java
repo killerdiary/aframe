@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,7 +24,6 @@ import com.hy.frame.R;
 public class KeyValueView extends LinearLayout {
 
     private TextView txtKey, txtValue;
-    private EditText editValue;
     private ImageView imgRight;
 
     public KeyValueView(Context context) {
@@ -50,7 +50,7 @@ public class KeyValueView extends LinearLayout {
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.KeyValueView, defStyleAttr, defStyleRes);
         if (a == null) return;
-        boolean edit = a.getBoolean(R.styleable.KeyValueView_kvEdit, false);
+//        boolean edit = a.getBoolean(R.styleable.KeyValueView_kvEdit, false);
         Drawable drawRight = a.getDrawable(R.styleable.KeyValueView_kvDrawRight);
         CharSequence key = a.getText(R.styleable.KeyValueView_kvKey);
         ColorStateList keyColor = a.getColorStateList(R.styleable.KeyValueView_kvKeyColor);
@@ -78,6 +78,7 @@ public class KeyValueView extends LinearLayout {
         if (keyColor != null) txtKey.setTextColor(keyColor);
         if (keySize > 0) txtKey.setTextSize(floatToSpDimension(context, keySize));
         if (keySign != null) txtKey.append(keySign);
+        //txtKey.setBackgroundResource(R.color.translucence);
         addView(txtKey, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         if (valuePaddingLeft == 0) valuePaddingLeft = valuePadding;
         if (valuePaddingRight == 0) valuePaddingRight = valuePadding;
@@ -93,21 +94,20 @@ public class KeyValueView extends LinearLayout {
             valueLp.width = 0;
             valueLp.weight = 1;
         }
-        int lineSpacing = getResources().getDimensionPixelSize(R.dimen.padding_normal);
-        if (edit) {
-            editValue = new EditText(context);
-            if (value != null) editValue.setText(value);
-            if (valueColor != null) editValue.setTextColor(valueColor);
-            if (valueSize > 0) editValue.setTextSize(floatToSpDimension(context, valueSize));
-            //if (valueGravity > 0) editValue.setGravity(valueGravity);
-            if (valueHint != null) editValue.setHint(valueHint);
-            if (valueHintColor != null) editValue.setHintTextColor(valueHintColor);
-            editValue.setPadding(valuePaddingLeft, valuePaddingTop, valuePaddingRight, valuePaddingBottom);
-            editValue.setBackgroundResource(R.color.transparent);
-            editValue.setLineSpacing(lineSpacing, 1);
-            editValue.setSingleLine(true);
-            addView(editValue, valueLp);
-        } else {
+//        if (edit) {
+//            editValue = new EditText(context);
+//            if (value != null) editValue.setText(value);
+//            if (valueColor != null) editValue.setTextColor(valueColor);
+//            if (valueSize > 0) editValue.setTextSize(floatToSpDimension(context, valueSize));
+//            //if (valueGravity > 0) editValue.setGravity(valueGravity);
+//            if (valueHint != null) editValue.setHint(valueHint);
+//            if (valueHintColor != null) editValue.setHintTextColor(valueHintColor);
+//            editValue.setPadding(valuePaddingLeft, valuePaddingTop, valuePaddingRight, valuePaddingBottom);
+//            editValue.setBackgroundResource(R.color.transparent);
+//            editValue.setSingleLine(true);
+//            editValue.setGravity(Gravity.CENTER_VERTICAL);
+//            addView(editValue, valueLp);
+//        } else {
             txtValue = new TextView(context);
             if (value != null) txtValue.setText(value);
             if (valueColor != null) txtValue.setTextColor(valueColor);
@@ -116,9 +116,11 @@ public class KeyValueView extends LinearLayout {
             if (valueHint != null) txtValue.setHint(valueHint);
             if (valueHintColor != null) txtValue.setHintTextColor(valueHintColor);
             txtValue.setPadding(valuePaddingLeft, valuePaddingTop, valuePaddingRight, valuePaddingBottom);
-            txtValue.setLineSpacing(lineSpacing, 1);
+            //txtValue.setBackgroundResource(R.color.divider_gray);
+            txtValue.setSingleLine(true);
+            txtValue.setGravity(Gravity.CENTER_VERTICAL);
             addView(txtValue, valueLp);
-        }
+//        }
         if (drawRight != null) {
             imgRight = new ImageView(context);
             imgRight.setImageDrawable(drawRight);
@@ -139,11 +141,22 @@ public class KeyValueView extends LinearLayout {
 
     public void setValue(CharSequence sequence) {
         if (txtValue != null) txtValue.setText(sequence);
-        else editValue.setText(sequence);
     }
 
     public CharSequence getValue() {
         if (txtValue != null) return txtValue.getText();
-        return editValue.getText();
+        return null;
+    }
+
+    public ImageView getImgRight() {
+        return imgRight;
+    }
+
+    public TextView getTxtKey() {
+        return txtKey;
+    }
+
+    public TextView getTxtValue() {
+        return txtValue;
     }
 }

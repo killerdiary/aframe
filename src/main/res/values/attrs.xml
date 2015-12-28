@@ -30,7 +30,6 @@
         <attr name="civFillColor" format="color" />
     </declare-styleable>
     <declare-styleable name="KeyValueView">
-        <attr name="kvEdit" format="boolean" />
         <attr name="kvDrawRight" format="reference" />
         <attr name="kvKey" format="string" />
         <attr name="kvKeyColor" format="reference|color" />

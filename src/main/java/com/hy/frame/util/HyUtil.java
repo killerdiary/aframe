@@ -18,14 +18,14 @@ import android.view.View;
 
 /**
  * 工具
- * 
+ *
  * @author HeYan
  * @time 2014年12月24日 下午1:43:34
  */
 public class HyUtil {
     /**
      * 手机号验证
-     * 
+     *
      * @param str
      * @return 验证通过返回true
      */
@@ -37,7 +37,7 @@ public class HyUtil {
 
     /**
      * 是否是数字
-     * 
+     *
      * @param str
      * @return 验证通过返回true
      */
@@ -49,7 +49,7 @@ public class HyUtil {
 
     /**
      * 是否是中文
-     * 
+     *
      * @param str
      * @return
      */
@@ -61,7 +61,7 @@ public class HyUtil {
 
     /**
      * 是否是IP地址
-     * 
+     *
      * @param str
      * @return
      */
@@ -73,7 +73,7 @@ public class HyUtil {
 
     /**
      * 是否是身份证
-     * 
+     *
      * @param str
      * @return
      */
@@ -89,7 +89,7 @@ public class HyUtil {
 
     /**
      * 电话号码验证
-     * 
+     *
      * @param str
      * @return 验证通过返回true
      */
@@ -117,7 +117,7 @@ public class HyUtil {
 
     /**
      * 邮箱验证
-     * 
+     *
      * @param str
      * @return 验证通过返回true
      */
@@ -159,7 +159,7 @@ public class HyUtil {
 
     /**
      * 去掉多余的0
-     * 
+     *
      * @param str
      * @return
      */
@@ -176,21 +176,21 @@ public class HyUtil {
 
     /**
      * 把字体结果dimen转化成原sp值
-     * 
+     *
      * @return
      */
     public static float floatToSpDimension(float value, Context context) {
         return value / context.getResources().getDisplayMetrics().scaledDensity;
     }
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     public static <T> T getView(View v, int resId) {
         return (T) v.findViewById(resId);
     }
 
     /**
      * 获取当前时间Date
-     * 
+     *
      * @return 现在时间(Now)
      */
     public static String getNowTime() {
@@ -205,15 +205,16 @@ public class HyUtil {
      * 获取当前时间Date
      */
     public static String getDateTime(long ltime) {
-        String type = "yyyy-MM-dd HH:mm:ss";
-        return getDateTime(ltime, type);
+        return getDateTime(ltime, null);
     }
 
     /**
      * 获取当前时间Date
      */
     public static String getDateTime(long ltime, String type) {
-        Date d = new Date(ltime * 1000);
+        if ((ltime + "").length() == 10) ltime = ltime * 1000L;
+        if (type == null) type = "yyyy-MM-dd HH:mm:ss";
+        Date d = new Date(ltime);
         SimpleDateFormat formatter = new SimpleDateFormat(type, Locale.CHINA);
         return formatter.format(d);
     }
@@ -236,7 +237,7 @@ public class HyUtil {
 
     /**
      * 将px值转换为sp值，保证文字大小不变
-     * 
+     *
      * @param pxValue
      * @return
      */
@@ -247,7 +248,7 @@ public class HyUtil {
 
     /**
      * 将sp值转换为px值，保证文字大小不变
-     * 
+     *
      * @param spValue
      * @return
      */
@@ -258,7 +259,7 @@ public class HyUtil {
 
     /**
      * 获取控件的高度，如果获取的高度为0，则重新计算尺寸后再返回高度
-     * 
+     *
      * @param view
      * @return
      */
@@ -273,7 +274,7 @@ public class HyUtil {
 
     /**
      * 获取控件的宽度，如果获取的宽度为0，则重新计算尺寸后再返回宽度
-     * 
+     *
      * @param view
      * @return
      */
@@ -288,7 +289,7 @@ public class HyUtil {
 
     /**
      * 测量控件的尺寸
-     * 
+     *
      * @param view
      */
     public static void calcViewMeasure(View view) {
@@ -315,7 +316,7 @@ public class HyUtil {
 
     /**
      * 检测该包名所对应的应用是否存在
-     * 
+     *
      * @param context
      * @param packageName
      * @return
@@ -334,7 +335,7 @@ public class HyUtil {
 
     /**
      * 网络是否连接
-     * 
+     *
      * @param context
      * @return
      */
@@ -346,7 +347,7 @@ public class HyUtil {
 
     /**
      * 是否是快速点击
-     * 
+     *
      * @return
      */
     public static boolean isFastClick() {
@@ -359,7 +360,7 @@ public class HyUtil {
 
     /**
      * 是否是车牌号
-     * 
+     *
      * @param str
      * @return
      */
@@ -373,26 +374,26 @@ public class HyUtil {
 
     /**
      * 获取周几
-     * 
+     *
      * @param week
      * @return
      */
     public static String getWeekName(int week) {
         switch (week) {
-        case Calendar.SUNDAY:
-            return "周日";
-        case Calendar.MONDAY:
-            return "周一";
-        case Calendar.TUESDAY:
-            return "周二";
-        case Calendar.WEDNESDAY:
-            return "周三";
-        case Calendar.THURSDAY:
-            return "周四";
-        case Calendar.FRIDAY:
-            return "周五";
-        case Calendar.SATURDAY:
-            return "周六";
+            case Calendar.SUNDAY:
+                return "周日";
+            case Calendar.MONDAY:
+                return "周一";
+            case Calendar.TUESDAY:
+                return "周二";
+            case Calendar.WEDNESDAY:
+                return "周三";
+            case Calendar.THURSDAY:
+                return "周四";
+            case Calendar.FRIDAY:
+                return "周五";
+            case Calendar.SATURDAY:
+                return "周六";
         }
         return null;
     }
