@@ -1,8 +1,5 @@
 package com.hy.frame.view;
 
-import java.util.List;
-
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,12 +18,22 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.util.HyUtil;
+import com.hy.frame.util.MyLog;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
+/**
+ * 滚动View
+ * author HeYan
+ * time 2015/12/29 13:39
+ * 备注：Object 如果不是 String or Integer 里面必须有getName和setName(String)
+ */
 public class MyWheelView extends ScrollView {
     public static final String TAG = MyWheelView.class.getSimpleName();
 
     public static class OnWheelViewListener {
-        public void onSelected(int selectedIndex, String item) {
+        public void onSelected(int selectedIndex, Object item) {
         }
     }
 
@@ -51,22 +58,55 @@ public class MyWheelView extends ScrollView {
     }
 
     // String[] items;
-    List<String> items;
+    List items;
     private int count;
 
-    private List<String> getItems() {
+    private <T> List<T> getItems() {
         return items;
     }
 
-    public void setItems(List<String> list) {
-        if (null == list)
+//    public void setItems(List<String> list) {
+//        if (null == list)
+//            return;
+//        items = list;
+////        count = items.size();
+////        Class<?> cls = list.get(0).getClass();
+////        // 前面和后面补全
+////        for (int i = 0; i < offset; i++) {
+////                items.add(0, "");
+////                items.add("");
+////        }
+////        initData();
+//    }
+
+    public <T> void setItems(List<T> list) {
+        if (null == list || list.size() == 0)
             return;
         items = list;
         count = items.size();
+        Class cls = list.get(0).getClass();
         // 前面和后面补全
         for (int i = 0; i < offset; i++) {
-            items.add(0, "");
-            items.add("");
+            if (cls == String.class) {
+                items.add(0, "");
+                items.add("");
+            } else if (cls == Integer.class) {
+                items.add(0, 0);
+                items.add(0);
+            } else {
+                try {
+                    T t1 = (T) cls.newInstance();
+                    Method m1 = cls.getMethod("setName", String.class);
+                    m1.invoke(t1, "");
+                    items.add(0, t1);
+                    T t2 = (T) cls.newInstance();
+                    Method m2 = cls.getMethod("setName", String.class);
+                    m2.invoke(t2, "");
+                    items.add(t2);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
         initData();
     }
@@ -159,7 +199,7 @@ public class MyWheelView extends ScrollView {
     private void initData() {
         displayItemCount = offset * 2 + 1;
         views.removeAllViews();
-        for (String item : items) {
+        for (Object item : items) {
             views.addView(createView(item));
         }
         refreshItemView(0);
@@ -169,12 +209,12 @@ public class MyWheelView extends ScrollView {
 
     int itemHeight = 0;
 
-    private TextView createView(String item) {
+    private TextView createView(Object item) {
         TextView tv = new TextView(context);
         tv.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         tv.setSingleLine(true);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        tv.setText(item);
+        tv.setText(getItemStr(item));
         tv.setGravity(Gravity.CENTER);
         int padding = getContext().getResources().getDimensionPixelSize(R.dimen.margin_normal);
         tv.setPadding(padding, padding, padding, padding);
@@ -357,7 +397,7 @@ public class MyWheelView extends ScrollView {
         if (null != onWheelViewListener) {
             if (selectedIndex >= items.size())
                 return;
-            if (items.get(selectedIndex).length() < 1) {
+            if (getItemStr(selectedIndex).length() < 1) {
                 int size = selectedIndex + 1;
                 final int lines = count + offset;
                 if (size > count + offset) {
@@ -369,7 +409,6 @@ public class MyWheelView extends ScrollView {
             }
             onWheelViewListener.onSelected(selectedIndex, items.get(selectedIndex));
         }
-
     }
 
     public void setSeletion(int position) {
@@ -384,8 +423,27 @@ public class MyWheelView extends ScrollView {
 
     }
 
+    private String getItemStr(int position) {
+        return getItemStr(items.get(position));
+    }
+
+    private String getItemStr(Object obj) {
+        if (obj instanceof String || obj instanceof Integer) return obj + "";
+        else {
+            Class cls = obj.getClass();
+            try {
+                Method method = cls.getMethod("getName");
+                return method.invoke(obj) + "";
+            } catch (Exception e) {
+                MyLog.e(getClass(), "Object 如果不是 String or Integer 里面必须有getName和setName(String)");
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
     public String getSeletedItem() {
-        return items.get(selectedIndex);
+        return getItemStr(selectedIndex);
     }
 
     public int getSeletedIndex() {

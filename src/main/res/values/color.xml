@@ -43,5 +43,5 @@
     <color name="game_sort_slider">#FEB859</color>
     <color name="game_item_gray">#F2F2F2</color>
     <color name="divider_gray">#AAacacac</color>
-
+    <color name="divider_gray_light">#11000000</color>
 </resources>
