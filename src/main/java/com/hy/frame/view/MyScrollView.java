@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -23,11 +24,11 @@ import com.hy.frame.util.MyLog;
 
 /**
  * 显示ViewPager功能
- * 
+ *
  * @author HeYan
  * @time 2014年9月4日 下午2:37:10
  */
-public class MyScrollView extends RelativeLayout implements OnPageChangeListener, Runnable{
+public class MyScrollView extends RelativeLayout implements OnPageChangeListener, Runnable {
     private final static int DEFAULT_INTERVAL = 3000;// 间隔时间3秒
     private boolean isOpenAuto;
     private long timer;// 间隔时间
@@ -93,7 +94,9 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         img.setOnClickListener(clickListener);
         addPage(img);
     }
+
     private OnClickListener clickListener;
+
     @Override
     public void setOnClickListener(OnClickListener l) {
         this.clickListener = l;
@@ -101,7 +104,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
 
     /**
      * 添加子Page 显示时需要调用show
-     * 
+     *
      * @param v
      */
     public void addPage(View v) {
@@ -165,12 +168,14 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         //MyLog.e("onPageScrolled " + position + "|" + positionOffset + "|" + positionOffsetPixels);
     }
-    public int getPostion(){
-        if(vPager!=null){
+
+    public int getPostion() {
+        if (vPager != null) {
             return vPager.getCurrentItem();
         }
         return 0;
     }
+
     @Override
     public void onPageSelected(int positon) {
         isDrag = false;
@@ -184,18 +189,20 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         }
         if (scrollCount >= 3)
             scrollCount = 2;
+        if (listener != null) listener.onViewChange(views.size(), positon + 1);
     }
 
-    /** 开启倒计时 */
+    /**
+     * 开启倒计时
+     */
     public void startAuto() {
         startAuto(DEFAULT_INTERVAL);
     }
 
     /**
      * 开启倒计时
-     * 
-     * @param interval
-     *            倒计时时间(秒)
+     *
+     * @param interval 倒计时时间(秒)
      */
     public void startAuto(int interval) {
         if (adapter == null) {
@@ -240,5 +247,15 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
             vPager.setCurrentItem(pager + 1);
         else
             vPager.setCurrentItem(0);
+    }
+
+    private IScrollListener listener;
+
+    public void setListener(IScrollListener listener) {
+        this.listener = listener;
+    }
+
+    public interface IScrollListener {
+        void onViewChange(int all, int position);
     }
 }
