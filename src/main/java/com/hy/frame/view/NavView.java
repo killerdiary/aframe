@@ -147,4 +147,8 @@ public class NavView extends FrameLayout implements Checkable {
     public TextView getTxtKey() {
         return txtKey;
     }
+
+    public LinearLayout getLlyContainer() {
+        return llyContainer;
+    }
 }
