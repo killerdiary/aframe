@@ -1,6 +1,7 @@
 package com.hy.frame.view;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.util.AttributeSet;
@@ -44,7 +45,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
      * 初始化工作
      */
     private void init() {
-        MyLog.d(getClass(), "CameraPreview initialize");
+        MyLog.d(getClass(), "initialize");
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
@@ -113,6 +114,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // reformatting changes here
         if (null != mCamera) {
             Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setPictureFormat(PixelFormat.JPEG);//图片格式
             parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
             requestLayout();
             mCamera.setParameters(parameters);
@@ -136,6 +138,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         MyLog.d(getClass(), "surfaceDestroyed");
         if (null != mCamera) {
             mCamera.stopPreview();
+            mCamera.release();
         }
     }
 
