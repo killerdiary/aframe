@@ -124,7 +124,7 @@ public class MyWheelView extends ScrollView {
 
     int displayItemCount; // 每页显示的数量
 
-    int selectedIndex = 1;
+    int selectedIndex = OFF_SET_DEFAULT;
 
     private void init(Context context) {
         this.context = context;
@@ -442,11 +442,15 @@ public class MyWheelView extends ScrollView {
         return "";
     }
 
-    public String getSeletedItem() {
+    public String getSelectedItem() {
         return getItemStr(selectedIndex);
     }
 
-    public int getSeletedIndex() {
+    public Object getSelectedObject() {
+        return items.get(selectedIndex);
+    }
+
+    public int getSelectedIndex() {
         return selectedIndex - offset;
     }
 
