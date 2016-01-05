@@ -103,12 +103,32 @@ public class BaseApplication extends Application {
         clear();
         System.exit(0);
     }
+
     /**
      * 清理activity栈
      */
     public void remove(Activity activity) {
         if (acts != null && !acts.isEmpty()) {
             acts.remove(activity);
+        }
+    }
+
+    /**
+     * 清理activity栈
+     */
+    public void removeFinish(Class cls) {
+        if (acts != null && !acts.isEmpty()) {
+            Activity act = null;
+            for (Activity item : acts) {
+                if (TextUtils.equals(item.getClass().getName(), cls.getName())) {
+                    act = item;
+                    break;
+                }
+            }
+            if (act != null) {
+                act.finish();
+                acts.remove(act);
+            }
         }
     }
 
