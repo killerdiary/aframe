@@ -11,7 +11,7 @@
         android:layout_width="48dip"
         android:layout_height="48dip"
         android:indeterminate="false"
-        android:indeterminateDrawable="@drawable/rotate_loading_circle" />
+        android:indeterminateDrawable="?attr/appLoadingDraw" />
 
     <ImageView
         android:id="@+id/base_imgMessage"
