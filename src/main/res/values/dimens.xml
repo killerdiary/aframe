@@ -79,7 +79,7 @@
     <dimen name="game_item_ico_width">55dip</dimen>
     <dimen name="home_activity_msg_item_heigth">60dip</dimen>
     <dimen name="webgame_headline_item_heigth">45dip</dimen>
-    <dimen name="lv_heigth">60dip</dimen>
+    <dimen name="lv_heigth">70dip</dimen>
     <dimen name="sort_item_heigth">120dip</dimen>
     <dimen name="small_sort_item_heigth">60dip</dimen>
     <dimen name="gallery_point_height">25dip</dimen>
