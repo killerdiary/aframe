@@ -51,7 +51,7 @@ public class BaseApplication extends Application {
                     result = netInfo.getType();
                 }
                 MyLog.d(getClass(), "NetState:" + result);
-                MyShare.get(context).putInt(Constant.NET_STATUS, result);
+                new MyShare(getApplicationContext()).putInt(Constant.NET_STATUS, result);
                 sendBroadcast(new Intent(Constant.ACTION_RECEIVE_NET_CHANGE));
             }
         }
