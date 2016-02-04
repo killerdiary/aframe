@@ -1,13 +1,5 @@
 package com.hy.frame.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -15,6 +7,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
 import android.view.View;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 工具
@@ -340,7 +340,7 @@ public class HyUtil {
      * @return
      */
     public static boolean isNetworkConnected(Context context) {
-        return MyShare.get(context).getInt(Constant.NET_STATUS) > -1;
+        return new MyShare(context.getApplicationContext()).getInt(Constant.NET_STATUS) > -1;
     }
 
     private static long lastTime = 0;

@@ -7,6 +7,7 @@ import android.content.Context;
  * @author HY
  * @time 2015-5-20 上午11:31:46
  */
+@Deprecated
 public class CacheShare extends MyShare {
     private static CacheShare instance;
     public static final String LAST_TIME = "LAST_TIME";
