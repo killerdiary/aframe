@@ -9,7 +9,6 @@ import android.os.Build;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -78,6 +77,8 @@ public class KeyValueView extends LinearLayout {
         if (keyColor != null) txtKey.setTextColor(keyColor);
         if (keySize > 0) txtKey.setTextSize(floatToSpDimension(context, keySize));
         if (keySign != null) txtKey.append(keySign);
+        txtKey.setSingleLine(true);
+        txtKey.setGravity(Gravity.TOP);
         //txtKey.setBackgroundResource(R.color.translucence);
         addView(txtKey, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         if (valuePaddingLeft == 0) valuePaddingLeft = valuePadding;
@@ -108,24 +109,25 @@ public class KeyValueView extends LinearLayout {
 //            editValue.setGravity(Gravity.CENTER_VERTICAL);
 //            addView(editValue, valueLp);
 //        } else {
-            txtValue = new TextView(context);
-            if (value != null) txtValue.setText(value);
-            if (valueColor != null) txtValue.setTextColor(valueColor);
-            if (valueSize > 0) txtValue.setTextSize(floatToSpDimension(context, valueSize));
-            //if (valueGravity > 0) txtValue.setGravity(valueGravity);
-            if (valueHint != null) txtValue.setHint(valueHint);
-            if (valueHintColor != null) txtValue.setHintTextColor(valueHintColor);
-            txtValue.setPadding(valuePaddingLeft, valuePaddingTop, valuePaddingRight, valuePaddingBottom);
-            //txtValue.setBackgroundResource(R.color.divider_gray);
-            txtValue.setSingleLine(true);
-            txtValue.setGravity(Gravity.CENTER_VERTICAL);
-            addView(txtValue, valueLp);
+        txtValue = new TextView(context);
+        if (value != null) txtValue.setText(value);
+        if (valueColor != null) txtValue.setTextColor(valueColor);
+        if (valueSize > 0) txtValue.setTextSize(floatToSpDimension(context, valueSize));
+        //if (valueGravity > 0) txtValue.setGravity(valueGravity);
+        if (valueHint != null) txtValue.setHint(valueHint);
+        if (valueHintColor != null) txtValue.setHintTextColor(valueHintColor);
+        txtValue.setPadding(valuePaddingLeft, valuePaddingTop, valuePaddingRight, valuePaddingBottom);
+        //txtValue.setBackgroundResource(R.color.divider_gray);
+        txtValue.setSingleLine(true);
+        txtValue.setGravity(Gravity.CENTER_VERTICAL);
+        addView(txtValue, valueLp);
 //        }
         if (drawRight != null) {
             imgRight = new ImageView(context);
             imgRight.setImageDrawable(drawRight);
             addView(imgRight, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
+
     }
 
     /**

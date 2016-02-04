@@ -89,7 +89,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         }
         txtTitle = getView(v, R.id.head_vTitle);
         flyMain = getView(v, R.id.base_flyMain);
-        if (!custumHeader && flyMain != null) {
+        if (!custumHeader && flyMain != null && layout > 0) {
             View.inflate(context, layout, flyMain);
         }
         init = false;
@@ -196,6 +196,12 @@ public abstract class BaseFragment extends Fragment implements android.view.View
      */
     public void setTitle(CharSequence title) {
         if (txtTitle != null) txtTitle.setText(title);
+    }
+
+    public TextView getTitleText() {
+        if (txtTitle != null)
+            return txtTitle;
+        return null;
     }
 
     protected void hideHeader() {

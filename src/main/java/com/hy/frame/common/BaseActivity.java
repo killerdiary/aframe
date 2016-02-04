@@ -82,7 +82,11 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             View.inflate(context, layout, flyMain);
         }
     }
-
+    public TextView getTitleText() {
+        if (txtTitle != null)
+            return txtTitle;
+        return null;
+    }
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -202,6 +206,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     @Override
     public void setTitle(@StringRes int titleId) {
         setTitle(getString(titleId));
+
     }
 
     /**
