@@ -25,14 +25,15 @@ public class MyShare {
 //    }
 //
 
-//    /**
-//     * 获取实例
-//     */
-//    public static MyShare get(Context context) {
-//        if (instance == null)
-//            instance = new MyShare(context, false);
-//        return instance;
-//    }
+
+    /**
+     * 获取实例
+     */
+    public static MyShare get(Context context) {
+        if (instance == null)
+            instance = new MyShare(context, false);
+        return instance;
+    }
 
     public MyShare(Context context) {
         this(context, false);
