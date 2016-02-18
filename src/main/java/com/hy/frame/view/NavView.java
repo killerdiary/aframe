@@ -57,6 +57,11 @@ public class NavView extends FrameLayout implements Checkable {
         llyContainer = new LinearLayout(context);
         llyContainer.setOrientation(horizontal ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
         llyContainer.setGravity(Gravity.CENTER);
+        if (!horizontal) {
+            int top = getPaddingTop();
+            setPadding(0, 0, 0, 0);
+            llyContainer.setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom());
+        }
         icoKey = new TintImageView(context);
         if (draw != null)
             icoKey.setImageDrawable(draw);
