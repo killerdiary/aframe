@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.util.HyUtil;
+import com.hy.frame.util.MyLog;
 
 /**
  * 主页 Nav
@@ -53,21 +54,23 @@ public class NavView extends FrameLayout implements Checkable {
         boolean checked = a.getBoolean(R.styleable.NavView_navChecked, false);
         boolean horizontal = a.getBoolean(R.styleable.NavView_navHorizontal, false);
         boolean textRight = a.getBoolean(R.styleable.NavView_navTextRight, false);
+        int padding = a.getDimensionPixelSize(R.styleable.NavView_navPadding, 0);
+        int drawWidth = a.getDimensionPixelSize(R.styleable.NavView_navDrawWidth, 0);
+        int drawHeight = a.getDimensionPixelSize(R.styleable.NavView_navDrawHeight, 0);
         a.recycle();
         llyContainer = new LinearLayout(context);
         llyContainer.setOrientation(horizontal ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
         llyContainer.setGravity(Gravity.CENTER);
         if (!horizontal) {
-            int top = getPaddingTop();
             setPadding(0, 0, 0, 0);
-            llyContainer.setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom());
+            llyContainer.setPadding(padding, padding, padding, padding);
         }
         icoKey = new TintImageView(context);
         if (draw != null)
             icoKey.setImageDrawable(draw);
         if (drawTint != null)
             icoKey.setColorFilter(drawTint);
-        llyContainer.addView(icoKey, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        llyContainer.addView(icoKey, new LinearLayout.LayoutParams(drawWidth > 0 ? drawWidth : LinearLayout.LayoutParams.WRAP_CONTENT, drawHeight > 0 ? drawHeight : LinearLayout.LayoutParams.WRAP_CONTENT));
         txtKey = new TextView(context);
         if (key != null)
             txtKey.setText(key);
