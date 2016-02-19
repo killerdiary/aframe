@@ -58,23 +58,23 @@ public class Constant {
     /**
      * 标记
      */
-    public static final String FLAG = "FLAG";
+    public static final String FLAG = "C_FLAG";
     /**
      * 标记 2
      */
-    public static final String FLAG2 = "FLAG2";
+    public static final String FLAG2 = "C_FLAG2";
     /**
      * 标记 3
      */
-    public static final String FLAG3 = "FLAG3";
+    public static final String FLAG3 = "C_FLAG3";
     /**
      * 标记ID
      */
-    public static final String FLAG_ID = "FLAG_ID";
+    public static final String FLAG_ID = "C_FLAG_ID";
     /**
      * 标记标题
      */
-    public static final String FLAG_TITLE = "FLAG_TITLE";
+    public static final String FLAG_TITLE = "C_FLAG_TITLE";
     /**
      * 默认请求码
      */
