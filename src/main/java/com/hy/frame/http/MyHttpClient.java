@@ -194,7 +194,7 @@ public abstract class MyHttpClient {
     /**
      * 请求方法
      *
-     * @param isGet 是否是GET请求
+     * @param isGet       是否是GET请求
      * @param requestCode 请求码
      * @param url         请求地址
      * @param params      请求参数
@@ -407,7 +407,7 @@ public abstract class MyHttpClient {
     protected void showLoading() {
         if (showDialog) {
             if (loadingDialog == null) {
-                loadingDialog = new LoadingDialog(context,null);
+                loadingDialog = new LoadingDialog(context, null);
             }
             loadingDialog.show();
         }
@@ -432,6 +432,11 @@ public abstract class MyHttpClient {
         } else {
             loadingDialog.updateMsg(msg);
         }
+    }
+
+    public void onDestroy() {
+        //在这里销毁所有当前请求
+        MyLog.d(getClass(), "onDestroy");
     }
 
     protected String getString(int resId) {

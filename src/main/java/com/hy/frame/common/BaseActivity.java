@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.bean.LoadCache;
+import com.hy.frame.http.MyHttpClient;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
@@ -37,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     private FrameLayout flyMain;
     private LoadCache loadCache;
     private boolean translucentStatus;
+    private MyHttpClient client;
 
     public void setTranslucentStatus(boolean translucentStatus) {
         this.translucentStatus = translucentStatus;
@@ -82,11 +84,13 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             View.inflate(context, layout, flyMain);
         }
     }
+
     public TextView getTitleText() {
         if (txtTitle != null)
             return txtTitle;
         return null;
     }
+
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -444,5 +448,18 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (client != null) {
+            client.onDestroy();
+        }
+        super.onDestroy();
+    }
+
+    protected MyHttpClient getClient() {
+
+        return null;
     }
 }
