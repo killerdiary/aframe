@@ -25,10 +25,10 @@ public abstract interface IBaseActivity {
      */
     void initData();
 
-    /**
-     * 初始化数据
-     */
-    void onStartData();
+//    /**
+//     * 初始化数据
+//     */
+//    void onStartData();
 
     /**
      * 请求数据

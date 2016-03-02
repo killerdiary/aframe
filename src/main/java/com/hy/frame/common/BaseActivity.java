@@ -85,6 +85,13 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         }
     }
 
+    /**
+     * 初始化数据
+     */
+    public void onStartData() {
+
+    }
+
     public TextView getTitleText() {
         if (txtTitle != null)
             return txtTitle;
@@ -458,8 +465,11 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         super.onDestroy();
     }
 
-    protected MyHttpClient getClient() {
+    protected void setClient(MyHttpClient client) {
+        this.client = client;
+    }
 
-        return null;
+    protected MyHttpClient getClient() {
+        return client;
     }
 }

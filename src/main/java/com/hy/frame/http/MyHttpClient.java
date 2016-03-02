@@ -46,6 +46,7 @@ public abstract class MyHttpClient {
     private String contentType, userAgent, accept;
     private Map<String, String> maps;
     private int qid;//队列ID
+    private boolean isDestroy;
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
         this(context, listener, host, null, null, null);
@@ -173,8 +174,12 @@ public abstract class MyHttpClient {
         sb.append(host);
         if (!host.endsWith("/") && !path.startsWith("/")) {
             sb.append("/");
+            sb.append(path);
+        } else if (host.endsWith("/") && path.startsWith("/")) {
+            sb.append(path.substring(1));
+        } else {
+            sb.append(path);
         }
-        sb.append(path);
         return sb.toString();
     }
 
@@ -202,6 +207,7 @@ public abstract class MyHttpClient {
      * @param list        结果是否是List
      */
     public <T> void request(boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
+        if (isDestroy) return;
         final ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
         result.setQid(qid);
@@ -312,6 +318,7 @@ public abstract class MyHttpClient {
     }
 
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {
+        if (isDestroy) return;
         JSONObject obj;
         try {
             obj = new JSONObject(json);
@@ -386,11 +393,13 @@ public abstract class MyHttpClient {
     }
 
     protected void onRequestError(ResultInfo result) {
+        if (isDestroy) return;
         if (listener != null)
             listener.onRequestError(result);
     }
 
     protected void onRequestSuccess(ResultInfo result) {
+        if (isDestroy) return;
         result.setErrorCode(0);
         if (listener != null)
             listener.onRequestSuccess(result);
@@ -405,6 +414,7 @@ public abstract class MyHttpClient {
      * 显示加载框
      */
     protected void showLoading() {
+        if (isDestroy) return;
         if (showDialog) {
             if (loadingDialog == null) {
                 loadingDialog = new LoadingDialog(context, null);
@@ -417,11 +427,13 @@ public abstract class MyHttpClient {
      * 隐藏加载框
      */
     protected void hideLoading() {
+        if (isDestroy) return;
         if (loadingDialog != null)
             loadingDialog.dismiss();
     }
 
     public void updateLoadingMsg(String msg) {
+        if (isDestroy) return;
         if (msg == null) {
             showDialog = false;
             return;
@@ -437,6 +449,7 @@ public abstract class MyHttpClient {
     public void onDestroy() {
         //在这里销毁所有当前请求
         MyLog.d(getClass(), "onDestroy");
+        isDestroy = true;
     }
 
     protected String getString(int resId) {
