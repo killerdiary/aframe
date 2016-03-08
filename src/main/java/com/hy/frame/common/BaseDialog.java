@@ -3,6 +3,7 @@ package com.hy.frame.common;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
@@ -59,10 +60,6 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
         onViewClick(v);
     }
 
-    protected void setOnClickListener(int resId) {
-        findViewById(resId).setOnClickListener(this);
-    }
-
     protected void windowDeploy(float width, float height, int gravity) {
         Window window = getWindow();
         LayoutParams params = getWindow().getAttributes(); // 获取对话框当前的参数值
@@ -93,6 +90,22 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
     @SuppressWarnings({"unchecked"})
     protected <T> T getView(int resId) {
         return (T) findViewById(resId);
+    }
+
+    /**
+     * 获取并绑定点击
+     *
+     * @param id id
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends View> T getViewAndClick(@IdRes int id) {
+        T v = getView(id);
+        v.setOnClickListener(this);
+        return v;
+    }
+
+    protected void setOnClickListener(int resId) {
+        findViewById(resId).setOnClickListener(this);
     }
 
     private Object tag;

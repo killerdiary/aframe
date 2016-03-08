@@ -3,9 +3,7 @@ package com.hy.frame.view;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hy.frame.R;
@@ -20,6 +18,10 @@ public class LoadingDialog extends BaseDialog {
 
     private TextView txtLoadMsg;
     private String loadMsg;
+
+    public LoadingDialog(Context context) {
+        this(context, null);
+    }
 
     public LoadingDialog(Context context, String loadMsg) {
         super(context);

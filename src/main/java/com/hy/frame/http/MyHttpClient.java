@@ -417,7 +417,7 @@ public abstract class MyHttpClient {
         if (isDestroy) return;
         if (showDialog) {
             if (loadingDialog == null) {
-                loadingDialog = new LoadingDialog(context, null);
+                setLoadingDialog(new LoadingDialog(context));
             }
             loadingDialog.show();
         }
@@ -440,7 +440,7 @@ public abstract class MyHttpClient {
         }
         showDialog = true;
         if (loadingDialog == null) {
-            loadingDialog = new LoadingDialog(context, msg);
+            setLoadingDialog(new LoadingDialog(context, msg));
         } else {
             loadingDialog.updateMsg(msg);
         }
