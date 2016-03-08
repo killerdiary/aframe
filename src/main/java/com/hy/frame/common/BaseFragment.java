@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.bean.LoadCache;
+import com.hy.frame.http.MyHttpClient;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
@@ -37,6 +38,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     private LoadCache loadCache;
     private int showCount;
     private boolean init;
+    private MyHttpClient client;
 
     public void setInit(boolean init) {
         this.init = init;
@@ -396,5 +398,19 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     public void onRightClick() {
     }
 
+    @Override
+    public void onDestroy() {
+        if (client != null) {
+            client.onDestroy();
+        }
+        super.onDestroy();
+    }
 
+    protected void setClient(MyHttpClient client) {
+        this.client = client;
+    }
+
+    protected MyHttpClient getClient() {
+        return client;
+    }
 }
