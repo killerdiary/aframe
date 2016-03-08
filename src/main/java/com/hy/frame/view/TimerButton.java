@@ -7,7 +7,7 @@ import android.widget.Button;
 import com.hy.frame.R;
 
 /**
- * 倒计时按钮
+ * 倒计时按钮 (hint = "%ss 后重发")
  *
  * @author HeYan
  * @time 2015年1月6日 下午5:11:46

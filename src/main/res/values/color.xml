@@ -31,7 +31,7 @@
     <color name="main_tab">#52CACC</color>
     <color name="main_tab_pressed">#296566</color>
     <color name="btn_default">#52CACB</color>
-    <color name="btn_pressed">#337E80</color>
+    <color name="btn_pressed">#ACACAC</color>
     <color name="btn_red">#F36070</color>
     <color name="btn_red_pressed">#80333C</color>
     <color name="btn_yellow">#FF970D</color>
