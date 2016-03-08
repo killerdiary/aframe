@@ -1,21 +1,5 @@
 package com.hy.frame.http;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxParams;
-import net.tsz.afinal.utils.FieldUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.text.TextUtils;
@@ -26,6 +10,21 @@ import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
+
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxParams;
+import net.tsz.afinal.utils.FieldUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 网络请求，不能直接使用<br/>
@@ -173,7 +172,8 @@ public abstract class MyHttpClient {
         StringBuilder sb = new StringBuilder();
         sb.append(host);
         if (!host.endsWith("/") && !path.startsWith("/")) {
-            sb.append("/");
+            if (!path.startsWith(":"))
+                sb.append("/");
             sb.append(path);
         } else if (host.endsWith("/") && path.startsWith("/")) {
             sb.append(path.substring(1));
