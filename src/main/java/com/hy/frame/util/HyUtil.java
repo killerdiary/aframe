@@ -129,6 +129,18 @@ public class HyUtil {
                 .matcher(str).matches();
     }
 
+    /**
+     * 是否是银行卡号
+     * @param str
+     * @return
+     */
+    public static boolean isBankCard(String str) {
+        if (isEmpty(str))
+            return false;
+        Pattern pattern = Pattern.compile("^(\\d{16}|\\d{19})$");
+        return pattern.matcher(str).matches();
+    }
+
     public static boolean isNoEmpty(String str) {
         return !isEmpty(str);
     }

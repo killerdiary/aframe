@@ -6,6 +6,7 @@
     <attr name="appTitleColor" format="reference|color" />
     <attr name="appTitleBarBg" format="reference|color" />
     <attr name="appLoadingDraw" format="reference" />
+    <attr name="appLoadingSmallDraw" format="reference" />
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>

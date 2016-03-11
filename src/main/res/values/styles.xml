@@ -15,6 +15,7 @@
         <item name="appTitleColor">@color/white</item>
         <item name="appTitleBarBg">@color/theme</item>
         <item name="appLoadingDraw">@drawable/rotate_loading_circle</item>
+        <item name="appLoadingSmallDraw">@drawable/rotate_loading_circle</item>
     </style>
 
     <style name="CurToolbar" parent="Widget.AppCompat.Toolbar">
