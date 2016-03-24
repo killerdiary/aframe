@@ -88,7 +88,6 @@ public class FinalBitmap {
 
 	/**
 	 * 设置图片正在加载的时候显示的图片
-	 * @param bitmap
 	 */
 	public FinalBitmap configLoadingImage(int resId) {
 		mConfig.defaultDisplayConfig.setLoadingBitmap(BitmapFactory.decodeResource(mContext.getResources(), resId));
@@ -125,7 +124,7 @@ public class FinalBitmap {
 	
 	/**
 	 * 配置默认图片的小的宽度
-	 * @param bitmapHeight
+	 * @param bitmapWidth
 	 */
 	public FinalBitmap configBitmapMaxWidth(int bitmapWidth){
 		mConfig.defaultDisplayConfig.setBitmapWidth(bitmapWidth);
@@ -420,7 +419,6 @@ public class FinalBitmap {
 
 	/**
 	 * 网络加载bitmap
-	 * @param data
 	 * @return
 	 */
 	private Bitmap processBitmap(String uri,BitmapDisplayConfig config) {

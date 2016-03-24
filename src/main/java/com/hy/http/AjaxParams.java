@@ -53,6 +53,13 @@ public class AjaxParams {
             urlParams.put(key, value);
         }
     }
+    public void put(String key, int value) {
+        put(key, value + "");
+    }
+
+    public void put(String key, long value) {
+        put(key, value + "");
+    }
 
     public void put(String key, File file) throws FileNotFoundException {
         put(key, new FileInputStream(file), file.getName());
@@ -100,60 +107,10 @@ public class AjaxParams {
         return sb.toString();
     }
 
-    /**
-     * Returns an HttpEntity containing all request parameters
-     */
-//    public HttpEntity getEntity() {
-//        HttpEntity entity = null;
-//
-//        if(!fileParams.isEmpty()) {
-//            MultipartEntity multipartEntity = new MultipartEntity();
-//
-//            // Add string params
-//            for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-//                multipartEntity.addPart(entry.getKey(), entry.getValue());
-//            }
-//
-//            // Add file params
-//            int currentIndex = 0;
-//            int lastIndex = fileParams.entrySet().size() - 1;
-//            for(ConcurrentHashMap.Entry<String, FileWrapper> entry : fileParams.entrySet()) {
-//                FileWrapper file = entry.getValue();
-//                if(file.inputStream != null) {
-//                    boolean isLast = currentIndex == lastIndex;
-//                    if(file.contentType != null) {
-//                        multipartEntity.addPart(entry.getKey(), file.getFileName(), file.inputStream, file.contentType, isLast);
-//                    } else {
-//                        multipartEntity.addPart(entry.getKey(), file.getFileName(), file.inputStream, isLast);
-//                    }
-//                }
-//                currentIndex++;
-//            }
-//
-//            entity = multipartEntity;
-//        } else {
-//            try {
-//                entity = new UrlEncodedFormEntity(getParamsList(), ENCODING);
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return entity;
-//    }
     private void init() {
         urlParams = new ConcurrentHashMap<String, String>();
         fileParams = new ConcurrentHashMap<String, FileWrapper>();
     }
-
-//    protected List<BasicNameValuePair> getParamsList() {
-//        List<BasicNameValuePair> lparams = new LinkedList<BasicNameValuePair>();
-//
-//        for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-//            lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-//        }
-//
-//        return lparams;
-//    }
 
     protected String getUrlParamQuery() {
         StringBuilder sb = new StringBuilder();
@@ -190,7 +147,7 @@ public class AjaxParams {
         return null;
     }
 
-    private static class FileWrapper {
+    public class FileWrapper {
         public InputStream inputStream;
         public String fileName;
         public String contentType;

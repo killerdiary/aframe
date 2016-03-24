@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2012-2013, Michael Yang 杨福海 (www.yangfuhai.com).
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,12 @@
  */
 package net.tsz.afinal;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import net.tsz.afinal.db.sqlite.CursorUtils;
 import net.tsz.afinal.db.sqlite.DbModel;
@@ -33,12 +33,13 @@ import net.tsz.afinal.db.table.ManyToOne;
 import net.tsz.afinal.db.table.OneToMany;
 import net.tsz.afinal.db.table.TableInfo;
 import net.tsz.afinal.exception.DbException;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 public class FinalDb {
 
@@ -78,7 +79,7 @@ public class FinalDb {
 
     /**
      * 创建FinalDb
-     * 
+     *
      * @param context
      */
     public static FinalDb create(Context context) {
@@ -89,7 +90,7 @@ public class FinalDb {
 
     /**
      * 创建FinalDb
-     * 
+     *
      * @param context
      * @param isDebug
      *            是否是debug模式（debug模式进行数据库操作的时候将会打印sql语句）
@@ -104,7 +105,7 @@ public class FinalDb {
 
     /**
      * 创建FinalDb
-     * 
+     *
      * @param context
      * @param dbName
      *            数据库名称
@@ -118,7 +119,7 @@ public class FinalDb {
 
     /**
      * 创建 FinalDb
-     * 
+     *
      * @param context
      * @param dbName
      *            数据库名称
@@ -135,13 +136,13 @@ public class FinalDb {
 
     /**
      * 创建FinalDb
-     * 
+     *
      * @param context
      * @param dbName
      *            数据库名称
      */
     public static FinalDb create(Context context, String targetDirectory,
-            String dbName) {
+                                 String dbName) {
         DaoConfig config = new DaoConfig();
         config.setContext(context);
         config.setDbName(dbName);
@@ -151,7 +152,7 @@ public class FinalDb {
 
     /**
      * 创建 FinalDb
-     * 
+     *
      * @param context
      * @param dbName
      *            数据库名称
@@ -159,7 +160,7 @@ public class FinalDb {
      *            是否为debug模式（debug模式进行数据库操作的时候将会打印sql语句）
      */
     public static FinalDb create(Context context, String targetDirectory,
-            String dbName, boolean isDebug) {
+                                 String dbName, boolean isDebug) {
         DaoConfig config = new DaoConfig();
         config.setContext(context);
         config.setTargetDirectory(targetDirectory);
@@ -170,7 +171,7 @@ public class FinalDb {
 
     /**
      * 创建 FinalDb
-     * 
+     *
      * @param context
      *            上下文
      * @param dbName
@@ -184,7 +185,7 @@ public class FinalDb {
      * @return
      */
     public static FinalDb create(Context context, String dbName,
-            boolean isDebug, int dbVersion, DbUpdateListener dbUpdateListener) {
+                                 boolean isDebug, int dbVersion, DbUpdateListener dbUpdateListener) {
         DaoConfig config = new DaoConfig();
         config.setContext(context);
         config.setDbName(dbName);
@@ -195,7 +196,7 @@ public class FinalDb {
     }
 
     /**
-     * 
+     *
      * @param context
      *            上下文
      * @param targetDirectory
@@ -206,13 +207,13 @@ public class FinalDb {
      *            是否是调试模式：调试模式会log出sql信息
      * @param dbVersion
      *            数据库版本信息
-     * @param dbUpdateListener数据库升级监听器
+     * @param dbUpdateListener 数据库升级监听器
      *            ：如果监听器为null，升级的时候将会清空所所有的数据
      * @return
      */
     public static FinalDb create(Context context, String targetDirectory,
-            String dbName, boolean isDebug, int dbVersion,
-            DbUpdateListener dbUpdateListener) {
+                                 String dbName, boolean isDebug, int dbVersion,
+                                 DbUpdateListener dbUpdateListener) {
         DaoConfig config = new DaoConfig();
         config.setContext(context);
         config.setTargetDirectory(targetDirectory);
@@ -225,7 +226,7 @@ public class FinalDb {
 
     /**
      * 创建FinalDb
-     * 
+     *
      * @param daoConfig
      * @return
      */
@@ -235,7 +236,7 @@ public class FinalDb {
 
     /**
      * 保存数据库，速度要比save快
-     * 
+     *
      * @param entity
      */
     public void save(Object entity) {
@@ -247,7 +248,7 @@ public class FinalDb {
      * 保存数据到数据库<br />
      * <b>注意：</b><br />
      * 保存成功后，entity的主键将被赋值（或更新）为数据库的主键， 只针对自增长的id有效
-     * 
+     *
      * @param entity
      *            要保存的数据
      * @return ture： 保存成功 false:保存失败
@@ -271,7 +272,7 @@ public class FinalDb {
 
     /**
      * 把List<KeyValue>数据存储到ContentValues
-     * 
+     *
      * @param list
      * @param cv
      */
@@ -289,7 +290,7 @@ public class FinalDb {
 
     /**
      * 更新数据 （主键ID必须不能为空）
-     * 
+     *
      * @param entity
      */
     public void update(Object entity) {
@@ -299,7 +300,7 @@ public class FinalDb {
 
     /**
      * 根据条件更新数据
-     * 
+     *
      * @param entity
      * @param strWhere
      *            条件为空的时候，将会更新所有的数据
@@ -311,7 +312,7 @@ public class FinalDb {
 
     /**
      * 删除数据
-     * 
+     *
      * @param entity
      *            entity的主键不能为空
      */
@@ -322,7 +323,7 @@ public class FinalDb {
 
     /**
      * 根据主键删除数据
-     * 
+     *
      * @param clazz
      *            要删除的实体类
      * @param id
@@ -335,7 +336,7 @@ public class FinalDb {
 
     /**
      * 根据条件删除数据
-     * 
+     *
      * @param clazz
      * @param strWhere
      *            条件为空的时候 将会删除所有的数据
@@ -349,7 +350,7 @@ public class FinalDb {
 
     /**
      * 删除表的所有数据
-     * 
+     *
      * @param clazz
      */
     public void deleteAll(Class<?> clazz) {
@@ -361,7 +362,7 @@ public class FinalDb {
 
     /**
      * 删除指定的表
-     * 
+     *
      * @param clazz
      */
     public void dropTable(Class<?> clazz) {
@@ -402,7 +403,7 @@ public class FinalDb {
 
     /**
      * 根据主键查找数据（默认不查询多对一或者一对多的关联数据）
-     * 
+     *
      * @param id
      * @param clazz
      */
@@ -428,7 +429,7 @@ public class FinalDb {
 
     /**
      * 根据主键查找，同时查找“多对一”的数据（如果有多个“多对一”属性，则查找所有的“多对一”属性）
-     * 
+     *
      * @param id
      * @param clazz
      */
@@ -447,14 +448,14 @@ public class FinalDb {
 
     /**
      * 根据条件查找，同时查找“多对一”的数据（只查找findClass中的类的数据）
-     * 
+     *
      * @param id
      * @param clazz
      * @param findClass
      *            要查找的类
      */
     public <T> T findWithManyToOneById(Object id, Class<T> clazz,
-            Class<?>... findClass) {
+                                       Class<?>... findClass) {
         checkTableExist(clazz);
         String sql = SqlBuilder.getSelectSQL(clazz, id);
         debugSql(sql);
@@ -468,14 +469,14 @@ public class FinalDb {
 
     /**
      * 将entity中的“多对一”的数据填充满 如果是懒加载填充，则dbModel参数可为null
-     * 
+     *
      * @param clazz
      * @param entity
      * @param <T>
      * @return
      */
     public <T> T loadManyToOne(DbModel dbModel, T entity, Class<T> clazz,
-            Class<?>... findClass) {
+                               Class<?>... findClass) {
         if (entity != null) {
             try {
                 Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap
@@ -537,7 +538,7 @@ public class FinalDb {
 
     /**
      * 根据主键查找，同时查找“一对多”的数据（如果有多个“一对多”属性，则查找所有的一对多”属性）
-     * 
+     *
      * @param id
      * @param clazz
      */
@@ -556,13 +557,13 @@ public class FinalDb {
 
     /**
      * 根据主键查找，同时查找“一对多”的数据（只查找findClass中的“一对多”）
-     * 
+     *
      * @param id
      * @param clazz
      * @param findClass
      */
     public <T> T findWithOneToManyById(Object id, Class<T> clazz,
-            Class<?>... findClass) {
+                                       Class<?>... findClass) {
         checkTableExist(clazz);
         String sql = SqlBuilder.getSelectSQL(clazz, id);
         debugSql(sql);
@@ -577,7 +578,7 @@ public class FinalDb {
 
     /**
      * 将entity中的“一对多”的数据填充满
-     * 
+     *
      * @param entity
      * @param clazz
      * @param <T>
@@ -625,7 +626,7 @@ public class FinalDb {
 
     /**
      * 查找所有的数据
-     * 
+     *
      * @param clazz
      */
     public <T> List<T> findAll(Class<T> clazz) {
@@ -635,7 +636,7 @@ public class FinalDb {
 
     /**
      * 查找所有数据
-     * 
+     *
      * @param clazz
      * @param orderBy
      *            排序的字段
@@ -648,7 +649,7 @@ public class FinalDb {
 
     /**
      * 根据条件查找一条数据
-     * 
+     *
      * @param clazz
      * @param strWhere
      *            条件不能为空
@@ -664,7 +665,7 @@ public class FinalDb {
 
     /**
      * 根据条件查找所有数据
-     * 
+     *
      * @param clazz
      * @param strWhere
      *            条件为空的时候查找所有数据
@@ -677,7 +678,7 @@ public class FinalDb {
 
     /**
      * 根据条件查找所有数据
-     * 
+     *
      * @param clazz
      * @param strWhere
      *            条件为空的时候查找所有数据
@@ -685,7 +686,7 @@ public class FinalDb {
      *            排序字段
      */
     public <T> List<T> findAllByWhere(Class<T> clazz, String strWhere,
-            String orderBy) {
+                                      String orderBy) {
         checkTableExist(clazz);
         return findAllBySql(clazz,
                 SqlBuilder.getSelectSQLByWhere(clazz, strWhere) + " ORDER BY "
@@ -694,7 +695,7 @@ public class FinalDb {
 
     /**
      * 根据条件查找所有数据
-     * 
+     *
      * @param clazz
      * @param strWhere
      *            条件为空的时候查找所有数据
@@ -702,7 +703,7 @@ public class FinalDb {
      *            分组字段
      */
     public <T> List<T> findAllByGroup(Class<T> clazz, String strWhere,
-            String gropBy) {
+                                      String gropBy) {
         checkTableExist(clazz);
         return findAllBySql(clazz,
                 SqlBuilder.getSelectSQLByWhere(clazz, strWhere) + " GROUP BY "
@@ -711,7 +712,7 @@ public class FinalDb {
 
     /**
      * 根据条件查找所有数据
-     * 
+     *
      * @param clazz
      * @param strSQL
      */
@@ -738,7 +739,7 @@ public class FinalDb {
 
     /**
      * 根据sql语句查找数据，这个一般用于数据统计
-     * 
+     *
      * @param strSQL
      */
     public DbModel findDbModelBySQL(String strSQL) {
@@ -816,7 +817,7 @@ public class FinalDb {
 
     /**
      * 查询记录的总数
-     * 
+     *
      * @param clazz
      * @param strWhere
      * @return
@@ -839,7 +840,7 @@ public class FinalDb {
 
     /**
      * 查找所有数据
-     * 
+     *
      * @param clazz
      * @param orderBy
      * @param count
@@ -852,7 +853,7 @@ public class FinalDb {
 
     /**
      * 查找所有数据
-     * 
+     *
      * @param clazz
      * @param orderBy
      * @param page
@@ -860,14 +861,14 @@ public class FinalDb {
      * @return
      */
     public <T> List<T> findAll(Class<T> clazz, String orderBy, int page,
-            int count) {
+                               int count) {
         return findAllBySql(clazz, SqlBuilder.getSelectSQL(clazz)
                 + getOrderBy(orderBy) + " LIMIT " + page * count + "," + count);
     }
 
     /**
      * 查找所有数据
-     * 
+     *
      * @param clazz
      * @param strWhere
      * @param orderBy
@@ -876,7 +877,7 @@ public class FinalDb {
      * @return
      */
     public <T> List<T> findAllByWhere(Class<T> clazz, String strWhere,
-            String orderBy, int page, int count) {
+                                      String orderBy, int page, int count) {
         return findAllBySql(clazz,
                 SqlBuilder.getSelectSQLByWhere(clazz, strWhere)
                         + getOrderBy(orderBy) + " LIMIT " + page * count + ","
@@ -966,13 +967,13 @@ public class FinalDb {
 
     /**
      * 在SD卡的指定目录上创建文件
-     * 
+     *
      * @param sdcardPath
      * @param dbfilename
      * @return
      */
     private SQLiteDatabase createDbFileOnSDCard(String sdcardPath,
-            String dbfilename) {
+                                                String dbfilename) {
         File dbf = new File(sdcardPath, dbfilename);
         if (!dbf.exists()) {
             try {
@@ -994,7 +995,7 @@ public class FinalDb {
         private DbUpdateListener mDbUpdateListener;
 
         public SqliteDbHelper(Context context, String name, int version,
-                DbUpdateListener dbUpdateListener) {
+                              DbUpdateListener dbUpdateListener) {
             super(context, name, null, version);
             this.mDbUpdateListener = dbUpdateListener;
         }

@@ -10,9 +10,8 @@ import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
+import com.hy.http.AjaxParams;
 
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxParams;
 import net.tsz.afinal.utils.FieldUtils;
 
 import org.json.JSONArray;
@@ -228,17 +227,17 @@ public abstract class MyHttpClient {
         MyLog.d(url);
         if (params != null)
             MyLog.d(params.toString());
-        FinalHttp fh = new FinalHttp();
-        fh.configTimeout(TIME_OUT);
-        if (HyUtil.isNoEmpty(userAgent))
-            fh.configUserAgent(userAgent);
-        if (HyUtil.isNoEmpty(accept))
-            fh.addHeader("Accept", accept);
-        if (maps != null) {
-            for (Entry<String, String> map : maps.entrySet()) {
-                fh.addHeader(map.getKey(), map.getValue());
-            }
-        }
+//        FinalHttp fh = new FinalHttp();
+//        fh.configTimeout(TIME_OUT);
+//        if (HyUtil.isNoEmpty(userAgent))
+//            fh.configUserAgent(userAgent);
+//        if (HyUtil.isNoEmpty(accept))
+//            fh.addHeader("Accept", accept);
+//        if (maps != null) {
+//            for (Entry<String, String> map : maps.entrySet()) {
+//                fh.addHeader(map.getKey(), map.getValue());
+//            }
+//        }
         MyAjaxCallBack callback = new MyAjaxCallBack(result) {
 
             @Override
@@ -291,10 +290,10 @@ public abstract class MyHttpClient {
                 hideLoading();
             }
         };
-        if (isGet)
-            fh.get(url, params, contentType, callback);
-        else
-            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
+//        if (isGet)
+//            fh.get(url, params, contentType, callback);
+//        else
+//            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
 //        Volley.newRequestQueue(context);
 //        RequestQueue queue = Volley.newRequestQueue(context);
 //        //queue.cancelAll();

@@ -1,6 +1,6 @@
 package com.hy.frame.http;
 
-import net.tsz.afinal.http.AjaxParams;
+import com.hy.http.AjaxParams;
 
 /**
  * 新增int long支持
@@ -10,12 +10,6 @@ import net.tsz.afinal.http.AjaxParams;
  */
 public class MyAjaxParams extends AjaxParams {
 
-    public void put(String key, int value) {
-        put(key, value + "");
-    }
 
-    public void put(String key, long value) {
-        put(key, value + "");
-    }
 
 }
