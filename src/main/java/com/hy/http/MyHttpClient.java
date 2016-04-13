@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.hy.frame.R;
@@ -13,7 +15,6 @@ import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
 
-import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.utils.FieldUtils;
 
 import org.json.JSONArray;
@@ -43,7 +44,7 @@ public abstract class MyHttpClient {
     private String host;// 域名
     private final static int TIME_OUT = 60 * 1000;
     private String contentType, userAgent, accept;
-    private Map<String, String> maps;
+    private Map<String, String> headerParams;
     private int qid;//队列ID
     private boolean isDestroy;
     private RequestQueue requestQueue;
@@ -89,9 +90,9 @@ public abstract class MyHttpClient {
     }
 
     public void addHeader(String key, String value) {
-        if (maps == null)
-            maps = new HashMap<String, String>();
-        maps.put(key, value);
+        if (headerParams == null)
+            headerParams = new HashMap<String, String>();
+        headerParams.put(key, value);
     }
 
     /**
@@ -228,8 +229,9 @@ public abstract class MyHttpClient {
             params.put("signatures", signatures);
         }
         MyLog.d(url);
-        if (params != null)
+        if (params != null) {
             MyLog.d(params.toString());
+        }
 //        FinalHttp fh = new FinalHttp();
 //        fh.configTimeout(TIME_OUT);
 //        if (HyUtil.isNoEmpty(userAgent))
@@ -241,83 +243,65 @@ public abstract class MyHttpClient {
 //                fh.addHeader(map.getKey(), map.getValue());
 //            }
 //        }
-        AjaxCallBack callback = new AjaxCallBack(result) {
-
+        int method = isGet ? method = Request.Method.GET : Request.Method.POST;
+//        if (isGet)
+//            fh.get(url, params, contentType, callback);
+//        else
+//            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
+        ISuccessListener successListener = new ISuccessListener() {
             @Override
-            public void onSuccess(Object o) {
-                super.onSuccess(o);
-            }
-
-            public void onSuccess(String json) {
+            void onSuccess(String data) {
                 hideLoading();
-                MyLog.d("onSuccess | " + json);
-                if (HyUtil.isNoEmpty(json)) {
-                    json = json.trim();
+                MyLog.d("onSuccess | " + data);
+                if (HyUtil.isNoEmpty(data)) {
+                    data = data.trim();
                     if (cls == null) {
-                        getResult().setObj(json);
+                        getResult().setObj(data);
                         onRequestSuccess(getResult());
-                    } else if (!TextUtils.equals(json.substring(0, 1), "{") || !TextUtils.equals(json.substring(json.length() - 1), "}")) {
+                    } else if (!TextUtils.equals(data.substring(0, 1), "{") || !TextUtils.equals(data.substring(data.length() - 1), "}")) {
                         getResult().setMsg(getString(R.string.API_FLAG_DATA_ERROR));
                         onRequestError(getResult());
                     } else {
-                        if (json.contains("[]"))
-                            json = json.replaceAll("\\[\\]", "null");
-                        if (json.contains("\"\""))
-                            json = json.replaceAll("\"\"", "null");
-                        doSuccess(getResult(), json, cls, list);
+                        if (data.contains("[]"))
+                            data = data.replaceAll("\\[\\]", "null");
+                        if (data.contains("\"\""))
+                            data = data.replaceAll("\"\"", "null");
+                        doSuccess(getResult(), data, cls, list);
                     }
                 } else {
                     getResult().setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
                     onRequestError(getResult());
                 }
             }
-
-            @Override
-            public void onFailure(Throwable t, int errorNo, String strMsg) {
-                hideLoading();
-                MyLog.e("onFailure | " + t.toString() + " | " + errorNo + " | " + strMsg);
-                int code = R.string.API_FLAG_CON_EXCEPTION;
-                if (strMsg != null) {
-                    String thr = strMsg.toLowerCase(Locale.CHINA);
-                    if (strMsg.contains("broken pipe"))
-                        code = R.string.API_FLAG_CON_BROKEN;
-                    else if (strMsg.contains("timed out"))
-                        code = R.string.API_FLAG_CON_TIMEOUT;
-                    else if (strMsg.contains("unknownhostexception"))
-                        code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
-                } else {
-                    String thr = t.toString().toLowerCase(Locale.CHINA);
-                    if (thr.contains("brokenpipe"))
-                        code = R.string.API_FLAG_CON_BROKEN;
-                    else if (thr.contains("timedout"))
-                        code = R.string.API_FLAG_CON_TIMEOUT;
-                }
-                result.setMsg(getString(code));
-                onRequestError(result);
-                hideLoading();
-            }
         };
-        if (isGet)
-            fh.get(url, params, contentType, callback);
-        else
-            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
-
-        StringRequest request = new StringRequest("", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
+        successListener.setResult(result);
+        IErrorListener errorListener = new IErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return super.getParams();
+                hideLoading();
+                MyLog.e("onFailure | " + error.getMessage());
+                int code = R.string.API_FLAG_CON_EXCEPTION;
+                String msg = error.getMessage();
+                if (msg != null) {
+                    String thr = msg.toLowerCase(Locale.CHINA);
+                    if (msg.contains("broken pipe"))
+                        code = R.string.API_FLAG_CON_BROKEN;
+                    else if (msg.contains("timed out"))
+                        code = R.string.API_FLAG_CON_TIMEOUT;
+                    else if (msg.contains("unknownhostexception"))
+                        code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
+                }
+                getResult().setMsg(getString(code));
+                onRequestError(getResult());
+                hideLoading();
             }
         };
+        errorListener.setResult(result);
+        StringRequest request = new StringRequest(method, url, params, successListener, errorListener);
+        request.setResult(result);
+        if (headerParams != null) {
+            request.setHeader(headerParams);
+        }
         requestQueue.add(request);
     }
 
@@ -453,6 +437,8 @@ public abstract class MyHttpClient {
     public void onDestroy() {
         //在这里销毁所有当前请求
         MyLog.d(getClass(), "onDestroy");
+        if(requestQueue!=null)
+            requestQueue.stop();
         isDestroy = true;
     }
 

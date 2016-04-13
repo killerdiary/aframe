@@ -13,7 +13,7 @@ public interface IMyHttpListener {
     /**
      * 请求失败
      *
-     * @param result 请求结果信息
+     * @param result 请求失败信息
      */
     void onRequestError(ResultInfo result);
 

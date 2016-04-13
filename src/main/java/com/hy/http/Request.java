@@ -2,6 +2,7 @@ package com.hy.http;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response.ErrorListener;
+import com.hy.frame.bean.ResultInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public abstract class Request<T> extends com.android.volley.Request<T> {
     private Map<String, String> headerParams;
     private Object mPostBody;
     private HttpEntity httpEntity;
+    private ResultInfo result;
 
     public Request(int method, String url, Object params, ErrorListener errorListener) {
         super(method, url, errorListener);
@@ -33,6 +35,10 @@ public abstract class Request<T> extends com.android.volley.Request<T> {
         else
             headerParams.remove(key);
         headerParams.put(key, value);
+    }
+
+    public void setHeader(Map<String, String> headerParams) {
+        this.headerParams = headerParams;
     }
 
     /**
@@ -86,5 +92,13 @@ public abstract class Request<T> extends com.android.volley.Request<T> {
             return baos.toByteArray();
         }
         return super.getBody();// mPostBody is null or Map<String, String>
+    }
+
+    public ResultInfo getResult() {
+        return result;
+    }
+
+    public void setResult(ResultInfo result) {
+        this.result = result;
     }
 }
