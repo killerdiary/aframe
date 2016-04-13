@@ -1,17 +1,19 @@
-package com.hy.frame.http;
+package com.hy.http;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.text.TextUtils;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.hy.frame.R;
 import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
-import com.hy.http.AjaxParams;
 
+import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.utils.FieldUtils;
 
 import org.json.JSONArray;
@@ -23,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * 网络请求，不能直接使用<br/>
@@ -45,6 +46,7 @@ public abstract class MyHttpClient {
     private Map<String, String> maps;
     private int qid;//队列ID
     private boolean isDestroy;
+    private RequestQueue requestQueue;
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
         this(context, listener, host, null, null, null);
@@ -62,7 +64,7 @@ public abstract class MyHttpClient {
      */
     public MyHttpClient(Context context, IMyHttpListener listener, String host, String contentType, String userAgent, String accept) {
         super();
-        if (context == null || listener == null || host == null) {
+        if (context == null || host == null) {
             MyLog.e("MyHttpClient init error!");
             return;
         }
@@ -75,6 +77,7 @@ public abstract class MyHttpClient {
         // this.http = new FinalHttp();
         // this.http.configTimeout(TIME_OUT);
         this.gson = new Gson();
+        this.requestQueue = Volley.newRequestQueue(context);
     }
 
     public Context getContext() {
@@ -207,7 +210,7 @@ public abstract class MyHttpClient {
      */
     public <T> void request(boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
         if (isDestroy) return;
-        final ResultInfo result = new ResultInfo();
+        ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
         result.setQid(qid);
         result.setErrorCode(ResultInfo.CODE_ERROR_DEFAULT);
@@ -238,9 +241,13 @@ public abstract class MyHttpClient {
 //                fh.addHeader(map.getKey(), map.getValue());
 //            }
 //        }
-        MyAjaxCallBack callback = new MyAjaxCallBack(result) {
+        AjaxCallBack callback = new AjaxCallBack(result) {
 
             @Override
+            public void onSuccess(Object o) {
+                super.onSuccess(o);
+            }
+
             public void onSuccess(String json) {
                 hideLoading();
                 MyLog.d("onSuccess | " + json);
@@ -290,30 +297,28 @@ public abstract class MyHttpClient {
                 hideLoading();
             }
         };
-//        if (isGet)
-//            fh.get(url, params, contentType, callback);
-//        else
-//            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
-//        Volley.newRequestQueue(context);
-//        RequestQueue queue = Volley.newRequestQueue(context);
-//        //queue.cancelAll();
-//        StringRequest request = new StringRequest("", new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                return super.getParams();
-//            }
-//        };
-//        queue.add(request);
+        if (isGet)
+            fh.get(url, params, contentType, callback);
+        else
+            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
+
+        StringRequest request = new StringRequest("", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
+            }
+        };
+        requestQueue.add(request);
     }
 
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {

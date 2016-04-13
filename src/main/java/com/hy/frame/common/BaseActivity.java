@@ -17,10 +17,10 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.bean.LoadCache;
-import com.hy.frame.http.MyHttpClient;
 import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
+import com.hy.http.MyHttpClient;
 
 /**
  * 父类Activity

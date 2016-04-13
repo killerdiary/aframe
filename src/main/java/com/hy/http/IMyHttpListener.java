@@ -1,4 +1,4 @@
-package com.hy.frame.http;
+package com.hy.http;
 
 import com.hy.frame.bean.ResultInfo;
 
