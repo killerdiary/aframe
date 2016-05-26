@@ -7,10 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,7 +16,6 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.util.HyUtil;
-import com.hy.frame.util.MyLog;
 
 /**
  * 主页 Nav
@@ -54,6 +50,7 @@ public class NavView extends FrameLayout implements Checkable {
         boolean checked = a.getBoolean(R.styleable.NavView_navChecked, false);
         boolean horizontal = a.getBoolean(R.styleable.NavView_navHorizontal, false);
         boolean textRight = a.getBoolean(R.styleable.NavView_navTextRight, false);
+        boolean center = a.getBoolean(R.styleable.NavView_navCenter, false);
         int padding = a.getDimensionPixelSize(R.styleable.NavView_navPadding, 0);
         int drawWidth = a.getDimensionPixelSize(R.styleable.NavView_navDrawWidth, 0);
         int drawHeight = a.getDimensionPixelSize(R.styleable.NavView_navDrawHeight, 0);
@@ -91,7 +88,13 @@ public class NavView extends FrameLayout implements Checkable {
             txtKey.setGravity(Gravity.CENTER);
             llyContainer.addView(txtKey, txtLlp);
         }
-        addView(llyContainer, new LayoutParams(horizontal ? LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT, horizontal ? LayoutParams.MATCH_PARENT : LayoutParams.MATCH_PARENT));
+        LayoutParams clp = new LayoutParams(horizontal ? LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT, horizontal ? LayoutParams.MATCH_PARENT : LayoutParams.MATCH_PARENT);
+        if (center) {
+            clp.width = LayoutParams.WRAP_CONTENT;
+            clp.height = LayoutParams.WRAP_CONTENT;
+            clp.gravity = Gravity.CENTER;
+        }
+        addView(llyContainer, clp);
         if (horizontal && drawRight != null) {
             ImageView imgRight = new ImageView(getContext());
             LayoutParams rllp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

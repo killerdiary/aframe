@@ -26,6 +26,8 @@
         <attr name="navDrawHeight" format="dimension" />
         <attr name="navTextRight" format="boolean" />
         <attr name="navPadding" format="dimension" />
+        <attr name="navCenter" format="boolean" />
+        <attr name="navDrawPadding" format="dimension" />
     </declare-styleable>
     <declare-styleable name="CircleImageView">
         <attr name="civBorderWidth" format="dimension" />
@@ -54,5 +56,6 @@
         <attr name="kvValueMarginRight" format="dimension" />
         <attr name="kvValueMarginTop" format="dimension" />
         <attr name="kvValueMarginBottom" format="dimension" />
+        <attr name="kvValueRight" format="boolean" />
     </declare-styleable>
 </resources>

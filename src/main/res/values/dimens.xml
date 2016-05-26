@@ -38,12 +38,12 @@
     <dimen name="web_refresh_progressbar_left">20dip</dimen>
     <dimen name="shadow_width">20dip</dimen>
     <dimen name="shadow_width_left">14dip</dimen>
-    <dimen name="txt_default">14sp</dimen>
-    <dimen name="txt_medium">16sp</dimen>
+    <dimen name="txt_default">16sp</dimen>
+    <dimen name="txt_medium">18sp</dimen>
     <dimen name="txt_big">20sp</dimen>
-    <dimen name="txt_small">12sp</dimen>
-    <dimen name="txt_smaller">10sp</dimen>
-    <dimen name="ico_width">20dip</dimen>
+    <dimen name="txt_small">14sp</dimen>
+    <dimen name="txt_smaller">12sp</dimen>
+    <dimen name="ico_width">12dip</dimen>
     <!-- END 常用 -->
     <!-- Add -->
 
