@@ -2,6 +2,7 @@ package com.hy.frame.view.recycler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +23,9 @@ public class LoadMoreHolder extends RecyclerView.ViewHolder {
 
     public LoadMoreHolder(View v) {
         super(v);
+        if (v.getLayoutParams() == null) {
+            v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
         proFoot = (ProgressBar) v.findViewById(R.id.footer_proFoot);
         txtFootHint = (TextView) v.findViewById(R.id.footer_txtFootHint);
     }

@@ -70,7 +70,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_FOOTER)
-            return new LoadMoreHolder(inflate(parent, R.layout.in_lv_footer));
+            return new LoadMoreHolder(inflate(parent, R.layout.in_recycler_footer));
         return createView(parent);
     }
 

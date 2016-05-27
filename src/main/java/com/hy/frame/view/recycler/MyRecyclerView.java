@@ -91,6 +91,7 @@ public class MyRecyclerView extends RecyclerView {
                         //进入加载
                         loadingMore = true;
                         adapter.setLoadMoreState(LoadMoreHolder.STATE_LOAD_ING);
+                        adapter.notifyDataSetChanged();
                         loadMoreListener.onLoadMore();
                     }
                 }

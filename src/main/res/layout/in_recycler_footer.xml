@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/footer_rlyFoot"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/lv_heigth"
+        android:layout_height="60dip"
+        android:background="@color/blue"
         android:padding="10dip">
 
         <!-- 进度条 -->
@@ -14,7 +15,7 @@
             android:id="@+id/footer_proFoot"
             android:layout_width="@dimen/web_refresh_progressbar_width"
             android:layout_height="@dimen/web_refresh_progressbar_width"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/web_refresh_progressbar_left"
             android:indeterminate="false"
             android:indeterminateDrawable="?attr/appLoadingSmallDraw" />
@@ -24,9 +25,9 @@
             style="@style/txtDefaultGrayStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:text="松开查看更多" />
 
-    </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>
