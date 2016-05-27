@@ -1,9 +1,5 @@
 package com.hy.frame.view;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -23,9 +19,13 @@ import android.widget.TextView;
 import com.hy.frame.R;
 import com.hy.frame.util.HyUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
- * @title 自定义ListView(下拉刷新，点击查看更多)
  * @author heyan
+ * @title 自定义ListView(下拉刷新，点击查看更多)
  * @time 2013-6-27 下午2:59:52
  */
 public class MyListView extends ListView implements OnScrollListener {
@@ -95,7 +95,7 @@ public class MyListView extends ListView implements OnScrollListener {
 
     /**
      * 初始化头部和底部
-     * 
+     *
      * @param context
      */
     private void init(Context context) {
@@ -121,7 +121,8 @@ public class MyListView extends ListView implements OnScrollListener {
         headerHeight = getResources().getDimensionPixelSize(R.dimen.lv_heigth);
         headView.setPadding(0, -1 * headerHeight, 0, 0);
         headView.invalidate();
-        addHeaderView(headView, null, false);
+        //addHeaderView(headView, null, false);
+//        addHeaderView(headView);
     }
 
     private void initFooter() {
@@ -154,7 +155,7 @@ public class MyListView extends ListView implements OnScrollListener {
     }
 
     public void onScroll(AbsListView arg0, int firstVisiableItem,
-            int visibleItemCount, int totalItemCount) {
+                         int visibleItemCount, int totalItemCount) {
         if (state == FLAG_DONE) {
             if (firstVisiableItem == 0) {
                 scrollTop = true;
@@ -177,137 +178,137 @@ public class MyListView extends ListView implements OnScrollListener {
         // 正在刷新
         if (pullDownRefresh || pullUpRefresh) {
             switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (!(scrollTop || scrollBottom))
+                case MotionEvent.ACTION_DOWN:
+                    if (!(scrollTop || scrollBottom))
+                        break;
+                    // MyLog.e("ACTION_DOWN");
+                    if (!isRecored) {
+                        // 开始检测
+                        isRecored = true;
+                        startY = (int) event.getY();
+                        direction = 0;
+                        // MyLog.e("ACTION_DOWN 记录当前位置:" + startY);
+                    }
                     break;
-                // MyLog.e("ACTION_DOWN");
-                if (!isRecored) {
-                    // 开始检测
-                    isRecored = true;
-                    startY = (int) event.getY();
-                    direction = 0;
-                    // MyLog.e("ACTION_DOWN 记录当前位置:" + startY);
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (!(scrollTop || scrollBottom))
+                case MotionEvent.ACTION_MOVE:
+                    if (!(scrollTop || scrollBottom))
+                        break;
+                    int tempY = (int) event.getY();
+                    // MyLog.e("ACTION_MOVE");
+                    if (!isRecored) {
+                        isRecored = true;
+                        startY = tempY;
+                        direction = 0;
+                        // MyLog.e("ACTION_MOVE 记录当前位置:" + startY);
+                    }
+                    // 检测开启，没有刷新，没有加载
+                    if (state != FLAG_REFRESHING && isRecored) {
+                        // 保证在设置padding的过程中，当前的位置一直是在head，否则如果当列表超出屏幕的话，当在上推的时候，列表会同时进行滚动
+                        int distance = tempY - startY;
+                        int abs = Math.abs(distance);
+                        if (state == FLAG_DONE) {
+                            if (distance != 0) {
+                                if (distance > 0)
+                                    direction = TO_DOWN;
+                                else
+                                    direction = TO_UP;
+                                state = FLAG_PULLING;
+                                changeViewByState();
+                            }
+                            // MyLog.e("ACTION_MOVE FLAG_DONE" + direction);
+                        }
+                        if (direction == TO_DOWN && !pullDownRefresh) {
+                            state = FLAG_DONE;
+                            break;
+                        }
+                        if (direction == TO_UP && !pullUpRefresh) {
+                            state = FLAG_DONE;
+                            break;
+                        }
+                        if (state == FLAG_PULLING) {
+                            // MyLog.e("ACTION_MOVE FLAG_PULLING " + direction);
+                            if (direction == TO_DOWN) {
+                                if (distance / RATIO >= headerHeight) {
+                                    state = FLAG_RELEASE;
+                                    isBack = true;
+                                    changeViewByState();
+                                } else if (distance <= 0) {
+                                    state = FLAG_DONE;
+                                    changeViewByState();
+                                }
+                                headView.setPadding(0, distance / RATIO
+                                        - headerHeight, 0, 0);
+                            } else if (direction == TO_UP) {
+                                if (abs / RATIO >= footerHeight) {
+                                    state = FLAG_RELEASE;
+                                    isBack = true;
+                                    changeViewByState();
+                                } else if (distance >= 0) {
+                                    state = FLAG_DONE;
+                                    changeViewByState();
+                                }
+                                footView.setPadding(0, 0, 0, abs / RATIO - 1
+                                        * footerHeight);
+                            }
+                        }
+                        // 可以松手去刷新了
+                        if (state == FLAG_RELEASE) {
+                            // MyLog.e("ACTION_MOVE 可以松手去刷新了");
+                            if (direction == TO_DOWN) {
+                                // setSelection(0);
+                                // 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
+                                if ((distance / RATIO < headerHeight)
+                                        && distance > 0) {
+                                    state = FLAG_PULLING;
+                                    changeViewByState();
+                                } else if (distance <= 0) {
+                                    state = FLAG_DONE;
+                                    changeViewByState();
+                                }
+                                headView.setPadding(0, distance / RATIO
+                                        - headerHeight, 0, 0);
+                            } else if (direction == TO_UP) {
+                                if ((abs / RATIO < footerHeight) && distance < 0) {
+                                    state = FLAG_PULLING;
+                                    changeViewByState();
+                                } else if (distance >= 0) {
+                                    state = FLAG_DONE;
+                                    changeViewByState();
+                                }
+                                footView.setPadding(0, 0, 0, abs / RATIO - 1
+                                        * footerHeight);
+                            }
+                        }
+                    }
                     break;
-                int tempY = (int) event.getY();
-                // MyLog.e("ACTION_MOVE");
-                if (!isRecored) {
-                    isRecored = true;
-                    startY = tempY;
-                    direction = 0;
-                    // MyLog.e("ACTION_MOVE 记录当前位置:" + startY);
-                }
-                // 检测开启，没有刷新，没有加载
-                if (state != FLAG_REFRESHING && isRecored) {
-                    // 保证在设置padding的过程中，当前的位置一直是在head，否则如果当列表超出屏幕的话，当在上推的时候，列表会同时进行滚动
-                    int distance = tempY - startY;
-                    int abs = Math.abs(distance);
-                    if (state == FLAG_DONE) {
-                        if (distance != 0) {
-                            if (distance > 0)
-                                direction = TO_DOWN;
-                            else
-                                direction = TO_UP;
-                            state = FLAG_PULLING;
+                case MotionEvent.ACTION_UP:
+                    if (!(scrollTop || scrollBottom))
+                        break;
+                    if (state != FLAG_REFRESHING) {
+                        if (state == FLAG_DONE) {
+                        }
+                        if (state == FLAG_PULLING) {
+                            state = FLAG_DONE;
                             changeViewByState();
                         }
-                        // MyLog.e("ACTION_MOVE FLAG_DONE" + direction);
-                    }
-                    if (direction == TO_DOWN && !pullDownRefresh) {
-                        state = FLAG_DONE;
-                        break;
-                    }
-                    if (direction == TO_UP && !pullUpRefresh) {
-                        state = FLAG_DONE;
-                        break;
-                    }
-                    if (state == FLAG_PULLING) {
-                        // MyLog.e("ACTION_MOVE FLAG_PULLING " + direction);
-                        if (direction == TO_DOWN) {
-                            if (distance / RATIO >= headerHeight) {
-                                state = FLAG_RELEASE;
-                                isBack = true;
-                                changeViewByState();
-                            } else if (distance <= 0) {
-                                state = FLAG_DONE;
-                                changeViewByState();
+                        if (state == FLAG_RELEASE) {
+                            state = FLAG_REFRESHING;
+                            changeViewByState();
+                            if (direction == TO_DOWN) {
+                                if (pullDownRefreshListener != null) {
+                                    pullDownRefreshListener.onRefresh(this, false);
+                                }
+                            } else if (direction == TO_UP) {
+                                if (pullUpRefreshListener != null) {
+                                    pullUpRefreshListener.onRefresh(this, false);
+                                }
                             }
-                            headView.setPadding(0, distance / RATIO
-                                    - headerHeight, 0, 0);
-                        } else if (direction == TO_UP) {
-                            if (abs / RATIO >= footerHeight) {
-                                state = FLAG_RELEASE;
-                                isBack = true;
-                                changeViewByState();
-                            } else if (distance >= 0) {
-                                state = FLAG_DONE;
-                                changeViewByState();
-                            }
-                            footView.setPadding(0, 0, 0, abs / RATIO - 1
-                                    * footerHeight);
-                        }
-                    }
-                    // 可以松手去刷新了
-                    if (state == FLAG_RELEASE) {
-                        // MyLog.e("ACTION_MOVE 可以松手去刷新了");
-                        if (direction == TO_DOWN) {
-                            // setSelection(0);
-                            // 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
-                            if ((distance / RATIO < headerHeight)
-                                    && distance > 0) {
-                                state = FLAG_PULLING;
-                                changeViewByState();
-                            } else if (distance <= 0) {
-                                state = FLAG_DONE;
-                                changeViewByState();
-                            }
-                            headView.setPadding(0, distance / RATIO
-                                    - headerHeight, 0, 0);
-                        } else if (direction == TO_UP) {
-                            if ((abs / RATIO < footerHeight) && distance < 0) {
-                                state = FLAG_PULLING;
-                                changeViewByState();
-                            } else if (distance >= 0) {
-                                state = FLAG_DONE;
-                                changeViewByState();
-                            }
-                            footView.setPadding(0, 0, 0, abs / RATIO - 1
-                                    * footerHeight);
-                        }
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                if (!(scrollTop || scrollBottom))
-                    break;
-                if (state != FLAG_REFRESHING) {
-                    if (state == FLAG_DONE) {
-                    }
-                    if (state == FLAG_PULLING) {
-                        state = FLAG_DONE;
-                        changeViewByState();
-                    }
-                    if (state == FLAG_RELEASE) {
-                        state = FLAG_REFRESHING;
-                        changeViewByState();
-                        if (direction == TO_DOWN) {
-                            if (pullDownRefreshListener != null) {
-                                pullDownRefreshListener.onRefresh(this, false);
-                            }
-                        } else if (direction == TO_UP) {
-                            if (pullUpRefreshListener != null) {
-                                pullUpRefreshListener.onRefresh(this, false);
-                            }
-                        }
 
+                        }
                     }
-                }
-                isRecored = false;
-                isBack = false;
-                break;
+                    isRecored = false;
+                    isBack = false;
+                    break;
 
             }
         }
@@ -317,94 +318,94 @@ public class MyListView extends ListView implements OnScrollListener {
     private void changeViewByState() {
         if (direction == TO_DOWN) {
             switch (state) {
-            case FLAG_RELEASE:
-                imgHeadArrow.setVisibility(View.VISIBLE);
-                proHead.setVisibility(View.GONE);
-                txtHeadHint.setVisibility(View.VISIBLE);
-                txtHeadUpdateTime.setVisibility(View.VISIBLE);
-                imgHeadArrow.clearAnimation();
-                // imgHeadArrow.setImageResource(R.drawable.refresh_arrow_get);
-                imgHeadArrow.startAnimation(animation);
-                txtHeadHint.setText("请释放 刷新");
-                // Log.i("HyLog", "RELEASE_To_REFRESH 这是第  " + i++ + "步" + 12 +
-                // "请释放 刷新");
-                break;
-            case FLAG_PULLING:
-                proHead.setVisibility(View.GONE);
-                txtHeadHint.setVisibility(View.VISIBLE);
-                txtHeadUpdateTime.setVisibility(View.VISIBLE);
-                imgHeadArrow.clearAnimation();
-                imgHeadArrow.setVisibility(View.VISIBLE);
-                if (isBack) {
-                    isBack = false;
+                case FLAG_RELEASE:
+                    imgHeadArrow.setVisibility(View.VISIBLE);
+                    proHead.setVisibility(View.GONE);
+                    txtHeadHint.setVisibility(View.VISIBLE);
+                    txtHeadUpdateTime.setVisibility(View.VISIBLE);
                     imgHeadArrow.clearAnimation();
-                    imgHeadArrow.startAnimation(reverseAnimation);
-                    txtHeadHint.setText("下拉刷新");
-                } else {
-                    txtHeadHint.setText("下拉刷新");
-                }
-                break;
-            case FLAG_REFRESHING:
-                headView.setPadding(0, 0, 0, 0);
-                proHead.setVisibility(View.VISIBLE);
-                imgHeadArrow.clearAnimation();
-                imgHeadArrow.setVisibility(View.GONE);
-                txtHeadHint.setText("正在加载中 ...");
-                txtHeadUpdateTime.setVisibility(View.VISIBLE);
-                break;
-            case FLAG_DONE:
-                headView.setPadding(0, -1 * headerHeight, 0, 0);
-                proHead.setVisibility(View.GONE);
-                imgHeadArrow.clearAnimation();
-                imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
-                txtHeadHint.setText("已经加载完毕 ");
-                txtHeadUpdateTime.setVisibility(View.VISIBLE);
-                break;
+                    // imgHeadArrow.setImageResource(R.drawable.refresh_arrow_get);
+                    imgHeadArrow.startAnimation(animation);
+                    txtHeadHint.setText("请释放 刷新");
+                    // Log.i("HyLog", "RELEASE_To_REFRESH 这是第  " + i++ + "步" + 12 +
+                    // "请释放 刷新");
+                    break;
+                case FLAG_PULLING:
+                    proHead.setVisibility(View.GONE);
+                    txtHeadHint.setVisibility(View.VISIBLE);
+                    txtHeadUpdateTime.setVisibility(View.VISIBLE);
+                    imgHeadArrow.clearAnimation();
+                    imgHeadArrow.setVisibility(View.VISIBLE);
+                    if (isBack) {
+                        isBack = false;
+                        imgHeadArrow.clearAnimation();
+                        imgHeadArrow.startAnimation(reverseAnimation);
+                        txtHeadHint.setText("下拉刷新");
+                    } else {
+                        txtHeadHint.setText("下拉刷新");
+                    }
+                    break;
+                case FLAG_REFRESHING:
+                    headView.setPadding(0, 0, 0, 0);
+                    proHead.setVisibility(View.VISIBLE);
+                    imgHeadArrow.clearAnimation();
+                    imgHeadArrow.setVisibility(View.GONE);
+                    txtHeadHint.setText("正在加载中 ...");
+                    txtHeadUpdateTime.setVisibility(View.VISIBLE);
+                    break;
+                case FLAG_DONE:
+                    headView.setPadding(0, -1 * headerHeight, 0, 0);
+                    proHead.setVisibility(View.GONE);
+                    imgHeadArrow.clearAnimation();
+                    imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
+                    txtHeadHint.setText("已经加载完毕 ");
+                    txtHeadUpdateTime.setVisibility(View.VISIBLE);
+                    break;
             }
 
         } else if (direction == TO_UP) {
             switch (state) {
-            case FLAG_RELEASE:
-                imgFootArrow.setVisibility(View.VISIBLE);
-                proFoot.setVisibility(View.GONE);
-                txtFootHint.setVisibility(View.VISIBLE);
-                txtFootUpdateTime.setVisibility(View.VISIBLE);
-                imgFootArrow.clearAnimation();
-                // imgFootArrow.setImageResource(R.drawable.refresh_arrow_get);
-                imgFootArrow.startAnimation(animation);
-                txtFootHint.setText("请释放 加载更多");
-                break;
-            case FLAG_PULLING:
-                proFoot.setVisibility(View.GONE);
-                txtFootHint.setVisibility(View.VISIBLE);
-                txtFootUpdateTime.setVisibility(View.VISIBLE);
-                imgFootArrow.clearAnimation();
-                imgFootArrow.setVisibility(View.VISIBLE);
-                if (isBack) {
-                    isBack = false;
+                case FLAG_RELEASE:
+                    imgFootArrow.setVisibility(View.VISIBLE);
+                    proFoot.setVisibility(View.GONE);
+                    txtFootHint.setVisibility(View.VISIBLE);
+                    txtFootUpdateTime.setVisibility(View.VISIBLE);
                     imgFootArrow.clearAnimation();
-                    imgFootArrow.startAnimation(reverseAnimation);
-                    txtFootHint.setText("上拉加载更多");
-                } else {
-                    txtFootHint.setText("上拉加载更多");
-                }
-                break;
-            case FLAG_REFRESHING:
-                // footView.setPadding(0, 0, 0, 0);
-                proFoot.setVisibility(View.VISIBLE);
-                imgFootArrow.clearAnimation();
-                imgFootArrow.setVisibility(View.GONE);
-                txtFootHint.setText("正在加载中 ...");
-                txtFootUpdateTime.setVisibility(View.VISIBLE);
-                break;
-            case FLAG_DONE:
-                footView.setPadding(0, -1 * footerHeight, 0, 0);
-                proFoot.setVisibility(View.GONE);
-                imgFootArrow.clearAnimation();
-                imgFootArrow.setImageResource(R.drawable.refresh_arrow_top);
-                txtFootHint.setText("已经加载完毕 ");
-                txtFootUpdateTime.setVisibility(View.VISIBLE);
-                break;
+                    // imgFootArrow.setImageResource(R.drawable.refresh_arrow_get);
+                    imgFootArrow.startAnimation(animation);
+                    txtFootHint.setText("请释放 加载更多");
+                    break;
+                case FLAG_PULLING:
+                    proFoot.setVisibility(View.GONE);
+                    txtFootHint.setVisibility(View.VISIBLE);
+                    txtFootUpdateTime.setVisibility(View.VISIBLE);
+                    imgFootArrow.clearAnimation();
+                    imgFootArrow.setVisibility(View.VISIBLE);
+                    if (isBack) {
+                        isBack = false;
+                        imgFootArrow.clearAnimation();
+                        imgFootArrow.startAnimation(reverseAnimation);
+                        txtFootHint.setText("上拉加载更多");
+                    } else {
+                        txtFootHint.setText("上拉加载更多");
+                    }
+                    break;
+                case FLAG_REFRESHING:
+                    // footView.setPadding(0, 0, 0, 0);
+                    proFoot.setVisibility(View.VISIBLE);
+                    imgFootArrow.clearAnimation();
+                    imgFootArrow.setVisibility(View.GONE);
+                    txtFootHint.setText("正在加载中 ...");
+                    txtFootUpdateTime.setVisibility(View.VISIBLE);
+                    break;
+                case FLAG_DONE:
+                    footView.setPadding(0, -1 * footerHeight, 0, 0);
+                    proFoot.setVisibility(View.GONE);
+                    imgFootArrow.clearAnimation();
+                    imgFootArrow.setImageResource(R.drawable.refresh_arrow_top);
+                    txtFootHint.setText("已经加载完毕 ");
+                    txtFootUpdateTime.setVisibility(View.VISIBLE);
+                    break;
             }
         }
 
@@ -412,7 +413,7 @@ public class MyListView extends ListView implements OnScrollListener {
 
     /**
      * 下拉刷新
-     * 
+     *
      * @param refreshListener
      */
     public void setPullDownRefreshListener(OnRefreshListener refreshListener) {
@@ -422,7 +423,7 @@ public class MyListView extends ListView implements OnScrollListener {
 
     /**
      * 上拉刷新
-     * 
+     *
      * @param refreshListener
      */
     public void setPullUpRefreshListener(OnRefreshListener refreshListener) {
@@ -509,7 +510,7 @@ public class MyListView extends ListView implements OnScrollListener {
 
     /**
      * 获取当前时间Date
-     * 
+     *
      * @return 现在时间(Now)
      */
     public String getNowTime() {
@@ -534,6 +535,21 @@ public class MyListView extends ListView implements OnScrollListener {
 
     public void setPullUpRefresh(boolean pullUpRefresh) {
         this.pullUpRefresh = pullUpRefresh;
+    }
+
+    private boolean expandAllItem;
+
+    public void setExpandAllItem(boolean expandAllItem) {
+        this.expandAllItem = expandAllItem;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (expandAllItem) {
+            int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
+            super.onMeasure(widthMeasureSpec, expandSpec);
+        } else
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
 }

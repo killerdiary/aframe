@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/gray_dark"
     android:layout_height="wrap_content" >
 
     <RelativeLayout
         android:id="@+id/lv_rlyHead"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/lv_heigth"
-        android:padding="10dip" >
+        android:layout_height="@dimen/lv_heigth">
 
         <!-- 箭头 -->
 

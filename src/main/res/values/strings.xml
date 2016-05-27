@@ -17,7 +17,9 @@
     <string name="API_FLAG_NO_RESPONSE">服务器没有数据返回，请重试</string>
     <string name="API_FLAG_DATA_ERROR">服务器返回数据错误，请重试</string>
     <string name="API_FLAG_ANALYSIS_ERROR">服务器返回数据解析错误，请重试</string>
+    <string name="load_more">加载更多</string>
     <string name="loading">加载中&#8230;</string>
+    <string name="load_complete">加载完成</string>
     <string name="hint_net_fail">网络连接失败，点击重试</string>
     <string name="hint_nodata">没有数据</string>
     <string name="back">返回</string>
