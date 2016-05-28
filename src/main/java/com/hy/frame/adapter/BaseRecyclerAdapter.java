@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hy.frame.R;
+import com.hy.frame.view.recycler.HeaderHolder;
 import com.hy.frame.view.recycler.LoadMoreHolder;
 
 import java.util.List;
@@ -19,12 +20,13 @@ import java.util.List;
  */
 public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     public static final int TYPE_HEADER = 1;
-    public static final int TYPE_FOOTER = 2;
+    public static final int TYPE_MORE = 2;
     private Context context;
     private List<T> datas;
     private IAdapterListener listener;
     private boolean isCanLoadMore;
     private int loadMoreState;
+    private int headerResId;
 
     public BaseRecyclerAdapter(Context context, List<T> datas) {
         this.context = context;
@@ -57,6 +59,10 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         this.loadMoreState = state;
     }
 
+    public void setHeaderResId(int headerResId) {
+        this.headerResId = headerResId;
+    }
+
     protected View inflate(ViewGroup parent, int resId) {
         return LayoutInflater.from(context).inflate(resId, null);
     }
@@ -69,8 +75,10 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_FOOTER)
+        if (viewType == TYPE_MORE)
             return new LoadMoreHolder(inflate(parent, R.layout.in_recycler_footer));
+        if (viewType == TYPE_HEADER)
+            return createHeaderView(inflate(parent, headerResId));
         return createView(parent);
     }
 
@@ -80,6 +88,8 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         if (holder instanceof LoadMoreHolder) {
             LoadMoreHolder footer = (LoadMoreHolder) holder;
             footer.onChangeState(loadMoreState);
+        } else if (holder instanceof HeaderHolder) {
+            bindHearderData(holder, position);
         } else {
             bindViewData(holder, position);
         }
@@ -89,12 +99,17 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     public int getItemCount() {
         int size = datas == null ? 0 : datas.size();
         if (size > 0 && isCanLoadMore) {
-            size = size + 1;
+            size++;
+        }
+        if (headerResId != 0) {
+            size++;
         }
         return size;
     }
 
     public T getItem(int position) {
+        if (headerResId != 0)
+            position = position - 1;
         return datas.get(position);
     }
 
@@ -107,7 +122,10 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         // 最后一个item设置为footerView
         if (isCanLoadMore && position + 1 == getItemCount()) {
-            return TYPE_FOOTER;
+            return TYPE_MORE;
+        }
+        if (headerResId != 0 && position == 0) {
+            return TYPE_HEADER;
         }
         return super.getItemViewType(position);
     }
@@ -121,4 +139,12 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
      * bind child data
      */
     protected abstract void bindViewData(RecyclerView.ViewHolder holder, int position);
+
+    protected HeaderHolder createHeaderView(View v) {
+        return new HeaderHolder(v);
+    }
+
+    protected void bindHearderData(RecyclerView.ViewHolder holder, int position) {
+
+    }
 }
