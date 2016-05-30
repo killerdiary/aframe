@@ -1,10 +1,5 @@
 package com.hy.frame.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.tsz.afinal.FinalBitmap;
-
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -21,6 +16,11 @@ import com.hy.frame.R;
 import com.hy.frame.adapter.ViewPagerAdapter;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
+
+import net.tsz.afinal.FinalBitmap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 显示ViewPager功能
@@ -70,6 +70,10 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         llyPoint.setGravity(Gravity.CENTER);
         llyPoint.setPadding(HyUtil.dip2px(context, 2), HyUtil.dip2px(context, 2), HyUtil.dip2px(context, 2), HyUtil.dip2px(context, 2));
         addView(llyPoint, prlp);
+    }
+
+    public ViewPager getViewPager() {
+        return vPager;
     }
 
     public void addImage(int drawId) {
@@ -127,10 +131,19 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
             adapter.refresh(views);
     }
 
+    private int pointResId;
+
+    public void setPointResId(int pointResId) {
+        this.pointResId = pointResId;
+    }
+
     private void addPoint() {
         CircleImageView img = new CircleImageView(getContext());
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(HyUtil.dip2px(getContext(), 8), HyUtil.dip2px(getContext(), 8));
-        img.setBackgroundResource(R.drawable.btn_circle_selector);
+        if (pointResId != 0)
+            img.setBackgroundResource(pointResId);
+        else
+            img.setBackgroundResource(R.drawable.btn_circle_selector);
         llp.setMargins(HyUtil.dip2px(getContext(), 4), HyUtil.dip2px(getContext(), 4), HyUtil.dip2px(getContext(), 4), HyUtil.dip2px(getContext(), 4));
         if (llyPoint.getChildCount() == 0) {
             img.setSelected(true);
