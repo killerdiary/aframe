@@ -85,12 +85,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         }
     }
 
-    /**
-     * 初始化数据
-     */
-    public void onStartData() {
-
-    }
+//    /**
+//     * 初始化数据
+//     */
+//    public void onStartData() {}
 
     public TextView getTitleText() {
         if (txtTitle != null)
@@ -349,7 +347,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         startAct(intent, cls);
     }
 
-    public void startActivityForResult(Class<?> cls, int requestCode) {
+    public void startActForResult(Class<?> cls, int requestCode) {
         Intent intent = new Intent(this, cls);
         intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
         startActivityForResult(intent, requestCode);

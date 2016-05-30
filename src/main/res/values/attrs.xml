@@ -17,6 +17,7 @@
         <attr name="navHorizontal" format="boolean" />
         <attr name="navChecked" format="boolean" />
         <attr name="navDrawRight" format="reference" />
+        <attr name="navDrawRightWidth" format="dimension" />
         <attr name="navText" format="string" />
         <attr name="navTextColor" format="reference|color" />
         <attr name="navTextSize" format="dimension" />
@@ -37,6 +38,7 @@
     </declare-styleable>
     <declare-styleable name="KeyValueView">
         <attr name="kvDrawRight" format="reference" />
+        <attr name="kvDrawRightWidth" format="dimension" />
         <attr name="kvKey" format="string" />
         <attr name="kvKeyColor" format="reference|color" />
         <attr name="kvKeySize" format="dimension" />

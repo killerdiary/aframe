@@ -28,5 +28,6 @@
     <string name="cancel">取消</string>
     <string name="timer_send_re">重新发送</string>
     <string name="timer_sending">发送中...</string>
+    <string name="loginout">退出当前账号</string>
 
 </resources>

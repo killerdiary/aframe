@@ -71,6 +71,7 @@ public class KeyValueView extends LinearLayout {
         int valueMarginRight = a.getDimensionPixelSize(R.styleable.KeyValueView_kvValueMarginRight, 0);
         int valueMarginTop = a.getDimensionPixelSize(R.styleable.KeyValueView_kvValueMarginTop, 0);
         int valueMarginBottom = a.getDimensionPixelSize(R.styleable.KeyValueView_kvValueMarginBottom, 0);
+        int drawRightWidth = a.getDimensionPixelSize(R.styleable.KeyValueView_kvDrawRightWidth, 0);
         boolean valueRight = a.getBoolean(R.styleable.KeyValueView_kvValueRight, false);
         a.recycle();
         txtKey = new TextView(context);
@@ -129,7 +130,11 @@ public class KeyValueView extends LinearLayout {
         if (drawRight != null) {
             imgRight = new ImageView(context);
             imgRight.setImageDrawable(drawRight);
-            addView(imgRight, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            if (drawRightWidth > 0) {
+                imgRight.setScaleType(ImageView.ScaleType.FIT_XY);
+                addView(imgRight, new LayoutParams(drawRightWidth, drawRightWidth));
+            } else
+                addView(imgRight, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
 
     }

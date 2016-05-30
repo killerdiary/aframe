@@ -54,6 +54,8 @@ public class NavView extends FrameLayout implements Checkable {
         int padding = a.getDimensionPixelSize(R.styleable.NavView_navPadding, 0);
         int drawWidth = a.getDimensionPixelSize(R.styleable.NavView_navDrawWidth, 0);
         int drawHeight = a.getDimensionPixelSize(R.styleable.NavView_navDrawHeight, 0);
+        int drawPadding = a.getDimensionPixelSize(R.styleable.NavView_navDrawPadding, 0);
+        int drawRightWidth = a.getDimensionPixelSize(R.styleable.NavView_navDrawRightWidth, 0);
         a.recycle();
         llyContainer = new LinearLayout(context);
         llyContainer.setOrientation(horizontal ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
@@ -82,9 +84,9 @@ public class NavView extends FrameLayout implements Checkable {
         } else {
             LinearLayout.LayoutParams txtLlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             if (horizontal)
-                txtLlp.leftMargin = getResources().getDimensionPixelSize(R.dimen.margin_normal);
+                txtLlp.leftMargin = drawPadding;
             else
-                txtLlp.topMargin = getResources().getDimensionPixelSize(R.dimen.padding_normal);
+                txtLlp.topMargin = drawPadding;
             txtKey.setGravity(Gravity.CENTER);
             llyContainer.addView(txtKey, txtLlp);
         }
@@ -98,6 +100,11 @@ public class NavView extends FrameLayout implements Checkable {
         if (horizontal && drawRight != null) {
             ImageView imgRight = new ImageView(getContext());
             LayoutParams rllp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            if (drawRightWidth > 0) {
+                imgRight.setScaleType(ImageView.ScaleType.FIT_XY);
+                rllp.width = drawRightWidth;
+                rllp.height = drawRightWidth;
+            }
             imgRight.setImageDrawable(drawRight);
             rllp.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
             addView(imgRight, rllp);
