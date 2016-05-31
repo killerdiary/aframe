@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.bean.LoadCache;
-import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.http.MyHttpClient;
@@ -298,14 +297,14 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     protected void startAct(Intent intent, Class<?> cls) {
         if (intent == null)
             intent = new Intent();
-        intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
+        intent.putExtra(BaseActivity.LAST_ACT, this.getClass().getSimpleName());
         intent.setClass(getActivity(), cls);
         startActivity(intent);
     }
 
     public void startActForResult(Class<?> cls, int requestCode) {
         Intent intent = new Intent(getActivity(), cls);
-        intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
+        intent.putExtra(BaseActivity.LAST_ACT, this.getClass().getSimpleName());
         startActivityForResult(intent, requestCode);
     }
 

@@ -44,6 +44,7 @@ public class AjaxParams {
      * @param key
      * @param file
      */
+    @Deprecated
     public void put(String key, File file) {
         try {
             put(key, new FileInputStream(file), file.getName());
@@ -57,6 +58,7 @@ public class AjaxParams {
      * @param stream
      * @param fileName
      */
+    @Deprecated
     public void put(String key, InputStream stream, String fileName) {
         put(key, stream, fileName, null);
     }
@@ -67,6 +69,7 @@ public class AjaxParams {
      * @param fileName
      * @param contentType
      */
+    @Deprecated
     public void put(String key, InputStream stream, String fileName,
                     String contentType) {
         if (key != null && stream != null) {
@@ -74,6 +77,7 @@ public class AjaxParams {
         }
     }
 
+    @Deprecated
     public HttpEntity getEntity() {
         HttpEntity entity = null;
         if (!fileParams.isEmpty()) {
@@ -107,6 +111,11 @@ public class AjaxParams {
         return entity;
     }
 
+    public ConcurrentHashMap<String, String> getUrlParams() {
+        return urlParams;
+    }
+
+    @Deprecated
     private static class FileWrapper {
         public InputStream inputStream;
         public String fileName;

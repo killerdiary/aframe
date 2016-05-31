@@ -15,10 +15,7 @@ public class Constant {
      * 是否是首次进入
      */
     public static final String FIRST_ENTER = "FIRST_ENTER";
-    /**
-     * 用户是否登录
-     */
-    public static final String LAST_ACT = "LAST_ACT";
+
     /**
      * 用户信息
      */

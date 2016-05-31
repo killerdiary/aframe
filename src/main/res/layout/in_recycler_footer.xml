@@ -7,7 +7,7 @@
         android:id="@+id/footer_rlyFoot"
         android:layout_width="match_parent"
         android:layout_height="60dip"
-        android:background="@color/blue"
+        android:background="@color/transparent"
         android:padding="10dip">
 
         <!-- 进度条 -->

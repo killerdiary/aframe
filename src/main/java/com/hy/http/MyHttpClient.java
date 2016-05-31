@@ -4,16 +4,18 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.hy.frame.R;
 import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
+import com.yolanda.nohttp.NoHttp;
+import com.yolanda.nohttp.OnResponseListener;
+import com.yolanda.nohttp.Request;
+import com.yolanda.nohttp.RequestMethod;
+import com.yolanda.nohttp.RequestQueue;
+import com.yolanda.nohttp.Response;
 
 import net.tsz.afinal.utils.FieldUtils;
 
@@ -78,7 +80,7 @@ public abstract class MyHttpClient {
         // this.http = new FinalHttp();
         // this.http.configTimeout(TIME_OUT);
         this.gson = new Gson();
-        this.requestQueue = Volley.newRequestQueue(context);
+        this.requestQueue = NoHttp.newRequestQueue();
     }
 
     public Context getContext() {
@@ -222,15 +224,14 @@ public abstract class MyHttpClient {
             onRequestError(result);
             return;
         }
-        showLoading();
         if (signatures != null) {
             if (params == null)
                 params = new AjaxParams();
             params.put("signatures", signatures);
         }
-        MyLog.d(url);
+        MyLog.d("request", url);
         if (params != null) {
-            MyLog.d(params.toString());
+            MyLog.d("request", params.getUrlParams().toString());
         }
 //        FinalHttp fh = new FinalHttp();
 //        fh.configTimeout(TIME_OUT);
@@ -243,45 +244,68 @@ public abstract class MyHttpClient {
 //                fh.addHeader(map.getKey(), map.getValue());
 //            }
 //        }
-        int method = isGet ? method = Request.Method.GET : Request.Method.POST;
+
 //        if (isGet)
 //            fh.get(url, params, contentType, callback);
 //        else
 //            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
-        ISuccessListener successListener = new ISuccessListener() {
+        RequestMethod method = isGet ? RequestMethod.GET : RequestMethod.POST;
+        Request<String> request = NoHttp.createStringRequest(url, method);
+//        if (HyUtil.isNoEmpty(accept))
+//            fh.addHeader("Accept", accept);
+        //request.set
+        //new StringRequest(method, url, params, successListener, errorListener);
+        request.setTag(result);
+        if (headerParams != null) {
+            for (Map.Entry<String, String> map : headerParams.entrySet()) {
+                request.addHeader(map.getKey(), map.getValue());
+            }
+        }
+        if (params != null) {
+            request.add(params.getUrlParams());
+        }
+        requestQueue.add(requestCode, request, new OnResponseListener<String>() {
             @Override
-            void onSuccess(String data) {
+            public void onStart(int what) {
+                MyLog.d("onStart", what);
+                showLoading();
+            }
+
+            @Override
+            public void onSucceed(int what, Response<String> response) {
                 hideLoading();
-                MyLog.d("onSuccess | " + data);
+                // 接受请求结果
+                String data = response.get();
+                MyLog.d("onSucceed", what + "|" + data);
+                ResultInfo result = (ResultInfo) response.getTag();
+                // Bitmap imageHead = response.get(); // 如果是bitmap类型，都是同样的用法
                 if (HyUtil.isNoEmpty(data)) {
                     data = data.trim();
                     if (cls == null) {
-                        getResult().setObj(data);
-                        onRequestSuccess(getResult());
+                        result.setObj(data);
+                        onRequestSuccess(result);
                     } else if (!TextUtils.equals(data.substring(0, 1), "{") || !TextUtils.equals(data.substring(data.length() - 1), "}")) {
-                        getResult().setMsg(getString(R.string.API_FLAG_DATA_ERROR));
-                        onRequestError(getResult());
+                        result.setMsg(getString(R.string.API_FLAG_DATA_ERROR));
+                        onRequestError(result);
                     } else {
                         if (data.contains("[]"))
                             data = data.replaceAll("\\[\\]", "null");
                         if (data.contains("\"\""))
                             data = data.replaceAll("\"\"", "null");
-                        doSuccess(getResult(), data, cls, list);
+                        doSuccess(result, data, cls, list);
                     }
                 } else {
-                    getResult().setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
-                    onRequestError(getResult());
+                    result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
+                    onRequestError(result);
                 }
             }
-        };
-        successListener.setResult(result);
-        IErrorListener errorListener = new IErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
+                MyLog.d("onFailed", what + "|" + exception.getMessage());
                 hideLoading();
-                MyLog.e("onFailure | " + error.getMessage());
                 int code = R.string.API_FLAG_CON_EXCEPTION;
-                String msg = error.getMessage();
+                String msg = exception.getMessage();
                 if (msg != null) {
                     String thr = msg.toLowerCase(Locale.CHINA);
                     if (msg.contains("broken pipe"))
@@ -291,18 +315,16 @@ public abstract class MyHttpClient {
                     else if (msg.contains("unknownhostexception"))
                         code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
                 }
-                getResult().setMsg(getString(code));
-                onRequestError(getResult());
-                hideLoading();
+                ResultInfo result = (ResultInfo) tag;
+                result.setMsg(getString(code));
+                onRequestError(result);
             }
-        };
-        errorListener.setResult(result);
-        StringRequest request = new StringRequest(method, url, params, successListener, errorListener);
-        request.setResult(result);
-        if (headerParams != null) {
-            request.setHeader(headerParams);
-        }
-        requestQueue.add(request);
+
+            @Override
+            public void onFinish(int what) {
+                MyLog.d("onFinish", what);
+            }
+        });
     }
 
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {
@@ -325,59 +347,68 @@ public abstract class MyHttpClient {
             }
             // 成功
             if (flag == 1) {
-                if (!HyUtil.isEmpty(data)) {
-                    if (list) {
-                        // List<T> rlt = gson.fromJson(data, newTypeToken<T>() {}.getType());
-                        List<T> beans = null;
-                        if (data.indexOf("[]") != 0) {
-                            JSONArray rlt = new JSONArray(data);
-                            if (rlt.length() > 0) {
-                                int size = rlt.length();
-                                beans = new ArrayList<>();
-                                for (int i = 0; i < size; i++) {
-                                    // String str = gson.toJson(rlt.get(i));
-                                    String str = rlt.getString(i);
-                                    T t = gson.fromJson(str, cls);
-                                    beans.add(t);
-                                }
-                            }
-                            result.setObj(beans);
-                        }
-                        onRequestSuccess(result);
-                    } else {
-                        if (cls == String.class) {
-                            result.setObj(data);
-                        } else if (cls == int.class || cls == Integer.class) {
-                            result.setObj(Integer.parseInt(data));
-                        } else if (cls == float.class || cls == Float.class) {
-                            result.setObj(Float.parseFloat(data));
-                        } else if (cls == double.class || cls == Double.class) {
-                            result.setObj(Double.parseDouble(data));
-                        } else if (cls == long.class || cls == Long.class) {
-                            result.setObj(Long.parseLong(data));
-                        } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
-                            result.setObj(FieldUtils.stringToDateTime(data));
-                        } else if (cls == boolean.class || cls == Boolean.class) {
-                            result.setObj(Boolean.parseBoolean(data));
-                        } else {
-                            T t = gson.fromJson(data, cls);
-                            result.setObj(t);
-                        }
-                        onRequestSuccess(result);
-                    }
-                } else
-                    onRequestSuccess(result);
-                return;
+                doSuccessData(result, data, cls, list);
             } else {
                 onRequestError(result);
-                return;
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
+            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
+            onRequestError(result);
         }
-        result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
-        result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
-        onRequestError(result);
+    }
+
+    protected <T> void doSuccessData(ResultInfo result, String data, Class<T> cls, boolean list) {
+        if (!HyUtil.isEmpty(data)) {
+            try {
+                if (list) {
+                    // List<T> rlt = gson.fromJson(data, newTypeToken<T>() {}.getType());
+                    List<T> beans = null;
+                    if (data.indexOf("[]") != 0) {
+                        JSONArray rlt = new JSONArray(data);
+                        if (rlt.length() > 0) {
+                            int size = rlt.length();
+                            beans = new ArrayList<>();
+                            for (int i = 0; i < size; i++) {
+                                // String str = gson.toJson(rlt.get(i));
+                                String str = rlt.getString(i);
+                                T t = gson.fromJson(str, cls);
+                                beans.add(t);
+                            }
+                        }
+                        result.setObj(beans);
+                    }
+                    onRequestSuccess(result);
+                } else {
+                    if (cls == String.class) {
+                        result.setObj(data);
+                    } else if (cls == int.class || cls == Integer.class) {
+                        result.setObj(Integer.parseInt(data));
+                    } else if (cls == float.class || cls == Float.class) {
+                        result.setObj(Float.parseFloat(data));
+                    } else if (cls == double.class || cls == Double.class) {
+                        result.setObj(Double.parseDouble(data));
+                    } else if (cls == long.class || cls == Long.class) {
+                        result.setObj(Long.parseLong(data));
+                    } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
+                        result.setObj(FieldUtils.stringToDateTime(data));
+                    } else if (cls == boolean.class || cls == Boolean.class) {
+                        result.setObj(Boolean.parseBoolean(data));
+                    } else {
+                        T t = gson.fromJson(data, cls);
+                        result.setObj(t);
+                    }
+                    onRequestSuccess(result);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
+            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
+            onRequestError(result);
+        } else
+            onRequestSuccess(result);
     }
 
     protected void onRequestError(ResultInfo result) {
@@ -437,7 +468,7 @@ public abstract class MyHttpClient {
     public void onDestroy() {
         //在这里销毁所有当前请求
         MyLog.d(getClass(), "onDestroy");
-        if(requestQueue!=null)
+        if (requestQueue != null)
             requestQueue.stop();
         isDestroy = true;
     }

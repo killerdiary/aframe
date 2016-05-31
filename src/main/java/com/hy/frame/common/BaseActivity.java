@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.bean.LoadCache;
-import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.http.MyHttpClient;
@@ -28,7 +27,8 @@ import com.hy.http.MyHttpClient;
  * time 2015/12/23 16:40
  */
 public abstract class BaseActivity extends AppCompatActivity implements android.view.View.OnClickListener, IBaseActivity {
-
+    public static final String LAST_ACT = "LAST_ACT";
+    public static final String BUNDLE = "TAG_BUNDLE";
     private BaseApplication app;
     protected Context context = this;
     private Class<?> lastAct;// 上一级 Activity
@@ -53,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     private void init() {
-        lastSkipAct = getIntent().getStringExtra(Constant.LAST_ACT);// 获取上一级Activity的Name
+        lastSkipAct = getIntent().getStringExtra(LAST_ACT);// 获取上一级Activity的Name
         try {
             app = (BaseApplication) getApplication();
         } catch (Exception e) {
@@ -313,19 +313,25 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     /**
-     * @see #startAct(Intent, Class)
+     * @see #startAct(Class, Bundle)
      */
     protected void startAct(Class<?> cls) {
-        startAct(null, cls);
+        startAct(cls, null);
+    }
+
+    protected void startAct(Class<?> cls, Bundle bundle) {
+        startAct(null, cls, bundle);
     }
 
     /**
      * 启动Activity
      */
-    protected void startAct(Intent intent, Class<?> cls) {
+    protected void startAct(Intent intent, Class<?> cls, Bundle bundle) {
         if (intent == null)
             intent = new Intent();
-        intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
+        if (bundle != null)
+            intent.putExtra(BUNDLE, bundle);
+        intent.putExtra(LAST_ACT, this.getClass().getSimpleName());
         intent.setClass(this, cls);
         startActivity(intent);
     }
@@ -344,13 +350,26 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     @Deprecated
     protected void startActClear(Intent intent, Class<?> cls) {
         if (app != null) app.clear();
-        startAct(intent, cls);
+        startAct(intent, cls, null);
     }
 
-    public void startActForResult(Class<?> cls, int requestCode) {
+    protected void startActForResult(Class<?> cls, int requestCode) {
+        startActForResult(cls, null, requestCode);
+    }
+
+    protected void startActForResult(Class<?> cls, Bundle bundle, int requestCode) {
         Intent intent = new Intent(this, cls);
-        intent.putExtra(Constant.LAST_ACT, this.getClass().getSimpleName());
+        intent.putExtra(LAST_ACT, this.getClass().getSimpleName());
+        if (bundle != null)
+            intent.putExtra(BUNDLE, bundle);
         startActivityForResult(intent, requestCode);
+    }
+
+    protected Bundle getBundle() {
+        if (getIntent().hasExtra(BUNDLE)) {
+            return getIntent().getBundleExtra(BUNDLE);
+        }
+        return null;
     }
 
     @Override
