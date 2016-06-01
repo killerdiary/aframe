@@ -17,9 +17,18 @@ import com.hy.frame.util.HyUtil;
  * @time 2015/11/16 13:25
  */
 public abstract class BaseDialog extends Dialog implements View.OnClickListener {
+    private IConfirmListener listener;
 
     public BaseDialog(Context context) {
         super(context, R.style.DialogTheme);
+    }
+
+    public void setListener(IConfirmListener listener) {
+        this.listener = listener;
+    }
+
+    public IConfirmListener getListener() {
+        return listener;
     }
 
     @Override
@@ -116,5 +125,9 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
 
     public void setTag(Object tag) {
         this.tag = tag;
+    }
+
+    public interface IConfirmListener {
+        void onDlgConfirm(BaseDialog dlg);
     }
 }

@@ -143,7 +143,8 @@ public class MyWheelView extends ScrollView {
         scrollerTask = new Runnable() {
 
             public void run() {
-
+                if (itemHeight == 0)
+                    return;
                 int newY = getScrollY();
                 if (initialY - newY == 0) { // stopped
                     final int remainder = initialY % itemHeight;
@@ -208,12 +209,17 @@ public class MyWheelView extends ScrollView {
     }
 
     int itemHeight = 0;
+    private int textSize;
+
+    public void setTextSize(int sp) {
+        this.textSize = sp;
+    }
 
     private TextView createView(Object item) {
         TextView tv = new TextView(context);
         tv.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         tv.setSingleLine(true);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize > 0 ? textSize : 14);
         tv.setText(getItemStr(item));
         tv.setGravity(Gravity.CENTER);
         int padding = getContext().getResources().getDimensionPixelSize(R.dimen.margin_normal);

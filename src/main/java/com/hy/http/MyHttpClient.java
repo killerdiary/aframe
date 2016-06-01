@@ -39,7 +39,8 @@ import java.util.Map;
 public abstract class MyHttpClient {
     private Context context;
     protected Gson gson;
-    private IMyHttpListener listener;
+
+    private List<IMyHttpListener> listeners;
     private boolean showDialog;// 显示加载对话框
     private LoadingDialog loadingDialog;
     private String signatures;// 密钥KEY
@@ -72,7 +73,8 @@ public abstract class MyHttpClient {
             return;
         }
         this.context = context;
-        this.listener = listener;
+        this.listeners = new ArrayList<>();
+        this.listeners.add(listener);
         this.host = host;
         this.contentType = contentType;
         this.userAgent = userAgent;
@@ -81,6 +83,20 @@ public abstract class MyHttpClient {
         // this.http.configTimeout(TIME_OUT);
         this.gson = new Gson();
         this.requestQueue = NoHttp.newRequestQueue();
+    }
+
+    public void setListener(IMyHttpListener listener) {
+        if (this.listeners == null)
+            this.listeners = new ArrayList<>();
+        else
+            this.listeners.clear();
+        this.listeners.add(listener);
+    }
+
+    public void addListener(IMyHttpListener listener) {
+        if (this.listeners == null)
+            this.listeners = new ArrayList<>();
+        this.listeners.add(listener);
     }
 
     public Context getContext() {
@@ -403,25 +419,29 @@ public abstract class MyHttpClient {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
+                result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
+                onRequestError(result);
             }
-            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
-            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
-            onRequestError(result);
         } else
             onRequestSuccess(result);
     }
 
     protected void onRequestError(ResultInfo result) {
         if (isDestroy) return;
-        if (listener != null)
-            listener.onRequestError(result);
+        if (listeners != null) {
+            for (IMyHttpListener listener : listeners)
+                listener.onRequestError(result);
+        }
     }
 
     protected void onRequestSuccess(ResultInfo result) {
         if (isDestroy) return;
         result.setErrorCode(0);
-        if (listener != null)
-            listener.onRequestSuccess(result);
+        if (listeners != null) {
+            for (IMyHttpListener listener : listeners)
+                listener.onRequestSuccess(result);
+        }
     }
 
     public void setLoadingDialog(LoadingDialog loadingDialog) {

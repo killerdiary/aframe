@@ -41,6 +41,26 @@ public class AjaxParams {
     }
 
     /**
+     * Add {@link Integer} param.
+     *
+     * @param key   param name.
+     * @param value param value.
+     */
+    public void put(String key, int value) {
+        put(key, value + "");
+    }
+
+    /**
+     * Add {@link Long} param.
+     *
+     * @param key   param name.
+     * @param value param value.
+     */
+    public void put(String key, long value) {
+        put(key, value + "");
+    }
+
+    /**
      * @param key
      * @param file
      */
