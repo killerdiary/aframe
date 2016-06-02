@@ -2,6 +2,7 @@ package com.hy.frame.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -10,6 +11,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     private LoadCache loadCache;
     private boolean translucentStatus;
     private MyHttpClient client;
+    private int rightCount;
 
     public void setTranslucentStatus(boolean translucentStatus) {
         this.translucentStatus = translucentStatus;
@@ -270,11 +273,29 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
                 ImageView img = getView(v, R.id.head_vRight);
                 img.setOnClickListener(this);
                 img.setImageResource(right);
+                rightCount++;
             } else {
                 ImageView img = getView(toolbar, R.id.head_vRight);
                 img.setImageResource(right);
             }
         }
+    }
+
+    protected void addHeaderRight(@DrawableRes int right) {
+        rightCount++;
+        View v = View.inflate(context, R.layout.in_head_right, null);
+        ImageView img = getView(v, R.id.head_vRight);
+        img.setId(right);
+        TypedArray array = getTheme().obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
+        int width = array.getDimensionPixelSize(0, 0);
+        array.recycle();
+        Toolbar.LayoutParams params = new Toolbar.LayoutParams(width, width);
+        //params.setMargins(0, 0, width * (rightCount - 1), 0);
+        params.gravity = Gravity.RIGHT;
+        img.setLayoutParams(params);
+        toolbar.addView(v);
+        img.setOnClickListener(this);
+        img.setImageResource(right);
     }
 
     protected void setHeaderRightTxt(@StringRes int right) {
