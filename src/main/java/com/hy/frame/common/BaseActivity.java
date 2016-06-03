@@ -286,7 +286,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         View v = View.inflate(context, R.layout.in_head_right, null);
         ImageView img = getView(v, R.id.head_vRight);
         img.setId(right);
-        TypedArray array = getTheme().obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
+        TypedArray array = getTheme().obtainStyledAttributes(new int[]{R.attr.appHeaderHeight});
         int width = array.getDimensionPixelSize(0, 0);
         array.recycle();
         Toolbar.LayoutParams params = new Toolbar.LayoutParams(width, width);

@@ -2,13 +2,24 @@
 
     <!--<style name="AppBaseTheme" parent="Base.Theme.AppCompat">-->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/theme_bg</item>
+        <item name="android:textColor">@color/txt_black</item>
+        <item name="android:textColorPrimary">@color/txt_black</item>
+        <item name="android:textColorHighlight">@color/txt_black</item>
+        <item name="android:textColorHint">@color/txt_gray</item>
+        <item name="android:textColorLink">@color/txt_blue</item>
+        <item name="android:textSize">@dimen/txt_default</item>
+        <item name="android:textStyle">normal</item>
+        <item name="colorPrimary">@color/theme</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/txt_black</item>
+        <item name="background">@color/theme_bg</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="19">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/theme_bg</item>
-        <item name="android:textColorPrimary">@color/txt_black</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="toolbarStyle">@style/CurToolbar</item>
+        <item name="appHeaderHeight">@dimen/header_height</item>
         <item name="appBackground">@color/theme_bg</item>
         <item name="appThemeColor">@color/theme</item>
         <item name="appTitleSize">@dimen/txt_big</item>
@@ -38,6 +49,7 @@
         <item name="android:textColor">@color/txt_black</item>
         <item name="android:textSize">@dimen/txt_medium</item>
     </style>
+
     <style name="txtBigStyle">
         <item name="android:textColor">@color/txt_black</item>
         <item name="android:textSize">@dimen/txt_big</item>

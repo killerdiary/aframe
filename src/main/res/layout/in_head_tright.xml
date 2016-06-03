@@ -9,6 +9,6 @@
     android:background="@drawable/default_selector"
     android:gravity="center"
     android:textColor="?attr/appTitleColor"
-    android:minWidth="?attr/actionBarSize"
+    android:minWidth="?attr/appHeaderHeight"
     android:padding="@dimen/padding_default"
     android:text="@string/confirm" />

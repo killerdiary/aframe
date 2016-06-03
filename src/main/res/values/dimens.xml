@@ -18,7 +18,7 @@
     <!--<dimen name="edit_colon_padding_left">28dip</dimen>-->
     <!--<dimen name="edit_padding_three_left">80dip</dimen>-->
     <!--<dimen name="edit_colon_padding_three_left">60dip</dimen>-->
-    <!--<dimen name="header_height">45dip</dimen>-->
+    <dimen name="header_height">45dip</dimen>
     <dimen name="header_func_width">60dip</dimen>
     <!--<dimen name="header_split">40dip</dimen>-->
     <!--<dimen name="header_title_left">50dip</dimen>-->

@@ -2,15 +2,14 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/head_toolBar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?attr/appHeaderHeight"
     android:background="?attr/appTitleBarBg"
-    android:fitsSystemWindows="false"
-    android:minHeight="?attr/actionBarSize">
+    android:fitsSystemWindows="false">
 
     <TextView
         android:id="@+id/head_vTitle"
         android:layout_width="wrap_content"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="?attr/appHeaderHeight"
         android:layout_gravity="center"
         android:gravity="center"
         android:singleLine="true"
