@@ -68,6 +68,13 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         this.headerResId = headerResId;
     }
 
+    /**
+     * Cur True Position
+     */
+    protected int getCurPosition(int position) {
+        return position - (headerResId != 0 ? 1 : 0);
+    }
+
     protected View inflate(ViewGroup parent, int resId) {
         return LayoutInflater.from(context).inflate(resId, null);
     }
