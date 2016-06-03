@@ -340,6 +340,9 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         startAct(cls, null);
     }
 
+    /**
+     * @see #startAct(Intent, Class, Bundle)
+     */
     protected void startAct(Class<?> cls, Bundle bundle) {
         startAct(null, cls, bundle);
     }

@@ -285,25 +285,36 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     }
 
     /**
-     * @see #startAct(Intent, Class)
+     * @see #startAct(Class, Bundle)
      */
     protected void startAct(Class<?> cls) {
-        startAct(null, cls);
+        startAct(cls, null);
+    }
+
+    /**
+     * @see #startAct(Intent, Class, Bundle)
+     */
+    protected void startAct(Class<?> cls, Bundle bundle) {
+        startAct(null, cls, bundle);
     }
 
     /**
      * 启动Activity
      */
-    protected void startAct(Intent intent, Class<?> cls) {
+    protected void startAct(Intent intent, Class<?> cls, Bundle bundle) {
         if (intent == null)
             intent = new Intent();
+        if (bundle != null)
+            intent.putExtra(BaseActivity.BUNDLE, bundle);
         intent.putExtra(BaseActivity.LAST_ACT, this.getClass().getSimpleName());
         intent.setClass(getActivity(), cls);
         startActivity(intent);
     }
 
-    public void startActForResult(Class<?> cls, int requestCode) {
+    public void startActForResult(Class<?> cls, Bundle bundle, int requestCode) {
         Intent intent = new Intent(getActivity(), cls);
+        if (bundle != null)
+            intent.putExtra(BaseActivity.BUNDLE, bundle);
         intent.putExtra(BaseActivity.LAST_ACT, this.getClass().getSimpleName());
         startActivityForResult(intent, requestCode);
     }

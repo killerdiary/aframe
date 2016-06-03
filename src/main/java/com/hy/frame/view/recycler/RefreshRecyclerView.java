@@ -11,7 +11,7 @@ import com.hy.frame.R;
 import com.hy.frame.adapter.BaseRecyclerAdapter;
 
 /**
- * RecyclerView 上下拉刷新加载更多 默认为ListView格式
+ * RecyclerView 上下拉刷新加载更多 适用于为ListView格式
  *
  * @author HeYan
  * @time 2016/5/28 9:19
