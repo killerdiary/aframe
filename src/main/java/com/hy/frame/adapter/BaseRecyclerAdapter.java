@@ -64,6 +64,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         this.loadMoreState = state;
     }
 
+    @Deprecated
     public void setHeaderResId(int headerResId) {
         this.headerResId = headerResId;
     }

@@ -17,6 +17,7 @@ package com.hy.frame.view.recycler;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -113,14 +114,19 @@ public class RecyclerViewHeader extends RelativeLayout {
         if (!hidden) {
             final int translation = calculateTranslation();
             if (isVertical) {
-                setTranslationY(translation);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    setTranslationY(translation);
+                }
             } else {
-                setTranslationX(translation);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    setTranslationX(translation);
+                }
             }
         }
     }
 
-    private int calculateTranslation() {
+    public int calculateTranslation() {
+        if (recyclerView == null || layoutManager == null) return 0;
         int offset = recyclerView.getScrollOffset(isVertical);
         int base = layoutManager.isReversed() ? recyclerView.getTranslationBase(isVertical) : 0;
         return base - offset;
