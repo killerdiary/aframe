@@ -1,16 +1,11 @@
 package com.hy.frame.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Checkable;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-
-import com.hy.frame.R;
 
 public class NavGroup extends LinearLayout implements View.OnClickListener {
     // holds the checked id; the selection is empty by default
@@ -236,7 +231,7 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
                 int size = getChildCount();
                 for (int i = 0; i < size; i++) {
                     View child = getChildAt(i);
-                    if (v.getId() != child.getId()) {
+                    if (v.getId() != child.getId() && child instanceof NavView) {
                         ((NavView) child).setChecked(false);
                     }
                 }
