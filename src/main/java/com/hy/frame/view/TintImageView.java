@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.hy.frame.R;
-import com.hy.frame.util.MyLog;
 
 public class TintImageView extends ImageView {
     private ColorStateList tint;
@@ -36,7 +35,8 @@ public class TintImageView extends ImageView {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        if (tint != null && tint.isStateful())
+//        if (tint != null && tint.isStateful())
+        if (tint != null)
             updateTintColor();
     }
 

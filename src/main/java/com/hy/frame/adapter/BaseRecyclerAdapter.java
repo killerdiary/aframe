@@ -6,9 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hy.frame.R;
 import com.hy.frame.view.recycler.HeaderHolder;
-import com.hy.frame.view.recycler.LoadMoreHolder;
+import com.hy.frame.view.recycler.IHeaderViewListner;
 
 import java.util.List;
 
@@ -20,28 +19,23 @@ import java.util.List;
  */
 public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     public static final int TYPE_HEADER = 1;
-    public static final int TYPE_MORE = 2;
+    //public static final int TYPE_MORE = 2;
     private Context context;
     private List<T> datas;
     private IAdapterListener listener;
-    private IHeaderViewListner headerListner;
-    private boolean isCanLoadMore;
-    private int loadMoreState;
+    //private boolean isCanLoadMore;
+    //private int loadMoreState;
     private int headerResId;
+    private IHeaderViewListner headerListner;
 
     public BaseRecyclerAdapter(Context context, List<T> datas) {
         this(context, datas, null);
     }
 
     public BaseRecyclerAdapter(Context context, List<T> datas, IAdapterListener listener) {
-        this(context, datas, null, null);
-    }
-
-    public BaseRecyclerAdapter(Context context, List<T> datas, IAdapterListener listener, IHeaderViewListner headerListner) {
         this.context = context;
         this.datas = datas;
         this.listener = listener;
-        this.headerListner = headerListner;
     }
 
     protected Context getContext() {
@@ -56,22 +50,33 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         this.listener = listener;
     }
 
-    public void setCanLoadMore(boolean isCanLoadMore) {
-        this.isCanLoadMore = isCanLoadMore;
-    }
+//    public void setCanLoadMore(boolean isCanLoadMore) {
+//        this.isCanLoadMore = isCanLoadMore;
+//    }
+//
+//    public void setLoadMoreState(int state) {
+//        this.loadMoreState = state;
+//    }
 
-    public void setLoadMoreState(int state) {
-        this.loadMoreState = state;
-    }
-
+    /**
+     * 只适用于ListView格式，如果内容不超过一屏，请用新方式
+     *
+     * @param headerResId
+     */
     @Deprecated
     public void setHeaderResId(int headerResId) {
         this.headerResId = headerResId;
     }
 
+    @Deprecated
+    public void setHeaderListner(IHeaderViewListner headerListner) {
+        this.headerListner = headerListner;
+    }
+
     /**
      * Cur True Position
      */
+    @Deprecated
     protected int getCurPosition(int position) {
         return position - (headerResId != 0 ? 1 : 0);
     }
@@ -88,8 +93,8 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_MORE)
-            return new LoadMoreHolder(inflate(parent, R.layout.in_recycler_footer));
+        //if (viewType == TYPE_MORE)
+        //    return new LoadMoreHolder(inflate(parent, R.layout.in_recycler_footer));
         if (viewType == TYPE_HEADER) {
             View header = inflate(parent, headerResId);
             if (headerListner != null)
@@ -102,10 +107,11 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof LoadMoreHolder) {
-            LoadMoreHolder footer = (LoadMoreHolder) holder;
-            footer.onChangeState(loadMoreState);
-        } else if (holder instanceof HeaderHolder) {
+        //if (holder instanceof LoadMoreHolder) {
+        //    LoadMoreHolder footer = (LoadMoreHolder) holder;
+        //    footer.onChangeState(loadMoreState);
+        //} else
+        if (holder instanceof HeaderHolder) {
             if (headerListner != null)
                 headerListner.bindHearderData((HeaderHolder) holder, position);
         } else {
@@ -116,9 +122,9 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         int size = datas == null ? 0 : datas.size();
-        if (size > 0 && isCanLoadMore) {
-            size++;
-        }
+//        if (size > 0 && isCanLoadMore) {
+//            size++;
+//        }
         if (headerResId != 0) {
             size++;
         }
@@ -139,9 +145,9 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     @Override
     public int getItemViewType(int position) {
         // 最后一个item设置为footerView
-        if (isCanLoadMore && position + 1 == getItemCount()) {
-            return TYPE_MORE;
-        }
+//        if (isCanLoadMore && position + 1 == getItemCount()) {
+//            return TYPE_MORE;
+//        }
         if (headerResId != 0 && position == 0) {
             return TYPE_HEADER;
         }
@@ -157,10 +163,4 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
      * bind child data
      */
     protected abstract void bindViewData(RecyclerView.ViewHolder holder, int position);
-
-    public interface IHeaderViewListner {
-        void bindHearderData(HeaderHolder holder, int position);
-
-        HeaderHolder createHeaderView(View v);
-    }
 }

@@ -14,6 +14,7 @@ import com.hy.frame.R;
  * @author HeYan LoadMoreHolder
  * @time 2016/5/27 16:35
  */
+@Deprecated
 public class LoadMoreHolder extends RecyclerView.ViewHolder {
     public static final int STATE_LOAD_PREPARE = 0;
     public static final int STATE_LOAD_ING = 1;
