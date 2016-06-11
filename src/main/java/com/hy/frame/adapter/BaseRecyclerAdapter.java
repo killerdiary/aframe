@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hy.frame.R;
 import com.hy.frame.view.recycler.HeaderHolder;
 import com.hy.frame.view.recycler.IHeaderViewListner;
 
@@ -115,8 +116,24 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
             if (headerListner != null)
                 headerListner.bindHearderData((HeaderHolder) holder, position);
         } else {
+            if (dividerSize > 0) {
+                int padding = getContext().getResources().getDimensionPixelSize(R.dimen.margin_normal);
+                int left = 0, top = 0, right = 0, bottom = 0;
+                left = holder.itemView.getPaddingLeft();
+                right = holder.itemView.getPaddingRight();
+                //int pos = getCurPosition(position);
+                top = padding;
+                if (position + 1 == getItemCount()) bottom = padding;
+                holder.itemView.setPadding(left, top, right, bottom);
+            }
             bindViewData(holder, position);
         }
+    }
+
+    private int dividerSize;
+
+    public void setDividerSize(int dividerSize) {
+        this.dividerSize = dividerSize;
     }
 
     @Override
