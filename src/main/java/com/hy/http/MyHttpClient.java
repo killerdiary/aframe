@@ -10,6 +10,7 @@ import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
+import com.yolanda.nohttp.Binary;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.OnResponseListener;
 import com.yolanda.nohttp.Request;
@@ -213,7 +214,7 @@ public abstract class MyHttpClient {
      * @param cls         类<泛型> (例如：Version.class) 如果为空则直接返回json字符串
      * @param list        结果是否是List
      */
-    public <T> void post(int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
+    public <T> void post(int requestCode, String url, AjaxParams params, Class<T> cls, boolean list) {
         request(false, requestCode, url, params, cls, list);
     }
 
@@ -279,6 +280,11 @@ public abstract class MyHttpClient {
         }
         if (params != null) {
             request.add(params.getUrlParams());
+            if (params.getFileParams() != null) {
+                for (Map.Entry<String, Binary> map : params.getFileParams().entrySet()) {
+                    request.add(map.getKey(), map.getValue());
+                }
+            }
         }
         requestQueue.add(requestCode, request, new OnResponseListener<String>() {
             @Override

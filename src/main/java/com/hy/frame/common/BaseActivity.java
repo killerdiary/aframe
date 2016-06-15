@@ -321,6 +321,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         return toolbar;
     }
 
+    protected View getHeaderLeft() {
+        return toolbar.findViewById(R.id.head_vLeft);
+    }
+
     protected View getHeaderRight() {
         return toolbar.findViewById(R.id.head_vRight);
     }
