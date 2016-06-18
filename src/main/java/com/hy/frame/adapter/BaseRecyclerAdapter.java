@@ -117,7 +117,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
                 headerListner.bindHearderData((HeaderHolder) holder, position);
         } else {
             if (dividerSize > 0) {
-                int padding = getContext().getResources().getDimensionPixelSize(R.dimen.margin_normal);
+                int padding = dividerSize;
                 int left = 0, top = 0, right = 0, bottom = 0;
                 left = holder.itemView.getPaddingLeft();
                 right = holder.itemView.getPaddingRight();

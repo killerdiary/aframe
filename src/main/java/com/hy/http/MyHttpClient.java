@@ -17,6 +17,7 @@ import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.RequestQueue;
 import com.yolanda.nohttp.Response;
+import com.yolanda.nohttp.cache.CacheMode;
 
 import net.tsz.afinal.utils.FieldUtils;
 
@@ -52,6 +53,7 @@ public abstract class MyHttpClient {
     private int qid;//队列ID
     private boolean isDestroy;
     private RequestQueue requestQueue;
+    private CacheMode cacheMode;
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
         this(context, listener, host, null, null, null);
@@ -121,6 +123,10 @@ public abstract class MyHttpClient {
      */
     public void setQid(int qid) {
         this.qid = qid;
+    }
+
+    public void setCacheMode(CacheMode cacheMode) {
+        this.cacheMode = cacheMode;
     }
 
     /**
@@ -286,6 +292,8 @@ public abstract class MyHttpClient {
                 }
             }
         }
+        if (cacheMode != null)
+            request.setCacheMode(cacheMode);
         requestQueue.add(requestCode, request, new OnResponseListener<String>() {
             @Override
             public void onStart(int what) {
@@ -314,6 +322,8 @@ public abstract class MyHttpClient {
                             data = data.replaceAll("\\[\\]", "null");
                         if (data.contains("\"\""))
                             data = data.replaceAll("\"\"", "null");
+                        //data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
+                        //data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
                         doSuccess(result, data, cls, list);
                     }
                 } else {
@@ -345,6 +355,7 @@ public abstract class MyHttpClient {
             @Override
             public void onFinish(int what) {
                 MyLog.d("onFinish", what);
+                cacheMode = null;
             }
         });
     }

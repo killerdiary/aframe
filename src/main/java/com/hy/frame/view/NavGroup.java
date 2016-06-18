@@ -56,7 +56,7 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
         super.onFinishInflate();
 
         // checks the appropriate NavView as requested in the XML file
-        if (mCheckedId != -1) {
+        if (mCheckedId != NO_ID) {
             mProtectFromCheckedChange = true;
             setCheckedStateForView(mCheckedId, true);
             mProtectFromCheckedChange = false;
@@ -66,11 +66,11 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (child instanceof NavGroup) {
+        if (child instanceof NavView) {
             final NavView nav = (NavView) child;
             if (nav.isChecked()) {
                 mProtectFromCheckedChange = true;
-                if (mCheckedId != -1) {
+                if (mCheckedId != NO_ID) {
                     setCheckedStateForView(mCheckedId, false);
                 }
                 mProtectFromCheckedChange = false;
@@ -91,15 +91,15 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
      */
     public void check(@IdRes int id) {
         // don't even bother
-        if (id != -1 && (id == mCheckedId)) {
+        if (id != NO_ID && (id == mCheckedId)) {
             return;
         }
 
-        if (mCheckedId != -1) {
+        if (mCheckedId != NO_ID) {
             setCheckedStateForView(mCheckedId, false);
         }
 
-        if (id != -1) {
+        if (id != NO_ID) {
             setCheckedStateForView(id, true);
         }
 
@@ -185,9 +185,10 @@ public class NavGroup extends LinearLayout implements View.OnClickListener {
             if (parent == NavGroup.this && child instanceof NavView) {
                 int id = child.getId();
                 // generates an id if it's missing
-                if (id == View.NO_ID) {
+                if (id!= NO_ID) {
 //                    id = View.generateViewId();
 //                    child.setId(id);
+
                 }
                 child.setOnClickListener(NavGroup.this);
             }
