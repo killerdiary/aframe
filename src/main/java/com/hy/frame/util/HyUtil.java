@@ -8,6 +8,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
 import android.view.View;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -131,6 +132,7 @@ public class HyUtil {
 
     /**
      * 是否是银行卡号
+     *
      * @param str
      * @return
      */
@@ -184,6 +186,15 @@ public class HyUtil {
             str = str.replaceAll("[.]$", "");// 如最后一位是.则去掉
         }
         return str;
+    }
+
+    /**
+     * 转换成Money格式
+     * @param obj
+     * @return
+     */
+    public static String formatToMoney(Object obj) {
+        return new DecimalFormat("0.00").format(obj);
     }
 
     /**
