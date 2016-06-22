@@ -281,11 +281,11 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         }
     }
 
-    protected void addHeaderRight(@DrawableRes int right) {
+    protected void addHeaderRight(@DrawableRes int right,@IdRes int id) {
         rightCount++;
         View v = View.inflate(context, R.layout.in_head_right, null);
         ImageView img = getView(v, R.id.head_vRight);
-        img.setId(right);
+        img.setId(id);
         TypedArray array = getTheme().obtainStyledAttributes(new int[]{R.attr.appHeaderHeight});
         int width = array.getDimensionPixelSize(0, 0);
         array.recycle();
