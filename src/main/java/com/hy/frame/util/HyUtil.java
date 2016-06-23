@@ -49,6 +49,15 @@ public class HyUtil {
     }
 
     /**
+     * 是否是英文
+     */
+    public static boolean isEnglish(String str) {
+        if (str == null)
+            return false;
+        return Pattern.compile("[a-zA-Z]+").matcher(str).matches();
+    }
+
+    /**
      * 是否是中文
      *
      * @param str
@@ -190,6 +199,7 @@ public class HyUtil {
 
     /**
      * 转换成Money格式
+     *
      * @param obj
      * @return
      */

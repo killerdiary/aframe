@@ -80,6 +80,10 @@ public class AjaxParams {
         return fileParams;
     }
 
+    public void setFileParams(ConcurrentHashMap<String, Binary> fileParams) {
+        this.fileParams = fileParams;
+    }
+
     @Deprecated
     private static class FileWrapper {
         public InputStream inputStream;

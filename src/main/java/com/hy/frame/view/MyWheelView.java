@@ -21,6 +21,7 @@ import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,7 +83,8 @@ public class MyWheelView extends ScrollView {
     public <T> void setItems(List<T> list) {
         if (null == list || list.size() == 0)
             return;
-        items = list;
+        items = new ArrayList();
+        items.addAll(list);
         count = items.size();
         Class cls = list.get(0).getClass();
         // 前面和后面补全

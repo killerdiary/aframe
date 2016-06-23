@@ -16,8 +16,7 @@ import com.hy.frame.R;
 import com.hy.frame.adapter.ViewPagerAdapter;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
-
-import net.tsz.afinal.FinalBitmap;
+import com.lidroid.xutils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     private int scrollCount;// 次数
     private ViewPager vPager;
     private LinearLayout llyPoint;
-    private FinalBitmap fb;
+    private BitmapUtils fb;
     private List<View> views;
     private ViewPagerAdapter adapter;
     private boolean isDrag;
@@ -90,7 +89,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         if (path == null)
             return;
         if (fb == null)
-            fb = FinalBitmap.create(getContext());
+            fb = new BitmapUtils(getContext());
         ImageView img = new ImageView(getContext());
         img.setScaleType(ScaleType.FIT_XY);
         img.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));

@@ -19,13 +19,14 @@ import com.yolanda.nohttp.RequestQueue;
 import com.yolanda.nohttp.Response;
 import com.yolanda.nohttp.cache.CacheMode;
 
-import net.tsz.afinal.utils.FieldUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -294,6 +295,8 @@ public abstract class MyHttpClient {
         }
         if (cacheMode != null)
             request.setCacheMode(cacheMode);
+        else
+            request.setCacheMode(CacheMode.DEFAULT);
         requestQueue.add(requestCode, request, new OnResponseListener<String>() {
             @Override
             public void onStart(int what) {
@@ -425,7 +428,7 @@ public abstract class MyHttpClient {
                     } else if (cls == long.class || cls == Long.class) {
                         result.setObj(Long.parseLong(data));
                     } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
-                        result.setObj(FieldUtils.stringToDateTime(data));
+                        result.setObj(stringToDateTime(data));
                     } else if (cls == boolean.class || cls == Boolean.class) {
                         result.setObj(Boolean.parseBoolean(data));
                     } else {
@@ -442,6 +445,18 @@ public abstract class MyHttpClient {
             }
         } else
             onRequestSuccess(result);
+    }
+
+    public static Date stringToDateTime(String strDate) {
+        if (strDate != null) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                return sdf.parse(strDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     protected void onRequestError(ResultInfo result) {
