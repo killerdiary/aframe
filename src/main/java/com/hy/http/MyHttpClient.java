@@ -42,7 +42,6 @@ import java.util.Map;
 public abstract class MyHttpClient {
     private Context context;
     protected Gson gson;
-
     private List<IMyHttpListener> listeners;
     private boolean showDialog;// 显示加载对话框
     private LoadingDialog loadingDialog;
