@@ -32,7 +32,7 @@ public class Logger {
     /**
      * Library debug sign.
      */
-    private static boolean SDebug = false;
+    private static boolean SDebug = true;
 
     public static void setTag(String tag) {
         STag = tag;

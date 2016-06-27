@@ -324,6 +324,7 @@ public abstract class BasicRequest<T> implements Request<T> {
     public long getContentLength() {
         CounterOutputStream outputStream = new CounterOutputStream();
         onWriteRequestBody(new Writer(outputStream));
+//        onWriteRequestBody(new Writer(outputStream,true));
         return outputStream.get();
     }
 

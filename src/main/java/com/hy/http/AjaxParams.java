@@ -18,6 +18,7 @@ public class AjaxParams {
     private static String ENCODING = "UTF-8";
     protected ConcurrentHashMap<String, String> urlParams;
     protected ConcurrentHashMap<String, Binary> fileParams;
+    private PostData postData;
 
     public AjaxParams() {
         init();
@@ -72,12 +73,20 @@ public class AjaxParams {
         fileParams.put(key, file);
     }
 
+    public void put(PostData postData) {
+        this.postData = postData;
+    }
+
     public ConcurrentHashMap<String, String> getUrlParams() {
         return urlParams;
     }
 
     public ConcurrentHashMap<String, Binary> getFileParams() {
         return fileParams;
+    }
+
+    public PostData getPostData() {
+        return postData;
     }
 
     public void setFileParams(ConcurrentHashMap<String, Binary> fileParams) {
@@ -105,5 +114,4 @@ public class AjaxParams {
             }
         }
     }
-
 }

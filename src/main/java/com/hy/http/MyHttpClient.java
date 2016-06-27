@@ -41,7 +41,6 @@ import java.util.Map;
  */
 public abstract class MyHttpClient {
     private Context context;
-    protected Gson gson;
 
     private List<IMyHttpListener> listeners;
     private boolean showDialog;// 显示加载对话框
@@ -85,7 +84,6 @@ public abstract class MyHttpClient {
         this.accept = accept;
         // this.http = new FinalHttp();
         // this.http.configTimeout(TIME_OUT);
-        this.gson = new Gson();
         this.requestQueue = NoHttp.newRequestQueue();
     }
 
@@ -396,48 +394,28 @@ public abstract class MyHttpClient {
     }
 
     protected <T> void doSuccessData(ResultInfo result, String data, Class<T> cls, boolean list) {
-        if (!HyUtil.isEmpty(data)) {
+        if (HyUtil.isNoEmpty(data) && !TextUtils.equals(data, "[]")) {
             try {
                 if (list) {
                     // List<T> rlt = gson.fromJson(data, newTypeToken<T>() {}.getType());
                     List<T> beans = null;
-                    if (data.indexOf("[]") != 0) {
-                        JSONArray rlt = new JSONArray(data);
-                        if (rlt.length() > 0) {
-                            int size = rlt.length();
-                            beans = new ArrayList<>();
-                            for (int i = 0; i < size; i++) {
-                                // String str = gson.toJson(rlt.get(i));
-                                String str = rlt.getString(i);
-                                T t = gson.fromJson(str, cls);
-                                beans.add(t);
-                            }
+                    JSONArray rlt = new JSONArray(data);
+                    if (rlt.length() > 0) {
+                        int size = rlt.length();
+                        beans = new ArrayList<>();
+                        for (int i = 0; i < size; i++) {
+                            String str = rlt.getString(i);
+                            T t = (T) doT(str, cls);
+                            beans.add(t);
                         }
-                        result.setObj(beans);
                     }
+                    result.setObj(beans);
                     onRequestSuccess(result);
                 } else {
-                    if (cls == String.class) {
-                        result.setObj(data);
-                    } else if (cls == int.class || cls == Integer.class) {
-                        result.setObj(Integer.parseInt(data));
-                    } else if (cls == float.class || cls == Float.class) {
-                        result.setObj(Float.parseFloat(data));
-                    } else if (cls == double.class || cls == Double.class) {
-                        result.setObj(Double.parseDouble(data));
-                    } else if (cls == long.class || cls == Long.class) {
-                        result.setObj(Long.parseLong(data));
-                    } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
-                        result.setObj(stringToDateTime(data));
-                    } else if (cls == boolean.class || cls == Boolean.class) {
-                        result.setObj(Boolean.parseBoolean(data));
-                    } else {
-                        T t = gson.fromJson(data, cls);
-                        result.setObj(t);
-                    }
+                    result.setObj(doT(data, cls));
                     onRequestSuccess(result);
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
                 result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
@@ -445,6 +423,25 @@ public abstract class MyHttpClient {
             }
         } else
             onRequestSuccess(result);
+    }
+
+    private <T> Object doT(String data, Class<T> cls) {
+        if (cls == String.class) {
+            return data;
+        } else if (cls == int.class || cls == Integer.class) {
+            return Integer.parseInt(data);
+        } else if (cls == float.class || cls == Float.class) {
+            return Float.parseFloat(data);
+        } else if (cls == double.class || cls == Double.class) {
+            return Double.parseDouble(data);
+        } else if (cls == long.class || cls == Long.class) {
+            return Long.parseLong(data);
+        } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
+            return stringToDateTime(data);
+        } else if (cls == boolean.class || cls == Boolean.class) {
+            return Boolean.parseBoolean(data);
+        }
+        return new Gson().fromJson(data, cls);
     }
 
     public static Date stringToDateTime(String strDate) {
