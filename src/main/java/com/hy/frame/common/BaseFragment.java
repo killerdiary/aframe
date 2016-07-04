@@ -280,6 +280,10 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         return toolbar.findViewById(R.id.head_vRight);
     }
 
+    protected View getHeaderLeft() {
+        return toolbar.findViewById(R.id.head_vLeft);
+    }
+
     protected View getMainView() {
         return flyMain;
     }
