@@ -57,8 +57,8 @@ public class RefreshRecyclerView extends SwipeRefreshLayout {
                 //RefreshRecyclerView.this.setEnabled(topRowVerticalPosition >= 0);
                 //RefreshRecyclerView.this.setEnabled(false);
                 if (null != loadMoreListener && canLoadMore && !loadingMore && itemCount > 0) {
-                    if (recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() % itemCount == 0) {
-                        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                    RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                    if (adapter != null && adapter instanceof BaseRecyclerAdapter && ((BaseRecyclerAdapter) adapter).getTrueItemCount() % itemCount == 0) {
                         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
                             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                             if (layoutManager.findLastVisibleItemPosition() + 1 == adapter.getItemCount()) {
@@ -107,7 +107,7 @@ public class RefreshRecyclerView extends SwipeRefreshLayout {
 //                        RefreshRecyclerView.this.setEnabled(v.getTop() >= 0);
 //                    } else
 //                        RefreshRecyclerView.this.setEnabled(false);
-                }else {
+                } else {
                     RefreshRecyclerView.this.setEnabled(false);
                 }
             }

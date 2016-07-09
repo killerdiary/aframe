@@ -148,10 +148,22 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         return size;
     }
 
+    public int getTrueItemCount() {
+        int size = getItemCount();
+        if (headerResId != 0) {
+            size--;
+        }
+        return size;
+    }
+
     public T getItem(int position) {
         if (headerResId != 0)
             position = position - 1;
         return datas.get(position);
+    }
+
+    public List<T> getDatas() {
+        return datas;
     }
 
     public void refresh(List<T> datas) {

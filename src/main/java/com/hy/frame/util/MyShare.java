@@ -31,7 +31,7 @@ public class MyShare {
      */
     public static MyShare get(Context context) {
         if (instance == null)
-            instance = new MyShare(context, false);
+            instance = new MyShare(context.getApplicationContext(), false);
         return instance;
     }
 
@@ -41,18 +41,18 @@ public class MyShare {
 
     public MyShare(Context context, boolean cache) {
         if (cache)
-            share = context.getSharedPreferences(SHARE_CACHE,
+            share = context.getApplicationContext().getSharedPreferences(SHARE_CACHE,
                     Context.MODE_PRIVATE);
         else
-            share = context.getSharedPreferences(SHARE_DEFAULT,
+            share = context.getApplicationContext().getSharedPreferences(SHARE_DEFAULT,
                     Context.MODE_PRIVATE);
     }
 
     private SharedPreferences getShared(Context context, boolean cache) {
         if (cache)
-            return context.getSharedPreferences(SHARE_CACHE,
+            return context.getApplicationContext().getSharedPreferences(SHARE_CACHE,
                     Context.MODE_PRIVATE);
-        return context.getSharedPreferences(SHARE_DEFAULT,
+        return context.getApplicationContext().getSharedPreferences(SHARE_DEFAULT,
                 Context.MODE_PRIVATE);
     }
 

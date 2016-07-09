@@ -112,7 +112,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
      */
     public void addPage(View v) {
         if (views == null)
-            views = new ArrayList<View>();
+            views = new ArrayList<>();
         views.add(v);
         addPoint();
     }
@@ -138,12 +138,14 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
 
     private void addPoint() {
         CircleImageView img = new CircleImageView(getContext());
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(HyUtil.dip2px(getContext(), 8), HyUtil.dip2px(getContext(), 8));
+        int width = HyUtil.dip2px(getContext(), 8);
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(width, width);
         if (pointResId != 0)
             img.setBackgroundResource(pointResId);
         else
             img.setBackgroundResource(R.drawable.btn_circle_selector);
-        llp.setMargins(HyUtil.dip2px(getContext(), 4), HyUtil.dip2px(getContext(), 4), HyUtil.dip2px(getContext(), 4), HyUtil.dip2px(getContext(), 4));
+        int padding = HyUtil.dip2px(getContext(), 4);
+        llp.setMargins(padding, padding, padding, padding);
         if (llyPoint.getChildCount() == 0) {
             img.setSelected(true);
         }
@@ -161,6 +163,10 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     public void hidePoint() {
         if (llyPoint != null)
             llyPoint.setVisibility(View.GONE);
+    }
+
+    public LinearLayout getLlyPoint() {
+        return llyPoint;
     }
 
     private int getCount() {
@@ -189,19 +195,19 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     }
 
     @Override
-    public void onPageSelected(int positon) {
+    public void onPageSelected(int position) {
         isDrag = false;
         int size = llyPoint.getChildCount();
         for (int i = 0; i < size; i++) {
             View v = llyPoint.getChildAt(i);
-            if (positon == i)
+            if (position == i)
                 v.setSelected(true);
             else
                 v.setSelected(false);
         }
         if (scrollCount >= 3)
             scrollCount = 2;
-        if (listener != null) listener.onViewChange(views.size(), positon + 1);
+        if (listener != null) listener.onViewChange(views.size(), position + 1);
     }
 
     /**
