@@ -7,16 +7,20 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.hy.frame.R;
 import com.hy.frame.bean.ResultInfo;
+import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
 import com.yolanda.nohttp.Binary;
+import com.yolanda.nohttp.Headers;
+import com.yolanda.nohttp.JsonObjectRequest;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.OnResponseListener;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.RequestQueue;
 import com.yolanda.nohttp.Response;
+import com.yolanda.nohttp.StringRequest;
 import com.yolanda.nohttp.cache.CacheMode;
 
 import org.json.JSONArray;
@@ -47,13 +51,14 @@ public abstract class MyHttpClient {
     private LoadingDialog loadingDialog;
     private String signatures;// 密钥KEY
     private String host;// 域名
-    private final static int TIME_OUT = 60 * 1000;
-    private String contentType, userAgent, accept;
+    //private final static int TIME_OUT = 60 * 1000;
+    //private String contentType, userAgent, accept;
     private Map<String, String> headerParams;
     private int qid;//队列ID
     private boolean isDestroy;
     private RequestQueue requestQueue;
     private CacheMode cacheMode;
+    private Request request;
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
         this(context, listener, host, null, null, null);
@@ -79,12 +84,18 @@ public abstract class MyHttpClient {
         this.listeners = new ArrayList<>();
         this.listeners.add(listener);
         this.host = host;
-        this.contentType = contentType;
-        this.userAgent = userAgent;
-        this.accept = accept;
+        //this.contentType = contentType;
+        //this.userAgent = userAgent;
+        //this.accept = accept;
         // this.http = new FinalHttp();
         // this.http.configTimeout(TIME_OUT);
         this.requestQueue = NoHttp.newRequestQueue();
+        if (accept != null)
+            addHeader(Headers.HEAD_KEY_ACCEPT, accept);
+        if (contentType != null)
+            addHeader(Headers.HEAD_KEY_CONTENT_TYPE, contentType);
+        if (userAgent != null)
+            addHeader(Headers.HEAD_KEY_USER_AGENT, userAgent);
     }
 
     public void setListener(IMyHttpListener listener) {
@@ -101,12 +112,20 @@ public abstract class MyHttpClient {
         this.listeners.add(listener);
     }
 
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
     public Context getContext() {
         return context;
     }
 
     public void setContentType(String contentType) {
-        this.contentType = contentType;
+        addHeader(Headers.HEAD_KEY_CONTENT_TYPE, contentType);
+    }
+
+    public void setAccept(String accept) {
+        addHeader(Headers.HEAD_KEY_ACCEPT, accept);
     }
 
     public void addHeader(String key, String value) {
@@ -223,6 +242,30 @@ public abstract class MyHttpClient {
         request(false, requestCode, url, params, cls, list);
     }
 
+    public void get(int resId) {
+        this.get(resId,  null,  null, false);
+    }
+
+    public <T> void get(int resId, Class<T> cls) {
+        this.get(resId, null, cls, false);
+    }
+
+    public <T> void get(int resId, AjaxParams params, Class<T> cls) {
+        this.get(resId, this.getPath(resId), params, cls, false);
+    }
+
+    public <T> void get(int resId, Class<T> cls, boolean list) {
+        this.get(resId, this.getPath(resId), null, cls, list);
+    }
+
+    public <T> void get(int resId, AjaxParams params, Class<T> cls, boolean list) {
+        this.get(resId, this.getPath(resId), params, cls, list);
+    }
+
+    public <T> void get(int requestCode, String url, AjaxParams params, Class<T> cls, boolean list) {
+        request(true, requestCode, url, params, cls, list);
+    }
+
     /**
      * 请求方法
      *
@@ -272,7 +315,8 @@ public abstract class MyHttpClient {
 //        else
 //            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
         RequestMethod method = isGet ? RequestMethod.GET : RequestMethod.POST;
-        Request<String> request = NoHttp.createStringRequest(url, method);
+        if (request == null)
+            request = NoHttp.createJsonObjectRequest(url, method);
 //        if (HyUtil.isNoEmpty(accept))
 //            fh.addHeader("Accept", accept);
         //request.set
@@ -295,77 +339,190 @@ public abstract class MyHttpClient {
             request.setCacheMode(cacheMode);
         else
             request.setCacheMode(CacheMode.DEFAULT);
-        requestQueue.add(requestCode, request, new OnResponseListener<String>() {
-            @Override
-            public void onStart(int what) {
-                MyLog.d("onStart", what);
-                showLoading();
-            }
+        OnResponseListener listener = null;
+        if (request instanceof JsonObjectRequest) {
+            listener = new OnResponseListener<JSONObject>() {
+                @Override
+                public void onStart(int what) {
+                    MyLog.d("onStart", what);
+                    showLoading();
+                }
 
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                hideLoading();
-                // 接受请求结果
-                String data = response.get();
-                MyLog.d("onSucceed", what + "|" + data);
-                ResultInfo result = (ResultInfo) response.getTag();
-                // Bitmap imageHead = response.get(); // 如果是bitmap类型，都是同样的用法
-                if (HyUtil.isNoEmpty(data)) {
-                    data = data.trim();
-                    if (cls == null) {
-                        result.setObj(data);
-                        onRequestSuccess(result);
-                    } else if (!TextUtils.equals(data.substring(0, 1), "{") || !TextUtils.equals(data.substring(data.length() - 1), "}")) {
-                        result.setMsg(getString(R.string.API_FLAG_DATA_ERROR));
-                        onRequestError(result);
+                @Override
+                public void onSucceed(int what, Response<JSONObject> response) {
+                    hideLoading();
+                    // 接受请求结果
+                    JSONObject data = response.get();
+                    MyLog.d("onSucceed", what + "|" + data);
+                    ResultInfo result = (ResultInfo) response.getTag();
+                    // Bitmap imageHead = response.get(); // 如果是bitmap类型，都是同样的用法
+                    if (data != null) {
+                        if (cls == null) {
+                            result.setObj(data);
+                            onRequestSuccess(result);
+                        } else {
+                            //兼容
+                            doSuccess(result, data, cls, list);
+                            doSuccess(result, data.toString(), cls, list);
+                        }
                     } else {
-                        if (data.contains("[]"))
-                            data = data.replaceAll("\\[\\]", "null");
-                        if (data.contains("\"\""))
-                            data = data.replaceAll("\"\"", "null");
-                        //data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-                        //data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-                        doSuccess(result, data, cls, list);
+                        result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
+                        onRequestError(result);
                     }
-                } else {
-                    result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
+                }
+
+                @Override
+                public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
+                    MyLog.d("onFailed", what + "|" + exception.getMessage());
+                    hideLoading();
+                    int code = R.string.API_FLAG_CON_EXCEPTION;
+                    String msg = exception.getMessage();
+                    if (msg != null) {
+                        String thr = msg.toLowerCase(Locale.CHINA);
+                        if (msg.contains("broken pipe"))
+                            code = R.string.API_FLAG_CON_BROKEN;
+                        else if (msg.contains("timed out"))
+                            code = R.string.API_FLAG_CON_TIMEOUT;
+                        else if (msg.contains("unknownhostexception"))
+                            code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
+                    }
+                    ResultInfo result = (ResultInfo) tag;
+                    result.setMsg(getString(code));
                     onRequestError(result);
                 }
-            }
 
-            @Override
-            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
-                MyLog.d("onFailed", what + "|" + exception.getMessage());
-                hideLoading();
-                int code = R.string.API_FLAG_CON_EXCEPTION;
-                String msg = exception.getMessage();
-                if (msg != null) {
-                    String thr = msg.toLowerCase(Locale.CHINA);
-                    if (msg.contains("broken pipe"))
-                        code = R.string.API_FLAG_CON_BROKEN;
-                    else if (msg.contains("timed out"))
-                        code = R.string.API_FLAG_CON_TIMEOUT;
-                    else if (msg.contains("unknownhostexception"))
-                        code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
+                @Override
+                public void onFinish(int what) {
+                    MyLog.d("onFinish", what);
+                    cacheMode = null;
+                    request = null;
                 }
-                ResultInfo result = (ResultInfo) tag;
-                result.setMsg(getString(code));
-                onRequestError(result);
-            }
+            };
+        } else if (request instanceof JSONArray) {
+            listener = new OnResponseListener<JSONArray>() {
+                @Override
+                public void onStart(int what) {
+                    MyLog.d("onStart", what);
+                    showLoading();
+                }
 
-            @Override
-            public void onFinish(int what) {
-                MyLog.d("onFinish", what);
-                cacheMode = null;
-            }
-        });
+                @Override
+                public void onSucceed(int what, Response<JSONArray> response) {
+                    hideLoading();
+                    // 接受请求结果
+                    JSONArray data = response.get();
+                    MyLog.d("onSucceed", what + "|" + data);
+                    ResultInfo result = (ResultInfo) response.getTag();
+                    if (data != null) {
+                        if (cls == null) {
+                            result.setObj(data);
+                            onRequestSuccess(result);
+                        } else {
+                            //兼容
+                            doSuccess(result, data, cls, list);
+                            doSuccess(result, data.toString(), cls, list);
+                        }
+                    } else {
+                        result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
+                        onRequestError(result);
+                    }
+                }
+
+                @Override
+                public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
+                    MyLog.d("onFailed", what + "|" + exception.getMessage());
+                    hideLoading();
+                    int code = R.string.API_FLAG_CON_EXCEPTION;
+                    String msg = exception.getMessage();
+                    if (msg != null) {
+                        String thr = msg.toLowerCase(Locale.CHINA);
+                        if (msg.contains("broken pipe"))
+                            code = R.string.API_FLAG_CON_BROKEN;
+                        else if (msg.contains("timed out"))
+                            code = R.string.API_FLAG_CON_TIMEOUT;
+                        else if (msg.contains("unknownhostexception"))
+                            code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
+                    }
+                    ResultInfo result = (ResultInfo) tag;
+                    result.setMsg(getString(code));
+                    onRequestError(result);
+                }
+
+                @Override
+                public void onFinish(int what) {
+                    MyLog.d("onFinish", what);
+                    cacheMode = null;
+                    request = null;
+                }
+            };
+        } else if (request instanceof StringRequest) {
+            listener = new OnResponseListener<String>() {
+                @Override
+                public void onStart(int what) {
+                    MyLog.d("onStart", what);
+                    showLoading();
+                }
+
+                @Override
+                public void onSucceed(int what, Response<String> response) {
+                    hideLoading();
+                    // 接受请求结果
+                    String data = response.get();
+                    MyLog.d("onSucceed", what + "|" + data);
+                    ResultInfo result = (ResultInfo) response.getTag();
+                    if (data != null) {
+                        result.setObj(data);
+                        onRequestSuccess(result);
+                    } else {
+                        result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
+                        onRequestError(result);
+                    }
+                }
+
+                @Override
+                public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
+                    MyLog.d("onFailed", what + "|" + exception.getMessage());
+                    hideLoading();
+                    int code = R.string.API_FLAG_CON_EXCEPTION;
+                    String msg = exception.getMessage();
+                    if (msg != null) {
+                        String thr = msg.toLowerCase(Locale.CHINA);
+                        if (msg.contains("broken pipe"))
+                            code = R.string.API_FLAG_CON_BROKEN;
+                        else if (msg.contains("timed out"))
+                            code = R.string.API_FLAG_CON_TIMEOUT;
+                        else if (msg.contains("unknownhostexception"))
+                            code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
+                    }
+                    ResultInfo result = (ResultInfo) tag;
+                    result.setMsg(getString(code));
+                    onRequestError(result);
+                }
+
+                @Override
+                public void onFinish(int what) {
+                    MyLog.d("onFinish", what);
+                    cacheMode = null;
+                    request = null;
+                }
+            };
+        }
+        requestQueue.add(requestCode, request, listener);
     }
 
+    @Deprecated
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {
+
+    }
+
+    @Deprecated
+    protected <T> void doSuccess(ResultInfo result, JSONArray json, Class<T> cls, boolean list) {
+
+    }
+
+    protected <T> void doSuccess(ResultInfo result, JSONObject obj, Class<T> cls, boolean list) {
         if (isDestroy) return;
-        JSONObject obj;
         try {
-            obj = new JSONObject(json);
             int flag = 0;
             if (obj.has("state")) {
                 flag = obj.getInt("state");
