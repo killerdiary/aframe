@@ -7,12 +7,12 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.hy.frame.R;
 import com.hy.frame.bean.ResultInfo;
-import com.hy.frame.util.Constant;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
 import com.yolanda.nohttp.Binary;
 import com.yolanda.nohttp.Headers;
+import com.yolanda.nohttp.JsonArrayRequest;
 import com.yolanda.nohttp.JsonObjectRequest;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.OnResponseListener;
@@ -59,22 +59,16 @@ public abstract class MyHttpClient {
     private RequestQueue requestQueue;
     private CacheMode cacheMode;
     private Request request;
+    private int requestType;
+    public static final int REQUEST_TYPE_JSON = 0;
+    public static final int REQUEST_TYPE_JSONARRAY = 1;
+    public static final int REQUEST_TYPE_STRING = 2;
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
-        this(context, listener, host, null, null, null);
+        this(context, listener, host, REQUEST_TYPE_JSON);
     }
 
-    /**
-     * 初始化
-     *
-     * @param context
-     * @param listener
-     * @param host
-     * @param contentType
-     * @param userAgent
-     * @param accept
-     */
-    public MyHttpClient(Context context, IMyHttpListener listener, String host, String contentType, String userAgent, String accept) {
+    public MyHttpClient(Context context, IMyHttpListener listener, String host, int requestType) {
         super();
         if (context == null || host == null) {
             MyLog.e("MyHttpClient init error!");
@@ -84,18 +78,8 @@ public abstract class MyHttpClient {
         this.listeners = new ArrayList<>();
         this.listeners.add(listener);
         this.host = host;
-        //this.contentType = contentType;
-        //this.userAgent = userAgent;
-        //this.accept = accept;
-        // this.http = new FinalHttp();
-        // this.http.configTimeout(TIME_OUT);
+        this.requestType = requestType;
         this.requestQueue = NoHttp.newRequestQueue();
-        if (accept != null)
-            addHeader(Headers.HEAD_KEY_ACCEPT, accept);
-        if (contentType != null)
-            addHeader(Headers.HEAD_KEY_CONTENT_TYPE, contentType);
-        if (userAgent != null)
-            addHeader(Headers.HEAD_KEY_USER_AGENT, userAgent);
     }
 
     public void setListener(IMyHttpListener listener) {
@@ -106,6 +90,12 @@ public abstract class MyHttpClient {
         this.listeners.add(listener);
     }
 
+    /**
+     * 慎用
+     *
+     * @param listener
+     */
+    @Deprecated
     public void addListener(IMyHttpListener listener) {
         if (this.listeners == null)
             this.listeners = new ArrayList<>();
@@ -120,17 +110,45 @@ public abstract class MyHttpClient {
         return context;
     }
 
+    /**
+     * 无效方法
+     *
+     * @param contentType
+     */
+    @Deprecated
     public void setContentType(String contentType) {
         addHeader(Headers.HEAD_KEY_CONTENT_TYPE, contentType);
     }
 
+    /**
+     * 无效方法
+     *
+     * @param accept
+     */
+    @Deprecated
     public void setAccept(String accept) {
         addHeader(Headers.HEAD_KEY_ACCEPT, accept);
     }
 
+    /**
+     * 无效方法
+     *
+     * @param userAgent
+     */
+    @Deprecated
+    public void setUserAgent(String userAgent) {
+        addHeader(Headers.HEAD_KEY_USER_AGENT, userAgent);
+    }
+
+    /**
+     * 添加头信息 User-Agent|Content-Type|Accept 无效
+     *
+     * @param key
+     * @param value
+     */
     public void addHeader(String key, String value) {
         if (headerParams == null)
-            headerParams = new HashMap<String, String>();
+            headerParams = new HashMap<>();
         headerParams.put(key, value);
     }
 
@@ -243,7 +261,7 @@ public abstract class MyHttpClient {
     }
 
     public void get(int resId) {
-        this.get(resId,  null,  null, false);
+        this.get(resId, null, null, false);
     }
 
     public <T> void get(int resId, Class<T> cls) {
@@ -315,12 +333,19 @@ public abstract class MyHttpClient {
 //        else
 //            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
         RequestMethod method = isGet ? RequestMethod.GET : RequestMethod.POST;
-        if (request == null)
-            request = NoHttp.createJsonObjectRequest(url, method);
-//        if (HyUtil.isNoEmpty(accept))
-//            fh.addHeader("Accept", accept);
-        //request.set
-        //new StringRequest(method, url, params, successListener, errorListener);
+        if (request == null) {
+            switch (requestType) {
+                case REQUEST_TYPE_JSONARRAY:
+                    request = NoHttp.createJsonArrayRequest(url, method);
+                    break;
+                case REQUEST_TYPE_STRING:
+                    request = NoHttp.createStringRequest(url, method);
+                    break;
+                default:
+                    request = NoHttp.createJsonObjectRequest(url, method);
+                    break;
+            }
+        }
         request.setTag(result);
         if (headerParams != null) {
             for (Map.Entry<String, String> map : headerParams.entrySet()) {
@@ -344,27 +369,21 @@ public abstract class MyHttpClient {
             listener = new OnResponseListener<JSONObject>() {
                 @Override
                 public void onStart(int what) {
-                    MyLog.d("onStart", what);
+                    if (isDestroy) return;
+                    MyLog.d("onStart(JSONObject)", "what=" + what);
                     showLoading();
                 }
 
                 @Override
                 public void onSucceed(int what, Response<JSONObject> response) {
+                    if (isDestroy) return;
                     hideLoading();
                     // 接受请求结果
                     JSONObject data = response.get();
-                    MyLog.d("onSucceed", what + "|" + data);
+                    MyLog.d("onSucceed(JSONObject)", "what=" + what + ",data=" + data);
                     ResultInfo result = (ResultInfo) response.getTag();
-                    // Bitmap imageHead = response.get(); // 如果是bitmap类型，都是同样的用法
                     if (data != null) {
-                        if (cls == null) {
-                            result.setObj(data);
-                            onRequestSuccess(result);
-                        } else {
-                            //兼容
-                            doSuccess(result, data, cls, list);
-                            doSuccess(result, data.toString(), cls, list);
-                        }
+                        doSuccess(result, data, cls, list);
                     } else {
                         result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
                         onRequestError(result);
@@ -373,7 +392,8 @@ public abstract class MyHttpClient {
 
                 @Override
                 public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
-                    MyLog.d("onFailed", what + "|" + exception.getMessage());
+                    if (isDestroy) return;
+                    MyLog.d("onFailed(JSONObject)", "what=" + what + ",msg=" + exception.getMessage());
                     hideLoading();
                     int code = R.string.API_FLAG_CON_EXCEPTION;
                     String msg = exception.getMessage();
@@ -393,35 +413,30 @@ public abstract class MyHttpClient {
 
                 @Override
                 public void onFinish(int what) {
-                    MyLog.d("onFinish", what);
+                    MyLog.d("onFinish(JSONObject)", "what=" + what);
                     cacheMode = null;
                     request = null;
                 }
             };
-        } else if (request instanceof JSONArray) {
+        } else if (request instanceof JsonArrayRequest) {
             listener = new OnResponseListener<JSONArray>() {
                 @Override
                 public void onStart(int what) {
-                    MyLog.d("onStart", what);
+                    if (isDestroy) return;
+                    MyLog.d("onStart(JSONArray)", "what=" + what);
                     showLoading();
                 }
 
                 @Override
                 public void onSucceed(int what, Response<JSONArray> response) {
+                    if (isDestroy) return;
                     hideLoading();
                     // 接受请求结果
                     JSONArray data = response.get();
-                    MyLog.d("onSucceed", what + "|" + data);
+                    MyLog.d("onSucceed(JSONArray)", "what=" + what + ",data=" + data);
                     ResultInfo result = (ResultInfo) response.getTag();
                     if (data != null) {
-                        if (cls == null) {
-                            result.setObj(data);
-                            onRequestSuccess(result);
-                        } else {
-                            //兼容
-                            doSuccess(result, data, cls, list);
-                            doSuccess(result, data.toString(), cls, list);
-                        }
+                        doSuccess(result, data, cls, list);
                     } else {
                         result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
                         onRequestError(result);
@@ -430,7 +445,8 @@ public abstract class MyHttpClient {
 
                 @Override
                 public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
-                    MyLog.d("onFailed", what + "|" + exception.getMessage());
+                    if (isDestroy) return;
+                    MyLog.d("onFailed(JSONArray)", "what=" + what + ",msg=" + exception.getMessage());
                     hideLoading();
                     int code = R.string.API_FLAG_CON_EXCEPTION;
                     String msg = exception.getMessage();
@@ -450,7 +466,7 @@ public abstract class MyHttpClient {
 
                 @Override
                 public void onFinish(int what) {
-                    MyLog.d("onFinish", what);
+                    MyLog.d("onFinish(JSONArray)", "what=" + what);
                     cacheMode = null;
                     request = null;
                 }
@@ -459,20 +475,21 @@ public abstract class MyHttpClient {
             listener = new OnResponseListener<String>() {
                 @Override
                 public void onStart(int what) {
-                    MyLog.d("onStart", what);
+                    if (isDestroy) return;
+                    MyLog.d("onStart(String)", "what=" + what);
                     showLoading();
                 }
 
                 @Override
                 public void onSucceed(int what, Response<String> response) {
+                    if (isDestroy) return;
                     hideLoading();
                     // 接受请求结果
                     String data = response.get();
-                    MyLog.d("onSucceed", what + "|" + data);
+                    MyLog.d("onSucceed(String)", "what=" + what + ",data=" + data);
                     ResultInfo result = (ResultInfo) response.getTag();
                     if (data != null) {
-                        result.setObj(data);
-                        onRequestSuccess(result);
+                        doSuccess(result, data, cls, list);
                     } else {
                         result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
                         onRequestError(result);
@@ -481,7 +498,8 @@ public abstract class MyHttpClient {
 
                 @Override
                 public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
-                    MyLog.d("onFailed", what + "|" + exception.getMessage());
+                    if (isDestroy) return;
+                    MyLog.d("onFailed(String)", "what=" + what + ",msg=" + exception.getMessage());
                     hideLoading();
                     int code = R.string.API_FLAG_CON_EXCEPTION;
                     String msg = exception.getMessage();
@@ -501,7 +519,7 @@ public abstract class MyHttpClient {
 
                 @Override
                 public void onFinish(int what) {
-                    MyLog.d("onFinish", what);
+                    MyLog.d("onFinish(String)", "what=" + what);
                     cacheMode = null;
                     request = null;
                 }
@@ -510,44 +528,130 @@ public abstract class MyHttpClient {
         requestQueue.add(requestCode, request, listener);
     }
 
+    /**
+     * String 格式数据(如果要使用请重构)
+     *
+     * @param result
+     * @param json
+     * @param cls
+     * @param list
+     * @param <T>
+     */
     @Deprecated
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {
-
+        result.setObj(json);
+        onRequestSuccess(result);
+//        try {
+//            int flag = 0;
+//            if (obj.has("state")) {
+//                flag = obj.getInt("state");
+//                result.setErrorCode(flag);
+//            }
+//            if (obj.has("msg")) {
+//                String msg = obj.getString("msg");
+//                result.setMsg(msg);
+//            }
+//            String data = null;
+//            if (obj.has("result")) {
+//                data = obj.getString("result");
+//                data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
+//                data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
+//            }
+//            // 成功
+//            if (flag == 1) {
+//                doSuccessData(result, data, cls, list);
+//            } else {
+//                onRequestError(result);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
+//            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
+//            onRequestError(result);
+//        }
     }
 
+    /**
+     * JSONArray 格式数据
+     *
+     * @param result
+     * @param obj
+     * @param cls
+     * @param list
+     * @param <T>
+     */
     @Deprecated
-    protected <T> void doSuccess(ResultInfo result, JSONArray json, Class<T> cls, boolean list) {
-
+    protected <T> void doSuccess(ResultInfo result, JSONArray obj, Class<T> cls, boolean list) {
+        result.setObj(obj);
+        onRequestSuccess(result);
+//        try {
+//            int flag = 0;
+//            if (obj.has("state")) {
+//                flag = obj.getInt("state");
+//                result.setErrorCode(flag);
+//            }
+//            if (obj.has("msg")) {
+//                String msg = obj.getString("msg");
+//                result.setMsg(msg);
+//            }
+//            String data = null;
+//            if (obj.has("result")) {
+//                data = obj.getString("result");
+//                data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
+//                data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
+//            }
+//            // 成功
+//            if (flag == 1) {
+//                doSuccessData(result, data, cls, list);
+//            } else {
+//                onRequestError(result);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
+//            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
+//            onRequestError(result);
+//        }
     }
 
+    /**
+     * JSONObject 格式数据 (默认)
+     *
+     * @param result
+     * @param obj
+     * @param cls
+     * @param list
+     * @param <T>
+     */
     protected <T> void doSuccess(ResultInfo result, JSONObject obj, Class<T> cls, boolean list) {
-        if (isDestroy) return;
-        try {
-            int flag = 0;
-            if (obj.has("state")) {
-                flag = obj.getInt("state");
-                result.setErrorCode(flag);
-            }
-            if (obj.has("msg")) {
-                String msg = obj.getString("msg");
-                result.setMsg(msg);
-            }
-            String data = null;
-            if (obj.has("result")) {
-                data = obj.getString("result");
-            }
-            // 成功
-            if (flag == 1) {
-                doSuccessData(result, data, cls, list);
-            } else {
-                onRequestError(result);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
-            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
-            onRequestError(result);
-        }
+//        try {
+//            int flag = 0;
+//            if (obj.has("state")) {
+//                flag = obj.getInt("state");
+//                result.setErrorCode(flag);
+//            }
+//            if (obj.has("msg")) {
+//                String msg = obj.getString("msg");
+//                result.setMsg(msg);
+//            }
+//            String data = null;
+//            if (obj.has("result")) {
+//                data = obj.getString("result");
+//                data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
+//                data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
+//            }
+//            // 成功
+//            if (flag == 1) {
+//                doSuccessData(result, data, cls, list);
+//            } else {
+//                onRequestError(result);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
+//            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
+//            onRequestError(result);
+//        }
     }
 
     protected <T> void doSuccessData(ResultInfo result, String data, Class<T> cls, boolean list) {
@@ -671,12 +775,21 @@ public abstract class MyHttpClient {
         }
     }
 
+    /**
+     * 销毁，释放
+     */
     public void onDestroy() {
         //在这里销毁所有当前请求
         MyLog.d(getClass(), "onDestroy");
+        isDestroy = true;
+        listeners = null;
+        loadingDialog = null;
+        if (request != null)
+            request.cancel(true);
+        request = null;
         if (requestQueue != null)
             requestQueue.stop();
-        isDestroy = true;
+        requestQueue = null;
     }
 
     protected String getString(int resId) {
