@@ -105,7 +105,7 @@ public class CameraUtil {
         intent.putExtra("aspectX", aspectX);
         intent.putExtra("aspectY", aspectY);
         intent.putExtra("outputX", aspectX * unit);
-        intent.putExtra("outputY", aspectX * unit);
+        intent.putExtra("outputY", aspectY * unit);
         intent.putExtra("scale", true);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());

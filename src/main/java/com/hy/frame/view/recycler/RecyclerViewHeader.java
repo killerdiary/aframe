@@ -169,7 +169,8 @@ public class RecyclerViewHeader extends RelativeLayout {
         if (recyclerWantsTouch && ev.getAction() == MotionEvent.ACTION_MOVE) {
             downTranslation = calculateTranslation();
         }
-        return recyclerWantsTouch || super.onInterceptTouchEvent(ev);
+        boolean superEv = super.onInterceptTouchEvent(ev);//让父类获得正确的参数，避免异常
+        return recyclerWantsTouch || superEv;
     }
 
     @Override
@@ -186,7 +187,11 @@ public class RecyclerViewHeader extends RelativeLayout {
                             event.getX() - horizontalDiff,
                             event.getY() - verticalDiff,
                             event.getMetaState());
-            recyclerView.onTouchEvent(recyclerEvent);
+            try {
+                recyclerView.onTouchEvent(recyclerEvent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return false;
         }
         return super.onTouchEvent(event);
