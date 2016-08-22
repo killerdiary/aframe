@@ -24,6 +24,7 @@ public class KeyValueView extends LinearLayout {
 
     private TextView txtKey, txtValue;
     private ImageView imgRight;
+    private boolean init;
 
     public KeyValueView(Context context) {
         this(context, null);
@@ -47,6 +48,8 @@ public class KeyValueView extends LinearLayout {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        if (init) return;
+        init = true;
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.KeyValueView, defStyleAttr, defStyleRes);
         if (a == null) return;
 //        boolean edit = a.getBoolean(R.styleable.KeyValueView_kvEdit, false);

@@ -8,5 +8,4 @@
     android:background="@drawable/default_selector"
     android:contentDescription="@string/app_name"
     android:padding="@dimen/margin_normal"
-    android:scaleType="center"
     android:src="@drawable/btn_help" />

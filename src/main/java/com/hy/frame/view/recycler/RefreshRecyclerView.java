@@ -27,7 +27,7 @@ public class RefreshRecyclerView extends SwipeRefreshLayout {
     private RecyclerView recyclerView;
     private FrameLayout flyContainer;
     private RecyclerViewHeader header;
-    private boolean canLoadMore, loadingMore;
+    private boolean canLoadMore, loadingMore,openRefresh;
     private ILoadMoreListener loadMoreListener;
     private boolean hasHeader;
 

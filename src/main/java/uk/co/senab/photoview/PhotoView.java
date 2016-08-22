@@ -60,14 +60,6 @@ public class PhotoView extends ImageView implements IPhotoView {
         }
     }
 
-    /**
-     * @deprecated use {@link #setRotationTo(float)}
-     */
-    @Override
-    public void setPhotoViewRotation(float rotationDegree) {
-        mAttacher.setRotationTo(rotationDegree);
-    }
-
     @Override
     public void setRotationTo(float rotationDegree) {
         mAttacher.setRotationTo(rotationDegree);
@@ -89,8 +81,8 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public Matrix getDisplayMatrix() {
-        return mAttacher.getDisplayMatrix();
+    public void getDisplayMatrix(Matrix matrix) {
+        mAttacher.getDisplayMatrix(matrix);
     }
 
     @Override
@@ -99,31 +91,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    @Deprecated
-    public float getMinScale() {
-        return getMinimumScale();
-    }
-
-    @Override
     public float getMinimumScale() {
         return mAttacher.getMinimumScale();
     }
 
     @Override
-    @Deprecated
-    public float getMidScale() {
-        return getMediumScale();
-    }
-
-    @Override
     public float getMediumScale() {
         return mAttacher.getMediumScale();
-    }
-
-    @Override
-    @Deprecated
-    public float getMaxScale() {
-        return getMaximumScale();
     }
 
     @Override
@@ -142,14 +116,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public void setAllowParentInterceptOnEdge(boolean allow) {
-        mAttacher.setAllowParentInterceptOnEdge(allow);
+    public Matrix getImageMatrix() {
+        return mAttacher.getImageMatrix();
     }
 
     @Override
-    @Deprecated
-    public void setMinScale(float minScale) {
-        setMinimumScale(minScale);
+    public void setAllowParentInterceptOnEdge(boolean allow) {
+        mAttacher.setAllowParentInterceptOnEdge(allow);
     }
 
     @Override
@@ -158,20 +131,8 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    @Deprecated
-    public void setMidScale(float midScale) {
-        setMediumScale(midScale);
-    }
-
-    @Override
     public void setMediumScale(float mediumScale) {
         mAttacher.setMediumScale(mediumScale);
-    }
-
-    @Override
-    @Deprecated
-    public void setMaxScale(float maxScale) {
-        setMaximumScale(maxScale);
     }
 
     @Override
@@ -210,6 +171,15 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    protected boolean setFrame(int l, int t, int r, int b) {
+        boolean changed = super.setFrame(l, t, r, b);
+        if (null != mAttacher) {
+            mAttacher.update();
+        }
+        return changed;
+    }
+
+    @Override
     public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
         mAttacher.setOnMatrixChangeListener(listener);
     }
@@ -225,18 +195,8 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public OnPhotoTapListener getOnPhotoTapListener() {
-        return mAttacher.getOnPhotoTapListener();
-    }
-
-    @Override
     public void setOnViewTapListener(OnViewTapListener listener) {
         mAttacher.setOnViewTapListener(listener);
-    }
-
-    @Override
-    public OnViewTapListener getOnViewTapListener() {
-        return mAttacher.getOnViewTapListener();
     }
 
     @Override
@@ -294,8 +254,14 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener) {
+        mAttacher.setOnSingleFlingListener(onSingleFlingListener);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
+        mAttacher = null;
         super.onDetachedFromWindow();
     }
 

@@ -9,9 +9,11 @@ import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,7 +34,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     private BaseApplication app;
     protected Context context;
     private Toolbar toolbar;
-    private TextView txtTitle;
+    //private TextView txtTitle;
     private FrameLayout flyMain;
     private LoadCache loadCache;
     private int showCount;
@@ -47,10 +49,12 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         return showCount;
     }
 
-    private boolean translucentStatus;
-
-    public void setTranslucentStatus(boolean translucentStatus) {
-        this.translucentStatus = translucentStatus;
+    protected boolean isTranslucentStatus() {
+        if(getActivity()!=null && getActivity() instanceof BaseActivity){
+            BaseActivity act = (BaseActivity) getActivity();
+            return act.isTranslucentStatus();
+        }
+        return false;
     }
 
     @Override
@@ -73,10 +77,11 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         boolean custumHeader = true;
         int layout = initLayoutId();
         View v = null;
-        if (layout > 0) {
+        if (layout != 0) {
             v = inflater.inflate(layout, container, false);
             toolbar = getView(v, R.id.head_toolBar);
         }
+        //没有标题，使用默认Layout
         if (toolbar == null) {
             custumHeader = false;
             v = inflater.inflate(R.layout.act_base, container, false);
@@ -85,10 +90,11 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         toolbar = getView(v, R.id.head_toolBar);
         toolbar.setTitle("");
         int statusBarHeight = getStatusBarHeight();
-        if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+        if (isTranslucentStatus() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
             toolbar.setPadding(0, statusBarHeight, 0, 0);
+            if (toolbar.getLayoutParams() != null)
+                toolbar.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.header_height) + statusBarHeight;
         }
-        txtTitle = getView(v, R.id.head_vTitle);
         flyMain = getView(v, R.id.base_flyMain);
         if (!custumHeader && flyMain != null && layout > 0) {
             View.inflate(context, layout, flyMain);
@@ -110,10 +116,18 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         return app;
     }
 
+    protected LoadCache getLoadCache() {
+        return loadCache;
+    }
+
+    protected void setLoadCache(LoadCache loadCache) {
+        this.loadCache = loadCache;
+    }
+
     /**
      * 加载布局
      */
-    private boolean initLoadView() {
+    protected boolean initLoadView() {
         if (flyMain == null) {
             MyLog.e(getClass(), "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!");
             return false;
@@ -196,13 +210,14 @@ public abstract class BaseFragment extends Fragment implements android.view.View
      * 设置标题
      */
     public void setTitle(CharSequence title) {
-        if (txtTitle != null) txtTitle.setText(title);
-    }
-
-    public TextView getTitleText() {
-        if (txtTitle != null)
-            return txtTitle;
-        return null;
+        if (toolbar.findViewById(R.id.head_vTitle) == null) {
+            View v = View.inflate(context, R.layout.in_head_title, null);
+            Toolbar.LayoutParams tlp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+            tlp.gravity = Gravity.CENTER;
+            toolbar.addView(v, tlp);
+        }
+        TextView txtTitle = getView(toolbar, R.id.head_vTitle);
+        txtTitle.setText(title);
     }
 
     protected void hideHeader() {
@@ -230,8 +245,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
                 TextView txt = getView(v, R.id.head_vLeft);
                 txt.setOnClickListener(this);
                 txt.setText(left);
-                if (txtTitle != null)
-                    txt.setTextColor(txtTitle.getTextColors());
             } else {
                 TextView txt = getView(toolbar, R.id.head_vLeft);
                 txt.setText(left);
@@ -260,8 +273,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
                 TextView txt = getView(v, R.id.head_vRight);
                 txt.setOnClickListener(this);
                 txt.setText(right);
-                if (txtTitle != null)
-                    txt.setTextColor(txtTitle.getTextColors());
             } else {
                 TextView txt = getView(toolbar, R.id.head_vRight);
                 txt.setText(right);
@@ -274,6 +285,10 @@ public abstract class BaseFragment extends Fragment implements android.view.View
      */
     protected View getHeader() {
         return toolbar;
+    }
+
+    protected View getHeaderTitle() {
+        return toolbar.findViewById(R.id.head_vTitle);
     }
 
     protected View getHeaderRight() {

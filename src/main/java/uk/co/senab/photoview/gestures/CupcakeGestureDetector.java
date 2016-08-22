@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-import com.hy.frame.util.MyLog;
+import uk.co.senab.photoview.log.LogManager;
 
 public class CupcakeGestureDetector implements GestureDetector {
 
@@ -54,10 +54,12 @@ public class CupcakeGestureDetector implements GestureDetector {
         return ev.getY();
     }
 
+    @Override
     public boolean isScaling() {
         return false;
     }
 
+    @Override
     public boolean isDragging() {
         return mIsDragging;
     }
@@ -70,7 +72,7 @@ public class CupcakeGestureDetector implements GestureDetector {
                 if (null != mVelocityTracker) {
                     mVelocityTracker.addMovement(ev);
                 } else {
-                    MyLog.i(LOG_TAG, "Velocity tracker is null");
+                    LogManager.getLogger().i(LOG_TAG, "Velocity tracker is null");
                 }
 
                 mLastTouchX = getActiveX(ev);

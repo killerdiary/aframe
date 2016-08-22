@@ -33,7 +33,7 @@ public class HyUtil {
     public static boolean isMobile(String str) {
         if (str == null)
             return false;
-        return Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$").matcher(str).matches(); // 验证手机号
+        return Pattern.compile("^[1][3,4,5,6,7,8][0-9]{9}$").matcher(str).matches(); // 验证手机号
     }
 
     /**

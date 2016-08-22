@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.hy.frame.common.BaseActivity;
 import com.hy.frame.common.BaseFragment;
+import com.wq.photo.widget.PickConfig;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -98,19 +101,45 @@ public class CameraUtil {
             MyLog.e(getClass(), "地址未初始化");
             return;
         }
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("scaleUpIfNeeded", true);//黑边
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", aspectX);
-        intent.putExtra("aspectY", aspectY);
-        intent.putExtra("outputX", aspectX * unit);
-        intent.putExtra("outputY", aspectY * unit);
-        intent.putExtra("scale", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", true); // no face detection
-        startActivityForResult(intent, Constant.FLAG_UPLOAD_IMAGE_CUT);
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//        intent.setDataAndType(uri, "image/*");
+//        intent.putExtra("scaleUpIfNeeded", true);//黑边
+//        intent.putExtra("crop", "true");
+//        intent.putExtra("aspectX", aspectX);
+//        intent.putExtra("aspectY", aspectY);
+//        intent.putExtra("outputX", aspectX * unit);
+//        intent.putExtra("outputY", aspectY * unit);
+//        intent.putExtra("scale", true);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+//        intent.putExtra("noFaceDetection", true); // no face detection
+//        startActivityForResult(intent, Constant.FLAG_UPLOAD_IMAGE_CUT);
+        //int chose_mode = true ? PickConfig.MODE_SINGLE_PICK : PickConfig.MODE_MULTIP_PICK;
+        int mode = PickConfig.MODE_SINGLE_PICK;
+        UCrop.Options options = new UCrop.Options();
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+        options.setCompressionQuality(70);//质量
+        options.setStatusBarColor(Color.parseColor("#D81B60"));
+        options.setToolbarColor(Color.parseColor("#E91E63"));
+//        new PickConfig.Builder(act == null ? fragment.getActivity() : act)
+//                .isneedcrop(true)//是否需要剪切
+//                .actionBarcolor(Color.parseColor("#E91E63"))
+//                .statusBarcolor(Color.parseColor("#D81B60"))
+//                .isneedcamera(true)//是否需要拍照
+//                .isSqureCrop(true)//是否是方形剪切
+//                .setUropOptions(options)
+//                .maxPickSize(1)//选择张数
+//                .spanCount(3)//每行显示
+//                .pickMode(mode).build();
+        UCrop uCrop = UCrop.of(uri, imageUri);
+        if (aspectX > 0 && aspectY > 0) {
+            uCrop = uCrop.withAspectRatio(aspectX, aspectY);
+        } else {
+            uCrop = uCrop.useSourceImageAspectRatio();
+        }
+        uCrop.withOptions(options);
+        uCrop.start(act == null ? fragment.getActivity() : act);
+        //startActivityForResult(intent, PickConfig.PICK_REQUEST_CODE);
     }
 
     /**

@@ -1,11 +1,13 @@
 package com.hy.frame.bean;
 
+import com.hy.frame.util.MenuUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 自定义菜单信息
- * 
+ *
  * @author HeYan
  * @time 2014-7-21 下午3:19:08
  */
@@ -23,8 +25,7 @@ public class MenuInfo {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(int id) {
         this.id = id;
@@ -38,8 +39,7 @@ public class MenuInfo {
     }
 
     /**
-     * @param icon
-     *            the icon to set
+     * @param icon the icon to set
      */
     public void setIcon(int icon) {
         this.icon = icon;
@@ -53,8 +53,7 @@ public class MenuInfo {
     }
 
     /**
-     * @param title
-     *            the title to set
+     * @param title the title to set
      */
     public void setTitle(int title) {
         this.title = title;
@@ -75,4 +74,16 @@ public class MenuInfo {
         data.put(key, value);
     }
 
+    public MenuInfo() {
+    }
+
+    public MenuInfo(int id, int icon, int title) {
+        this.id = id;
+        this.icon = icon;
+        this.title = title;
+    }
+
+    public MenuInfo(int title) {
+        this.title = title;
+    }
 }

@@ -47,15 +47,15 @@ public abstract class MyHttpClient {
     private Context context;
 
     private List<IMyHttpListener> listeners;
-    private boolean showDialog;// 显示加载对话框
-    private LoadingDialog loadingDialog;
+    protected boolean showDialog;// 显示加载对话框
+    protected LoadingDialog loadingDialog;
     private String signatures;// 密钥KEY
     private String host;// 域名
     //private final static int TIME_OUT = 60 * 1000;
     //private String contentType, userAgent, accept;
     private Map<String, String> headerParams;
     private int qid;//队列ID
-    private boolean isDestroy;
+    protected boolean isDestroy;
     private RequestQueue requestQueue;
     private CacheMode cacheMode;
     private Request request;

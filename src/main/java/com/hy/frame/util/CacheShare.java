@@ -3,24 +3,25 @@ package com.hy.frame.util;
 import android.content.Context;
 
 /**
- * @title 缓存SHARE
  * @author HY
+ * @title 缓存SHARE
  * @time 2015-5-20 上午11:31:46
  */
 @Deprecated
 public class CacheShare extends MyShare {
-    private static CacheShare instance;
+    public static final String SHARE_CACHE = "SHARE_CACHE";
     public static final String LAST_TIME = "LAST_TIME";
+    private static MyShare instance;
 
     public CacheShare(Context context) {
-        super(context, true);
+        super(context, SHARE_CACHE);
         clearCache();
     }
 
     /**
      * 获取实例
      */
-    public static CacheShare get(Context context) {
+    public static MyShare get(Context context) {
         if (instance == null)
             instance = new CacheShare(context);
         return instance;

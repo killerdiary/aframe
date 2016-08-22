@@ -12,47 +12,27 @@ import android.content.SharedPreferences;
 public class MyShare {
     private static MyShare instance;
     private SharedPreferences share;
-    public static final String SHARE_DEFAULT = "default";
-    public static final String SHARE_CACHE = "cache";
-
-    //    private SharedPreferences  getShare(Context context, boolean cache) {
-//        if (cache)
-//            share = context.getSharedPreferences(SHARE_CACHE,
-//                    Context.MODE_PRIVATE);
-//        else
-//            share = context.getSharedPreferences(SHARE_DEFAULT,
-//                    Context.MODE_PRIVATE);
-//    }
-//
-
+    public static final String SHARE_DEFAULT = "SHARE_DEFAULT";
 
     /**
      * 获取实例
      */
     public static MyShare get(Context context) {
         if (instance == null)
-            instance = new MyShare(context.getApplicationContext(), false);
+            instance = new MyShare(context);
         return instance;
     }
 
     public MyShare(Context context) {
-        this(context, false);
+        this(context, SHARE_DEFAULT);
     }
 
-    public MyShare(Context context, boolean cache) {
-        if (cache)
-            share = context.getApplicationContext().getSharedPreferences(SHARE_CACHE,
-                    Context.MODE_PRIVATE);
-        else
-            share = context.getApplicationContext().getSharedPreferences(SHARE_DEFAULT,
-                    Context.MODE_PRIVATE);
+    public MyShare(Context context, String shareName) {
+        share = getShared(context, shareName);
     }
 
-    private SharedPreferences getShared(Context context, boolean cache) {
-        if (cache)
-            return context.getApplicationContext().getSharedPreferences(SHARE_CACHE,
-                    Context.MODE_PRIVATE);
-        return context.getApplicationContext().getSharedPreferences(SHARE_DEFAULT,
+    private SharedPreferences getShared(Context context, String shareName) {
+        return context.getApplicationContext().getSharedPreferences(shareName,
                 Context.MODE_PRIVATE);
     }
 

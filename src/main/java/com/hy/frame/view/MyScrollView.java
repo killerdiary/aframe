@@ -38,23 +38,24 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     private List<View> views;
     private ViewPagerAdapter adapter;
     private boolean isDrag;
+    private boolean init;
+
+    public MyScrollView(Context context) {
+        this(context, null);
+    }
+
+    public MyScrollView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
     public MyScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
 
-    public MyScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-
-    public MyScrollView(Context context) {
-        super(context);
-        init(context);
-    }
-
     private void init(Context context) {
+        if (init) return;
+        init = true;
         vPager = new ViewPager(context);
         vPager.setOnPageChangeListener(this);
         LayoutParams rlp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -73,6 +74,13 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
 
     public ViewPager getViewPager() {
         return vPager;
+    }
+
+    public void clear() {
+        if (views != null) {
+            views.clear();
+            adapter.refresh(views);
+        }
     }
 
     public void addImage(int drawId) {

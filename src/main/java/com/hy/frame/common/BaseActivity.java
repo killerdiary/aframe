@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,15 +37,14 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     private Class<?> lastAct;// 上一级 Activity
     private String lastSkipAct;// 跳转过来的Activity
     private Toolbar toolbar;
-    private TextView txtTitle;
+    //    private TextView txtTitle;
     private FrameLayout flyMain;
     private LoadCache loadCache;
-    private boolean translucentStatus;
     private MyHttpClient client;
     private int rightCount;
 
-    public void setTranslucentStatus(boolean translucentStatus) {
-        this.translucentStatus = translucentStatus;
+    protected boolean isTranslucentStatus() {
+        return false;
     }
 
     @Override
@@ -66,10 +66,14 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         }
         app.addActivity(this);
         int layout = initLayoutId();
-        if (layout < 1) return;
+        if (layout == 0) {
+            MyLog.e(getClass(), "initLayoutId not call");
+            return;
+        }
         setContentView(layout);
         toolbar = getView(R.id.head_toolBar);
         boolean custumHeader = true;
+        //没有标题，使用默认Layout
         if (toolbar == null) {
             custumHeader = false;
             setContentView(R.layout.act_base);
@@ -77,12 +81,15 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         }
         toolbar.setTitle("");
         int statusBarHeight = getStatusBarHeight();
-        if (translucentStatus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+        if (isTranslucentStatus() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             toolbar.setPadding(0, statusBarHeight, 0, 0);
+            if (toolbar.getLayoutParams() != null)
+                toolbar.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.header_height) + statusBarHeight;
         }
         setSupportActionBar(toolbar);
-        txtTitle = getView(R.id.head_vTitle);
         flyMain = getView(R.id.base_flyMain);
+        //如果使用的默认Layout，则把当前Layout inflate到默认Layout中
         if (!custumHeader && flyMain != null) {
             View.inflate(context, layout, flyMain);
         }
@@ -93,11 +100,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 //     */
 //    public void onStartData() {}
 
-    public TextView getTitleText() {
-        if (txtTitle != null)
-            return txtTitle;
-        return null;
-    }
 
     public int getStatusBarHeight() {
         int result = 0;
@@ -137,10 +139,18 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             toolbar.setNavigationIcon(null);
     }
 
+    protected LoadCache getLoadCache() {
+        return loadCache;
+    }
+
+    protected void setLoadCache(LoadCache loadCache) {
+        this.loadCache = loadCache;
+    }
+
     /**
      * 加载布局
      */
-    private boolean initLoadView() {
+    protected boolean initLoadView() {
         if (flyMain == null) {
             MyLog.e(getClass(), "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!");
             return false;
@@ -159,6 +169,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         loadCache.llyLoad = getView(R.id.base_llyLoad);
         loadCache.proLoading = getView(R.id.base_proLoading);
         loadCache.imgMessage = getView(R.id.base_imgMessage);
+        loadCache.txtMessage = getView(R.id.base_txtMessage);
         loadCache.txtMessage = getView(R.id.base_txtMessage);
         return true;
     }
@@ -226,10 +237,16 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      */
     @Override
     public void setTitle(CharSequence title) {
-        if (txtTitle != null)
-            txtTitle.setText(title);
-        else
-            super.setTitle(title);
+        if (toolbar.findViewById(R.id.head_vTitle) == null) {
+            View v = View.inflate(context, R.layout.in_head_title, null);
+            Toolbar.LayoutParams tlp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+            if (tlp != null) {
+                tlp.gravity = Gravity.CENTER;
+            }
+            toolbar.addView(v, tlp);
+        }
+        TextView txtTitle = getView(toolbar, R.id.head_vTitle);
+        txtTitle.setText(title);
     }
 
     protected void hideHeader() {
@@ -257,8 +274,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
                 TextView txt = getView(v, R.id.head_vLeft);
                 txt.setOnClickListener(this);
                 txt.setText(left);
-                if (txtTitle != null)
-                    txt.setTextColor(txtTitle.getTextColors());
             } else {
                 TextView txt = getView(toolbar, R.id.head_vLeft);
                 txt.setText(left);
@@ -281,7 +296,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         }
     }
 
-    protected void addHeaderRight(@DrawableRes int right,@IdRes int id) {
+    protected void addHeaderRight(@DrawableRes int right, @IdRes int id) {
         rightCount++;
         View v = View.inflate(context, R.layout.in_head_right, null);
         ImageView img = getView(v, R.id.head_vRight);
@@ -305,8 +320,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
                 TextView txt = getView(v, R.id.head_vRight);
                 txt.setOnClickListener(this);
                 txt.setText(right);
-                if (txtTitle != null)
-                    txt.setTextColor(txtTitle.getTextColors());
             } else {
                 TextView txt = getView(toolbar, R.id.head_vRight);
                 txt.setText(right);
@@ -319,6 +332,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      */
     protected View getHeader() {
         return toolbar;
+    }
+
+    protected View getHeaderTitle() {
+        return toolbar.findViewById(R.id.head_vTitle);
     }
 
     protected View getHeaderLeft() {

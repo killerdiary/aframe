@@ -1,25 +1,25 @@
 package com.hy.frame.common;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.CallSuper;
 import android.text.TextUtils;
 
 import com.hy.frame.util.Constant;
+import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.util.MyShare;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 应用
@@ -36,59 +36,60 @@ public class BaseApplication extends Application {
      * 全局数据
      */
     private HashMap<String, Object> hashMap;
-    private IntentFilter filter;
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            MyLog.d(getClass(), "action:" + action);
-            if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
-                ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                int result = -1;
-                NetworkInfo netInfo = manager.getActiveNetworkInfo();// 当前网络信息
-                if (netInfo != null && netInfo.isConnected()) {
-                    result = netInfo.getType();
-                }
-                MyLog.d(getClass(), "NetState:" + result);
-                new MyShare(getApplicationContext()).putInt(Constant.NET_STATUS, result);
-                sendBroadcast(new Intent(Constant.ACTION_RECEIVE_NET_CHANGE));
-            }
-        }
-    };
+    private BroadcastReceiver receiver;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        MyLog.d(getClass(), "Application start!");
-        acts = new CopyOnWriteArrayList<>();
-        hashMap = new HashMap<>();
-        initNetListener();
-    }
-
-    /**
-     * 初始化网络监听
-     */
-    private void initNetListener() {
-        filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
-        registerReceiver(receiver, filter);
-        receiver.onReceive(this, new Intent(ConnectivityManager.CONNECTIVITY_ACTION));
+        String processName = HyUtil.getProcessName(this, android.os.Process.myPid());
+        if (processName != null) {
+            MyLog.d(getClass(), "Application start! process:" + processName);
+            boolean defaultProcess = TextUtils.equals(processName, getPackageName());
+            if (defaultProcess) {
+                initAppForMainProcess();
+            } else {
+                initAppForOtherProcess(processName);
+            }
+        }
     }
 
     @Override
     public void onTerminate() {
+        // 程序终止的时候执行
+        MyLog.d(getClass(), "Application closed! onTerminate");
+        if (receiver != null) {
+            try {
+                unregisterReceiver(receiver);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         super.onTerminate();
-        if (receiver != null)
-            unregisterReceiver(receiver);
-        MyLog.d(getClass(), "Application closed!");
     }
+
+    @Override
+    public void onLowMemory() {
+        // 低内存的时候执行
+        MyLog.d(getClass(), "onLowMemory");
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        // 程序在内存清理的时候执行
+        MyLog.d(getClass(), "onTrimMemory");
+        super.onTrimMemory(level);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        MyLog.d(getClass(), "onConfigurationChanged");
+        super.onConfigurationChanged(newConfig);
+    }
+
 
     /**
      * 添加Activity到容器中
-     *
-     * @param activity
      */
     public void addActivity(Activity activity) {
         //防止重复添加
@@ -152,16 +153,13 @@ public class BaseApplication extends Application {
      */
     public void putValue(String key, Object value) {
         if (hashMap == null) {
-            hashMap = new HashMap<String, Object>();
+            hashMap = new HashMap<>();
         }
         hashMap.put(key, value);
     }
 
     /**
      * 取数据
-     *
-     * @param key
-     * @return
      */
     public Object getValue(String key) {
         if (hashMap != null) {
@@ -170,4 +168,57 @@ public class BaseApplication extends Application {
         return null;
     }
 
+    /**
+     * 主线程方法
+     */
+    @CallSuper
+    protected void initAppForMainProcess() {
+        initAppForMainProcess(null);
+    }
+
+    @CallSuper
+    protected void initAppForMainProcess(IntentFilter filter) {
+        if (filter == null)
+            filter = new IntentFilter();
+        if (!filter.hasAction(ConnectivityManager.CONNECTIVITY_ACTION))
+            filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
+        if (receiver == null)
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String action = intent.getAction();
+                    MyLog.d(getClass(), "action:" + action);
+                    if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
+                        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                        int result = -1;
+                        NetworkInfo netInfo = manager.getActiveNetworkInfo();// 当前网络信息
+                        if (netInfo != null && netInfo.isConnected()) {
+                            result = netInfo.getType();
+                        }
+                        MyLog.d(getClass(), "NetState:" + result);
+                        new MyShare(getApplicationContext()).putInt(Constant.NET_STATUS, result);
+                        sendBroadcast(new Intent(Constant.ACTION_RECEIVE_NET_CHANGE));
+                    }
+                    BaseApplication.this.onReceive(this, intent);
+                }
+            };
+        registerReceiver(receiver, filter);
+        //默认有网
+        new MyShare(getApplicationContext()).putInt(Constant.NET_STATUS, 1);
+        //receiver.onReceive(this, new Intent(ConnectivityManager.CONNECTIVITY_ACTION));
+        acts = new CopyOnWriteArrayList<>();
+        hashMap = new HashMap<>();
+    }
+
+    /**
+     * 其它线程方法
+     */
+    protected void initAppForOtherProcess(String process) {
+
+    }
+
+    protected void onReceive(BroadcastReceiver receiver, Intent intent) {
+
+    }
 }
