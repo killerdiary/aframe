@@ -1,17 +1,20 @@
 package com.bumptech.glide.load.engine;
 
+import com.bumptech.glide.load.Encoder;
 import com.bumptech.glide.load.Key;
-import com.bumptech.glide.load.Options;
+import com.bumptech.glide.load.ResourceDecoder;
+import com.bumptech.glide.load.ResourceEncoder;
 import com.bumptech.glide.load.Transformation;
-import java.util.Map;
+import com.bumptech.glide.load.resource.transcode.ResourceTranscoder;
 
 class EngineKeyFactory {
 
-  @SuppressWarnings("rawtypes")
-  public EngineKey buildKey(Object model, Key signature, int width, int height,
-      Map<Class<?>, Transformation<?>> transformations, Class<?> resourceClass,
-      Class<?> transcodeClass, Options options) {
-    return new EngineKey(model, signature, width, height, transformations, resourceClass,
-        transcodeClass, options);
-  }
+    @SuppressWarnings("rawtypes")
+    public EngineKey buildKey(String id, Key signature, int width, int height, ResourceDecoder cacheDecoder,
+            ResourceDecoder sourceDecoder, Transformation transformation, ResourceEncoder encoder,
+            ResourceTranscoder transcoder, Encoder sourceEncoder) {
+        return new EngineKey(id, signature, width, height, cacheDecoder, sourceDecoder, transformation, encoder,
+                transcoder, sourceEncoder);
+    }
+
 }

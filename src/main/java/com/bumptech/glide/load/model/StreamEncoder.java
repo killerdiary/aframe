@@ -1,54 +1,41 @@
 package com.bumptech.glide.load.model;
 
 import android.util.Log;
+
 import com.bumptech.glide.load.Encoder;
-import com.bumptech.glide.load.Options;
-import com.bumptech.glide.load.engine.bitmap_recycle.ArrayPool;
-import java.io.File;
-import java.io.FileOutputStream;
+import com.bumptech.glide.util.ByteArrayPool;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * An {@link com.bumptech.glide.load.Encoder} that can write an {@link java.io.InputStream} to
- * disk.
+ * An {@link com.bumptech.glide.load.Encoder} that can write an {@link java.io.InputStream} to disk.
  */
 public class StreamEncoder implements Encoder<InputStream> {
-  private static final String TAG = "StreamEncoder";
-  private final ArrayPool byteArrayPool;
+    private static final String TAG = "StreamEncoder";
 
-  public StreamEncoder(ArrayPool byteArrayPool) {
-    this.byteArrayPool = byteArrayPool;
-  }
-
-  @Override
-  public boolean encode(InputStream data, File file, Options options) {
-    byte[] buffer = byteArrayPool.get(ArrayPool.STANDARD_BUFFER_SIZE_BYTES, byte[].class);
-    boolean success = false;
-    OutputStream os = null;
-    try {
-      os = new FileOutputStream(file);
-      int read;
-      while ((read = data.read(buffer)) != -1) {
-        os.write(buffer, 0, read);
-      }
-      os.close();
-      success = true;
-    } catch (IOException e) {
-      if (Log.isLoggable(TAG, Log.DEBUG)) {
-        Log.d(TAG, "Failed to encode data onto the OutputStream", e);
-      }
-    } finally {
-      if (os != null) {
+    @Override
+    public boolean encode(InputStream data, OutputStream os) {
+        byte[] buffer = ByteArrayPool.get().getBytes();
         try {
-          os.close();
+            int read;
+            while ((read = data.read(buffer)) != -1) {
+                    os.write(buffer, 0, read);
+            }
+            return true;
         } catch (IOException e) {
-          // Do nothing.
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "Failed to encode data onto the OutputStream", e);
+            }
+            return false;
+        } finally {
+            ByteArrayPool.get().releaseBytes(buffer);
         }
-      }
-      byteArrayPool.put(buffer, byte[].class);
     }
-    return success;
-  }
+
+    @Override
+    public String getId() {
+        return "";
+    }
 }
