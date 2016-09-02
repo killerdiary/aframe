@@ -5,7 +5,7 @@
     >
     <item android:id="@+id/menu_photo_delete"
         android:title=""
-        android:icon="@drawable/menu_delete"
+        android:icon="@mipmap/menu_delete"
         app:showAsAction="always" />
 
     <item android:id="@+id/menu_photo_count"

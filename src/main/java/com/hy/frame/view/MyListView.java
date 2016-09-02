@@ -357,7 +357,7 @@ public class MyListView extends ListView implements OnScrollListener {
                     headView.setPadding(0, -1 * headerHeight, 0, 0);
                     proHead.setVisibility(View.GONE);
                     imgHeadArrow.clearAnimation();
-                    imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
+                    imgHeadArrow.setImageResource(R.mipmap.refresh_arrow_top);
                     txtHeadHint.setText("已经加载完毕 ");
                     txtHeadUpdateTime.setVisibility(View.VISIBLE);
                     break;
@@ -402,7 +402,7 @@ public class MyListView extends ListView implements OnScrollListener {
                     footView.setPadding(0, -1 * footerHeight, 0, 0);
                     proFoot.setVisibility(View.GONE);
                     imgFootArrow.clearAnimation();
-                    imgFootArrow.setImageResource(R.drawable.refresh_arrow_top);
+                    imgFootArrow.setImageResource(R.mipmap.refresh_arrow_top);
                     txtFootHint.setText("已经加载完毕 ");
                     txtFootUpdateTime.setVisibility(View.VISIBLE);
                     break;

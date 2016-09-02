@@ -8,6 +8,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
 import android.view.View;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -92,8 +93,8 @@ public class HyUtil {
             return false;
         if (str.length() == 15)
             return Pattern.compile("^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$").matcher(str).matches();
-        if(str.contains("x"))
-            str = str.replaceAll("x","X");
+        if (str.contains("x"))
+            str = str.replaceAll("x", "X");
         if (str.length() == 18)
             return Pattern.compile("^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$").matcher(str).matches();
         return false;
@@ -357,26 +358,25 @@ public class HyUtil {
      * @return
      */
     public static boolean checkPackage(Context context, String packageName) {
-
         if (TextUtils.isEmpty(packageName))
             return false;
         try {
-            context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_ACTIVITIES);
+            context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             return true;
         } catch (NameNotFoundException e) {
             return false;
         }
     }
 
-    /**
-     * 网络是否连接
-     *
-     * @param context
-     * @return
-     */
-    public static boolean isNetworkConnected(Context context) {
-        return new MyShare(context.getApplicationContext()).getInt(Constant.NET_STATUS) > -1;
-    }
+//    /**
+//     * 网络是否连接
+//     *
+//     * @param context
+//     * @return
+//     */
+//    public static boolean isNetworkConnected(Context context) {
+//        return new MyShare(context.getApplicationContext()).getInt(Constant.NET_STATUS) > -1;
+//    }
 
     private static long lastTime = 0;
 
@@ -448,5 +448,90 @@ public class HyUtil {
             }
         }
         return null;
+    }
+
+    private static String getCachePath(Context context, String dir) {
+        File f = context.getExternalFilesDir(dir);
+        if (f == null) {
+            f = context.getCacheDir();
+            if (f == null) return null;
+            String path = f.getAbsolutePath() + File.separator + dir;
+            File file = new File(path);
+            // 判断文件夹存在与否，否则创建
+            if (!file.exists() && file.mkdirs()) {
+                return file.getAbsolutePath();
+            }
+            return f.getAbsolutePath();
+        } else {
+            return f.getAbsolutePath();
+        }
+    }
+
+    /**
+     * 获取相册缓存路径
+     */
+    public static String getCachePathWeb(Context context) {
+        return getCachePath(context, "Web");
+    }
+
+    /**
+     * 获取下载缓存路径
+     */
+    public static String getCachePathDownload(Context context) {
+        return getCachePath(context, "Download");
+    }
+
+    /**
+     * 获取相册缓存路径
+     */
+    public static String getCachePathAlbum(Context context) {
+        return getCachePath(context, "Album");
+    }
+
+    /**
+     * 获取剪切缓存路径
+     */
+    public static String getCachePathCrop(Context context) {
+        return getCachePath(context, "CropFile");
+    }
+
+    /**
+     * 获取音频缓存路径
+     */
+    public static String getCachePathAudio(Context context) {
+        return getCachePath(context, "AudioFile");
+    }
+
+    /**
+     * 获取音频缓存路径
+     */
+    public static String getCachePathAudioC(Context context) {
+        return getCachePath(context, "AudioFileC");
+    }
+
+    /**
+     * 获取图片缓存路径
+     */
+    public static String getCachePathImage(Context context) {
+        return getCachePath(context, "Image");
+    }
+
+    /**
+     * 获取缓存大小
+     *
+     * @param context
+     * @return
+     */
+    public static String getCacheSize(Context context) {
+        // 取得sdcard文件路径
+        String path = getCachePath(context, null); // "mnt/sdcard"
+        if (path == null) {
+            return "0M";
+        }
+        return FileUtil.getAutoFileOrFilesSize(path);
+    }
+
+    public static void clearCache(Context context) {
+        FileUtil.delAllFile(getCachePath(context, null));
     }
 }

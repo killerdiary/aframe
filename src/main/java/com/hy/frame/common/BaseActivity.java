@@ -80,12 +80,16 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             toolbar = getView(R.id.head_toolBar);
         }
         toolbar.setTitle("");
-        int statusBarHeight = getStatusBarHeight();
-        if (isTranslucentStatus() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            toolbar.setPadding(0, statusBarHeight, 0, 0);
-            if (toolbar.getLayoutParams() != null)
-                toolbar.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.header_height) + statusBarHeight;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int statusBarHeight = getStatusBarHeight();
+            if (isTranslucentStatus() && statusBarHeight > 0) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                toolbar.setPadding(0, statusBarHeight, 0, 0);
+                if (toolbar.getLayoutParams() != null)
+                    toolbar.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.header_height) + statusBarHeight;
+            } else {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
         }
         setSupportActionBar(toolbar);
         flyMain = getView(R.id.base_flyMain);
@@ -194,7 +198,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     protected void showNoData(String msg) {
-        showNoData(msg, R.drawable.img_hint_nodata);
+        showNoData(msg, R.mipmap.img_hint_nodata);
     }
 
     //R.drawable.img_hint_net_fail

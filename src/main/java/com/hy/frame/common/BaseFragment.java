@@ -170,7 +170,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     }
 
     protected void showNoData(String msg) {
-        showNoData(msg, R.drawable.img_hint_nodata);
+        showNoData(msg, R.mipmap.img_hint_nodata);
     }
 
     //R.drawable.img_hint_net_fail

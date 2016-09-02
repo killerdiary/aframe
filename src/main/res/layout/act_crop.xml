@@ -1,0 +1,211 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.yalantis.ucrop.view.UCropView
+        android:id="@+id/crop_vUCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/crop_flyControls"
+        android:background="@color/black" />
+
+    <FrameLayout
+        android:id="@+id/crop_flyControls"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/crop_controls_height"
+        android:layout_above="@+id/crop_llyAction"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/layout_aspect_ratio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/crop_aspect_ratio_1_1"
+                style="@style/LayoutActionStyle">
+
+                <com.yalantis.ucrop.view.widget.AspectRatioTextView
+                    style="@style/ucrop_TextViewCropAspectRatio"
+                    app:ucrop_artv_ratio_x="1"
+                    app:ucrop_artv_ratio_y="1" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/crop_aspect_ratio_3_4"
+                style="@style/LayoutActionStyle">
+
+                <com.yalantis.ucrop.view.widget.AspectRatioTextView
+                    style="@style/ucrop_TextViewCropAspectRatio"
+                    app:ucrop_artv_ratio_x="4"
+                    app:ucrop_artv_ratio_y="3" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/crop_aspect_ratio_original"
+                style="@style/LayoutActionStyle">
+
+                <com.yalantis.ucrop.view.widget.AspectRatioTextView
+                    style="@style/ucrop_TextViewCropAspectRatio"
+                    android:textAllCaps="true"
+                    app:ucrop_artv_ratio_title="@string/ucrop_label_original" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/crop_aspect_ratio_3_2"
+                style="@style/LayoutActionStyle">
+
+                <com.yalantis.ucrop.view.widget.AspectRatioTextView
+                    style="@style/ucrop_TextViewCropAspectRatio"
+                    app:ucrop_artv_ratio_x="3"
+                    app:ucrop_artv_ratio_y="2" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/crop_aspect_ratio_16_9"
+                style="@style/LayoutActionStyle">
+
+                <com.yalantis.ucrop.view.widget.AspectRatioTextView
+                    style="@style/ucrop_TextViewCropAspectRatio"
+                    app:ucrop_artv_ratio_x="16"
+                    app:ucrop_artv_ratio_y="9" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_rotate_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/text_view_rotate"
+                style="@style/ucrop_TextViewWidgetText"
+                tools:text="100°" />
+
+            <com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
+                android:id="@+id/rotate_scroll_wheel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/text_view_rotate"
+                android:layout_toEndOf="@+id/wrapper_reset_rotate"
+                android:layout_toLeftOf="@+id/wrapper_rotate_by_angle"
+                android:layout_toRightOf="@+id/wrapper_reset_rotate"
+                android:layout_toStartOf="@+id/wrapper_rotate_by_angle" />
+
+            <FrameLayout
+                android:id="@+id/wrapper_reset_rotate"
+                style="@style/ucrop_WrapperRotateButton"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    style="@style/ImageActionStyle"
+                    android:src="@mipmap/ucrop_ic_reset" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/wrapper_rotate_by_angle"
+                style="@style/ucrop_WrapperRotateButton"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    style="@style/ImageActionStyle"
+                    android:src="@mipmap/ucrop_ic_angle" />
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_scale_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/text_view_scale"
+                style="@style/ucrop_TextViewWidgetText"
+                tools:text="100%" />
+
+            <com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
+                android:id="@+id/scale_scroll_wheel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/text_view_scale" />
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_above="@+id/crop_llyAction"
+        android:background="@drawable/ucrop_shadow_upside"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/crop_llyAction"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/crop_action_height"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.hy.frame.view.NavView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            app:navDraw="@mipmap/ico_crop_scale"
+            app:navDrawTint="@color/red"
+            app:navDrawWidth="20dp"
+            app:navText="缩放" />
+
+        <FrameLayout
+            android:id="@+id/crop_flyScale"
+            style="@style/LayoutActionStyle">
+
+            <com.hy.frame.view.TintImageView
+                android:id="@+id/crop_imgScale"
+                style="@style/ImageActionStyle"
+                android:src="@mipmap/ico_crop_scale"
+                app:tint="@color/txt_gray_light" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/crop_flyRotate"
+            style="@style/LayoutActionStyle">
+
+            <ImageView
+                android:id="@+id/crop_imgRotate"
+                style="@style/ImageActionStyle"
+                android:src="@mipmap/ico_crop_rotate" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/crop_flyRatio"
+            style="@style/LayoutActionStyle">
+
+            <ImageView
+                android:id="@+id/crop_imgRatio"
+                style="@style/ImageActionStyle"
+                android:src="@mipmap/ico_crop_ratio" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+</RelativeLayout>

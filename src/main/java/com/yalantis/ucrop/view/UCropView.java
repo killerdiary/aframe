@@ -4,16 +4,18 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.hy.frame.R;
 
-
+/**
+ * 剪切View
+ */
 public class UCropView extends FrameLayout {
 
-    private final GestureCropImageView mGestureCropImageView;
-    private final OverlayView mViewOverlay;
+    private GestureCropImageView mGestureCropImageView;
+    private OverlayView mViewOverlay;
 
     public UCropView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -21,11 +23,17 @@ public class UCropView extends FrameLayout {
 
     public UCropView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
 
-        LayoutInflater.from(context).inflate(R.layout.ucrop_view, this, true);
-        mGestureCropImageView = (GestureCropImageView) findViewById(R.id.image_view_crop);
-        mViewOverlay = (OverlayView) findViewById(R.id.view_overlay);
-
+    private void init(Context context, AttributeSet attrs) {
+        int padding = getResources().getDimensionPixelSize(R.dimen.margin_normal);
+        mGestureCropImageView = new GestureCropImageView(context);
+        mGestureCropImageView.setPadding(padding,padding,padding,padding);
+        addView(mGestureCropImageView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        mViewOverlay = new OverlayView(context);
+        mViewOverlay.setPadding(padding,padding,padding,padding);
+        addView(mViewOverlay, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mGestureCropImageView.setCropBoundsChangeListener(new CropImageView.CropBoundsChangeListener() {
             @Override
             public void onCropBoundsChangedRotate(float cropRatio) {
@@ -35,8 +43,7 @@ public class UCropView extends FrameLayout {
                 }
             }
         });
-
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ucrop_UCropView);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.UCropView);
         mViewOverlay.processStyledAttributes(a);
         mGestureCropImageView.processStyledAttributes(a);
         a.recycle();

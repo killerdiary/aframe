@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 
-    <color name="theme">#222222</color>
+    <color name="theme">@color/colorPrimary</color>
     <color name="theme_bg">#F5F5F5</color>
     <color name="theme_title">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
@@ -27,8 +30,8 @@
     <color name="txt_blue">#52CACB</color>
     <color name="txt_gray">#787878</color>
     <color name="txt_gray_light">#B3B3B3</color>
-    <color name="txt_white_pressed">#60FFFFFF</color>
     <color name="btn_disable">#B3B3B3</color>
+    <color name="btn_highlight">#10000000</color>
     <!--<color name="main_tab">#52CACC</color>-->
     <!--<color name="main_tab_pressed">#296566</color>-->
     <!--<color name="btn_default">#52CACB</color>-->
@@ -45,4 +48,6 @@
     <!--<color name="game_item_gray">#F2F2F2</color>-->
     <color name="divider_gray">#AAacacac</color>
     <color name="divider_gray_light">#11000000</color>
+
+    <color name="red_tran">#99FF2222</color>
 </resources>

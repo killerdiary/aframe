@@ -199,7 +199,7 @@ public class RefreshLinearLayout extends LinearLayout {
         imgHeadArrow.setVisibility(View.VISIBLE);
         if (lp.topMargin > 0) {
             txtHeadHint.setText(R.string.refresh_release_text);
-            imgHeadArrow.setImageResource(R.drawable.refresh_arrow_top);
+            imgHeadArrow.setImageResource(R.mipmap.refresh_arrow_top);
         } else {
             txtHeadHint.setText(R.string.refresh_down_text);
             imgHeadArrow.clearAnimation();

@@ -7,10 +7,7 @@ package com.hy.frame.util;
  * @time 2014年12月18日 下午4:36:33
  */
 public class Constant {
-    /**
-     * 权限
-     */
-    public static final String PERMISSION = "android.permission.THYD";
+
     /**
      * 是否是首次进入
      */
@@ -36,22 +33,7 @@ public class Constant {
      * 上次记录的APP版本
      */
     public static final String LAST_VERSION = "LAST_VERSION";
-    /**
-     * 内部消息-网络改变
-     */
-    public static final String ACTION_RECEIVE_NET_CHANGE = "com.hy.frame.ACTION_NET_CHANGE";
-    /**
-     * 网络状态
-     */
-    public static final String NET_STATUS = "NET_STATUS";
-    /**
-     * 网络状态-断开
-     */
-    public static final int NET_DISCONNECT = -1;
-    /**
-     * 网络状态-断开
-     */
-    public static final int NET_CONNECTED = 1;
+
     /**
      * 标记
      */
@@ -84,6 +66,10 @@ public class Constant {
      * 普通注册
      */
     public static final int FLAG_USER_REGIST = 101;
+
+    public static final int REQUEST_PERMISSION_CAMERA = 2001;
+    public static final int REQUEST_PERMISSION_STORAGE = 2002;
+    public static final int REQUEST_PERMISSION_LOCATION = 2003;
     /**
      * 每页的条数
      */
@@ -105,8 +91,6 @@ public class Constant {
      * 接受到用户注销消息
      */
     public static final int FLAG_RECEIVE_LOGINOUT = 603;
-    // /** 接受到注册推送 */
-    // public static final int FLAG_RECEIVE_PUSH_REGIST = 604;
     /**
      * 接收到更新用户信息
      */
@@ -116,13 +100,13 @@ public class Constant {
      */
     public static final int FLAG_RECEIVE_NOTIFY = 607;
     /**
-     * 提醒更新历史消息
+     * 提醒更新消息
      */
-    public static final int FLAG_RECEIVE_UPDATE_MSG = 608;
+    public static final int FLAG_RECEIVE_MSG_UPDATE = 608;
     /**
      * 提醒强制退出
      */
-    public static final int FLAG_RECEIVE_FORCE_LOGINOUT = 609;
+    public static final int FLAG_RECEIVE_LOGINOUT_FORCE = 609;
     /**
      * 提醒通知点击
      */
@@ -131,19 +115,7 @@ public class Constant {
     public static final String HTTP_CONTENTTYPE = "application/x-www-form-urlencoded";
     public static final String HTTP_USERAGENT = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13";
     public static final String HTTP_ACCEPT_JSON = "application/json";
-    public static final String HTTP_AUTH= "AUTHORIZATION";
-    /**
-     * 拍照
-     */
-    public static final int FLAG_UPLOAD_TAKE_PICTURE = 10;
-    /**
-     * 选择图片
-     */
-    public static final int FLAG_UPLOAD_CHOOICE_IMAGE = 12;
-    /**
-     * 剪切
-     */
-    public static final int FLAG_UPLOAD_IMAGE_CUT = 13;
+    public static final String HTTP_AUTH = "AUTHORIZATION";
 
 
 }

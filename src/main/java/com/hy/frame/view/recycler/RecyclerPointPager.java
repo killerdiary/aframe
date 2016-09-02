@@ -2,6 +2,7 @@ package com.hy.frame.view.recycler;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -14,14 +15,12 @@ import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.CircleImageView;
 
-import java.util.List;
-
 /**
  * com.hy.frame.view.recycler
  * author HeYan
  * time 2016/8/16 14:21
  */
-public class RecyclerPointPager extends RelativeLayout implements Runnable {
+public class RecyclerPointPager extends RelativeLayout implements Runnable, RecyclerViewPager.OnPageChangedListener {
     private final static int DEFAULT_INTERVAL = 3000;// 间隔时间3秒
     private boolean isOpenAuto;
     private long timer;// 间隔时间
@@ -29,7 +28,6 @@ public class RecyclerPointPager extends RelativeLayout implements Runnable {
     private RecyclerViewPager rcyList;
     private LinearLayout llyPoint;
     //private BitmapUtils fb;
-    private List<String> datas;
     private BaseRecyclerAdapter adapter;
     //private boolean isDrag;
     private boolean init;
@@ -66,13 +64,30 @@ public class RecyclerPointPager extends RelativeLayout implements Runnable {
         llyPoint.setPadding(padding, padding, padding, padding);
         addView(llyPoint, prlp);
         rcyList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        rcyList.setFlingFactor(0);
+        rcyList.addOnPageChangedListener(this);
     }
 
     public void setAdapter(BaseRecyclerAdapter adapter) {
+        if (this.adapter != null) {
+            return;
+        }
         this.adapter = adapter;
-        rcyList.setAdapter(adapter);
         llyPoint.removeAllViews();
-        int size = adapter.getItemCount();
+        int size = this.adapter.getItemCount();
+        for (int i = 0; i < size; i++) {
+            addPoint();
+        }
+        rcyList.setAdapter(this.adapter);
+
+    }
+
+    public void resetPoint() {
+        if (this.adapter == null) {
+            return;
+        }
+        llyPoint.removeAllViews();
+        int size = this.adapter.getItemCount();
         for (int i = 0; i < size; i++) {
             addPoint();
         }
@@ -198,8 +213,6 @@ public class RecyclerPointPager extends RelativeLayout implements Runnable {
         // MyLog.e("isInLayout:"+isInLayout());
         scrollCount++;
         postDelayed(this, timer);
-        if (rcyList.isSinglePageFling())
-            return;
         if (scrollCount < 3)
             return;
         if (!isOpenAuto || adapter == null)
@@ -207,6 +220,8 @@ public class RecyclerPointPager extends RelativeLayout implements Runnable {
         if (!isShown() || getCount() <= 1)
             return;
         int pager = rcyList.getCurrentPosition();
+        if (rcyList.getScrollState() != RecyclerView.SCROLL_STATE_IDLE)
+            return;
         //MyLog.e("pager:" + pager + "| getCount:" + getCount());
         if (pager < getCount() - 1)
             rcyList.smoothScrollToPosition(pager + 1);
@@ -219,6 +234,17 @@ public class RecyclerPointPager extends RelativeLayout implements Runnable {
 
     public void setListener(IScrollListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void OnPageChanged(int oldPosition, int newPosition) {
+        int size = llyPoint.getChildCount();
+        for (int i = 0; i < size; i++) {
+            llyPoint.getChildAt(i).setSelected(i == newPosition);
+        }
+        if (listener != null) {
+            listener.onViewChange(adapter.getItemCount(), newPosition);
+        }
     }
 
     public interface IScrollListener {

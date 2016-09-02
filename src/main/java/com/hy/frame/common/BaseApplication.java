@@ -178,35 +178,19 @@ public class BaseApplication extends Application {
 
     @CallSuper
     protected void initAppForMainProcess(IntentFilter filter) {
-        if (filter == null)
-            filter = new IntentFilter();
-        if (!filter.hasAction(ConnectivityManager.CONNECTIVITY_ACTION))
-            filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
-        if (receiver == null)
-            receiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
-                    MyLog.d(getClass(), "action:" + action);
-                    if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
-                        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                        int result = -1;
-                        NetworkInfo netInfo = manager.getActiveNetworkInfo();// 当前网络信息
-                        if (netInfo != null && netInfo.isConnected()) {
-                            result = netInfo.getType();
-                        }
-                        MyLog.d(getClass(), "NetState:" + result);
-                        new MyShare(getApplicationContext()).putInt(Constant.NET_STATUS, result);
-                        sendBroadcast(new Intent(Constant.ACTION_RECEIVE_NET_CHANGE));
+        if (filter != null) {
+            filter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
+            if (receiver == null)
+                receiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        String action = intent.getAction();
+                        MyLog.d(getClass(), "action:" + action);
+                        BaseApplication.this.onReceive(this, intent);
                     }
-                    BaseApplication.this.onReceive(this, intent);
-                }
-            };
-        registerReceiver(receiver, filter);
-        //默认有网
-        new MyShare(getApplicationContext()).putInt(Constant.NET_STATUS, 1);
-        //receiver.onReceive(this, new Intent(ConnectivityManager.CONNECTIVITY_ACTION));
+                };
+            registerReceiver(receiver, filter);
+        }
         acts = new CopyOnWriteArrayList<>();
         hashMap = new HashMap<>();
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hy.frame.view.TintImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/head_vRight"
     android:layout_width="?attr/appHeaderHeight"
     android:layout_height="?attr/appHeaderHeight"
@@ -8,4 +8,4 @@
     android:background="@drawable/default_selector"
     android:contentDescription="@string/app_name"
     android:padding="@dimen/margin_normal"
-    android:src="@drawable/btn_help" />
+    android:src="@mipmap/btn_help" />

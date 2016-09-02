@@ -11,7 +11,7 @@
         <attr name="aspectRatioY" format= "integer"/>
         <attr name="imageResource" format="reference"/>
     </declare-styleable>
-    <declare-styleable name="ucrop_UCropView">
+    <declare-styleable name="UCropView">
 
         <!--Crop image view-->
         <attr name="ucrop_aspect_ratio_x" format="float"/>

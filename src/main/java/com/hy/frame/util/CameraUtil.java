@@ -1,23 +1,28 @@
 package com.hy.frame.util;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 
 import com.hy.frame.common.BaseActivity;
 import com.hy.frame.common.BaseFragment;
-import com.wq.photo.widget.PickConfig;
-import com.yalantis.ucrop.UCrop;
+import com.hy.frame.ui.CropActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 拍照工具类
@@ -25,25 +30,35 @@ import java.io.IOException;
  * time 2015/12/29 16:57
  */
 public class CameraUtil {
+    /**
+     * 拍照
+     */
+    public static final int FLAG_UPLOAD_TAKE_PICTURE = 10;
+    /**
+     * 选择图片
+     */
+    public static final int FLAG_UPLOAD_CHOOICE_IMAGE = 12;
+    /**
+     * 剪切
+     */
+    public static final int FLAG_UPLOAD_IMAGE_CUT = 13;
     private BaseActivity act;
     private BaseFragment fragment;
     private CameraDealListener listener;
-    private String cachePath;
 
-    public CameraUtil(BaseActivity act, CameraDealListener listener, String cachePath) {
+    public CameraUtil(BaseActivity act, CameraDealListener listener) {
         this.act = act;
         this.listener = listener;
-        this.cachePath = cachePath;
     }
 
-    public CameraUtil(BaseFragment fragment, CameraDealListener listener, String cachePath) {
+    public CameraUtil(BaseFragment fragment, CameraDealListener listener) {
         this.fragment = fragment;
         this.listener = listener;
-        this.cachePath = cachePath;
     }
 
     //private Uri imageUri, cacheUri;
     private static final String URI_IMAGE = "CAMERA_URI_IMAGE", URI_CACHE = "CAMERA_URI_CACHE";// URI_CONTENT = "CAMERA_URI_CONTENT";
+
 
     private Context getContext() {
         if (act == null) return fragment.getContext();
@@ -51,22 +66,26 @@ public class CameraUtil {
     }
 
     private boolean initPhotoData() {
+        String path = HyUtil.getCachePathCrop(getContext());
         // 判断sd卡
-        if (cachePath == null) {
+        if (path == null) {
             MyToast.show(getContext(), "没有SD卡，不能拍照");
             return false;
         }
+        if (!requesStoragetPermission()) return false;
         // FileUtil.delAllFile(path);
         long time = System.currentTimeMillis();
-        String imagePath = cachePath + File.separator + "pic" + time + ".jpg";
+        String imagePath = path + File.separator + "pic" + time + ".jpg";
         //String cachePath = path + File.separator + "cache" + time + ".jpg";
         //MyShare.get(getContext()).putString(URI_CACHE, "file://" + cachePath);
         MyShare.get(getContext()).putString(URI_IMAGE, "file://" + imagePath);
         return true;
     }
 
+
     public void onDlgCameraClick() {
-        if (initPhotoData())
+        if (initPhotoData()) {
+            if (!requestCameraPermission()) return;
             try {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 ContentValues values = new ContentValues();
@@ -74,10 +93,11 @@ public class CameraUtil {
                 if (contentUri == null) return;
                 MyShare.get(getContext()).putString(URI_CACHE, contentUri.toString());
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
-                startActivityForResult(intent, Constant.FLAG_UPLOAD_TAKE_PICTURE);
+                startActivityForResult(intent, FLAG_UPLOAD_TAKE_PICTURE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
     }
 
     public void onDlgPhotoClick() {
@@ -85,7 +105,7 @@ public class CameraUtil {
             try {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
-                startActivityForResult(intent, Constant.FLAG_UPLOAD_CHOOICE_IMAGE);
+                startActivityForResult(intent, FLAG_UPLOAD_CHOOICE_IMAGE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -108,124 +128,42 @@ public class CameraUtil {
 //        intent.putExtra("aspectX", aspectX);
 //        intent.putExtra("aspectY", aspectY);
 //        intent.putExtra("outputX", aspectX * unit);
-//        intent.putExtra("outputY", aspectY * unit);
+//        intent.putExtra("outputY", aspectX * unit);
 //        intent.putExtra("scale", true);
 //        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 //        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 //        intent.putExtra("noFaceDetection", true); // no face detection
 //        startActivityForResult(intent, Constant.FLAG_UPLOAD_IMAGE_CUT);
-        //int chose_mode = true ? PickConfig.MODE_SINGLE_PICK : PickConfig.MODE_MULTIP_PICK;
-        int mode = PickConfig.MODE_SINGLE_PICK;
-        UCrop.Options options = new UCrop.Options();
-        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
-        options.setCompressionQuality(70);//质量
-        options.setStatusBarColor(Color.parseColor("#D81B60"));
-        options.setToolbarColor(Color.parseColor("#E91E63"));
-//        new PickConfig.Builder(act == null ? fragment.getActivity() : act)
-//                .isneedcrop(true)//是否需要剪切
-//                .actionBarcolor(Color.parseColor("#E91E63"))
-//                .statusBarcolor(Color.parseColor("#D81B60"))
-//                .isneedcamera(true)//是否需要拍照
-//                .isSqureCrop(true)//是否是方形剪切
-//                .setUropOptions(options)
-//                .maxPickSize(1)//选择张数
-//                .spanCount(3)//每行显示
-//                .pickMode(mode).build();
-        UCrop uCrop = UCrop.of(uri, imageUri);
-        if (aspectX > 0 && aspectY > 0) {
-            uCrop = uCrop.withAspectRatio(aspectX, aspectY);
-        } else {
-            uCrop = uCrop.useSourceImageAspectRatio();
-        }
-        uCrop.withOptions(options);
-        uCrop.start(act == null ? fragment.getActivity() : act);
-        //startActivityForResult(intent, PickConfig.PICK_REQUEST_CODE);
-    }
 
-    /**
-     * 压缩图片
-     *
-     * @param path      路径
-     * @param maxKb     最大KB
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
-     * @param clistener 回调
-     */
-    public synchronized void compressImage(String path, int maxKb, int maxWidth, int maxHeight, CameraCompressListener clistener) {
-        if (clistener == null) {
-            MyLog.e("CameraCompressListener 未定义，CODE：0");
-            return;
-        }
-        if (path == null) {
-            MyLog.e("图片加载出错，CODE：0");
-            clistener.onComprossError("图片加载出错");
-            return;
-        }
-        Uri imageUri = getImageUri();
-        if (imageUri == null) {
-            MyLog.e(getClass(), "地址未初始化");
-            clistener.onComprossError("图片存储路径未定义");
-            return;
-        }
+//        UCrop.Options options = new UCrop.Options();
+//        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+//        options.setCompressionQuality(70);//质量
+//        options.setStatusBarColor(Color.parseColor("#D81B60"));
+//        options.setToolbarColor(Color.parseColor("#E91E63"));
+//        UCrop uCrop = UCrop.of(uri, imageUri);
+//        if (aspectX > 0 && aspectY > 0) {
+//            //uCrop = uCrop.withAspectRatio(aspectX, aspectY);
+//            //uCrop = uCrop.withAspectRatio(aspectX, aspectY);
+//        } else {
+//            uCrop = uCrop.useSourceImageAspectRatio();
+//        }
+//        uCrop.withOptions(options);
+//        uCrop.start(act == null ? fragment.getActivity() : act);
 
-        File f = new File(path);
-        if (!f.exists()) {
-            clistener.onComprossError("图片不存在");
-            return;
-        }
-        double size = FileUtil.getFileOrFilesSize(path, FileUtil.SIZETYPE_KB);
-        MyLog.d("File Size:" + size);
-        if (maxKb > 0 && size <= maxKb) {
-            clistener.onCompressSuccess(path);
-            return;
-        }
-//            int maxWidth = 1024;
-//            int maxHeight = 1024;
-//            int maxWidth = 512;
-//            int maxHeight = 512;
-        BitmapFactory.Options oldOpts = new BitmapFactory.Options();
-        oldOpts.inJustDecodeBounds = true;
-        //加载属性
-        BitmapFactory.decodeFile(path, oldOpts);
-        int w = oldOpts.outWidth;
-        int h = oldOpts.outHeight;
-        //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
-        int be = 2;//be=1表示不缩放
-        if (w > h && w > maxWidth) {//如果宽度大的话根据宽度固定大小缩放
-            be = w / maxWidth;
-        } else if (w < h && h > maxHeight) {//如果高度高的话根据宽度固定大小缩放
-            be = h / maxHeight;
-        }
-        if (be <= 1)
-            be = 2;
-        MyLog.d("原尺寸：" + w + "x" + h + " | 缩放比例：" + be);
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        newOpts.inSampleSize = be;//设置缩放比例
-        //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        //newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap2 = BitmapFactory.decodeFile(path, newOpts);
-        if (bitmap2 == null) {
-            MyLog.e("图片加载出错，CODE：2");
-            clistener.onComprossError("图片读取失败");
-            return;
-        }
-        f = new File(imageUri.getPath());
+        Intent intent = new Intent(getContext(), CropActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(CropActivity.EXTRA_ASPECT_X, aspectX);
+        bundle.putInt(CropActivity.EXTRA_ASPECT_Y, aspectY);
+        bundle.putInt(CropActivity.EXTRA_ASPECT_UNIT, unit);
+        bundle.putParcelable(CropActivity.EXTRA_INPUT_URI, uri);
+        bundle.putParcelable(CropActivity.EXTRA_OUTPUT_URI, imageUri);
+        intent.putExtra(BaseActivity.BUNDLE, bundle);
         try {
-            if (!f.exists() && f.createNewFile()) {
-                clistener.onComprossError("文件创建失败");
-                return;
-            }
-            FileOutputStream fOut = new FileOutputStream(f);
-            bitmap2.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-            bitmap2.recycle();
-            size = FileUtil.getFileOrFilesSize(imageUri.getPath(), FileUtil.SIZETYPE_KB);
-            MyLog.d("File Size:" + size);
-            clistener.onCompressSuccess(imageUri.getPath());
-        } catch (IOException e) {
+            startActivityForResult(intent, FLAG_UPLOAD_IMAGE_CUT);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private void startActivityForResult(Intent intent, int requestCode) {
@@ -248,31 +186,30 @@ public class CameraUtil {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            File f = null;
+            File f;
+            Uri cacheUri;
             String path;
             try {
                 switch (requestCode) {
-                    case Constant.FLAG_UPLOAD_TAKE_PICTURE:
+                    case FLAG_UPLOAD_TAKE_PICTURE:
                         if (data != null && data.getData() != null) {
                             path = CameraDocument.getPath(getContext(), data.getData());
                         } else {
                             path = CameraDocument.getPath(getContext(), getCacheUri());
                         }
-                        if (path != null)
-                            f = new File(path);
-                        if (f != null && f.exists() && f.length() > 0) {
+                        f = new File(path);
+                        if (f.exists() && f.length() > 0) {
                             if (listener != null)
                                 listener.onCameraTakeSuccess(path);
                         } else {
                             MyLog.e(getClass(), "拍照存储异常");
                         }
                         break;
-                    case Constant.FLAG_UPLOAD_CHOOICE_IMAGE:
+                    case FLAG_UPLOAD_CHOOICE_IMAGE:
                         if (data != null && data.getData() != null) {
                             path = CameraDocument.getPath(getContext(), data.getData());
-                            if (path != null)
-                                f = new File(path);
-                            if (f != null && f.exists() && f.length() > 0) {
+                            f = new File(path);
+                            if (f.exists() && f.length() > 0) {
                                 if (listener != null)
                                     listener.onCameraPickSuccess(path);
                             } else {
@@ -280,7 +217,7 @@ public class CameraUtil {
                             }
                         }
                         break;
-                    case Constant.FLAG_UPLOAD_IMAGE_CUT:
+                    case FLAG_UPLOAD_IMAGE_CUT:
                         Uri imageUri = getImageUri();
                         f = new File(imageUri.getPath());
                         if (f.exists() && f.length() > 0) {
@@ -302,11 +239,60 @@ public class CameraUtil {
         }
     }
 
-    private boolean saveFile(Uri uri, File f) {
-        try {
-            if (!f.exists() && !f.createNewFile()) {
-                return false;
+    private boolean requestCameraPermission() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+            return true;
+        Activity act = null;
+        if (this.act != null)
+            act = this.act;
+        if (this.fragment != null)
+            act = this.fragment.getActivity();
+        ActivityCompat.requestPermissions(act,
+                new String[]{Manifest.permission.CAMERA},
+                Constant.REQUEST_PERMISSION_CAMERA);
+        return false;
+    }
+
+    private boolean requesStoragetPermission() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return true;
+        Activity act = null;
+        if (this.act != null)
+            act = this.act;
+        if (this.fragment != null)
+            act = this.fragment.getActivity();
+        ActivityCompat.requestPermissions(act,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                Constant.REQUEST_PERMISSION_STORAGE);
+        return false;
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constant.REQUEST_PERMISSION_CAMERA: {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    MyToast.show(getContext(), "获取权限成功，请重新拍照或选择图片");
+                } else {
+                    MyToast.show(getContext(), "您没有摄像头权限，请去权限管理中心开启");
+                }
             }
+            break;
+            case Constant.REQUEST_PERMISSION_STORAGE: {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    MyToast.show(getContext(), "获取权限成功，请重新拍照或选择图片");
+                } else {
+                    MyToast.show(getContext(), "您没有文件存储权限，请去权限管理中心开启");
+                }
+            }
+            break;
+        }
+    }
+
+    private boolean saveFile(Uri uri, File f) {
+        ContentResolver resolver = getContext().getContentResolver();
+        try {
+            if (!f.exists())
+                f.createNewFile();
             Bitmap bmp;
             String path = CameraDocument.getPath(getContext(), uri);
             bmp = BitmapFactory.decodeFile(path);
@@ -330,11 +316,5 @@ public class CameraUtil {
         void onCameraPickSuccess(String uri);
 
         void onCameraCutSuccess(String uri);
-    }
-
-    public interface CameraCompressListener {
-        void onCompressSuccess(String path);
-
-        void onComprossError(String msg);
     }
 }

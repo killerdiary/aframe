@@ -29,7 +29,7 @@ import java.util.List;
  * @author Green
  */
 public class RecyclerViewPager extends RecyclerView {
-    public static final boolean DEBUG = BuildConfig.DEBUG;
+    public static   boolean DEBUG = false;
 
     private RecyclerViewPagerAdapter<?> mViewPagerAdapter;
     private float mTriggerOffset = 0.25f;
@@ -63,6 +63,7 @@ public class RecyclerViewPager extends RecyclerView {
 
     public RecyclerViewPager(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        DEBUG = MyLog.isLoggable;
         initAttrs(context, attrs, defStyle);
         setNestedScrollingEnabled(false);
     }

@@ -24,7 +24,6 @@ import com.yolanda.nohttp.StringRequest;
 import com.yolanda.nohttp.cache.CacheMode;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -301,12 +300,6 @@ public abstract class MyHttpClient {
         result.setQid(qid);
         result.setErrorCode(ResultInfo.CODE_ERROR_DEFAULT);
         qid = 0;
-        if (!HyUtil.isNetworkConnected(context)) {
-            result.setErrorCode(ResultInfo.CODE_ERROR_NET);
-            result.setMsg(getString(R.string.API_FLAG_NET_FAIL));
-            onRequestError(result);
-            return;
-        }
         if (signatures != null) {
             if (params == null)
                 params = new AjaxParams();
@@ -316,22 +309,6 @@ public abstract class MyHttpClient {
         if (params != null) {
             MyLog.d("request", params.getUrlParams().toString());
         }
-//        FinalHttp fh = new FinalHttp();
-//        fh.configTimeout(TIME_OUT);
-//        if (HyUtil.isNoEmpty(userAgent))
-//            fh.configUserAgent(userAgent);
-//        if (HyUtil.isNoEmpty(accept))
-//            fh.addHeader("Accept", accept);
-//        if (maps != null) {
-//            for (Entry<String, String> map : maps.entrySet()) {
-//                fh.addHeader(map.getKey(), map.getValue());
-//            }
-//        }
-
-//        if (isGet)
-//            fh.get(url, params, contentType, callback);
-//        else
-//            fh.post(url, params == null ? null : params.getEntity(), contentType, callback);
         RequestMethod method = isGet ? RequestMethod.GET : RequestMethod.POST;
         if (request == null) {
             switch (requestType) {
