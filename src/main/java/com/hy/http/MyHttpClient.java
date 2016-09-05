@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.hy.frame.R;
+import com.hy.frame.bean.DownFile;
 import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
@@ -22,6 +23,9 @@ import com.yolanda.nohttp.RequestQueue;
 import com.yolanda.nohttp.Response;
 import com.yolanda.nohttp.StringRequest;
 import com.yolanda.nohttp.cache.CacheMode;
+import com.yolanda.nohttp.download.DownloadListener;
+import com.yolanda.nohttp.download.DownloadQueue;
+import com.yolanda.nohttp.download.DownloadRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -294,6 +298,12 @@ public abstract class MyHttpClient {
      * @param list        结果是否是List
      */
     public <T> void request(boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
+        request(request, isGet, requestCode, url, params, cls, list);
+        request = null;
+        cacheMode = null;
+    }
+
+    public <T> void request(Request request, boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
         if (isDestroy) return;
         ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
@@ -392,7 +402,6 @@ public abstract class MyHttpClient {
                 public void onFinish(int what) {
                     MyLog.d("onFinish(JSONObject)", "what=" + what);
                     cacheMode = null;
-                    request = null;
                 }
             };
         } else if (request instanceof JsonArrayRequest) {
@@ -444,8 +453,6 @@ public abstract class MyHttpClient {
                 @Override
                 public void onFinish(int what) {
                     MyLog.d("onFinish(JSONArray)", "what=" + what);
-                    cacheMode = null;
-                    request = null;
                 }
             };
         } else if (request instanceof StringRequest) {
@@ -497,12 +504,101 @@ public abstract class MyHttpClient {
                 @Override
                 public void onFinish(int what) {
                     MyLog.d("onFinish(String)", "what=" + what);
-                    cacheMode = null;
-                    request = null;
                 }
             };
         }
         requestQueue.add(requestCode, request, listener);
+    }
+
+    private DownloadQueue downloadQueue;
+
+    public void download(String url, String fileFolder, String filename, boolean isRange, boolean isDeleteOld) {
+        if (downloadQueue == null)
+            downloadQueue = NoHttp.newDownloadQueue();
+        final DownloadRequest request = NoHttp.createDownloadRequest(url, fileFolder, filename, isRange, isDeleteOld);
+        int requestCode = url.length();
+        DownFile downFile = new DownFile();
+        request.setTag(downFile);
+        downloadQueue.add(requestCode, request, new DownloadListener() {
+            @Override
+            public void onDownloadError(int what, Exception exception) {
+                if (isDestroy) return;
+                MyLog.d("onDownloadError(File)", "what=" + what);
+                hideLoading();
+                int code = R.string.API_FLAG_CON_EXCEPTION;
+                String msg = exception.getMessage();
+                if (msg != null) {
+                    String thr = msg.toLowerCase(Locale.CHINA);
+                    if (msg.contains("broken pipe"))
+                        code = R.string.API_FLAG_CON_BROKEN;
+                    else if (msg.contains("timed out"))
+                        code = R.string.API_FLAG_CON_TIMEOUT;
+                    else if (msg.contains("unknownhostexception"))
+                        code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
+                }
+                ResultInfo result = new ResultInfo();
+                result.setRequestCode(what);
+                result.setErrorCode(ResultInfo.CODE_ERROR_DEFAULT);
+                DownFile downFile = (DownFile) request.getTag();
+                downFile.setState(DownFile.STATUS_ERROR);
+                result.setObj(downFile);
+                result.setMsg(getString(code));
+                onRequestError(result);
+            }
+
+            @Override
+            public void onStart(int what, boolean isResume, long rangeSize, Headers responseHeaders, long allCount) {
+                if (isDestroy) return;
+                MyLog.d("onStart(File)", "what=" + what);
+                showLoading();
+                ResultInfo result = new ResultInfo();
+                result.setRequestCode(what);
+                result.setErrorCode(0);
+                DownFile downFile = (DownFile) request.getTag();
+                downFile.setState(DownFile.STATUS_START);
+                downFile.setAllCount(allCount);
+                result.setObj(downFile);
+                result.setMsg("downloading");
+                onRequestSuccess(result);
+            }
+
+            @Override
+            public void onProgress(int what, int progress, long fileCount) {
+                MyLog.d("onProgress(File)", "what=" + what + ",progress=" + progress + ",fileCount=" + fileCount);
+                ResultInfo result = new ResultInfo();
+                result.setRequestCode(what);
+                result.setErrorCode(0);
+                DownFile downFile = (DownFile) request.getTag();
+                downFile.setState(DownFile.STATUS_START);
+                downFile.setProgress(progress);
+                downFile.setFileCount(fileCount);
+                result.setObj(downFile);
+                result.setMsg("downloading");
+                onRequestSuccess(result);
+            }
+
+            @Override
+            public void onFinish(int what, String filePath) {
+                MyLog.d("onFinish(File)", "what=" + what + ",filePath=" + filePath);
+                if (isDestroy) return;
+                hideLoading();
+                ResultInfo result = new ResultInfo();
+                result.setRequestCode(what);
+                result.setErrorCode(0);
+                DownFile downFile = (DownFile) request.getTag();
+                downFile.setState(DownFile.STATUS_SUCCESS);
+                downFile.setProgress(100);
+                downFile.setFilePath(filePath);
+                result.setObj(downFile);
+                result.setMsg("downloaded");
+                onRequestSuccess(result);
+            }
+
+            @Override
+            public void onCancel(int what) {
+                MyLog.d("onCancel(File)", "what=" + what);
+            }
+        });
     }
 
     /**

@@ -63,7 +63,7 @@ public class RecyclerViewPager extends RecyclerView {
 
     public RecyclerViewPager(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        DEBUG = MyLog.isLoggable;
+        //DEBUG = MyLog.isLoggable;
         initAttrs(context, attrs, defStyle);
         setNestedScrollingEnabled(false);
     }
