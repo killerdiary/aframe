@@ -1,10 +1,9 @@
 package android.webkit.safe;
 
 import android.text.TextUtils;
-import android.util.Log;
-import android.webkit.WebView;
 
 import com.hy.frame.util.MyLog;
+import com.tencent.smtt.sdk.WebView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,9 +64,7 @@ public class JsCallJava {
             mPreloadInterfaceJS = sb.toString();
             sb.setLength(0);
         } catch (Exception e) {
-            if (MyLog.isLoggable) {
-                Log.e(TAG, "init js error:" + e.getMessage());
-            }
+            MyLog.e(TAG, "init js error:" + e.getMessage());
         }
     }
 
@@ -76,9 +73,7 @@ public class JsCallJava {
         Class[] argsTypes = method.getParameterTypes();
         for (String ignoreMethod : IGNORE_UNSAFE_METHODS) {
             if (ignoreMethod.equals(sign)) {
-                if (MyLog.isLoggable) {
-                    Log.w(TAG, "method(" + sign + ") is unsafe, will be pass");
-                }
+                MyLog.w(TAG, "method(" + sign + ") is unsafe, will be pass");
                 return null;
             }
         }
@@ -201,9 +196,7 @@ public class JsCallJava {
             // insertRes = "\"".concat(String.valueOf(result)).concat("\"");
         }
         String resStr = String.format(RETURN_RESULT_FORMAT, stateCode, insertRes);
-        if (MyLog.isLoggable) {
-            Log.d(TAG, "call time: " + (android.os.SystemClock.uptimeMillis() - time) + ", request: " + reqJson + ", result:" + resStr);
-        }
+        MyLog.d(TAG, "call time: " + (android.os.SystemClock.uptimeMillis() - time) + ", request: " + reqJson + ", result:" + resStr);
         return resStr;
     }
 

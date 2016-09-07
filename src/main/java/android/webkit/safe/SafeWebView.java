@@ -5,18 +5,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.JsPromptResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.hy.frame.util.MyLog;
+import com.tencent.smtt.export.external.interfaces.JsPromptResult;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import org.json.JSONObject;
 
@@ -65,15 +64,13 @@ public class SafeWebView extends WebView {
     @Deprecated
     public void addJavascriptInterface(Object interfaceObj, String interfaceName) {
         if (mJsCallJavas == null) {
-            mJsCallJavas = new HashMap<String, JsCallJava>();
+            mJsCallJavas = new HashMap<>();
         }
         mJsCallJavas.put(interfaceName, new JsCallJava(interfaceObj, interfaceName));
         setClient();
         if (mJsCallJavas != null) {
             injectJavaScript();
-            if (MyLog.isLoggable) {
-                Log.d(TAG, "injectJavaScript, addJavascriptInterface.interfaceObj = " + interfaceObj + ", interfaceName = " + interfaceName);
-            }
+            MyLog.d(TAG, "injectJavaScript, addJavascriptInterface.interfaceObj = " + interfaceObj + ", interfaceName = " + interfaceName);
         }
     }
 
@@ -158,7 +155,7 @@ public class SafeWebView extends WebView {
      */
     public void addInjectJavaScript(String javaScript) {
         if (mInjectJavaScripts == null) {
-            mInjectJavaScripts = new HashMap<Integer, String>();
+            mInjectJavaScripts = new HashMap<>();
         }
         mInjectJavaScripts.put(javaScript.hashCode(), javaScript);
         injectExtraJavaScript();
@@ -221,9 +218,7 @@ public class SafeWebView extends WebView {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (mJsCallJavas != null) {
                 injectJavaScript();
-                if (MyLog.isLoggable) {
-                    Log.d(TAG, "injectJavaScript, onPageStarted.url = " + view.getUrl());
-                }
+                MyLog.d(TAG, "injectJavaScript, onPageStarted.url = " + view.getUrl());
             }
             if (mInjectJavaScripts != null) {
                 injectExtraJavaScript();
@@ -241,9 +236,7 @@ public class SafeWebView extends WebView {
         public void onProgressChanged(WebView view, int newProgress) {
             if (mJsCallJavas != null) {
                 injectJavaScript();
-                if (MyLog.isLoggable) {
-                    Log.d(TAG, "injectJavaScript, onProgressChanged.newProgress = " + newProgress + ", url = " + view.getUrl());
-                }
+                MyLog.d(TAG, "injectJavaScript, onProgressChanged.newProgress = " + newProgress + ", url = " + view.getUrl());
             }
             if (mInjectJavaScripts != null) {
                 injectExtraJavaScript();

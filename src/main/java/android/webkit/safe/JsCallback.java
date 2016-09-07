@@ -8,16 +8,17 @@
 
 package android.webkit.safe;
 
-import android.util.Log;
-import android.webkit.WebView;
 
 import com.hy.frame.util.MyLog;
+import com.tencent.smtt.sdk.WebView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
+
 
 public class JsCallback {
     private static final String CALLBACK_JS_FORMAT = "javascript:%s.callback(%d, %d %s);";
@@ -29,7 +30,7 @@ public class JsCallback {
 
     public JsCallback(WebView view, String injectedName, int index) {
         mCouldGoOn = true;
-        mWebViewRef = new WeakReference<WebView>(view);
+        mWebViewRef = new WeakReference<>(view);
         mInjectedName = injectedName;
         mIndex = index;
     }
@@ -37,7 +38,7 @@ public class JsCallback {
     /**
      * 向网页执行js回调；
      *
-     * @param args
+     * @param args 参数
      * @throws JsCallbackException
      */
     public void apply(Object... args) throws JsCallbackException {
@@ -61,10 +62,8 @@ public class JsCallback {
                 sb.append("\"");
             }
         }
-        String execJs = String.format(CALLBACK_JS_FORMAT, mInjectedName, mIndex, mIsPermanent, sb.toString());
-        if (MyLog.isLoggable) {
-            Log.d("JsCallBack", execJs);
-        }
+        String execJs = String.format(Locale.CHINA, CALLBACK_JS_FORMAT, mInjectedName, mIndex, mIsPermanent, sb.toString());
+        MyLog.d("JsCallBack", execJs);
         mWebViewRef.get().loadUrl(execJs);
         mCouldGoOn = mIsPermanent > 0;
     }
@@ -72,8 +71,7 @@ public class JsCallback {
     /**
      * 是否是JSON(JavaScript Object Notation)对象；
      *
-     * @param obj
-     * @return
+     * @param obj 对象
      */
     private boolean isJavaScriptObject(Object obj) {
         if (obj instanceof JSONObject || obj instanceof JSONArray) {
@@ -97,7 +95,7 @@ public class JsCallback {
      * 一般传入到Java方法的js function是一次性使用的，即在Java层jsCallback.apply(...)之后不能再发起回调了；
      * 如果需要传入的function能够在当前页面生命周期内多次使用，请在第一次apply前setPermanent(true)；
      *
-     * @param value
+     * @param value 值
      */
     public void setPermanent(boolean value) {
         mIsPermanent = value ? 1 : 0;
