@@ -10,6 +10,7 @@ import android.view.View;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -253,6 +254,23 @@ public class HyUtil {
         Date d = new Date(ltime);
         SimpleDateFormat formatter = new SimpleDateFormat(type, Locale.CHINA);
         return formatter.format(d);
+    }
+
+    public static Date stringToDateTime(String strDate) {
+        return stringToDateTime(strDate,null);
+    }
+
+    public static Date stringToDateTime(String strDate, String type) {
+        if (strDate != null) {
+            if (type == null) type = "yyyy-MM-dd HH:mm:ss";
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(type,Locale.CHINA);
+                return sdf.parse(strDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**

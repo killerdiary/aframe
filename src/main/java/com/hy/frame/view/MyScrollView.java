@@ -12,11 +12,11 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.hy.frame.R;
 import com.hy.frame.adapter.ViewPagerAdapter;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
-import com.lidroid.xutils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,6 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     private int scrollCount;// 次数
     private ViewPager vPager;
     private LinearLayout llyPoint;
-    private BitmapUtils fb;
     private List<View> views;
     private ViewPagerAdapter adapter;
     private boolean isDrag;
@@ -96,12 +95,10 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
     public void addImage(String path) {
         if (path == null)
             return;
-        if (fb == null)
-            fb = new BitmapUtils(getContext());
         ImageView img = new ImageView(getContext());
         img.setScaleType(ScaleType.FIT_XY);
         img.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        fb.display(img, path);
+        Glide.with(getContext()).load(path).into(img);
         img.setOnClickListener(clickListener);
         addPage(img);
     }

@@ -1,5 +1,7 @@
 package com.hy.frame.bean;
 
+import java.io.File;
+
 /**
  * com.hy.frame.bean
  * author HeYan
@@ -15,7 +17,11 @@ public class DownFile {
     private int progress;
     private long fileCount;
     private long allCount;
-    private String filePath;
+    private String saveDir;
+    private String fileName;
+    private String url;
+    private boolean isRange;
+    private boolean isDeleteOld;
 
     public int getState() {
         return state;
@@ -49,11 +55,47 @@ public class DownFile {
         this.allCount = allCount;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getSaveDir() {
+        return saveDir;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setSaveDir(String saveDir) {
+        this.saveDir = saveDir;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public boolean isRange() {
+        return isRange;
+    }
+
+    public void setRange(boolean range) {
+        isRange = range;
+    }
+
+    public boolean isDeleteOld() {
+        return isDeleteOld;
+    }
+
+    public void setDeleteOld(boolean deleteOld) {
+        isDeleteOld = deleteOld;
+    }
+
+    public String getFilePath() {
+        return saveDir + File.separator + fileName;
     }
 }

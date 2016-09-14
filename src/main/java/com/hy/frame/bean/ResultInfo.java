@@ -22,7 +22,7 @@ public class ResultInfo {
     private Object obj;//返回结果
     private int errorCode;//错误码
     private String msg;//描述
-
+    private int requestType;
     /**
      * 请求码，接口编号
      */
@@ -91,5 +91,13 @@ public class ResultInfo {
      */
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public int getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(int requestType) {
+        this.requestType = requestType;
     }
 }

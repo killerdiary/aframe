@@ -2,6 +2,10 @@ package com.hy.http;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.MainThread;
+import android.support.annotation.UiThread;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -11,33 +15,34 @@ import com.hy.frame.bean.ResultInfo;
 import com.hy.frame.util.HyUtil;
 import com.hy.frame.util.MyLog;
 import com.hy.frame.view.LoadingDialog;
-import com.yolanda.nohttp.Binary;
-import com.yolanda.nohttp.Headers;
-import com.yolanda.nohttp.JsonArrayRequest;
-import com.yolanda.nohttp.JsonObjectRequest;
-import com.yolanda.nohttp.NoHttp;
-import com.yolanda.nohttp.OnResponseListener;
-import com.yolanda.nohttp.Request;
-import com.yolanda.nohttp.RequestMethod;
-import com.yolanda.nohttp.RequestQueue;
-import com.yolanda.nohttp.Response;
-import com.yolanda.nohttp.StringRequest;
-import com.yolanda.nohttp.cache.CacheMode;
-import com.yolanda.nohttp.download.DownloadListener;
-import com.yolanda.nohttp.download.DownloadQueue;
-import com.yolanda.nohttp.download.DownloadRequest;
+import com.hy.http.file.Binary;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * 网络请求，不能直接使用<br/>
@@ -48,24 +53,26 @@ import java.util.Map;
  */
 public abstract class MyHttpClient {
     private Context context;
-
     private List<IMyHttpListener> listeners;
     protected boolean showDialog;// 显示加载对话框
     protected LoadingDialog loadingDialog;
-    private String signatures;// 密钥KEY
+    //    private String signatures;// 密钥KEY
     private String host;// 域名
     //private final static int TIME_OUT = 60 * 1000;
     //private String contentType, userAgent, accept;
     private Map<String, String> headerParams;
-    private int qid;//队列ID
+    //    private int qid;//队列ID
     protected boolean isDestroy;
-    private RequestQueue requestQueue;
-    private CacheMode cacheMode;
-    private Request request;
-    private int requestType;
+    //    private RequestQueue requestQueue;
+//    private CacheMode cacheMode;
+//    private Request request;
+    private OkHttpClient client;
+    private Handler handler;
     public static final int REQUEST_TYPE_JSON = 0;
     public static final int REQUEST_TYPE_JSONARRAY = 1;
     public static final int REQUEST_TYPE_STRING = 2;
+    public static final int REQUEST_TYPE_FILE = 3;
+    public Set<Integer> queues;
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
         this(context, listener, host, REQUEST_TYPE_JSON);
@@ -78,19 +85,32 @@ public abstract class MyHttpClient {
             return;
         }
         this.context = context;
-        this.listeners = new ArrayList<>();
-        this.listeners.add(listener);
         this.host = host;
-        this.requestType = requestType;
-        this.requestQueue = NoHttp.newRequestQueue();
+        this.handler = new Handler(Looper.getMainLooper());
+        setListener(listener);
+    }
+
+    /**
+     * @param context  上下文
+     * @param listener 舰艇
+     * @param host     域名
+     * @param verify   开启验证
+     */
+    public MyHttpClient(Context context, IMyHttpListener listener, String host, boolean verify) {
+        this(context, listener, host);
+        if (verify) {
+            PackageInfo pi = HyUtil.getAppVersion(context);
+            if (pi != null) {
+                if (pi.signatures != null && pi.signatures.length > 0)
+                    addHeader("signatures", pi.signatures[0].toCharsString());
+            }
+        }
     }
 
     public void setListener(IMyHttpListener listener) {
-        if (this.listeners == null)
-            this.listeners = new ArrayList<>();
-        else
+        if (this.listeners != null)
             this.listeners.clear();
-        this.listeners.add(listener);
+        addListener(listener);
     }
 
     /**
@@ -105,33 +125,52 @@ public abstract class MyHttpClient {
         this.listeners.add(listener);
     }
 
-    public void setRequest(Request request) {
-        this.request = request;
+    private void addQueue(int requestCode) {
+        if (this.queues == null)
+            this.queues = new HashSet<>();
+        this.queues.add(requestCode);
     }
+
+    private boolean hasQueue(int requestCode) {
+        if (queues != null)
+            return queues.contains(requestCode);
+        return false;
+    }
+
+    private boolean removeQueue(int requestCode) {
+        if (queues != null)
+            return queues.remove(requestCode);
+        return false;
+    }
+
+//    @Deprecated
+//    public void setRequest(Request request) {
+//        this.request = request;
+//    }
 
     public Context getContext() {
         return context;
     }
 
-    /**
-     * 无效方法
-     *
-     * @param contentType
-     */
-    @Deprecated
-    public void setContentType(String contentType) {
-        addHeader(Headers.HEAD_KEY_CONTENT_TYPE, contentType);
-    }
-
-    /**
-     * 无效方法
-     *
-     * @param accept
-     */
-    @Deprecated
-    public void setAccept(String accept) {
-        addHeader(Headers.HEAD_KEY_ACCEPT, accept);
-    }
+//    /**
+//     * 无效方法
+//     *
+//     * @param contentType
+//     */
+//    @Deprecated
+//    public void setContentType(String contentType) {
+//        addHeader(Headers.HEAD_KEY_CONTENT_TYPE, contentType);
+//    }
+//
+//    /**
+//     * 无效方法
+//     *
+//     * @param accept
+//     */
+//    @Deprecated
+//    public void setAccept(String accept) {
+//        addHeader(Headers.HEAD_KEY_ACCEPT, accept);
+//    }
 
     /**
      * 无效方法
@@ -155,43 +194,65 @@ public abstract class MyHttpClient {
         headerParams.put(key, value);
     }
 
-    /**
-     * 设置队列ID
-     *
-     * @param qid 队列ID
-     */
-    public void setQid(int qid) {
-        this.qid = qid;
-    }
+//    /**
+//     * 设置队列ID
+//     *
+//     * @param qid 队列ID
+//     */
+//    @Deprecated
+//    public void setQid(int qid) {
+//        this.qid = qid;
+//    }
+//
+//    @Deprecated
+//    public void setCacheMode(CacheMode cacheMode) {
+//        this.cacheMode = cacheMode;
+//    }
 
-    public void setCacheMode(CacheMode cacheMode) {
-        this.cacheMode = cacheMode;
-    }
 
     /**
-     * @param context  上下文
-     * @param listener 舰艇
-     * @param host     域名
-     * @param verify   开启验证
+     * @see #post(int, String, AjaxParams, Class, boolean)
      */
-    public MyHttpClient(Context context, IMyHttpListener listener, String host, boolean verify) {
-        this(context, listener, host);
-        if (verify) {
-            PackageInfo pi = HyUtil.getAppVersion(context);
-            if (pi != null) {
-                if (pi.signatures != null && pi.signatures.length > 0)
-                    this.signatures = pi.signatures[0].toCharsString();
-            }
+    protected String getPath(int resId) {
+        String path = getString(resId);
+        if (path.startsWith("http"))
+            return path;
+        StringBuilder sb = new StringBuilder();
+        sb.append(host);
+        if (!host.endsWith("/") && !path.startsWith("/")) {
+            if (!path.startsWith(":"))
+                sb.append("/");
+            sb.append(path);
+        } else if (host.endsWith("/") && path.startsWith("/")) {
+            sb.append(path.substring(1));
+        } else {
+            sb.append(path);
         }
+        return sb.toString();
     }
 
-    /**
-     * 显示加载对话框
-     *
-     * @param showDialog 是否显示加载对话框
-     */
-    public void setShowDialog(boolean showDialog) {
-        this.showDialog = showDialog;
+    public void get(int resId) {
+        this.get(resId, null, null, false);
+    }
+
+    public <T> void get(int resId, Class<T> cls) {
+        this.get(resId, null, cls, false);
+    }
+
+    public <T> void get(int resId, AjaxParams params, Class<T> cls) {
+        this.get(resId, this.getPath(resId), params, cls, false);
+    }
+
+    public <T> void get(int resId, Class<T> cls, boolean list) {
+        this.get(resId, this.getPath(resId), null, cls, list);
+    }
+
+    public <T> void get(int resId, AjaxParams params, Class<T> cls, boolean list) {
+        this.get(resId, this.getPath(resId), params, cls, list);
+    }
+
+    public <T> void get(int requestCode, String url, AjaxParams params, Class<T> cls, boolean list) {
+        request(true, requestCode, url, params, cls, list);
     }
 
     /**
@@ -229,26 +290,6 @@ public abstract class MyHttpClient {
         post(resId, getPath(resId), params, cls, list);
     }
 
-    /**
-     * @see #post(int, String, AjaxParams, Class, boolean)
-     */
-    protected String getPath(int resId) {
-        String path = getString(resId);
-        if (path.startsWith("http"))
-            return path;
-        StringBuilder sb = new StringBuilder();
-        sb.append(host);
-        if (!host.endsWith("/") && !path.startsWith("/")) {
-            if (!path.startsWith(":"))
-                sb.append("/");
-            sb.append(path);
-        } else if (host.endsWith("/") && path.startsWith("/")) {
-            sb.append(path.substring(1));
-        } else {
-            sb.append(path);
-        }
-        return sb.toString();
-    }
 
     /**
      * 请求方法
@@ -263,29 +304,6 @@ public abstract class MyHttpClient {
         request(false, requestCode, url, params, cls, list);
     }
 
-    public void get(int resId) {
-        this.get(resId, null, null, false);
-    }
-
-    public <T> void get(int resId, Class<T> cls) {
-        this.get(resId, null, cls, false);
-    }
-
-    public <T> void get(int resId, AjaxParams params, Class<T> cls) {
-        this.get(resId, this.getPath(resId), params, cls, false);
-    }
-
-    public <T> void get(int resId, Class<T> cls, boolean list) {
-        this.get(resId, this.getPath(resId), null, cls, list);
-    }
-
-    public <T> void get(int resId, AjaxParams params, Class<T> cls, boolean list) {
-        this.get(resId, this.getPath(resId), params, cls, list);
-    }
-
-    public <T> void get(int requestCode, String url, AjaxParams params, Class<T> cls, boolean list) {
-        request(true, requestCode, url, params, cls, list);
-    }
 
     /**
      * 请求方法
@@ -298,307 +316,217 @@ public abstract class MyHttpClient {
      * @param list        结果是否是List
      */
     public <T> void request(boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
-        request(request, isGet, requestCode, url, params, cls, list);
-        request = null;
-        cacheMode = null;
-    }
-
-    public <T> void request(Request request, boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
-        if (isDestroy) return;
+        MyLog.d("request", url);
+        MyLog.d("params", params == null ? null : params.toString());
         ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
-        result.setQid(qid);
-        result.setErrorCode(ResultInfo.CODE_ERROR_DEFAULT);
-        qid = 0;
-        if (signatures != null) {
-            if (params == null)
-                params = new AjaxParams();
-            params.put("signatures", signatures);
+        result.setRequestType(REQUEST_TYPE_JSON);
+        if (isGet && params != null && params.getUrlParams() != null && params.getUrlParams().size() > 0) {
+            url = url + "?" + params.getUrlParamsString();
         }
-        MyLog.d("request", url);
-        if (params != null) {
-            MyLog.d("request", params.getUrlParams().toString());
-        }
+        result.setQid(params == null ? 0 : params.getQid());
         RequestMethod method = isGet ? RequestMethod.GET : RequestMethod.POST;
-        if (request == null) {
-            switch (requestType) {
-                case REQUEST_TYPE_JSONARRAY:
-                    request = NoHttp.createJsonArrayRequest(url, method);
-                    break;
-                case REQUEST_TYPE_STRING:
-                    request = NoHttp.createStringRequest(url, method);
-                    break;
-                default:
-                    request = NoHttp.createJsonObjectRequest(url, method);
-                    break;
-            }
-        }
-        request.setTag(result);
-        if (headerParams != null) {
-            for (Map.Entry<String, String> map : headerParams.entrySet()) {
-                request.addHeader(map.getKey(), map.getValue());
-            }
-        }
-        if (params != null) {
-            request.add(params.getUrlParams());
-            if (params.getFileParams() != null) {
-                for (Map.Entry<String, Binary> map : params.getFileParams().entrySet()) {
-                    request.add(map.getKey(), map.getValue());
-                }
-            }
-        }
-        if (cacheMode != null)
-            request.setCacheMode(cacheMode);
-        else
-            request.setCacheMode(CacheMode.DEFAULT);
-        OnResponseListener listener = null;
-        if (request instanceof JsonObjectRequest) {
-            listener = new OnResponseListener<JSONObject>() {
-                @Override
-                public void onStart(int what) {
-                    if (isDestroy) return;
-                    MyLog.d("onStart(JSONObject)", "what=" + what);
-                    showLoading();
-                }
-
-                @Override
-                public void onSucceed(int what, Response<JSONObject> response) {
-                    if (isDestroy) return;
-                    hideLoading();
-                    // 接受请求结果
-                    JSONObject data = response.get();
-                    MyLog.d("onSucceed(JSONObject)", "what=" + what + ",data=" + data);
-                    ResultInfo result = (ResultInfo) response.getTag();
-                    if (data != null) {
-                        doSuccess(result, data, cls, list);
-                    } else {
-                        result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
-                        onRequestError(result);
-                    }
-                }
-
-                @Override
-                public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
-                    if (isDestroy) return;
-                    MyLog.d("onFailed(JSONObject)", "what=" + what + ",msg=" + exception.getMessage());
-                    hideLoading();
-                    int code = R.string.API_FLAG_CON_EXCEPTION;
-                    String msg = exception.getMessage();
-                    if (msg != null) {
-                        String thr = msg.toLowerCase(Locale.CHINA);
-                        if (msg.contains("broken pipe"))
-                            code = R.string.API_FLAG_CON_BROKEN;
-                        else if (msg.contains("timed out"))
-                            code = R.string.API_FLAG_CON_TIMEOUT;
-                        else if (msg.contains("unknownhostexception"))
-                            code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
-                    }
-                    ResultInfo result = (ResultInfo) tag;
-                    result.setMsg(getString(code));
-                    onRequestError(result);
-                }
-
-                @Override
-                public void onFinish(int what) {
-                    MyLog.d("onFinish(JSONObject)", "what=" + what);
-                    cacheMode = null;
-                }
-            };
-        } else if (request instanceof JsonArrayRequest) {
-            listener = new OnResponseListener<JSONArray>() {
-                @Override
-                public void onStart(int what) {
-                    if (isDestroy) return;
-                    MyLog.d("onStart(JSONArray)", "what=" + what);
-                    showLoading();
-                }
-
-                @Override
-                public void onSucceed(int what, Response<JSONArray> response) {
-                    if (isDestroy) return;
-                    hideLoading();
-                    // 接受请求结果
-                    JSONArray data = response.get();
-                    MyLog.d("onSucceed(JSONArray)", "what=" + what + ",data=" + data);
-                    ResultInfo result = (ResultInfo) response.getTag();
-                    if (data != null) {
-                        doSuccess(result, data, cls, list);
-                    } else {
-                        result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
-                        onRequestError(result);
-                    }
-                }
-
-                @Override
-                public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
-                    if (isDestroy) return;
-                    MyLog.d("onFailed(JSONArray)", "what=" + what + ",msg=" + exception.getMessage());
-                    hideLoading();
-                    int code = R.string.API_FLAG_CON_EXCEPTION;
-                    String msg = exception.getMessage();
-                    if (msg != null) {
-                        String thr = msg.toLowerCase(Locale.CHINA);
-                        if (msg.contains("broken pipe"))
-                            code = R.string.API_FLAG_CON_BROKEN;
-                        else if (msg.contains("timed out"))
-                            code = R.string.API_FLAG_CON_TIMEOUT;
-                        else if (msg.contains("unknownhostexception"))
-                            code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
-                    }
-                    ResultInfo result = (ResultInfo) tag;
-                    result.setMsg(getString(code));
-                    onRequestError(result);
-                }
-
-                @Override
-                public void onFinish(int what) {
-                    MyLog.d("onFinish(JSONArray)", "what=" + what);
-                }
-            };
-        } else if (request instanceof StringRequest) {
-            listener = new OnResponseListener<String>() {
-                @Override
-                public void onStart(int what) {
-                    if (isDestroy) return;
-                    MyLog.d("onStart(String)", "what=" + what);
-                    showLoading();
-                }
-
-                @Override
-                public void onSucceed(int what, Response<String> response) {
-                    if (isDestroy) return;
-                    hideLoading();
-                    // 接受请求结果
-                    String data = response.get();
-                    MyLog.d("onSucceed(String)", "what=" + what + ",data=" + data);
-                    ResultInfo result = (ResultInfo) response.getTag();
-                    if (data != null) {
-                        doSuccess(result, data, cls, list);
-                    } else {
-                        result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
-                        onRequestError(result);
-                    }
-                }
-
-                @Override
-                public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
-                    if (isDestroy) return;
-                    MyLog.d("onFailed(String)", "what=" + what + ",msg=" + exception.getMessage());
-                    hideLoading();
-                    int code = R.string.API_FLAG_CON_EXCEPTION;
-                    String msg = exception.getMessage();
-                    if (msg != null) {
-                        String thr = msg.toLowerCase(Locale.CHINA);
-                        if (msg.contains("broken pipe"))
-                            code = R.string.API_FLAG_CON_BROKEN;
-                        else if (msg.contains("timed out"))
-                            code = R.string.API_FLAG_CON_TIMEOUT;
-                        else if (msg.contains("unknownhostexception"))
-                            code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
-                    }
-                    ResultInfo result = (ResultInfo) tag;
-                    result.setMsg(getString(code));
-                    onRequestError(result);
-                }
-
-                @Override
-                public void onFinish(int what) {
-                    MyLog.d("onFinish(String)", "what=" + what);
-                }
-            };
-        }
-        requestQueue.add(requestCode, request, listener);
+        request(method, url, buildBody(isGet, params), result, cls, list);
     }
 
-    private DownloadQueue downloadQueue;
+    private RequestBody buildBody(boolean isGet, AjaxParams params) {
+        if (isGet || params == null) {
+            return null;
+        }
+        if (params.getFileParams() != null && params.getFileParams().size() > 0) {
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            if (params.getUrlParams() != null)
+                for (Map.Entry<String, String> map : params.getUrlParams().entrySet()) {
+                    builder.addFormDataPart(map.getKey(), map.getValue());
+                }
+            for (Map.Entry<String, Binary> map : params.getFileParams().entrySet()) {
+                RequestBody body = RequestBody.create(MediaType.parse(map.getValue().getMimeType()), map.getValue().getFile());
+                builder.addFormDataPart(map.getKey(), map.getValue().getFileName(), body);
+            }
+            return builder.build();
+        } else if (params.getUrlParams() != null) {
+            FormBody.Builder builder = new FormBody.Builder();
+            if (params.getUrlParams() != null)
+                for (Map.Entry<String, String> map : params.getUrlParams().entrySet()) {
+                    builder.add(map.getKey(), map.getValue());
+                }
+            return builder.build();
+        }
+        return null;
+    }
 
-    public void download(String url, String fileFolder, String filename, boolean isRange, boolean isDeleteOld) {
-        if (downloadQueue == null)
-            downloadQueue = NoHttp.newDownloadQueue();
-        final DownloadRequest request = NoHttp.createDownloadRequest(url, fileFolder, filename, isRange, isDeleteOld);
-        int requestCode = url.length();
-        DownFile downFile = new DownFile();
-        request.setTag(downFile);
-        downloadQueue.add(requestCode, request, new DownloadListener() {
+    @MainThread
+    public <T> void request(RequestMethod method, String url, RequestBody body, ResultInfo result, final Class<T> cls, final boolean list) {
+        if (isDestroy) return;
+        if (hasQueue(result.getRequestCode())) {
+            result.setMsg(getString(R.string.API_FLAG_REPEAT));
+            onRequestError(result);
+            return;
+        }
+        addQueue(result.getRequestCode());
+        if (client == null)
+            client = new OkHttpClient.Builder().build();
+        Request.Builder builder = new Request.Builder().url(url);
+        builder.method(method.toString(), body);
+        builder.tag(result);
+        if (headerParams != null) {
+            for (Map.Entry<String, String> map : headerParams.entrySet()) {
+                builder.addHeader(map.getKey(), map.getValue());
+            }
+        }
+        switch (result.getRequestType()) {
+            case REQUEST_TYPE_JSON:
+            case REQUEST_TYPE_JSONARRAY:
+                builder.addHeader(Headers.HEAD_KEY_ACCEPT, Headers.HEAD_ACCEPT_JSON);
+                break;
+            case REQUEST_TYPE_STRING:
+                builder.addHeader(Headers.HEAD_KEY_ACCEPT, Headers.HEAD_ACCEPT_STRING);
+                break;
+            case REQUEST_TYPE_FILE:
+                builder.addHeader(Headers.HEAD_KEY_ACCEPT, Headers.HEAD_ACCEPT_FILE);
+                break;
+        }
+//        if (cacheMode != null)
+//            request.setCacheMode(cacheMode);
+//        else
+//            request.setCacheMode(CacheMode.DEFAULT);
+        showLoading();
+        client.newCall(builder.build()).enqueue(new Callback() {
             @Override
-            public void onDownloadError(int what, Exception exception) {
-                if (isDestroy) return;
-                MyLog.d("onDownloadError(File)", "what=" + what);
-                hideLoading();
+            public void onFailure(Call call, IOException e) {
+                ResultInfo result = (ResultInfo) call.request().tag();
+                String msg = e != null ? e.getMessage() : null;
+                MyLog.d("onFailed", "what=" + result.getRequestCode() + ",msg=" + msg);
                 int code = R.string.API_FLAG_CON_EXCEPTION;
-                String msg = exception.getMessage();
                 if (msg != null) {
                     String thr = msg.toLowerCase(Locale.CHINA);
-                    if (msg.contains("broken pipe"))
+                    if (thr.contains("broken pipe"))
                         code = R.string.API_FLAG_CON_BROKEN;
-                    else if (msg.contains("timed out"))
+                    else if (thr.contains("timed out"))
                         code = R.string.API_FLAG_CON_TIMEOUT;
-                    else if (msg.contains("unknownhostexception"))
+                    else if (thr.contains("unknownhostexception"))
                         code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION;
                 }
-                ResultInfo result = new ResultInfo();
-                result.setRequestCode(what);
-                result.setErrorCode(ResultInfo.CODE_ERROR_DEFAULT);
-                DownFile downFile = (DownFile) request.getTag();
-                downFile.setState(DownFile.STATUS_ERROR);
-                result.setObj(downFile);
                 result.setMsg(getString(code));
                 onRequestError(result);
             }
 
             @Override
-            public void onStart(int what, boolean isResume, long rangeSize, Headers responseHeaders, long allCount) {
+            public void onResponse(Call call, Response response) throws IOException {
                 if (isDestroy) return;
-                MyLog.d("onStart(File)", "what=" + what);
-                showLoading();
-                ResultInfo result = new ResultInfo();
-                result.setRequestCode(what);
-                result.setErrorCode(0);
-                DownFile downFile = (DownFile) request.getTag();
-                downFile.setState(DownFile.STATUS_START);
-                downFile.setAllCount(allCount);
-                result.setObj(downFile);
-                result.setMsg("downloading");
-                onRequestSuccess(result);
-            }
-
-            @Override
-            public void onProgress(int what, int progress, long fileCount) {
-                MyLog.d("onProgress(File)", "what=" + what + ",progress=" + progress + ",fileCount=" + fileCount);
-                ResultInfo result = new ResultInfo();
-                result.setRequestCode(what);
-                result.setErrorCode(0);
-                DownFile downFile = (DownFile) request.getTag();
-                downFile.setState(DownFile.STATUS_START);
-                downFile.setProgress(progress);
-                downFile.setFileCount(fileCount);
-                result.setObj(downFile);
-                result.setMsg("downloading");
-                onRequestSuccess(result);
-            }
-
-            @Override
-            public void onFinish(int what, String filePath) {
-                MyLog.d("onFinish(File)", "what=" + what + ",filePath=" + filePath);
-                if (isDestroy) return;
-                hideLoading();
-                ResultInfo result = new ResultInfo();
-                result.setRequestCode(what);
-                result.setErrorCode(0);
-                DownFile downFile = (DownFile) request.getTag();
-                downFile.setState(DownFile.STATUS_SUCCESS);
-                downFile.setProgress(100);
-                downFile.setFilePath(filePath);
-                result.setObj(downFile);
-                result.setMsg("downloaded");
-                onRequestSuccess(result);
-            }
-
-            @Override
-            public void onCancel(int what) {
-                MyLog.d("onCancel(File)", "what=" + what);
+                //hideLoading();
+                ResultInfo result = (ResultInfo) call.request().tag();
+                if (response.isSuccessful()) {
+                    if (result.getRequestType() == REQUEST_TYPE_FILE) {
+                        doSuccessFile(result, response.body());
+                        return;
+                    }
+                    String data = response.body().string();
+                    MyLog.d("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
+                    if (data.length() > 0) {
+                        try {
+                            switch (result.getRequestType()) {
+                                case REQUEST_TYPE_JSON:
+                                    doSuccess(result, new JSONObject(data), cls, list);
+                                    return;
+                                case REQUEST_TYPE_JSONARRAY:
+                                    doSuccess(result, new JSONArray(data), cls, list);
+                                    return;
+                                case REQUEST_TYPE_STRING:
+                                    doSuccess(result, data, cls, list);
+                                    return;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
+                onRequestError(result);
             }
         });
+
+    }
+
+    //private DownloadQueue downloadQueue;
+
+    public void download(String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld) {
+        download(url.length(), url, fileFolder, fileName, isRange, isDeleteOld);
+    }
+
+    public void download(int requestCode, String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld) {
+        MyLog.d("download", url);
+        ResultInfo result = new ResultInfo();
+        result.setRequestCode(requestCode);
+        result.setRequestType(REQUEST_TYPE_FILE);
+        RequestMethod method = RequestMethod.GET;
+
+        DownFile downFile = new DownFile();
+        downFile.setSaveDir(fileFolder);
+        downFile.setRange(isRange);
+        downFile.setUrl(url);
+        downFile.setFileName(fileName);
+        downFile.setDeleteOld(isDeleteOld);
+        result.setObj(downFile);
+        request(method, url, null, result, null, false);
+    }
+
+    protected void doSuccessFile(ResultInfo result, ResponseBody body) {
+        if (body != null) {
+            DownFile downFile = result.getObj();
+            long total = body.contentLength();
+            downFile.setState(DownFile.STATUS_START);
+            downFile.setAllCount(total);
+            onRequestSuccess(result);
+            InputStream is = null;
+            FileOutputStream fos = null;
+            byte[] buf = new byte[2048];
+            int len = 0;
+            try {
+                is = body.byteStream();
+                File cacheFile = new File(downFile.getSaveDir(), downFile.getFileName() + ".cache");
+                fos = new FileOutputStream(cacheFile);
+                long sum = 0;
+                while ((len = is.read(buf)) != -1) {
+                    fos.write(buf, 0, len);
+                    sum += len;
+                    int progress = (int) (sum * 1.0f / total * 100);
+                    MyLog.d("onProgress(File)", "what=" + result.getRequestCode() + ",progress=" + progress + ",fileCount=" + sum);
+                    downFile.setState(DownFile.STATUS_PROGRESS);
+                    downFile.setProgress(progress);
+                    downFile.setFileCount(sum);
+                    result.setObj(downFile);
+                    onRequestSuccess(result);
+                }
+                fos.flush();
+                if (sum == total) {
+                    downFile.setState(DownFile.STATUS_SUCCESS);
+                    File file = new File(downFile.getSaveDir(), downFile.getFileName());
+                    cacheFile.renameTo(file);
+                    MyLog.d("onSucceed", "文件下载成功");
+                } else {
+                    downFile.setState(DownFile.STATUS_ERROR);
+                    MyLog.d("onSucceed", "文件下载中断");
+                }
+            } catch (Exception e) {
+                MyLog.d("onSucceed", "文件下载失败");
+            } finally {
+                try {
+                    if (is != null)
+                        is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if (fos != null)
+                        fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        onRequestSuccess(result);
+
     }
 
     /**
@@ -771,45 +699,87 @@ public abstract class MyHttpClient {
         } else if (cls == long.class || cls == Long.class) {
             return Long.parseLong(data);
         } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
-            return stringToDateTime(data);
+            return HyUtil.stringToDateTime(data);
         } else if (cls == boolean.class || cls == Boolean.class) {
             return Boolean.parseBoolean(data);
         }
         return new Gson().fromJson(data, cls);
     }
 
-    public static Date stringToDateTime(String strDate) {
-        if (strDate != null) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                return sdf.parse(strDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
+
+    /**
+     * not main thread
+     */
+    @Deprecated
+    protected void onStart() {
     }
 
-    protected void onRequestError(ResultInfo result) {
+    /**
+     * not main thread
+     */
+    @Deprecated
+    protected void onRequestError(final ResultInfo result) {
         if (isDestroy) return;
-        if (listeners != null) {
-            for (IMyHttpListener listener : listeners)
-                listener.onRequestError(result);
+        if (handler != null) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    removeQueue(result.getRequestCode());
+                    hideLoading();
+                    if (listeners != null) {
+                        for (IMyHttpListener listener : listeners) {
+                            listener.onRequestError(result);
+                        }
+                    }
+                }
+            });
         }
     }
 
-    protected void onRequestSuccess(ResultInfo result) {
+    /**
+     * not main thread
+     */
+    @Deprecated
+    protected void onRequestSuccess(final ResultInfo result) {
         if (isDestroy) return;
         result.setErrorCode(0);
-        if (listeners != null) {
-            for (IMyHttpListener listener : listeners)
-                listener.onRequestSuccess(result);
+        if (handler != null) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (result.getRequestType() == REQUEST_TYPE_FILE) {
+                        DownFile downFile = result.getObj();
+                        if (downFile.getState() == DownFile.STATUS_SUCCESS || downFile.getState() == DownFile.STATUS_ERROR) {
+                            removeQueue(result.getRequestCode());
+                            hideLoading();
+                        }
+                    } else {
+                        removeQueue(result.getRequestCode());
+                        hideLoading();
+                    }
+                    if (listeners != null) {
+                        for (IMyHttpListener listener : listeners) {
+                            listener.onRequestSuccess(result);
+                        }
+                    }
+                }
+            });
         }
     }
 
+    /**
+     * 显示加载对话框
+     *
+     * @param showDialog 是否显示加载对话框
+     */
+    @UiThread
+    public void setShowDialog(boolean showDialog) {
+        this.showDialog = showDialog;
+    }
+
+    @UiThread
     public void setLoadingDialog(LoadingDialog loadingDialog) {
         this.loadingDialog = loadingDialog;
-        //this.showDialog = true;
     }
 
     /**
@@ -834,6 +804,7 @@ public abstract class MyHttpClient {
             loadingDialog.dismiss();
     }
 
+    @UiThread
     public void updateLoadingMsg(String msg) {
         if (isDestroy) return;
         if (msg == null) {
@@ -851,21 +822,20 @@ public abstract class MyHttpClient {
     /**
      * 销毁，释放
      */
+    @MainThread
     public void onDestroy() {
         //在这里销毁所有当前请求
         MyLog.d(getClass(), "onDestroy");
         isDestroy = true;
         listeners = null;
         loadingDialog = null;
-        if (request != null)
-            request.cancel(true);
-        request = null;
-        if (requestQueue != null)
-            requestQueue.stop();
-        requestQueue = null;
+        if (client != null && client.dispatcher() != null)
+            client.dispatcher().cancelAll();
     }
 
+
     protected String getString(int resId) {
-        return context.getString(resId);
+        return context == null ? null : context.getString(resId);
     }
+
 }

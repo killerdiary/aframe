@@ -1,5 +1,5 @@
 package com.hy.http;
 
-public class PostData {
+public abstract class PostData {
 
 }

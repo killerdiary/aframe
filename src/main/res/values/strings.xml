@@ -18,6 +18,7 @@
     <string name="API_FLAG_NO_RESPONSE">服务器没有数据返回，请重试</string>
     <string name="API_FLAG_DATA_ERROR">服务器返回数据错误，请重试</string>
     <string name="API_FLAG_ANALYSIS_ERROR">服务器返回数据解析错误，请重试</string>
+    <string name="API_FLAG_REPEAT">正在努力加载中...</string>
 
     <string name="load_more">加载更多</string>
     <string name="loading">加载中&#8230;</string>
@@ -42,4 +43,8 @@
 
     <string name="edit_input_hint">请输入</string>
     <string name="edit_empty_hint">不能为空</string>
+
+    <string name="http_test">HTTP TEST</string>
+    <string name="http_post">post</string>
+    <string name="http_down">download</string>
 </resources>

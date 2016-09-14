@@ -1,12 +1,10 @@
 package com.hy.http;
 
-import com.yolanda.nohttp.Binary;
-import com.yolanda.nohttp.FileBinary;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import com.hy.http.file.Binary;
+import com.hy.http.file.FileBinary;
+
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,9 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author panxw
  */
 public class AjaxParams {
-    private static String ENCODING = "UTF-8";
-    protected ConcurrentHashMap<String, String> urlParams;
-    protected ConcurrentHashMap<String, Binary> fileParams;
+    private static final String ENCODING = "UTF-8";
+    private int qid;
+    private ConcurrentHashMap<String, String> urlParams;
+    private ConcurrentHashMap<String, Binary> fileParams;
     private PostData postData;
 
     public AjaxParams() {
@@ -30,11 +29,25 @@ public class AjaxParams {
     }
 
     private void init() {
-        urlParams = new ConcurrentHashMap<String, String>();
-        fileParams = new ConcurrentHashMap<String, Binary>();
+        urlParams = new ConcurrentHashMap<>();
+        fileParams = new ConcurrentHashMap<>();
     }
 
     /**
+     * Add {@link Object} param.
+     *
+     * @param key   param name.
+     * @param value param value.
+     */
+    public void put(String key, Object value) {
+        if (key != null && value != null) {
+            put(key, String.valueOf(value));
+        }
+    }
+
+    /**
+     * Add {@link String} param.
+     *
      * @param key
      * @param value
      */
@@ -51,7 +64,7 @@ public class AjaxParams {
      * @param value param value.
      */
     public void put(String key, int value) {
-        put(key, value + "");
+        put(key, String.valueOf(value));
     }
 
     /**
@@ -61,7 +74,37 @@ public class AjaxParams {
      * @param value param value.
      */
     public void put(String key, long value) {
-        put(key, value + "");
+        put(key, String.valueOf(value));
+    }
+
+    /**
+     * Add {@link Double} param.
+     *
+     * @param key   param name.
+     * @param value param value.
+     */
+    public void put(String key, double value) {
+        put(key, String.valueOf(value));
+    }
+
+    /**
+     * Add {@link Float} param.
+     *
+     * @param key   param name.
+     * @param value param value.
+     */
+    public void put(String key, float value) {
+        put(key, String.valueOf(value));
+    }
+
+    /**
+     * Add {@link Boolean} param.
+     *
+     * @param key   param name.
+     * @param value param value.
+     */
+    public void put(String key, boolean value) {
+        put(key, String.valueOf(value));
     }
 
     /**
@@ -81,6 +124,14 @@ public class AjaxParams {
         return urlParams;
     }
 
+    public int getQid() {
+        return qid;
+    }
+
+    public void setQid(int qid) {
+        this.qid = qid;
+    }
+
     public ConcurrentHashMap<String, Binary> getFileParams() {
         return fileParams;
     }
@@ -93,25 +144,49 @@ public class AjaxParams {
         this.fileParams = fileParams;
     }
 
-    @Deprecated
-    private static class FileWrapper {
-        public InputStream inputStream;
-        public String fileName;
-        public String contentType;
-
-        public FileWrapper(InputStream inputStream, String fileName,
-                           String contentType) {
-            this.inputStream = inputStream;
-            this.fileName = fileName;
-            this.contentType = contentType;
-        }
-
-        public String getFileName() {
-            if (fileName != null) {
-                return fileName;
-            } else {
-                return "nofilename";
+    public String getUrlParamsString() {
+        StringBuilder sb = new StringBuilder();
+        if (urlParams != null && urlParams.size() > 0) {
+            int size = urlParams.size();
+            int i = 0;
+            for (Map.Entry<String, String> map : urlParams.entrySet()) {
+                i++;
+                sb.append(map.getKey());
+                sb.append("=");
+                sb.append(map.getValue());
+                if (i < size)
+                    sb.append("&");
             }
         }
+        return sb.toString();
+    }
+
+    public String getFileParamsString() {
+        StringBuilder sb = new StringBuilder();
+        if (fileParams != null && fileParams.size() > 0) {
+            int size = fileParams.size();
+            int i = 0;
+            for (Map.Entry<String, Binary> map : fileParams.entrySet()) {
+                i++;
+                sb.append(map.getKey());
+                sb.append("=");
+                sb.append(map.getValue());
+                if (i < size)
+                    sb.append("&");
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getUrlParamsString());
+        String fileParamsString = getFileParamsString();
+        if (sb.length() > 0 && fileParamsString != null && fileParamsString.length() > 0) {
+            sb.append("&");
+            sb.append(fileParamsString);
+        }
+        return sb.toString();
     }
 }
