@@ -1,12 +1,12 @@
 package com.hy.frame.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hy.frame.R;
 import com.hy.frame.view.recycler.HeaderHolder;
 import com.hy.frame.view.recycler.IHeaderViewListner;
 
@@ -91,11 +91,19 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         return (V) v.findViewById(resId);
     }
 
+    private int gridCount;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //if (viewType == TYPE_MORE)
         //    return new LoadMoreHolder(inflate(parent, R.layout.in_recycler_footer));
+        boolean isGrid = ((RecyclerView) parent).getLayoutManager() instanceof GridLayoutManager;
+        if (isGrid) {
+            gridCount = ((GridLayoutManager) ((RecyclerView) parent).getLayoutManager()).getSpanCount();
+            if (dividerHorizontalSize > 0) {
+                parent.setPadding(dividerHorizontalSize, parent.getPaddingTop(), parent.getPaddingRight(), parent.getPaddingBottom());
+            }
+        }
         if (viewType == TYPE_HEADER) {
             View header = inflate(parent, headerResId);
             if (headerListner != null)
@@ -116,37 +124,71 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
             if (headerListner != null)
                 headerListner.bindHearderData((HeaderHolder) holder, position);
         } else {
-            if (dividerSize > 0 || topPadding > 0) {
-                int padding = dividerSize;
+            if (dividerHorizontalSize > 0 || dividerVerticalSize > 0 || topPadding > 0 || bottomPadding > 0) {
+                int padding = dividerVerticalSize;
                 int left = 0, top = 0, right = 0, bottom = 0;
                 left = holder.itemView.getPaddingLeft();
                 right = holder.itemView.getPaddingRight();
+                bottom = holder.itemView.getPaddingBottom();
                 int pos = getCurPosition(position);
                 if (pos == 0 && topPadding > 0) {
                     top = topPadding;
-                } else {
+                } else if (dividerVerticalSize > 0) {
                     top = padding;
                 }
-                if (position + 1 == getItemCount()) bottom = padding;
+                if (bottomPadding > 0) {
+                    bottom = 0;
+                    if (gridCount <= 1 && getItemCount() - (position + 1) == 0) {
+                        bottom = bottomPadding;
+                    } else if (gridCount > 1) {
+                        int curPosition = getCurPosition(position) + 1;
+                        int lastLinePosition = 0;
+                        int surplus = getTrueItemCount() % gridCount;
+                        if (surplus == 0) {
+                            lastLinePosition = getTrueItemCount() - gridCount;
+                        } else {
+                            lastLinePosition = getTrueItemCount() - surplus;
+                        }
+                        if (curPosition > lastLinePosition) {
+                            bottom = bottomPadding;
+                        }
+                    }
+                }
+                if (gridCount > 1 && dividerHorizontalSize > 0) {
+                    right = dividerHorizontalSize;
+                }
                 holder.itemView.setPadding(left, top, right, bottom);
             }
             bindViewData(holder, position);
         }
     }
 
-    private int dividerSize, topPadding;
+    private int dividerHorizontalSize, dividerVerticalSize, topPadding, bottomPadding;
 
+    @Deprecated
     public void setDividerSize(int dividerSize) {
-        this.dividerSize = dividerSize;
+        setDividerVerticalSize(dividerSize);
+    }
+
+    public void setDividerHorizontalSize(int dividerHorizontalSize) {
+        this.dividerHorizontalSize = dividerHorizontalSize;
+    }
+
+    public void setDividerVerticalSize(int dividerVerticalSize) {
+        this.dividerVerticalSize = dividerVerticalSize;
     }
 
     public void setTopPadding(int topPadding) {
         this.topPadding = topPadding;
     }
 
+    public void setBottomPadding(int bottomPadding) {
+        this.bottomPadding = bottomPadding;
+    }
+
     @Override
     public int getItemCount() {
-        int size = datas == null ? 0 : datas.size();
+        int size = getTrueItemCount();
 //        if (size > 0 && isCanLoadMore) {
 //            size++;
 //        }
@@ -157,11 +199,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     }
 
     public int getTrueItemCount() {
-        int size = getItemCount();
-        if (headerResId != 0) {
-            size--;
-        }
-        return size;
+        return datas == null ? 0 : datas.size();
     }
 
     public T getItem(int position) {

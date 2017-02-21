@@ -44,7 +44,4 @@
     <string name="edit_input_hint">请输入</string>
     <string name="edit_empty_hint">不能为空</string>
 
-    <string name="http_test">HTTP TEST</string>
-    <string name="http_post">post</string>
-    <string name="http_down">download</string>
 </resources>

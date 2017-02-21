@@ -37,7 +37,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -334,16 +333,18 @@ public abstract class MyHttpClient {
             return null;
         }
         if (params.getFileParams() != null && params.getFileParams().size() > 0) {
-            MultipartBody.Builder builder = new MultipartBody.Builder();
-            if (params.getUrlParams() != null)
-                for (Map.Entry<String, String> map : params.getUrlParams().entrySet()) {
-                    builder.addFormDataPart(map.getKey(), map.getValue());
-                }
+//            MultipartBody.Builder builder = new MultipartBody.Builder();
+//            if (params.getUrlParams() != null && params.getUrlParams().size() > 0)
+//                for (Map.Entry<String, String> map : params.getUrlParams().entrySet()) {
+//                    builder.addFormDataPart(map.getKey(), map.getValue());
+//                }
             for (Map.Entry<String, Binary> map : params.getFileParams().entrySet()) {
                 RequestBody body = RequestBody.create(MediaType.parse(map.getValue().getMimeType()), map.getValue().getFile());
-                builder.addFormDataPart(map.getKey(), map.getValue().getFileName(), body);
+                return body;
+                //builder.addPart(body);
+//                builder.addFormDataPart(map.getKey(), map.getValue().getFileName(), body);
             }
-            return builder.build();
+//            return builder.build();
         } else if (params.getUrlParams() != null) {
             FormBody.Builder builder = new FormBody.Builder();
             if (params.getUrlParams() != null)
