@@ -7,5 +7,5 @@
     android:layout_gravity="right"
     android:background="@drawable/default_selector"
     android:contentDescription="@string/app_name"
-    android:padding="@dimen/margin_normal"
+    android:padding="@dimen/titlebar_margin"
     android:src="@mipmap/btn_help" />

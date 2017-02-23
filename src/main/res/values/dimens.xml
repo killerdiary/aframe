@@ -26,6 +26,7 @@
     <!--<dimen name="key_two_left">50dip</dimen>-->
     <!--<dimen name="key_three_left">65dip</dimen>-->
     <dimen name="margin_normal">10dip</dimen>
+    <dimen name="titlebar_margin">12dip</dimen>
     <dimen name="margin_default">20dip</dimen>
     <dimen name="margin_big">40dip</dimen>
     <dimen name="padding_normal">4dip</dimen>
