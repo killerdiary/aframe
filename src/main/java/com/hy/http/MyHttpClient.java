@@ -418,6 +418,10 @@ public abstract class MyHttpClient {
                 //hideLoading();
                 ResultInfo result = (ResultInfo) call.request().tag();
                 if (response.isSuccessful()) {
+                    String token = response.header("token");
+                    if (!TextUtils.isEmpty(token)) {
+                        result.putValue("token",token);
+                    }
                     if (result.getRequestType() == REQUEST_TYPE_FILE) {
                         doSuccessFile(result, response.body());
                         return;

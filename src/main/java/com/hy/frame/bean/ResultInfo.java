@@ -1,5 +1,8 @@
 package com.hy.frame.bean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 服务器返回数据
  * Created by HeYan on 2015/10/17.
@@ -23,6 +26,8 @@ public class ResultInfo {
     private int errorCode;//错误码
     private String msg;//描述
     private int requestType;
+    private Map<String, String> maps;//其他
+
     /**
      * 请求码，接口编号
      */
@@ -99,5 +104,16 @@ public class ResultInfo {
 
     public void setRequestType(int requestType) {
         this.requestType = requestType;
+    }
+
+    public void putValue(String key, String value) {
+        if (maps == null)
+            maps = new HashMap<>();
+        maps.put(key, value);
+    }
+
+    public String getValue(String key) {
+        if (maps != null) return maps.get(key);
+        return null;
     }
 }
