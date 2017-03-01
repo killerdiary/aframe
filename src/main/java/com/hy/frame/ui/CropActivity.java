@@ -49,22 +49,21 @@ public class CropActivity extends BaseActivity {
         UCropView vUCrop = getView(R.id.crop_vUCrop);
         imgCrop = vUCrop.getCropImageView();
         vOverlay = vUCrop.getOverlayView();
+        setOnClickListener(R.id.crop_navTurnLeft);
+        setOnClickListener(R.id.crop_navTurnRight);
+        setOnClickListener(R.id.crop_txtConfirm);
+        setOnClickListener(R.id.crop_txtCancel);
     }
 
     @Override
     public void initData() {
         setHeaderLeft(R.mipmap.ico_back);
         setTitle(R.string.crop);
-        setHeaderRight(R.mipmap.ico_confirm);
         TextView txtTitle = (TextView) getHeaderTitle();
         int color = txtTitle.getCurrentTextColor();
         if (getHeaderLeft() instanceof TintImageView) {
             TintImageView imgLeft = (TintImageView) getHeaderLeft();
             imgLeft.setColorFilter(color);
-        }
-        if (getHeaderRight() instanceof TintImageView) {
-            TintImageView imgRight = (TintImageView) getHeaderRight();
-            imgRight.setColorFilter(color);
         }
         imgCrop.setTransformImageListener(new TransformImageView.TransformImageListener() {
 
@@ -93,7 +92,30 @@ public class CropActivity extends BaseActivity {
 
     @Override
     public void onViewClick(View v) {
-
+        if (v.getId() == R.id.crop_txtCancel) {
+            onLeftClick();
+        } else if (v.getId() == R.id.crop_txtConfirm) {
+            onRightClick();
+        } else if (v.getId() == R.id.crop_navTurnLeft) {
+            imgCrop.postRotate(-90);
+        } else if (v.getId() == R.id.crop_navTurnRight) {
+            imgCrop.postRotate(90);
+            Bundle bundle = getBundle();
+            int aspectX = bundle.getInt(EXTRA_ASPECT_X, 0);
+            int aspectY = bundle.getInt(EXTRA_ASPECT_Y, 0);
+            int unit = bundle.getInt(EXTRA_ASPECT_UNIT, 0);
+            if (aspectX > 0 && aspectY > 0) {
+                imgCrop.setTargetAspectRatio(aspectX / (float) aspectY);
+            } else {
+                imgCrop.setTargetAspectRatio(CropImageView.SOURCE_IMAGE_ASPECT_RATIO);
+            }
+            imgCrop.setMaxResultImageSizeX(aspectX * unit);
+            imgCrop.setMaxResultImageSizeY(aspectY * unit);
+            imgCrop.setScaleEnabled(true);
+            imgCrop.setRotateEnabled(false);
+            quality = bundle.getInt(EXTRA_QUALITY, DEFAULT_COMPRESS_QUALITY);
+            processOptions(bundle);
+        }
     }
 
     private void initImageData() {
@@ -116,7 +138,7 @@ public class CropActivity extends BaseActivity {
         int aspectX = bundle.getInt(EXTRA_ASPECT_X, 0);
         int aspectY = bundle.getInt(EXTRA_ASPECT_Y, 0);
         int unit = bundle.getInt(EXTRA_ASPECT_UNIT, 0);
-        if (aspectX > 0 && aspectX > 0) {
+        if (aspectX > 0 && aspectY > 0) {
             imgCrop.setTargetAspectRatio(aspectX / (float) aspectY);
         } else {
             imgCrop.setTargetAspectRatio(CropImageView.SOURCE_IMAGE_ASPECT_RATIO);

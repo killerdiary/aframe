@@ -9,6 +9,9 @@ import android.support.annotation.UiThread;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hy.frame.R;
 import com.hy.frame.bean.DownFile;
 import com.hy.frame.bean.ResultInfo;
@@ -37,6 +40,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -333,18 +337,19 @@ public abstract class MyHttpClient {
             return null;
         }
         if (params.getFileParams() != null && params.getFileParams().size() > 0) {
-//            MultipartBody.Builder builder = new MultipartBody.Builder();
-//            if (params.getUrlParams() != null && params.getUrlParams().size() > 0)
-//                for (Map.Entry<String, String> map : params.getUrlParams().entrySet()) {
-//                    builder.addFormDataPart(map.getKey(), map.getValue());
-//                }
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            builder.setType(MultipartBody.FORM);
+            if (params.getUrlParams() != null && params.getUrlParams().size() > 0)
+                for (Map.Entry<String, String> map : params.getUrlParams().entrySet()) {
+                    builder.addFormDataPart(map.getKey(), map.getValue());
+                }
             for (Map.Entry<String, Binary> map : params.getFileParams().entrySet()) {
                 RequestBody body = RequestBody.create(MediaType.parse(map.getValue().getMimeType()), map.getValue().getFile());
-                return body;
-                //builder.addPart(body);
-//                builder.addFormDataPart(map.getKey(), map.getValue().getFileName(), body);
+                //return body;
+                builder.addPart(body);
+                builder.addFormDataPart(map.getKey(), map.getValue().getFileName(), body);
             }
-//            return builder.build();
+            return builder.build();
         } else if (params.getUrlParams() != null) {
             FormBody.Builder builder = new FormBody.Builder();
             if (params.getUrlParams() != null)
@@ -420,28 +425,28 @@ public abstract class MyHttpClient {
                 if (response.isSuccessful()) {
                     String token = response.header("token");
                     if (!TextUtils.isEmpty(token)) {
-                        result.putValue("token",token);
+                        result.putValue("token", token);
                     }
                     if (result.getRequestType() == REQUEST_TYPE_FILE) {
                         doSuccessFile(result, response.body());
                         return;
                     }
-                    String data = response.body().string();
+                    String data = String.valueOf(response.body().string());
                     MyLog.d("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
                     if (data.length() > 0) {
                         try {
                             switch (result.getRequestType()) {
                                 case REQUEST_TYPE_JSON:
-                                    doSuccess(result, new JSONObject(data), cls, list);
+                                    doSuccess(result, new JsonParser().parse(data).getAsJsonObject(), cls, list);
                                     return;
                                 case REQUEST_TYPE_JSONARRAY:
-                                    doSuccess(result, new JSONArray(data), cls, list);
+                                    doSuccess(result, new JsonParser().parse(data).getAsJsonArray(), cls, list);
                                     return;
                                 case REQUEST_TYPE_STRING:
                                     doSuccess(result, data, cls, list);
                                     return;
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -587,7 +592,7 @@ public abstract class MyHttpClient {
      * @param <T>
      */
     @Deprecated
-    protected <T> void doSuccess(ResultInfo result, JSONArray obj, Class<T> cls, boolean list) {
+    protected <T> void doSuccess(ResultInfo result, JsonArray obj, Class<T> cls, boolean list) {
         result.setObj(obj);
         onRequestSuccess(result);
 //        try {
@@ -629,7 +634,7 @@ public abstract class MyHttpClient {
      * @param list
      * @param <T>
      */
-    protected <T> void doSuccess(ResultInfo result, JSONObject obj, Class<T> cls, boolean list) {
+    protected <T> void doSuccess(ResultInfo result, JsonObject obj, Class<T> cls, boolean list) {
 //        try {
 //            int flag = 0;
 //            if (obj.has("state")) {
