@@ -15,7 +15,6 @@ import com.yalantis.ucrop.util.BitmapLoadUtils;
 import com.yalantis.ucrop.view.CropImageView;
 import com.yalantis.ucrop.view.GestureCropImageView;
 import com.yalantis.ucrop.view.OverlayView;
-import com.yalantis.ucrop.view.TransformImageView;
 import com.yalantis.ucrop.view.UCropView;
 
 import java.io.OutputStream;
@@ -38,6 +37,7 @@ public class CropActivity extends BaseActivity {
     private OverlayView vOverlay;
     private Uri outputUri;
     private int quality;
+    private boolean isHor;
 
     @Override
     public int initLayoutId() {
@@ -65,18 +65,6 @@ public class CropActivity extends BaseActivity {
             TintImageView imgLeft = (TintImageView) getHeaderLeft();
             imgLeft.setColorFilter(color);
         }
-        imgCrop.setTransformImageListener(new TransformImageView.TransformImageListener() {
-
-            @Override
-            public void onRotate(float currentAngle) {
-                setAngleText(currentAngle);
-            }
-
-            @Override
-            public void onScale(float currentScale) {
-                setScaleText(currentScale);
-            }
-        });
         initImageData();
     }
 
@@ -90,31 +78,29 @@ public class CropActivity extends BaseActivity {
 
     }
 
+    private int aspectX, aspectY;
+
     @Override
     public void onViewClick(View v) {
         if (v.getId() == R.id.crop_txtCancel) {
             onLeftClick();
         } else if (v.getId() == R.id.crop_txtConfirm) {
             onRightClick();
-        } else if (v.getId() == R.id.crop_navTurnLeft) {
-            imgCrop.postRotate(-90);
-        } else if (v.getId() == R.id.crop_navTurnRight) {
-            imgCrop.postRotate(90);
-            Bundle bundle = getBundle();
-            int aspectX = bundle.getInt(EXTRA_ASPECT_X, 0);
-            int aspectY = bundle.getInt(EXTRA_ASPECT_Y, 0);
-            int unit = bundle.getInt(EXTRA_ASPECT_UNIT, 0);
-            if (aspectX > 0 && aspectY > 0) {
-                imgCrop.setTargetAspectRatio(aspectX / (float) aspectY);
-            } else {
-                imgCrop.setTargetAspectRatio(CropImageView.SOURCE_IMAGE_ASPECT_RATIO);
+        } else if (v.getId() == R.id.crop_navTurnLeft || v.getId() == R.id.crop_navTurnRight) {
+            if (v.getId() == R.id.crop_navTurnLeft) {
+                imgCrop.postRotate(-90);
+            } else if (v.getId() == R.id.crop_navTurnRight) {
+                imgCrop.postRotate(90);
             }
-            imgCrop.setMaxResultImageSizeX(aspectX * unit);
-            imgCrop.setMaxResultImageSizeY(aspectY * unit);
-            imgCrop.setScaleEnabled(true);
-            imgCrop.setRotateEnabled(false);
-            quality = bundle.getInt(EXTRA_QUALITY, DEFAULT_COMPRESS_QUALITY);
-            processOptions(bundle);
+            if (aspectX == 0 || aspectY == 0) {
+                if (!isHor) {
+                    imgCrop.setTargetAspectRatio(CropImageView.SOURCE_IMAGE_ASPECT_RATIO_F);
+                } else {
+                    imgCrop.setTargetAspectRatio(CropImageView.SOURCE_IMAGE_ASPECT_RATIO);
+                }
+                isHor = !isHor;
+                imgCrop.setImageToWrapCropBounds();
+            }
         }
     }
 
@@ -135,8 +121,8 @@ public class CropActivity extends BaseActivity {
             return;
         }
 
-        int aspectX = bundle.getInt(EXTRA_ASPECT_X, 0);
-        int aspectY = bundle.getInt(EXTRA_ASPECT_Y, 0);
+        aspectX = bundle.getInt(EXTRA_ASPECT_X, 0);
+        aspectY = bundle.getInt(EXTRA_ASPECT_Y, 0);
         int unit = bundle.getInt(EXTRA_ASPECT_UNIT, 0);
         if (aspectX > 0 && aspectY > 0) {
             imgCrop.setTargetAspectRatio(aspectX / (float) aspectY);
