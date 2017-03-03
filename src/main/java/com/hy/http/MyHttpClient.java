@@ -21,13 +21,16 @@ import com.hy.frame.view.LoadingDialog;
 import com.hy.http.file.Binary;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +38,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -76,6 +84,7 @@ public abstract class MyHttpClient {
     public static final int REQUEST_TYPE_STRING = 2;
     public static final int REQUEST_TYPE_FILE = 3;
     public Set<Integer> queues;
+    private String cerName = ""; //https签名证书name
 
     public MyHttpClient(Context context, IMyHttpListener listener, String host) {
         this(context, listener, host, REQUEST_TYPE_JSON);
@@ -185,6 +194,10 @@ public abstract class MyHttpClient {
         addHeader(Headers.HEAD_KEY_USER_AGENT, userAgent);
     }
 
+    public void setCerName(String cerName) {
+        this.cerName = cerName;
+    }
+
     /**
      * 添加头信息 User-Agent|Content-Type|Accept 无效
      *
@@ -197,7 +210,7 @@ public abstract class MyHttpClient {
         headerParams.put(key, value);
     }
 
-//    /**
+    //    /**
 //     * 设置队列ID
 //     *
 //     * @param qid 队列ID
@@ -211,7 +224,36 @@ public abstract class MyHttpClient {
 //    public void setCacheMode(CacheMode cacheMode) {
 //        this.cacheMode = cacheMode;
 //    }
+//    private SSLContext sslContext;
 
+
+    /**
+     * 忽略所有https证书
+     */
+    private void overlockCard() {
+//        final TrustManager[] trustAllCerts = new TrustManager[]{
+//                new X509TrustManager() {
+//                    @Override
+//                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                    }
+//
+//                    @Override
+//                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                    }
+//
+//                    @Override
+//                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+//                        X509Certificate[] x509Certificates = new X509Certificate[0];
+//                        return x509Certificates;
+//                    }
+//                }};
+//        try {
+////            sslContext = SSLContext.getInstance("SSL");
+////            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+//        } catch (Exception e) {
+//            MyLog.e("ssl出现异常");
+//        }
+    }
 
     /**
      * @see #post(int, String, AjaxParams, Class, boolean)
@@ -370,8 +412,33 @@ public abstract class MyHttpClient {
             return;
         }
         addQueue(result.getRequestCode());
-        if (client == null)
-            client = new OkHttpClient.Builder().build();
+        if (client == null) {
+            OkHttpClient.Builder obuilder = new OkHttpClient.Builder();
+            if (!TextUtils.isEmpty(cerName)) {
+                //选择证书
+                try {
+                    CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+                    KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                    keyStore.load(null);
+                    InputStream certificate = getContext().getAssets().open(cerName);
+                    keyStore.setCertificateEntry(Integer.toString(0), certificateFactory.generateCertificate(certificate));
+                    try {
+                        if (certificate != null)
+                            certificate.close();
+                    } catch (IOException e) {
+                    }
+                    SSLContext sslContext = SSLContext.getInstance("TLS");
+                    TrustManagerFactory trustManagerFactory =
+                            TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                    trustManagerFactory.init(keyStore);
+                    sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
+                    obuilder.sslSocketFactory(sslContext.getSocketFactory());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            client = obuilder.build();
+        }
         Request.Builder builder = new Request.Builder().url(url);
         builder.method(method.toString(), body);
         builder.tag(result);

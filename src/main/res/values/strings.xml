@@ -44,5 +44,6 @@
 
     <string name="edit_input_hint">请输入</string>
     <string name="edit_empty_hint">不能为空</string>
+    <string name="edit_format_error">格式错误</string>
 
 </resources>

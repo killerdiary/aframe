@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+
 
 import com.hy.frame.util.MyLog;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 /**
  * 浏览代理
@@ -17,7 +16,7 @@ import com.hy.frame.util.MyLog;
  * time 2016/1/15 16:52
  */
 public class MyWebViewClient extends WebViewClient {
-    protected boolean isLoadError;
+    public boolean isLoadError;
 
 
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
