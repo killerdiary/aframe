@@ -33,7 +33,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     // private boolean custom;
     private BaseApplication app;
     protected Context context;
-    private Toolbar toolbar;
+//    private Toolbar toolbar;
     //private TextView txtTitle;
     private FrameLayout flyMain;
     private LoadCache loadCache;
@@ -74,42 +74,20 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         context = getActivity();
         app = (BaseApplication) getActivity().getApplication();
         // custom = true;
-        boolean custumHeader = true;
         int layout = initLayoutId();
         View v = null;
         if (layout != 0) {
             v = inflater.inflate(layout, container, false);
-            toolbar = getView(v, R.id.head_toolBar);
+            flyMain = getView(v, R.id.base_flyMain);
         }
-        //没有标题，使用默认Layout
-        if (toolbar == null) {
-            custumHeader = false;
-            v = inflater.inflate(R.layout.act_base, container, false);
-            toolbar = getView(v, R.id.head_toolBar);
-        }
-        toolbar = getView(v, R.id.head_toolBar);
-        toolbar.setTitle("");
-        int statusBarHeight = getStatusBarHeight();
-        if (isTranslucentStatus() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && statusBarHeight > 0) {
-            toolbar.setPadding(0, statusBarHeight, 0, 0);
-            if (toolbar.getLayoutParams() != null)
-                toolbar.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.header_height) + statusBarHeight;
-        }
-        flyMain = getView(v, R.id.base_flyMain);
-        if (!custumHeader && flyMain != null && layout > 0) {
+        //没有flyMain，使用默认Layout
+        if (flyMain == null) {
+            v = inflater.inflate(R.layout.act_base_fragment, container, false);
+            flyMain = getView(v, R.id.base_flyMain);
             View.inflate(context, layout, flyMain);
         }
         init = false;
         return v;
-    }
-
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
     }
 
     public BaseApplication getApp() {
@@ -197,106 +175,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
                 else v.setVisibility(View.VISIBLE);
             }
         }
-    }
-
-    /**
-     * 设置标题
-     */
-    public void setTitle(@StringRes int titleId) {
-        setTitle(getString(titleId));
-    }
-
-    /**
-     * 设置标题
-     */
-    public void setTitle(CharSequence title) {
-        if (toolbar.findViewById(R.id.head_vTitle) == null) {
-            View v = View.inflate(context, R.layout.in_head_title, null);
-            Toolbar.LayoutParams tlp = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
-            tlp.gravity = Gravity.CENTER;
-            toolbar.addView(v, tlp);
-        }
-        TextView txtTitle = getView(toolbar, R.id.head_vTitle);
-        txtTitle.setText(title);
-    }
-
-    protected void hideHeader() {
-        if (toolbar != null) toolbar.setVisibility(View.GONE);
-    }
-
-    protected void setHeaderLeft(@DrawableRes int left) {
-        if (left > 0) {
-            if (toolbar.findViewById(R.id.head_vLeft) == null) {
-                View v = View.inflate(context, R.layout.in_head_left, toolbar);
-                ImageView img = getView(v, R.id.head_vLeft);
-                img.setOnClickListener(this);
-                img.setImageResource(left);
-            } else {
-                ImageView img = getView(toolbar, R.id.head_vLeft);
-                img.setImageResource(left);
-            }
-        }
-    }
-
-    protected void setHeaderLeftTxt(@StringRes int left) {
-        if (left > 0) {
-            if (toolbar.findViewById(R.id.head_vLeft) == null) {
-                View v = View.inflate(context, R.layout.in_head_tleft, toolbar);
-                TextView txt = getView(v, R.id.head_vLeft);
-                txt.setOnClickListener(this);
-                txt.setText(left);
-            } else {
-                TextView txt = getView(toolbar, R.id.head_vLeft);
-                txt.setText(left);
-            }
-        }
-    }
-
-    protected void setHeaderRight(@DrawableRes int right) {
-        if (right > 0) {
-            if (toolbar.findViewById(R.id.head_vRight) == null) {
-                View v = View.inflate(context, R.layout.in_head_right, toolbar);
-                ImageView img = getView(v, R.id.head_vRight);
-                img.setOnClickListener(this);
-                img.setImageResource(right);
-            } else {
-                ImageView img = getView(toolbar, R.id.head_vRight);
-                img.setImageResource(right);
-            }
-        }
-    }
-
-    protected void setHeaderRightTxt(@StringRes int right) {
-        if (right > 0) {
-            if (toolbar.findViewById(R.id.head_vRight) == null) {
-                View v = View.inflate(context, R.layout.in_head_tright, toolbar);
-                TextView txt = getView(v, R.id.head_vRight);
-                txt.setOnClickListener(this);
-                txt.setText(right);
-            } else {
-                TextView txt = getView(toolbar, R.id.head_vRight);
-                txt.setText(right);
-            }
-        }
-    }
-
-    /**
-     * 头部
-     */
-    protected View getHeader() {
-        return toolbar;
-    }
-
-    protected View getHeaderTitle() {
-        return toolbar.findViewById(R.id.head_vTitle);
-    }
-
-    protected View getHeaderRight() {
-        return toolbar.findViewById(R.id.head_vRight);
-    }
-
-    protected View getHeaderLeft() {
-        return toolbar.findViewById(R.id.head_vLeft);
     }
 
     protected View getMainView() {
