@@ -11,14 +11,14 @@
     <string name="refresh_load_more_release">释放即可加载</string>
 
     <string name="API_FLAG_NET_EXCEPTION">网络异常，请检测网络后重试</string>
-    <string name="API_FLAG_NET_FAIL">网络断开，请打开网络后重试</string>
-    <string name="API_FLAG_CON_EXCEPTION">服务器连接异常，请重试</string>
-    <string name="API_FLAG_CON_BROKEN">服务器连接中断，请重试</string>
-    <string name="API_FLAG_CON_TIMEOUT">服务器连接超时，请重试</string>
-    <string name="API_FLAG_CON_UNKNOWNHOSTEXCEPTION">服务器解析异常，请重试</string>
-    <string name="API_FLAG_NO_RESPONSE">服务器没有数据返回，请重试</string>
-    <string name="API_FLAG_DATA_ERROR">服务器返回数据错误，请重试</string>
-    <string name="API_FLAG_ANALYSIS_ERROR">服务器返回数据解析错误，请重试</string>
+    <string name="API_FLAG_NET_FAIL">@string/API_FLAG_NET_EXCEPTION</string>
+    <string name="API_FLAG_CON_EXCEPTION">@string/API_FLAG_NET_EXCEPTION</string>
+    <string name="API_FLAG_CON_BROKEN">@string/API_FLAG_NET_EXCEPTION</string>
+    <string name="API_FLAG_CON_TIMEOUT">@string/API_FLAG_NET_EXCEPTION</string>
+    <string name="API_FLAG_CON_UNKNOWNHOSTEXCEPTION">@string/API_FLAG_NET_EXCEPTION</string>
+    <string name="API_FLAG_NO_RESPONSE">@string/API_FLAG_NET_EXCEPTION</string>
+    <string name="API_FLAG_DATA_ERROR">@string/API_FLAG_NET_EXCEPTION</string>
+    <string name="API_FLAG_ANALYSIS_ERROR">@string/API_FLAG_NET_EXCEPTION</string>
     <string name="API_FLAG_REPEAT">正在努力加载中...</string>
 
     <string name="load_more">加载更多</string>

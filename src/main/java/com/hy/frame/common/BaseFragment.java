@@ -2,21 +2,13 @@ package com.hy.frame.common;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.bean.LoadCache;
@@ -30,10 +22,11 @@ import com.hy.http.MyHttpClient;
  * time 2015/12/23 17:12
  */
 public abstract class BaseFragment extends Fragment implements android.view.View.OnClickListener, IFragmentListener, IBaseActivity {
+    private View contentView;
     // private boolean custom;
     private BaseApplication app;
     protected Context context;
-//    private Toolbar toolbar;
+    //    private Toolbar toolbar;
     //private TextView txtTitle;
     private FrameLayout flyMain;
     private LoadCache loadCache;
@@ -41,8 +34,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     private boolean init;
     private MyHttpClient client;
 
-    public void setInit(boolean init) {
-        this.init = init;
+    public boolean isInit() {
+        return init;
     }
 
     public int getShowCount() {
@@ -50,7 +43,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     }
 
     protected boolean isTranslucentStatus() {
-        if(getActivity()!=null && getActivity() instanceof BaseActivity){
+        if (getActivity() != null && getActivity() instanceof BaseActivity) {
             BaseActivity act = (BaseActivity) getActivity();
             return act.isTranslucentStatus();
         }
@@ -62,7 +55,6 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         super.onStart();
         if (!init) {
             init = true;
-            initView();
             initData();
         }
     }
@@ -71,23 +63,27 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // MyLog.d(getClass(), "onCreateView");
         showCount++;
-        context = getActivity();
-        app = (BaseApplication) getActivity().getApplication();
-        // custom = true;
-        int layout = initLayoutId();
-        View v = null;
-        if (layout != 0) {
-            v = inflater.inflate(layout, container, false);
-            flyMain = getView(v, R.id.base_flyMain);
+        if (contentView == null) {
+            context = getActivity();
+            app = (BaseApplication) getActivity().getApplication();
+            // custom = true;
+            int layout = initLayoutId();
+            View v = null;
+            if (layout != 0) {
+                v = inflater.inflate(layout, container, false);
+                flyMain = getView(v, R.id.base_flyMain);
+            }
+            //没有flyMain，使用默认Layout
+            if (flyMain == null) {
+                v = inflater.inflate(R.layout.act_base_fragment, container, false);
+                flyMain = getView(v, R.id.base_flyMain);
+                View.inflate(context, layout, flyMain);
+            }
+            contentView = v;
+            initView();
+            init = false;
         }
-        //没有flyMain，使用默认Layout
-        if (flyMain == null) {
-            v = inflater.inflate(R.layout.act_base_fragment, container, false);
-            flyMain = getView(v, R.id.base_flyMain);
-            View.inflate(context, layout, flyMain);
-        }
-        init = false;
-        return v;
+        return contentView;
     }
 
     public BaseApplication getApp() {
@@ -163,6 +159,19 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         }
     }
 
+    private boolean retry;//重试
+
+    protected void allowRetry() {
+        if (loadCache != null) {
+            retry = true;
+            loadCache.llyLoad.setOnClickListener(this);
+        }
+    }
+
+    protected void onRetryRequest() {
+
+    }
+
     /**
      * 显示内容View
      */
@@ -235,6 +244,8 @@ public abstract class BaseFragment extends Fragment implements android.view.View
             onLeftClick();
         else if (v.getId() == R.id.head_vRight)
             onRightClick();
+        else if (v.getId() == R.id.base_llyLoad)
+            onRetryRequest();
         else
             onViewClick(v);
     }
@@ -257,7 +268,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
      */
     @SuppressWarnings("unchecked")
     public <T extends View> T getView(@IdRes int id) {
-        return getView(getView(), id);
+        return getView(contentView, id);
     }
 
     /**
@@ -285,7 +296,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
     }
 
     protected void setOnClickListener(@IdRes int id) {
-        if (getView() != null) getView().findViewById(id).setOnClickListener(this);
+        if (contentView != null) contentView.findViewById(id).setOnClickListener(this);
     }
 
     protected void setOnClickListener(View v, @IdRes int id) {

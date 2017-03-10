@@ -33,7 +33,7 @@ dependencies {
     //compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:support-vector-drawable:25.2.0'
+    //compile 'com.android.support:support-vector-drawable:25.2.0'
     compile 'com.android.support:recyclerview-v7:25.2.0'
     //compile files('libs/gson-2.6.2.jar')
     //compile files('libs/volley_android23.jar')

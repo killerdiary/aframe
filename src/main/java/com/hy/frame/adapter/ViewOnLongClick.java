@@ -21,7 +21,7 @@ public class ViewOnLongClick implements android.view.View.OnLongClickListener {
     @Override
     public boolean onLongClick(android.view.View v) {
         if (listener != null) {
-            listener.onViewClick(LONG_CLICK, obj, position);
+            listener.onViewClick(v, obj, position);
         }
         return false;
     }

@@ -20,7 +20,7 @@ public class ViewOnClick implements android.view.View.OnClickListener {
     @Override
     public void onClick(android.view.View v) {
         if (listener != null) {
-            listener.onViewClick(v.getId(), obj, position);
+            listener.onViewClick(v, obj, position);
         }
     }
 
