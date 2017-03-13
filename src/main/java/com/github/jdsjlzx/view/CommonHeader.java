@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
-import com.github.jdsjlzx.R;
+import com.hy.frame.R;
 
 
 /**

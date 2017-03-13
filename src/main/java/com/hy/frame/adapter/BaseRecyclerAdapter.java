@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hy.frame.view.recycler.HeaderHolder;
-import com.hy.frame.view.recycler.IHeaderViewListner;
-
 import java.util.List;
 
 /**
@@ -19,15 +16,16 @@ import java.util.List;
  * @time 2016/5/27 16:22
  */
 public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
-    public static final int TYPE_HEADER = 1;
+    //    public static final int TYPE_HEADER = 1;
     //public static final int TYPE_MORE = 2;
     private Context context;
     private List<T> datas;
     private IAdapterListener listener;
     //private boolean isCanLoadMore;
     //private int loadMoreState;
-    private int headerResId;
-    private IHeaderViewListner headerListner;
+//    private int headerResId;
+//    private IHeaderViewListner headerListner;
+    private int headerCount;
 
     public BaseRecyclerAdapter(Context context, List<T> datas) {
         this(context, datas, null);
@@ -59,28 +57,20 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
 //        this.loadMoreState = state;
 //    }
 
-    /**
-     * 只适用于ListView格式，如果内容不超过一屏，请用新方式
-     *
-     * @param headerResId
-     */
-    @Deprecated
-    public void setHeaderResId(int headerResId) {
-        this.headerResId = headerResId;
-    }
-
-    @Deprecated
-    public void setHeaderListner(IHeaderViewListner headerListner) {
-        this.headerListner = headerListner;
-    }
-
-    /**
-     * Cur True Position
-     */
-    @Deprecated
-    protected int getCurPosition(int position) {
-        return position - (headerResId != 0 ? 1 : 0);
-    }
+//    /**
+//     * 只适用于ListView格式，如果内容不超过一屏，请用新方式
+//     *
+//     * @param headerResId
+//     */
+//    @Deprecated
+//    public void setHeaderResId(int headerResId) {
+//        this.headerResId = headerResId;
+//    }
+//
+//    @Deprecated
+//    public void setHeaderListner(IHeaderViewListner headerListner) {
+//        this.headerListner = headerListner;
+//    }
 
     protected View inflate(ViewGroup parent, int resId) {
         return LayoutInflater.from(context).inflate(resId, null);
@@ -104,63 +94,53 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
                 parent.setPadding(dividerHorizontalSize, parent.getPaddingTop(), parent.getPaddingRight(), parent.getPaddingBottom());
             }
         }
-        if (viewType == TYPE_HEADER) {
-            View header = inflate(parent, headerResId);
-            if (headerListner != null)
-                return headerListner.createHeaderView(header);
-            return new HeaderHolder(header);
-        }
+//        if (viewType == TYPE_HEADER) {
+//            View header = inflate(parent, headerResId);
+//            if (headerListner != null)
+//                return headerListner.createHeaderView(header);
+//            return new HeaderHolder(header);
+//        }
         return createView(parent);
     }
 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        //if (holder instanceof LoadMoreHolder) {
-        //    LoadMoreHolder footer = (LoadMoreHolder) holder;
-        //    footer.onChangeState(loadMoreState);
-        //} else
-        if (holder instanceof HeaderHolder) {
-            if (headerListner != null)
-                headerListner.bindHearderData((HeaderHolder) holder, position);
-        } else {
-            if (dividerHorizontalSize > 0 || dividerVerticalSize > 0 || topPadding > 0 || bottomPadding > 0) {
-                int padding = dividerVerticalSize;
-                int left = 0, top = 0, right = 0, bottom = 0;
-                left = holder.itemView.getPaddingLeft();
-                right = holder.itemView.getPaddingRight();
-                bottom = holder.itemView.getPaddingBottom();
-                int pos = getCurPosition(position);
-                if (pos == 0 && topPadding > 0) {
-                    top = topPadding;
-                } else if (dividerVerticalSize > 0) {
-                    top = padding;
-                }
-                if (bottomPadding > 0) {
-                    bottom = 0;
-                    if (gridCount <= 1 && getItemCount() - (position + 1) == 0) {
+        if (dividerHorizontalSize > 0 || dividerVerticalSize > 0 || topPadding > 0 || bottomPadding > 0) {
+            int padding = dividerVerticalSize;
+            int left = 0, top = 0, right = 0, bottom = 0;
+            left = holder.itemView.getPaddingLeft();
+            right = holder.itemView.getPaddingRight();
+            bottom = holder.itemView.getPaddingBottom();
+            if (position == 0 && topPadding > 0) {
+                top = topPadding;
+            } else if (dividerVerticalSize > 0) {
+                top = padding;
+            }
+            if (bottomPadding > 0) {
+                bottom = 0;
+                if (gridCount <= 1 && getItemCount() - (position + 1) == 0) {
+                    bottom = bottomPadding;
+                } else if (gridCount > 1) {
+                    int curPosition = getCurPosition(position) + 1;
+                    int lastLinePosition = 0;
+                    int surplus = getItemCount() % gridCount;
+                    if (surplus == 0) {
+                        lastLinePosition = getItemCount() - gridCount;
+                    } else {
+                        lastLinePosition = getItemCount() - surplus;
+                    }
+                    if (curPosition > lastLinePosition) {
                         bottom = bottomPadding;
-                    } else if (gridCount > 1) {
-                        int curPosition = getCurPosition(position) + 1;
-                        int lastLinePosition = 0;
-                        int surplus = getTrueItemCount() % gridCount;
-                        if (surplus == 0) {
-                            lastLinePosition = getTrueItemCount() - gridCount;
-                        } else {
-                            lastLinePosition = getTrueItemCount() - surplus;
-                        }
-                        if (curPosition > lastLinePosition) {
-                            bottom = bottomPadding;
-                        }
                     }
                 }
-                if (gridCount > 1 && dividerHorizontalSize > 0) {
-                    right = dividerHorizontalSize;
-                }
-                holder.itemView.setPadding(left, top, right, bottom);
             }
-            bindViewData(holder, position);
+            if (gridCount > 1 && dividerHorizontalSize > 0) {
+                right = dividerHorizontalSize;
+            }
+            holder.itemView.setPadding(left, top, right, bottom);
         }
+        bindViewData(holder, position);
     }
 
     private int dividerHorizontalSize, dividerVerticalSize, topPadding, bottomPadding;
@@ -186,25 +166,18 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         this.bottomPadding = bottomPadding;
     }
 
-    @Override
-    public int getItemCount() {
-        int size = getTrueItemCount();
-//        if (size > 0 && isCanLoadMore) {
-//            size++;
-//        }
-        if (headerResId != 0) {
-            size++;
-        }
-        return size;
+    public void setHeaderCount(int headerCount) {
+        this.headerCount = headerCount;
     }
 
-    public int getTrueItemCount() {
-        return datas == null ? 0 : datas.size();
+    /**
+     * Cur True Position
+     */
+    protected int getCurPosition(int position) {
+        return position - headerCount;
     }
 
     public T getItem(int position) {
-        if (headerResId != 0)
-            position = position - 1;
         return datas.get(position);
     }
 
@@ -219,14 +192,12 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        // 最后一个item设置为footerView
-//        if (isCanLoadMore && position + 1 == getItemCount()) {
-//            return TYPE_MORE;
-//        }
-        if (headerResId != 0 && position == 0) {
-            return TYPE_HEADER;
-        }
         return super.getItemViewType(position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return datas == null ? 0 : datas.size();
     }
 
     /**

@@ -23,6 +23,7 @@ import com.hy.frame.util.MyLog;
  * @author HeYan
  * @time 2016/5/28 9:19
  */
+@Deprecated
 public class RefreshRecyclerView extends SwipeRefreshLayout {
     private RecyclerView recyclerView;
     private FrameLayout flyContainer;
@@ -58,7 +59,7 @@ public class RefreshRecyclerView extends SwipeRefreshLayout {
                 //RefreshRecyclerView.this.setEnabled(false);
                 if (null != loadMoreListener && canLoadMore && !loadingMore && itemCount > 0) {
                     RecyclerView.Adapter adapter = recyclerView.getAdapter();
-                    if (adapter != null && adapter instanceof BaseRecyclerAdapter && ((BaseRecyclerAdapter) adapter).getTrueItemCount() % itemCount == 0) {
+                    if (adapter != null && adapter instanceof BaseRecyclerAdapter && ((BaseRecyclerAdapter) adapter).getItemCount() % itemCount == 0) {
                         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
                             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                             if (layoutManager.findLastVisibleItemPosition() + 1 == adapter.getItemCount()) {
