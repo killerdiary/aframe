@@ -212,7 +212,18 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             loadCache.showNoData(msg, drawId);
         }
     }
+    private boolean retry;//重试
 
+    protected void allowRetry() {
+        if (loadCache != null) {
+            retry = true;
+            loadCache.llyLoad.setOnClickListener(this);
+        }
+    }
+
+    protected void onRetryRequest() {
+
+    }
     /**
      * 显示内容View
      */
