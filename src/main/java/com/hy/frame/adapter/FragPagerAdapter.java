@@ -45,4 +45,5 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
             return titles[position];
         return null;
     }
+
 }

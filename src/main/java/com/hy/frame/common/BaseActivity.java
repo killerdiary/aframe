@@ -41,7 +41,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     private FrameLayout flyMain;
     private LoadCache loadCache;
     private MyHttpClient client;
-    private int rightCount;
 
     protected boolean isTranslucentStatus() {
         return false;
@@ -55,7 +54,31 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         initData();
     }
 
+    /**
+     * 唯一布局ID
+     */
+    protected int initSingleLayoutId() {
+        return 0;
+    }
+
     private void init() {
+        if (initSingleLayoutId() != 0) {
+            setContentView(initSingleLayoutId());
+            toolbar = getView(R.id.head_toolBar);
+            flyMain = getView(R.id.base_flyMain);
+        } else if (initLayoutId() != 0) {
+            setContentView(R.layout.act_base);
+            toolbar = getView(R.id.head_toolBar);
+            flyMain = getView(R.id.base_flyMain);
+            View.inflate(context, initLayoutId(), flyMain);
+        } else {
+            MyLog.e(getClass(), "initLayoutId not call");
+        }
+        initToolbar();
+        initApp();
+    }
+
+    private void initApp() {
         lastSkipAct = getIntent().getStringExtra(LAST_ACT);// 获取上一级Activity的Name
         try {
             app = (BaseApplication) getApplication();
@@ -65,20 +88,10 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             return;
         }
         app.addActivity(this);
-        int layout = initLayoutId();
-        if (layout == 0) {
-            MyLog.e(getClass(), "initLayoutId not call");
-            return;
-        }
-        setContentView(layout);
-        toolbar = getView(R.id.head_toolBar);
-        boolean custumHeader = true;
-        //没有标题，使用默认Layout
-        if (toolbar == null) {
-            custumHeader = false;
-            setContentView(R.layout.act_base);
-            toolbar = getView(R.id.head_toolBar);
-        }
+    }
+
+    private void initToolbar() {
+        if (toolbar == null) return;
         toolbar.setTitle("");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             int statusBarHeight = getStatusBarHeight();
@@ -92,13 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             }
         }
         setSupportActionBar(toolbar);
-        flyMain = getView(R.id.base_flyMain);
-        //如果使用的默认Layout，则把当前Layout inflate到默认Layout中
-        if (!custumHeader && flyMain != null) {
-            View.inflate(context, layout, flyMain);
-        }
     }
-
 //    /**
 //     * 初始化数据
 //     */
@@ -212,6 +219,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             loadCache.showNoData(msg, drawId);
         }
     }
+
     private boolean retry;//重试
 
     protected void allowRetry() {
@@ -224,6 +232,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     protected void onRetryRequest() {
 
     }
+
     /**
      * 显示内容View
      */
@@ -303,7 +312,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
                 ImageView img = getView(v, R.id.head_vRight);
                 img.setOnClickListener(this);
                 img.setImageResource(right);
-                rightCount++;
             } else {
                 ImageView img = getView(toolbar, R.id.head_vRight);
                 img.setImageResource(right);
@@ -312,7 +320,6 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     protected void addHeaderRight(@DrawableRes int right, @IdRes int id) {
-        rightCount++;
         View v = View.inflate(context, R.layout.in_head_right, null);
         ImageView img = getView(v, R.id.head_vRight);
         img.setId(id);
