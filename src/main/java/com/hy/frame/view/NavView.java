@@ -25,6 +25,7 @@ import com.hy.frame.util.HyUtil;
 public class NavView extends FrameLayout implements Checkable {
     private LinearLayout llyContainer;
     private TintImageView icoKey;
+    private ImageView imgRight;
     private TextView txtKey;
     private boolean mChecked;
 
@@ -98,7 +99,7 @@ public class NavView extends FrameLayout implements Checkable {
         }
         addView(llyContainer, clp);
         if (horizontal && drawRight != null) {
-            ImageView imgRight = new ImageView(getContext());
+            imgRight = new ImageView(getContext());
             LayoutParams rllp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             if (drawRightWidth > 0) {
                 imgRight.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -160,6 +161,10 @@ public class NavView extends FrameLayout implements Checkable {
 
     public TintImageView getIcoKey() {
         return icoKey;
+    }
+
+    public ImageView getImgRight() {
+        return imgRight;
     }
 
     public TextView getTxtKey() {

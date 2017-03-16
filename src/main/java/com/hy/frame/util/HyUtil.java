@@ -231,9 +231,14 @@ public class HyUtil {
      * @return 现在时间(Now)
      */
     public static String getNowTime() {
+        return getNowTime(null);
+    }
+
+    public static String getNowTime(String type) {
         Date d = new Date(System.currentTimeMillis());
         // String type = "yyyy-MM-dd HH:mm:ss";
-        String type = "HH:mm:ss";
+        if (type == null)
+            type = "HH:mm:ss";
         SimpleDateFormat formatter = new SimpleDateFormat(type, Locale.CHINA);
         return formatter.format(d);
     }
@@ -257,14 +262,14 @@ public class HyUtil {
     }
 
     public static Date stringToDateTime(String strDate) {
-        return stringToDateTime(strDate,null);
+        return stringToDateTime(strDate, null);
     }
 
     public static Date stringToDateTime(String strDate, String type) {
         if (strDate != null) {
             if (type == null) type = "yyyy-MM-dd HH:mm:ss";
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat(type,Locale.CHINA);
+                SimpleDateFormat sdf = new SimpleDateFormat(type, Locale.CHINA);
                 return sdf.parse(strDate);
             } catch (ParseException e) {
                 e.printStackTrace();

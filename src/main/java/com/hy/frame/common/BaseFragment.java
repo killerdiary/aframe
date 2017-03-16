@@ -89,7 +89,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
                 flyMain = getView(v1, R.id.base_flyMain);
                 if (flyMain == null) {
                     v = inflater.inflate(R.layout.act_base_fragment, container, false);
-                    flyMain = getView(v1, R.id.base_flyMain);
+                    flyMain = getView(v, R.id.base_flyMain);
                     View.inflate(context, initSingleLayoutId(), flyMain);
                 } else {
                     v = v1;
@@ -102,7 +102,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
                 MyLog.e(getClass(), "initLayoutId not call");
                 return null;
             }
-            toolbar = getView(v,R.id.head_toolBar);
+            toolbar = getView(v, R.id.head_toolBar);
             contentView = v;
             init = false;
             initToolbar();
@@ -115,6 +115,7 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         if (toolbar == null) return;
         toolbar.setTitle("");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //toolbar.setBackgroundResource(R.color.blue);
             int statusBarHeight = ((BaseActivity) getActivity()).getStatusBarHeight();
             if (isTranslucentStatus() && statusBarHeight > 0) {
                 toolbar.setPadding(0, statusBarHeight, 0, 0);
@@ -379,6 +380,10 @@ public abstract class BaseFragment extends Fragment implements android.view.View
         intent.putExtra(BaseActivity.LAST_ACT, this.getClass().getSimpleName());
         intent.setClass(getActivity(), cls);
         startActivity(intent);
+    }
+
+    public void startActForResult(Class<?> cls, int requestCode) {
+        startActForResult(cls, null, requestCode);
     }
 
     public void startActForResult(Class<?> cls, Bundle bundle, int requestCode) {
