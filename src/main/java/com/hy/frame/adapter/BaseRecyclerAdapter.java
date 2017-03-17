@@ -173,7 +173,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     /**
      * Cur True Position
      */
-    protected int getCurPosition(int position) {
+    public int getCurPosition(int position) {
         return position - headerCount;
     }
 
