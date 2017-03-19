@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AjaxParams {
     private static final String ENCODING = "UTF-8";
-    private int qid;
+    private long qid;
     private ConcurrentHashMap<String, String> urlParams;
     private ConcurrentHashMap<String, Binary> fileParams;
     private PostData postData;
@@ -124,11 +124,11 @@ public class AjaxParams {
         return urlParams;
     }
 
-    public int getQid() {
+    public long getQid() {
         return qid;
     }
 
-    public void setQid(int qid) {
+    public void setQid(long qid) {
         this.qid = qid;
     }
 

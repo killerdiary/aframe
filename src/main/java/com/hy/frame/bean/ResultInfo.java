@@ -21,7 +21,7 @@ public class ResultInfo {
      */
     public static final int CODE_ERROR_DECODE = -252;
     private int requestCode;//请求码，接口编号
-    private int qid;//队列ID
+    private long qid;//队列ID
     private Object obj;//返回结果
     private int errorCode;//错误码
     private String msg;//描述
@@ -45,14 +45,14 @@ public class ResultInfo {
     /**
      * 队列ID
      */
-    public int getQid() {
+    public long getQid() {
         return qid;
     }
 
     /**
      * 队列ID
      */
-    public void setQid(int qid) {
+    public void setQid(long qid) {
         this.qid = qid;
     }
 

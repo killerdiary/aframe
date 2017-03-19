@@ -587,6 +587,7 @@ public abstract class MyHttpClient {
                 }
             } catch (Exception e) {
                 MyLog.d("onSucceed", "文件下载失败");
+                downFile.setState(DownFile.STATUS_ERROR);
             } finally {
                 try {
                     if (is != null)
@@ -601,6 +602,7 @@ public abstract class MyHttpClient {
                     e.printStackTrace();
                 }
             }
+            result.setObj(downFile);
         }
         onRequestSuccess(result);
 
