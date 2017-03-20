@@ -170,6 +170,10 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         this.headerCount = headerCount;
     }
 
+    public int getHeaderCount() {
+        return headerCount;
+    }
+
     /**
      * Cur True Position
      */
