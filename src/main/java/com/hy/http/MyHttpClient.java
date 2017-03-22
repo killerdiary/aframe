@@ -28,9 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,9 +38,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -93,7 +89,7 @@ public abstract class MyHttpClient {
     public MyHttpClient(Context context, IMyHttpListener listener, String host, int requestType) {
         super();
         if (context == null || host == null) {
-            MyLog.e("MyHttpClient init error!");
+            MyLog.i("MyHttpClient init error!");
             return;
         }
         this.context = context;
@@ -251,7 +247,7 @@ public abstract class MyHttpClient {
 ////            sslContext = SSLContext.getInstance("SSL");
 ////            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
 //        } catch (Exception e) {
-//            MyLog.e("ssl出现异常");
+//            MyLog.i("ssl出现异常");
 //        }
     }
 
@@ -361,8 +357,8 @@ public abstract class MyHttpClient {
      * @param list        结果是否是List
      */
     public <T> void request(boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
-        MyLog.d("request", url);
-        MyLog.d("params", params == null ? null : params.toString());
+        MyLog.i("request", url);
+        MyLog.i("params", params == null ? null : params.toString());
         ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
         result.setRequestType(REQUEST_TYPE_JSON);
@@ -469,7 +465,7 @@ public abstract class MyHttpClient {
             public void onFailure(Call call, IOException e) {
                 ResultInfo result = (ResultInfo) call.request().tag();
                 String msg = e != null ? e.getMessage() : null;
-                MyLog.d("onFailed", "what=" + result.getRequestCode() + ",msg=" + msg);
+                MyLog.i("onFailed", "what=" + result.getRequestCode() + ",msg=" + msg);
                 int code = R.string.API_FLAG_CON_EXCEPTION;
                 if (msg != null) {
                     String thr = msg.toLowerCase(Locale.CHINA);
@@ -499,7 +495,7 @@ public abstract class MyHttpClient {
                         return;
                     }
                     String data = String.valueOf(response.body().string());
-                    MyLog.d("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
+                    MyLog.i("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
                     if (data.length() > 0) {
                         try {
                             switch (result.getRequestType()) {
@@ -532,7 +528,7 @@ public abstract class MyHttpClient {
     }
 
     public void download(int requestCode, String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld) {
-        MyLog.d("download", url);
+        MyLog.i("download", url);
         ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
         result.setRequestType(REQUEST_TYPE_FILE);
@@ -549,9 +545,11 @@ public abstract class MyHttpClient {
     }
 
     protected void doSuccessFile(ResultInfo result, ResponseBody body) {
+        //MyLog.i("doSuccessFile" + result.getRequestCode());
         if (body != null) {
             DownFile downFile = result.getObj();
             long total = body.contentLength();
+            MyLog.i("onProgress(File)", "what=" + result.getRequestCode() + ",total=" + total);
             downFile.setState(DownFile.STATUS_START);
             downFile.setAllCount(total);
             onRequestSuccess(result);
@@ -568,7 +566,7 @@ public abstract class MyHttpClient {
                     fos.write(buf, 0, len);
                     sum += len;
                     int progress = (int) (sum * 1.0f / total * 100);
-                    MyLog.d("onProgress(File)", "what=" + result.getRequestCode() + ",progress=" + progress + ",fileCount=" + sum);
+                    MyLog.i("onProgress(File)", "what=" + result.getRequestCode() + ",progress=" + progress + ",fileCount=" + sum + ",total=" + total);
                     downFile.setState(DownFile.STATUS_PROGRESS);
                     downFile.setProgress(progress);
                     downFile.setFileCount(sum);
@@ -576,17 +574,23 @@ public abstract class MyHttpClient {
                     onRequestSuccess(result);
                 }
                 fos.flush();
-                if (sum == total) {
+                // else if (total < 0) {
+                //    downFile.setState(DownFile.STATUS_SUCCESS);
+                //    File file = new File(downFile.getSaveDir(), downFile.getFileName());
+                //    cacheFile.renameTo(file);
+                //    MyLog.i("onSucceed", "文件下载成功");
+                //}
+                if (total > 0 && sum == total) {
                     downFile.setState(DownFile.STATUS_SUCCESS);
                     File file = new File(downFile.getSaveDir(), downFile.getFileName());
                     cacheFile.renameTo(file);
-                    MyLog.d("onSucceed", "文件下载成功");
+                    MyLog.i("onSucceed", "文件下载成功");
                 } else {
                     downFile.setState(DownFile.STATUS_ERROR);
-                    MyLog.d("onSucceed", "文件下载中断");
+                    MyLog.i("onSucceed", "文件下载中断");
                 }
             } catch (Exception e) {
-                MyLog.d("onSucceed", "文件下载失败");
+                MyLog.i("onSucceed", "文件下载失败");
                 downFile.setState(DownFile.STATUS_ERROR);
             } finally {
                 try {
@@ -799,7 +803,11 @@ public abstract class MyHttpClient {
     @Deprecated
     protected void onRequestError(final ResultInfo result) {
         if (isDestroy) return;
+        initHandler();
         if (handler != null) {
+            runnable.setSuccess(false);
+            runnable.setResult(result);
+            handler.post(runnable);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -815,17 +823,17 @@ public abstract class MyHttpClient {
         }
     }
 
-    /**
-     * not main thread
-     */
-    @Deprecated
-    protected void onRequestSuccess(final ResultInfo result) {
-        if (isDestroy) return;
-        result.setErrorCode(0);
-        if (handler != null) {
-            handler.post(new Runnable() {
+    private MyRunnable runnable;
+
+    private void initHandler() {
+        if (runnable == null) {
+            runnable = new MyRunnable() {
                 @Override
                 public void run() {
+                    handler.removeCallbacks(runnable);
+                    ResultInfo result = getResult();
+                    //MyLog.i("onRequest run" + result.getRequestCode());
+                    if (!hasQueue(result.getRequestCode())) return;
                     if (result.getRequestType() == REQUEST_TYPE_FILE) {
                         DownFile downFile = result.getObj();
                         if (downFile.getState() == DownFile.STATUS_SUCCESS || downFile.getState() == DownFile.STATUS_ERROR) {
@@ -838,11 +846,56 @@ public abstract class MyHttpClient {
                     }
                     if (listeners != null) {
                         for (IMyHttpListener listener : listeners) {
-                            listener.onRequestSuccess(result);
+                            //MyLog.i("onRequest listener" + result.getRequestCode());
+                            if (isSuccess())
+                                listener.onRequestSuccess(result);
+                            else
+                                listener.onRequestError(result);
                         }
                     }
                 }
-            });
+            };
+        }
+    }
+
+    /**
+     * not main thread
+     */
+    @Deprecated
+    protected void onRequestSuccess(ResultInfo result) {
+        //MyLog.i("onRequestSuccess" + result.getRequestCode());
+        if (isDestroy) return;
+        result.setErrorCode(0);
+        initHandler();
+        if (handler != null) {
+//            handler.
+            runnable.setSuccess(true);
+            runnable.setResult(result);
+            handler.post(runnable);
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    MyLog.i("onRequestSuccess run" + result.getRequestCode());
+//                    if (!hasQueue(result.getRequestCode())) return;
+//                    if (result.getRequestType() == REQUEST_TYPE_FILE) {
+//                        DownFile downFile = result.getObj();
+//                        if (downFile.getState() == DownFile.STATUS_SUCCESS || downFile.getState() == DownFile.STATUS_ERROR) {
+//                            removeQueue(result.getRequestCode());
+//                            hideLoading();
+//                        }
+//                    } else {
+//                        removeQueue(result.getRequestCode());
+//                        hideLoading();
+//                    }
+//                    if (listeners != null) {
+//                        for (IMyHttpListener listener : listeners) {
+//                            MyLog.i("onRequestSuccess listener" + result.getRequestCode());
+//                            listener.onRequestSuccess(result);
+//                        }
+//                    }
+//                    handler.removeCallbacks(this);
+//                }
+//            });
         }
     }
 
@@ -904,7 +957,7 @@ public abstract class MyHttpClient {
     @MainThread
     public void onDestroy() {
         //在这里销毁所有当前请求
-        MyLog.d(getClass(), "onDestroy");
+        MyLog.i(getClass(), "onDestroy");
         isDestroy = true;
         listeners = null;
         loadingDialog = null;
@@ -917,4 +970,29 @@ public abstract class MyHttpClient {
         return context == null ? null : context.getString(resId);
     }
 
+    private class MyRunnable implements Runnable {
+        private ResultInfo result;
+        private boolean success;
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public ResultInfo getResult() {
+            return result;
+        }
+
+        public void setResult(ResultInfo result) {
+            this.result = result;
+        }
+
+        @Override
+        public void run() {
+
+        }
+    }
 }
