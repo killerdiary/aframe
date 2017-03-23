@@ -21,8 +21,6 @@ import com.hy.frame.ui.CropActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 拍照工具类
@@ -30,10 +28,18 @@ import java.util.Map;
  * time 2015/12/29 16:57
  */
 public class CameraUtil {
+    public static final int REQUEST_PERMISSION_CAMERA = 2001;
+    public static final int REQUEST_PERMISSION_STORAGE = 2002;
+    public static final int REQUEST_PERMISSION_LOCATION = 2003;
+    public static final int REQUEST_PERMISSION_AUDIO = 2004;
     /**
      * 拍照
      */
     public static final int FLAG_UPLOAD_TAKE_PICTURE = 10;
+    /**
+     * 拍视频
+     */
+    public static final int FLAG_UPLOAD_TAKE_VIDEO = 15;
     /**
      * 选择图片
      */
@@ -45,6 +51,7 @@ public class CameraUtil {
     private BaseActivity act;
     private BaseFragment fragment;
     private CameraDealListener listener;
+    private CamerVideoListener videoListener;
 
     public CameraUtil(BaseActivity act, CameraDealListener listener) {
         this.act = act;
@@ -56,8 +63,13 @@ public class CameraUtil {
         this.listener = listener;
     }
 
+    public void setVideoListener(CamerVideoListener videoListener) {
+        this.videoListener = videoListener;
+    }
+
     //private Uri imageUri, cacheUri;
     private static final String URI_IMAGE = "CAMERA_URI_IMAGE", URI_CACHE = "CAMERA_URI_CACHE";// URI_CONTENT = "CAMERA_URI_CONTENT";
+    private static final String URI_VIDEO = "CAMERA_URI_VIDEO";
 
 
     private Context getContext() {
@@ -93,6 +105,7 @@ public class CameraUtil {
                 if (contentUri == null) return;
                 MyShare.get(getContext()).putString(URI_CACHE, contentUri.toString());
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, FLAG_UPLOAD_TAKE_PICTURE);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -105,10 +118,33 @@ public class CameraUtil {
             try {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, FLAG_UPLOAD_CHOOICE_IMAGE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+    }
+
+    public void onDlgVideoClick(float quality, int seconds) {
+        if (initPhotoData()) {
+            if (!requestCameraPermission()) return;
+            try {
+                //Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                ContentValues values = new ContentValues();
+                Uri contentUri = getContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                if (contentUri == null) return;
+                MyShare.get(getContext()).putString(URI_VIDEO, contentUri.toString());
+                //intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, seconds);
+                intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 5 * 1000);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NE W_TASK);
+                startActivityForResult(intent, FLAG_UPLOAD_TAKE_VIDEO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void cropImageUri(int aspectX, int aspectY, int unit) {
@@ -232,6 +268,18 @@ public class CameraUtil {
                             MyLog.e(getClass(), "剪切未知情况");
                         }
                         break;
+                    case FLAG_UPLOAD_TAKE_VIDEO:
+                        if (data != null && data.getData() != null) {
+                            path = CameraDocument.getPath(getContext(), data.getData());
+                            f = new File(path);
+                            if (f.exists() && f.length() > 0) {
+                                if (videoListener != null)
+                                    videoListener.onVideoTakeSuccess(path);
+                            } else {
+                                MyLog.e(getClass(), "选择的图片不存在");
+                            }
+                        }
+                        break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -249,7 +297,21 @@ public class CameraUtil {
             act = this.fragment.getActivity();
         ActivityCompat.requestPermissions(act,
                 new String[]{Manifest.permission.CAMERA},
-                Constant.REQUEST_PERMISSION_CAMERA);
+                REQUEST_PERMISSION_CAMERA);
+        return false;
+    }
+
+    private boolean requestAudioPermission() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+            return true;
+        Activity act = null;
+        if (this.act != null)
+            act = this.act;
+        if (this.fragment != null)
+            act = this.fragment.getActivity();
+        ActivityCompat.requestPermissions(act,
+                new String[]{Manifest.permission.RECORD_AUDIO},
+                REQUEST_PERMISSION_AUDIO);
         return false;
     }
 
@@ -263,13 +325,13 @@ public class CameraUtil {
             act = this.fragment.getActivity();
         ActivityCompat.requestPermissions(act,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                Constant.REQUEST_PERMISSION_STORAGE);
+                REQUEST_PERMISSION_STORAGE);
         return false;
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Constant.REQUEST_PERMISSION_CAMERA: {
+            case REQUEST_PERMISSION_CAMERA: {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                     MyToast.show(getContext(), "获取权限成功，请重新拍照或选择图片");
                 } else {
@@ -277,7 +339,7 @@ public class CameraUtil {
                 }
             }
             break;
-            case Constant.REQUEST_PERMISSION_STORAGE: {
+            case REQUEST_PERMISSION_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     MyToast.show(getContext(), "获取权限成功，请重新拍照或选择图片");
                 } else {
@@ -285,7 +347,22 @@ public class CameraUtil {
                 }
             }
             break;
+            case REQUEST_PERMISSION_AUDIO: {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    MyToast.show(getContext(), "获取权限成功，请重新录音");
+                } else {
+                    MyToast.show(getContext(), "您没有录音权限，请去权限管理中心开启");
+                }
+            }
+            break;
         }
+    }
+
+    public boolean checkAudioPermission() {
+        if (initPhotoData()) {
+            if (requestAudioPermission()) return true;
+        }
+        return false;
     }
 
     private boolean saveFile(Uri uri, File f) {
@@ -311,10 +388,15 @@ public class CameraUtil {
     }
 
     public interface CameraDealListener {
-        void onCameraTakeSuccess(String uri);
+        void onCameraTakeSuccess(String path);
 
-        void onCameraPickSuccess(String uri);
+        void onCameraPickSuccess(String path);
 
-        void onCameraCutSuccess(String uri);
+        void onCameraCutSuccess(String path);
+    }
+
+
+    public interface CamerVideoListener {
+        void onVideoTakeSuccess(String path);
     }
 }

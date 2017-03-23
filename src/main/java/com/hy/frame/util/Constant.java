@@ -70,6 +70,7 @@ public class Constant {
     public static final int REQUEST_PERMISSION_CAMERA = 2001;
     public static final int REQUEST_PERMISSION_STORAGE = 2002;
     public static final int REQUEST_PERMISSION_LOCATION = 2003;
+    public static final int REQUEST_PERMISSION_AUDIO= 2004;
     /**
      * 每页的条数
      */
