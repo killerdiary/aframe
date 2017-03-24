@@ -1,16 +1,16 @@
 package com.hy.frame.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
-
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.StatFs;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class FileUtil {
     public static final int SIZETYPE_B = 1;// 获取文件大小单位为B的double值
@@ -20,11 +20,9 @@ public class FileUtil {
 
     /**
      * 获取文件指定文件的指定单位的大小
-     * 
-     * @param filePath
-     *            文件路径
-     * @param sizeType
-     *            获取大小的类型1为B、2为KB、3为MB、4为GB
+     *
+     * @param filePath 文件路径
+     * @param sizeType 获取大小的类型1为B、2为KB、3为MB、4为GB
      * @return double值的大小
      */
     public static double getFileOrFilesSize(String filePath, int sizeType) {
@@ -45,9 +43,8 @@ public class FileUtil {
 
     /**
      * 调用此方法自动计算指定文件或指定文件夹的大小
-     * 
-     * @param filePath
-     *            文件路径
+     *
+     * @param filePath 文件路径
      * @return 计算好的带B、KB、MB、GB的字符串
      */
     public static String getAutoFileOrFilesSize(String filePath) {
@@ -68,7 +65,7 @@ public class FileUtil {
 
     /**
      * 获取指定文件大小
-     * 
+     *
      * @param file File
      * @return
      * @throws Exception
@@ -89,7 +86,7 @@ public class FileUtil {
 
     /**
      * 获取指定文件夹
-     * 
+     *
      * @param f
      * @return
      * @throws Exception
@@ -109,7 +106,7 @@ public class FileUtil {
 
     /**
      * 转换文件大小
-     * 
+     *
      * @param fileS
      * @return
      */
@@ -134,7 +131,7 @@ public class FileUtil {
 
     /**
      * 转换文件大小,指定转换的类型
-     * 
+     *
      * @param fileS
      * @param sizeType
      * @return
@@ -143,27 +140,27 @@ public class FileUtil {
         DecimalFormat df = new DecimalFormat("#.00");
         double fileSizeLong = 0;
         switch (sizeType) {
-        case SIZETYPE_B:
-            fileSizeLong = Double.valueOf(df.format((double) fileS));
-            break;
-        case SIZETYPE_KB:
-            fileSizeLong = Double.valueOf(df.format((double) fileS / 1024));
-            break;
-        case SIZETYPE_MB:
-            fileSizeLong = Double.valueOf(df.format((double) fileS / 1048576));
-            break;
-        case SIZETYPE_GB:
-            fileSizeLong = Double.valueOf(df.format((double) fileS / 1073741824));
-            break;
-        default:
-            break;
+            case SIZETYPE_B:
+                fileSizeLong = Double.valueOf(df.format((double) fileS));
+                break;
+            case SIZETYPE_KB:
+                fileSizeLong = Double.valueOf(df.format((double) fileS / 1024));
+                break;
+            case SIZETYPE_MB:
+                fileSizeLong = Double.valueOf(df.format((double) fileS / 1048576));
+                break;
+            case SIZETYPE_GB:
+                fileSizeLong = Double.valueOf(df.format((double) fileS / 1073741824));
+                break;
+            default:
+                break;
         }
         return fileSizeLong;
     }
-    
+
     /**
      * 删除该路径下的所有文件
-     * 
+     *
      * @param path
      * @return
      */
@@ -196,9 +193,7 @@ public class FileUtil {
     public static void delFolder(String folderPath) {
         try {
             delAllFile(folderPath); // 删除完里面所有内容
-            String filePath = folderPath;
-            filePath = filePath.toString();
-            File myFilePath = new File(filePath);
+            File myFilePath = new File(folderPath);
             myFilePath.delete(); // 删除空文件夹
         } catch (Exception e) {
             e.printStackTrace();

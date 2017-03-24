@@ -287,7 +287,7 @@ public class CameraUtil {
         }
     }
 
-    private boolean requestCameraPermission() {
+    public boolean requestCameraPermission() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             return true;
         Activity act = null;
@@ -301,7 +301,7 @@ public class CameraUtil {
         return false;
     }
 
-    private boolean requestAudioPermission() {
+    public boolean requestAudioPermission() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
             return true;
         Activity act = null;
@@ -315,7 +315,7 @@ public class CameraUtil {
         return false;
     }
 
-    private boolean requesStoragetPermission() {
+    public boolean requesStoragetPermission() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
             return true;
         Activity act = null;
@@ -333,7 +333,7 @@ public class CameraUtil {
         switch (requestCode) {
             case REQUEST_PERMISSION_CAMERA: {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    MyToast.show(getContext(), "获取权限成功，请重新拍照或选择图片");
+                    MyToast.show(getContext(), "获取权限成功，请重试");
                 } else {
                     MyToast.show(getContext(), "您没有摄像头权限，请去权限管理中心开启");
                 }
@@ -341,7 +341,7 @@ public class CameraUtil {
             break;
             case REQUEST_PERMISSION_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    MyToast.show(getContext(), "获取权限成功，请重新拍照或选择图片");
+                    MyToast.show(getContext(), "获取权限成功，请重试");
                 } else {
                     MyToast.show(getContext(), "您没有文件存储权限，请去权限管理中心开启");
                 }
@@ -349,7 +349,7 @@ public class CameraUtil {
             break;
             case REQUEST_PERMISSION_AUDIO: {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                    MyToast.show(getContext(), "获取权限成功，请重新录音");
+                    MyToast.show(getContext(), "获取权限成功，请重试");
                 } else {
                     MyToast.show(getContext(), "您没有录音权限，请去权限管理中心开启");
                 }
@@ -359,9 +359,13 @@ public class CameraUtil {
     }
 
     public boolean checkAudioPermission() {
-        if (initPhotoData()) {
-            if (requestAudioPermission()) return true;
-        }
+        if (requesStoragetPermission() && requestAudioPermission()) return true;
+        return false;
+    }
+
+    public boolean checkVideoPermission() {
+        if (requesStoragetPermission() && requestAudioPermission() && requestCameraPermission())
+            return true;
         return false;
     }
 

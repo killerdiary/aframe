@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -433,6 +434,9 @@ public abstract class MyHttpClient {
                     e.printStackTrace();
                 }
             }
+            obuilder.writeTimeout(10 * 60, TimeUnit.SECONDS);
+            obuilder.connectTimeout(30, TimeUnit.SECONDS);
+            obuilder.readTimeout(30, TimeUnit.SECONDS);
             client = obuilder.build();
         }
         Request.Builder builder = new Request.Builder().url(url);
@@ -513,6 +517,8 @@ public abstract class MyHttpClient {
                             e.printStackTrace();
                         }
                     }
+                } else {
+                    MyLog.i("onFail", "what=" + result.getRequestCode() + ",data=" + response.message());
                 }
                 result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
                 onRequestError(result);
