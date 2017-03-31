@@ -67,9 +67,10 @@ public class CameraUtil {
         this.videoListener = videoListener;
     }
 
-    //private Uri imageUri, cacheUri;
-    private static final String URI_IMAGE = "CAMERA_URI_IMAGE", URI_CACHE = "CAMERA_URI_CACHE";// URI_CONTENT = "CAMERA_URI_CONTENT";
-    private static final String URI_VIDEO = "CAMERA_URI_VIDEO";
+    private Uri imageUri, cacheUri;
+    //private static final String URI_IMAGE = "CAMERA_URI_IMAGE";
+    //private static final String URI_CACHE = "CAMERA_URI_CACHE";
+    //private static final String URI_VIDEO = "CAMERA_URI_VIDEO";
 
 
     private Context getContext() {
@@ -78,22 +79,28 @@ public class CameraUtil {
     }
 
     private boolean initPhotoData() {
+        if (!requesStoragetPermission()) return false;
         String path = HyUtil.getCachePathCrop(getContext());
         // 判断sd卡
         if (path == null) {
             MyToast.show(getContext(), "没有SD卡，不能拍照");
             return false;
         }
-        if (!requesStoragetPermission()) return false;
         // FileUtil.delAllFile(path);
-        long time = System.currentTimeMillis();
-        String imagePath = path + File.separator + "pic" + time + ".jpg";
+        //long time = System.currentTimeMillis();
+        //String imagePath = path + File.separator + "pic" + time + ".jpg";
         //String cachePath = path + File.separator + "cache" + time + ".jpg";
         //MyShare.get(getContext()).putString(URI_CACHE, "file://" + cachePath);
-        MyShare.get(getContext()).putString(URI_IMAGE, "file://" + imagePath);
+        //MyShare.get(getContext()).putString(URI_IMAGE, "file://" + imagePath);
         return true;
     }
 
+    private Uri getNewCacheUri() {
+        String path = HyUtil.getCachePathCrop(getContext());
+        long time = System.currentTimeMillis();
+        String imagePath = path + File.separator + "pic" + time + ".jpg";
+        return Uri.parse("file://" + imagePath);
+    }
 
     public void onDlgCameraClick() {
         if (initPhotoData()) {
@@ -101,10 +108,9 @@ public class CameraUtil {
             try {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 ContentValues values = new ContentValues();
-                Uri contentUri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                if (contentUri == null) return;
-                MyShare.get(getContext()).putString(URI_CACHE, contentUri.toString());
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
+                cacheUri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                if (cacheUri == null) return;
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cacheUri);
                 //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, FLAG_UPLOAD_TAKE_PICTURE);
             } catch (Exception e) {
@@ -118,7 +124,6 @@ public class CameraUtil {
             try {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, FLAG_UPLOAD_CHOOICE_IMAGE);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -134,7 +139,7 @@ public class CameraUtil {
                 ContentValues values = new ContentValues();
                 Uri contentUri = getContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
                 if (contentUri == null) return;
-                MyShare.get(getContext()).putString(URI_VIDEO, contentUri.toString());
+                //MyShare.get(getContext()).putString(URI_VIDEO, contentUri.toString());
                 //intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, seconds);
@@ -148,12 +153,12 @@ public class CameraUtil {
     }
 
     public void cropImageUri(int aspectX, int aspectY, int unit) {
-        cropImageUri(getCacheUri(), aspectX, aspectY, unit);
+        cropImageUri(cacheUri, aspectX, aspectY, unit);
     }
 
-    public void cropImageUri(Uri uri, int aspectX, int aspectY, int unit) {
-        Uri imageUri = getImageUri();
-        if (uri == null || imageUri == null) {
+    public void cropImageUri(Uri cacheUri, int aspectX, int aspectY, int unit) {
+        imageUri = getNewCacheUri();
+        if (cacheUri == null || imageUri == null) {
             MyLog.e(getClass(), "地址未初始化");
             return;
         }
@@ -191,7 +196,7 @@ public class CameraUtil {
         bundle.putInt(CropActivity.EXTRA_ASPECT_X, aspectX);
         bundle.putInt(CropActivity.EXTRA_ASPECT_Y, aspectY);
         bundle.putInt(CropActivity.EXTRA_ASPECT_UNIT, unit);
-        bundle.putParcelable(CropActivity.EXTRA_INPUT_URI, uri);
+        bundle.putParcelable(CropActivity.EXTRA_INPUT_URI, cacheUri);
         bundle.putParcelable(CropActivity.EXTRA_OUTPUT_URI, imageUri);
         intent.putExtra(BaseActivity.BUNDLE, bundle);
         try {
@@ -199,7 +204,6 @@ public class CameraUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void startActivityForResult(Intent intent, int requestCode) {
@@ -210,29 +214,31 @@ public class CameraUtil {
         }
     }
 
-    public Uri getCacheUri() {
-        String path = MyShare.get(getContext()).getString(URI_CACHE);
-        return path == null ? null : Uri.parse(path);
-    }
-
-    public Uri getImageUri() {
-        String path = MyShare.get(getContext()).getString(URI_IMAGE);
-        return path == null ? null : Uri.parse(path);
-    }
+//    public Uri getCacheUri() {
+//        String path = MyShare.get(getContext()).getString(URI_CACHE);
+//        return path == null ? null : Uri.parse(path);
+//    }
+//
+//    public Uri getImageUri() {
+//        String path = MyShare.get(getContext()).getString(URI_IMAGE);
+//        return path == null ? null : Uri.parse(path);
+//    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             File f;
-            Uri cacheUri;
             String path;
             try {
                 switch (requestCode) {
                     case FLAG_UPLOAD_TAKE_PICTURE:
                         if (data != null && data.getData() != null) {
-                            path = CameraDocument.getPath(getContext(), data.getData());
+                            cacheUri = data.getData();
+                            path = CameraDocument.getPath(getContext(), cacheUri);
                         } else {
-                            path = CameraDocument.getPath(getContext(), getCacheUri());
+                            if (cacheUri == null) return;
+                            path = CameraDocument.getPath(getContext(), cacheUri);
                         }
+                        if (path == null) return;
                         f = new File(path);
                         if (f.exists() && f.length() > 0) {
                             if (listener != null)
@@ -243,7 +249,9 @@ public class CameraUtil {
                         break;
                     case FLAG_UPLOAD_CHOOICE_IMAGE:
                         if (data != null && data.getData() != null) {
-                            path = CameraDocument.getPath(getContext(), data.getData());
+                            cacheUri = data.getData();
+                            path = CameraDocument.getPath(getContext(), cacheUri);
+                            if (path == null) return;
                             f = new File(path);
                             if (f.exists() && f.length() > 0) {
                                 if (listener != null)
@@ -254,7 +262,7 @@ public class CameraUtil {
                         }
                         break;
                     case FLAG_UPLOAD_IMAGE_CUT:
-                        Uri imageUri = getImageUri();
+                        if (imageUri == null) return;
                         f = new File(imageUri.getPath());
                         if (f.exists() && f.length() > 0) {
                             if (listener != null)
@@ -271,6 +279,7 @@ public class CameraUtil {
                     case FLAG_UPLOAD_TAKE_VIDEO:
                         if (data != null && data.getData() != null) {
                             path = CameraDocument.getPath(getContext(), data.getData());
+                            if (path == null) return;
                             f = new File(path);
                             if (f.exists() && f.length() > 0) {
                                 if (videoListener != null)
