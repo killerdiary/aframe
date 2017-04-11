@@ -84,5 +84,16 @@
         <attr name="rightViewId" format="reference" />
         <attr name="contentViewId" format="reference" />
     </declare-styleable>
-
+    <declare-styleable name="MyEditText">
+        <attr name="mEditDrawRight" format="reference" />
+        <attr name="mEditDrawRightWidth" format="dimension" />
+        <attr name="mEditEye" format="boolean" />
+        <attr name="mEditTest" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="MyTextView">
+        <attr name="mTxtDrawLeftWidth" format="dimension" />
+        <attr name="mTxtDrawTopWidth" format="dimension" />
+        <attr name="mTxtDrawRightWidth" format="dimension" />
+        <attr name="mTxtDrawBottomWidth" format="dimension" />
+    </declare-styleable>
 </resources>

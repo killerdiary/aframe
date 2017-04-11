@@ -1,6 +1,7 @@
 package com.hy.frame.view;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.widget.Button;
 
@@ -12,7 +13,7 @@ import com.hy.frame.R;
  * @author HeYan
  * @time 2015年1月6日 下午5:11:46
  */
-public class TimerButton extends Button implements Runnable {
+public class TimerButton extends AppCompatButton implements Runnable {
 
     private final static int DEFAULT_INTERVAL = 120;// 间隔时间60秒
     private final static int UPDATE_END = 0;
