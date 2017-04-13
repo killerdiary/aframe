@@ -85,6 +85,7 @@ public class MyEditText extends AppCompatEditText implements TextWatcher, View.O
     private void changePasswordStyle() {
         isShowPassword = !isShowPassword;
         setTransformationMethod(isShowPassword ? HideReturnsTransformationMethod.getInstance() : PasswordTransformationMethod.getInstance());
+        setSelected(isShowPassword);
     }
 
     private void showDrawRight() {

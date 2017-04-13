@@ -502,6 +502,8 @@ public abstract class MyHttpClient {
                     MyLog.i("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
                     if (data.length() > 0) {
                         try {
+                            data = data.replaceAll("\\[\\]", "null");
+                            data = data.replaceAll("\"\"", "null");
                             switch (result.getRequestType()) {
                                 case REQUEST_TYPE_JSON:
                                     doSuccess(result, new JsonParser().parse(data).getAsJsonObject(), cls, list);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 import com.hy.frame.R;
@@ -14,7 +15,7 @@ import com.hy.frame.R;
  * @author HeYan
  * @time 2017/4/11 11:29
  */
-public class MyTextView extends AppCompatEditText {
+public class MyTextView extends AppCompatTextView {
     private boolean isEye, isShowPassword;
     private Drawable drawRight;
     //private int drawRightWidth;
@@ -24,7 +25,7 @@ public class MyTextView extends AppCompatEditText {
     }
 
     public MyTextView(Context context, AttributeSet attrs) {
-        this(context, attrs, android.R.attr.editTextStyle);
+        this(context, attrs, android.R.attr.textViewStyle);
     }
 
     public MyTextView(Context context, AttributeSet attrs, int defStyleAttr) {
