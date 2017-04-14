@@ -130,7 +130,7 @@ public class CameraUtil {
             }
     }
 
-    public void onDlgVideoClick(float quality, int seconds) {
+    public void onDlgVideoClick(int quality, int seconds) {
         if (initPhotoData()) {
             if (!requestCameraPermission()) return;
             try {
@@ -140,10 +140,10 @@ public class CameraUtil {
                 Uri contentUri = getContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
                 if (contentUri == null) return;
                 //MyShare.get(getContext()).putString(URI_VIDEO, contentUri.toString());
-                //intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, quality);
                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, seconds);
-                intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 5 * 1000);
+                //intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 2000 * 1000);
                 //intent.setFlags(Intent.FLAG_ACTIVITY_NE W_TASK);
                 startActivityForResult(intent, FLAG_UPLOAD_TAKE_VIDEO);
             } catch (Exception e) {
