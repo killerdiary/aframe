@@ -65,5 +65,6 @@ public class MyLog {
     private static void println(int priority, String tag, Object msg, Throwable tr) {
         if (isLoggable)
             Log.println(priority, TAG, tag + ": " + msg);
+//            Log.println(Log.ERROR, TAG, tag + ": " + msg);
     }
 }

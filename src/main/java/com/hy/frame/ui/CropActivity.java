@@ -2,6 +2,7 @@ package com.hy.frame.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +10,10 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 import com.hy.frame.common.BaseActivity;
+import com.hy.frame.util.CameraDocument;
+import com.hy.frame.util.ImageUtil;
 import com.hy.frame.util.MyLog;
+import com.hy.frame.view.NavView;
 import com.hy.frame.view.TintImageView;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
 import com.yalantis.ucrop.view.CropImageView;
@@ -35,6 +39,7 @@ public class CropActivity extends BaseActivity {
     public static final String EXTRA_QUALITY = "QUALITY";
     private GestureCropImageView imgCrop;
     private OverlayView vOverlay;
+    private NavView navTurnLeft, navTurnRight;
     private Uri outputUri;
     private int quality;
     private boolean isHor;
@@ -49,8 +54,8 @@ public class CropActivity extends BaseActivity {
         UCropView vUCrop = getView(R.id.crop_vUCrop);
         imgCrop = vUCrop.getCropImageView();
         vOverlay = vUCrop.getOverlayView();
-        setOnClickListener(R.id.crop_navTurnLeft);
-        setOnClickListener(R.id.crop_navTurnRight);
+        navTurnLeft = getViewAndClick(R.id.crop_navTurnLeft);
+        navTurnRight = getViewAndClick(R.id.crop_navTurnRight);
         setOnClickListener(R.id.crop_txtConfirm);
         setOnClickListener(R.id.crop_txtCancel);
     }
@@ -104,6 +109,9 @@ public class CropActivity extends BaseActivity {
         }
     }
 
+    private boolean isBigImage;
+    private int maxWidth = 0, maxHeight = 0;
+
     private void initImageData() {
         Bundle bundle = getBundle();
         Uri inputUri = bundle.getParcelable(EXTRA_INPUT_URI);
@@ -112,6 +120,14 @@ public class CropActivity extends BaseActivity {
             MyLog.e(getClass(), "地址未指定");
             finish();
             return;
+        }
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(CameraDocument.getPath(context, inputUri), options);
+        if (options.outHeight >= 3000 && options.outHeight >= options.outWidth * 3) {
+            isBigImage = true;
+            navTurnLeft.setVisibility(View.GONE);
+            navTurnRight.setVisibility(View.GONE);
         }
         try {
             imgCrop.setImageUri(inputUri);
@@ -129,6 +145,8 @@ public class CropActivity extends BaseActivity {
         } else {
             imgCrop.setTargetAspectRatio(CropImageView.SOURCE_IMAGE_ASPECT_RATIO);
         }
+        maxWidth = aspectX * unit;
+        maxHeight = aspectY * unit;
         imgCrop.setMaxResultImageSizeX(aspectX * unit);
         imgCrop.setMaxResultImageSizeY(aspectY * unit);
         imgCrop.setScaleEnabled(true);
@@ -176,23 +194,30 @@ public class CropActivity extends BaseActivity {
 
     @Override
     public void onRightClick() {
-        OutputStream outputStream = null;
-        try {
-            final Bitmap croppedBitmap = imgCrop.cropImage();
-            if (croppedBitmap != null) {
-                outputStream = getContentResolver().openOutputStream(outputUri);
-                croppedBitmap.compress(DEFAULT_COMPRESS_FORMAT, quality, outputStream);
-                croppedBitmap.recycle();
+        if (isBigImage) {
+            if (ImageUtil.compressByPath(CameraDocument.getPath(context, imgCrop.getImageUri()), outputUri.getPath(), quality, maxWidth, maxHeight)) {
                 setResult(RESULT_OK, new Intent().setData(outputUri));
-                finish();
-            } else {
-                MyLog.e(getClass(), "剪切失败");
-                finish();
             }
-        } catch (Exception e) {
             finish();
-        } finally {
-            BitmapLoadUtils.close(outputStream);
+        } else {
+            OutputStream outputStream = null;
+            try {
+                final Bitmap croppedBitmap = imgCrop.cropImage();
+                if (croppedBitmap != null) {
+                    outputStream = getContentResolver().openOutputStream(outputUri);
+                    croppedBitmap.compress(DEFAULT_COMPRESS_FORMAT, quality, outputStream);
+                    croppedBitmap.recycle();
+                    setResult(RESULT_OK, new Intent().setData(outputUri));
+                    finish();
+                } else {
+                    MyLog.e(getClass(), "剪切失败");
+                    finish();
+                }
+            } catch (Exception e) {
+                finish();
+            } finally {
+                BitmapLoadUtils.close(outputStream);
+            }
         }
     }
 

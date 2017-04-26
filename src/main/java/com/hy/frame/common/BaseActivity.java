@@ -375,7 +375,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         return toolbar.findViewById(R.id.head_vRight);
     }
 
-    protected View getMainView() {
+    public View getMainView() {
         return flyMain;
     }
 

@@ -3,7 +3,6 @@ package com.hy.frame.view;
 import android.content.Context;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.widget.Button;
 
 import com.hy.frame.R;
 
@@ -47,6 +46,9 @@ public class TimerButton extends AppCompatButton implements Runnable {
         this.status = UPDATE_END;
         this.setText(R.string.timer_send_re);
         this.setEnabled(true);
+        if (listener != null) {
+            listener.onTimerEnd();
+        }
     }
 
     private void update(int time) {
@@ -76,6 +78,11 @@ public class TimerButton extends AppCompatButton implements Runnable {
         run();
     }
 
+    public void start(int interval, TimerListener listener) {
+        this.listener = listener;
+        start(interval);
+    }
+
     @Override
     public void run() {
         timer--;
@@ -85,5 +92,11 @@ public class TimerButton extends AppCompatButton implements Runnable {
         }
         update(timer);
         postDelayed(this, 1000);
+    }
+
+    private TimerListener listener;
+
+    public interface TimerListener {
+        void onTimerEnd();
     }
 }

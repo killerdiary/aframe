@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.hy.frame.common.BaseActivity;
 import com.hy.frame.common.BaseFragment;
@@ -143,11 +144,12 @@ public class CameraUtil {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, quality);
                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, seconds);
-                //intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 2000 * 1000);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NE W_TASK);
+                intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 480 * 800);
                 startActivityForResult(intent, FLAG_UPLOAD_TAKE_VIDEO);
+                MyLog.e(getClass(),"onDlgVideoClick 1");
             } catch (Exception e) {
                 e.printStackTrace();
+                MyLog.e(getClass(),"onDlgVideoClick 2");
             }
         }
     }
@@ -225,6 +227,7 @@ public class CameraUtil {
 //    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        MyLog.e(getClass(),"onActivityResult 4");
         if (resultCode == Activity.RESULT_OK) {
             File f;
             String path;
@@ -277,6 +280,7 @@ public class CameraUtil {
                         }
                         break;
                     case FLAG_UPLOAD_TAKE_VIDEO:
+                        MyLog.e(getClass(),"onActivityResult 5");
                         if (data != null && data.getData() != null) {
                             path = CameraDocument.getPath(getContext(), data.getData());
                             if (path == null) return;
@@ -292,6 +296,7 @@ public class CameraUtil {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                MyLog.e(getClass(),"onActivityResult 6");
             }
         }
     }

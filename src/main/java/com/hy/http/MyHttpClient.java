@@ -530,16 +530,16 @@ public abstract class MyHttpClient {
     }
 
     //private DownloadQueue downloadQueue;
-
-    public void download(String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld) {
-        download(url.length(), url, fileFolder, fileName, isRange, isDeleteOld);
+    public void download(int requestCode, String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld) {
+        download(requestCode, url, fileFolder, fileName, isRange, isDeleteOld, 0);
     }
 
-    public void download(int requestCode, String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld) {
+    public void download(int requestCode, String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld, long qid) {
         MyLog.i("download", url);
         ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
         result.setRequestType(REQUEST_TYPE_FILE);
+        result.setQid(qid);
         RequestMethod method = RequestMethod.GET;
 
         DownFile downFile = new DownFile();
@@ -876,34 +876,9 @@ public abstract class MyHttpClient {
         result.setErrorCode(0);
         initHandler();
         if (handler != null) {
-//            handler.
             runnable.setSuccess(true);
             runnable.setResult(result);
             handler.post(runnable);
-//            handler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    MyLog.i("onRequestSuccess run" + result.getRequestCode());
-//                    if (!hasQueue(result.getRequestCode())) return;
-//                    if (result.getRequestType() == REQUEST_TYPE_FILE) {
-//                        DownFile downFile = result.getObj();
-//                        if (downFile.getState() == DownFile.STATUS_SUCCESS || downFile.getState() == DownFile.STATUS_ERROR) {
-//                            removeQueue(result.getRequestCode());
-//                            hideLoading();
-//                        }
-//                    } else {
-//                        removeQueue(result.getRequestCode());
-//                        hideLoading();
-//                    }
-//                    if (listeners != null) {
-//                        for (IMyHttpListener listener : listeners) {
-//                            MyLog.i("onRequestSuccess listener" + result.getRequestCode());
-//                            listener.onRequestSuccess(result);
-//                        }
-//                    }
-//                    handler.removeCallbacks(this);
-//                }
-//            });
         }
     }
 

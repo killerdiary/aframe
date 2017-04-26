@@ -31,32 +31,32 @@ public class ImageUtil {
         return bitmap;
     }
 
-    public synchronized boolean compressByPath(String path, int maxWidth, int maxHeight) {
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+    public static boolean compressByPath(String path, String newPath, int quality, int maxWidth, int maxHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
         //开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, newOpts);//此时返回bm为空
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);//此时返回bm为空
+        options.inJustDecodeBounds = false;
+        int w = options.outWidth;
+        int h = options.outHeight;
         //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
         int be = 1;//be=1表示不缩放
-        if (w > h && w > maxWidth) {//如果宽度大的话根据宽度固定大小缩放
-            be = newOpts.outWidth / maxWidth;
-        } else if (w < h && h > maxHeight) {//如果高度高的话根据宽度固定大小缩放
-            be = newOpts.outHeight / maxHeight;
+        if (maxWidth > 0 && w > h && w > maxWidth) {//如果宽度大的话根据宽度固定大小缩放
+            be = options.outWidth / maxWidth;
+        } else if (maxHeight > 0 && w < h && h > maxHeight) {//如果高度高的话根据宽度固定大小缩放
+            be = options.outHeight / maxHeight;
         }
         if (be <= 0)
             be = 1;
-        newOpts.inSampleSize = be;//设置缩放比例
+        options.inSampleSize = be;//设置缩放比例
         //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        bitmap = BitmapFactory.decodeFile(path, newOpts);
-        File f = new File(path);
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        File f = new File(newPath);
         try {
             if (!f.exists())
                 f.createNewFile();
             FileOutputStream fOut = new FileOutputStream(f);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, fOut);
             fOut.flush();
             fOut.close();
             return true;
@@ -66,7 +66,7 @@ public class ImageUtil {
         return false;
     }
 
-    public synchronized boolean compressByBitmap(Bitmap bitmap,String path, int maxWidth, int maxHeight) {
+    public synchronized boolean compressByBitmap(Bitmap bitmap, String path, int maxWidth, int maxHeight) {
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         //开始读入图片，此时把options.inJustDecodeBounds 设回true了
         newOpts.inJustDecodeBounds = false;

@@ -19,6 +19,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+
+import com.hy.frame.util.MyLog;
 import com.lidroid.xutils.db.sqlite.*;
 import com.lidroid.xutils.db.table.DbModel;
 import com.lidroid.xutils.db.table.Id;
@@ -776,7 +778,7 @@ public class DbUtils {
     ///////////////////////////////////// exec sql /////////////////////////////////////////////////////
     private void debugSql(String sql) {
         if (debug) {
-            LogUtils.d(sql);
+            MyLog.d(sql);
         }
     }
 

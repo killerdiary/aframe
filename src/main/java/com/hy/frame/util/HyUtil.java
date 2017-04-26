@@ -533,6 +533,20 @@ public class HyUtil {
     }
 
     /**
+     * 获取视频缓存路径
+     */
+    public static String getCachePathVideo(Context context) {
+        return getCachePath(context, "VideoFile");
+    }
+
+    /**
+     * 获取视频缓存路径
+     */
+    public static String getCachePathVideoC(Context context) {
+        return getCachePath(context, "VideoFileC");
+    }
+
+    /**
      * 获取图片缓存路径
      */
     public static String getCachePathImage(Context context) {
