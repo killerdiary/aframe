@@ -11,7 +11,7 @@ import android.util.Log;
 public class MyLog {
 
     public final static String TAG = "HyLog";
-    public static boolean isLoggable = true;
+    public static boolean isLoggable = false;
     //public static final boolean isLoggable = Log.isLoggable(TAG, Log.VERBOSE);
 
     public static void i(Object msg) {
