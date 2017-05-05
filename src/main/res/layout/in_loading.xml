@@ -17,17 +17,19 @@
         android:id="@+id/base_imgMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="60dp"
+        android:maxHeight="60dp"
         android:src="@drawable/img_empty"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/base_txtMessage"
-        style="@style/txtSmallGrayStyle"
+        android:textColor="@color/txt_gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_default"
         android:gravity="center"
         android:text="加载中 ..."
-        android:textSize="@dimen/txt_medium" />
+        android:textSize="@dimen/txt_small" />
 
 </LinearLayout>

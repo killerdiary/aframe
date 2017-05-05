@@ -20,7 +20,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
     //public static final int TYPE_MORE = 2;
     private Context context;
     private List<T> datas;
-    private IAdapterListener listener;
+    private IAdapterListener<T> listener;
     //private boolean isCanLoadMore;
     //private int loadMoreState;
 //    private int headerResId;
@@ -31,7 +31,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         this(context, datas, null);
     }
 
-    public BaseRecyclerAdapter(Context context, List<T> datas, IAdapterListener listener) {
+    public BaseRecyclerAdapter(Context context, List<T> datas, IAdapterListener<T> listener) {
         this.context = context;
         this.datas = datas;
         this.listener = listener;
@@ -41,11 +41,11 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         return context;
     }
 
-    protected IAdapterListener getListener() {
+    protected IAdapterListener<T> getListener() {
         return listener;
     }
 
-    public void setListener(IAdapterListener listener) {
+    public void setListener(IAdapterListener<T> listener) {
         this.listener = listener;
     }
 

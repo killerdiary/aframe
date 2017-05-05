@@ -20,7 +20,7 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
     private IConfirmListener listener;
 
     public BaseDialog(Context context) {
-        super(context, R.style.DialogTheme);
+        super(context, R.style.AppBaseTheme_DialogTheme);
     }
 
     public void setListener(IConfirmListener listener) {

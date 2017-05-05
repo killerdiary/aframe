@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/transparent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
 
     <RelativeLayout
         android:id="@+id/lv_rlyHead"
@@ -36,26 +36,28 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <!-- 提示 -->
 
             <TextView
                 android:id="@+id/lv_txtHeadHint"
-                style="@style/txtDefaultGrayStyle"
+                style="@style/AppBaseTheme.TxtStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/refresh_release_text" />
+                android:text="@string/refresh_release_text"
+                android:textColor="@color/txt_gray" />
 
             <!-- 最近更新 -->
 
             <TextView
                 android:id="@+id/lv_txtHeadUpdateTime"
-                style="@style/txtDefaultGrayStyle"
+                style="@style/AppBaseTheme.TxtStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_normal"
-                android:text="上次更新：05-24 15:54" />
+                android:text="上次更新：05-24 15:54"
+                android:textColor="@color/txt_gray" />
         </LinearLayout>
     </RelativeLayout>
 

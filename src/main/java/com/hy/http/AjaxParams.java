@@ -51,10 +51,11 @@ public class AjaxParams {
      * @param key
      * @param value
      */
-    public void put(String key, String value) {
+    public AjaxParams put(String key, String value) {
         if (key != null && value != null) {
             urlParams.put(key, value);
         }
+        return this;
     }
 
     /**
@@ -63,8 +64,9 @@ public class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
-    public void put(String key, int value) {
+    public AjaxParams put(String key, int value) {
         put(key, String.valueOf(value));
+        return this;
     }
 
     /**
@@ -73,8 +75,9 @@ public class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
-    public void put(String key, long value) {
+    public AjaxParams put(String key, long value) {
         put(key, String.valueOf(value));
+        return this;
     }
 
     /**
@@ -83,8 +86,9 @@ public class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
-    public void put(String key, double value) {
+    public AjaxParams put(String key, double value) {
         put(key, String.valueOf(value));
+        return this;
     }
 
     /**
@@ -93,8 +97,9 @@ public class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
-    public void put(String key, float value) {
+    public AjaxParams put(String key, float value) {
         put(key, String.valueOf(value));
+        return this;
     }
 
     /**
@@ -103,8 +108,9 @@ public class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
-    public void put(String key, boolean value) {
+    public AjaxParams put(String key, boolean value) {
         put(key, String.valueOf(value));
+        return this;
     }
 
     /**
@@ -112,11 +118,11 @@ public class AjaxParams {
      * @param file
      */
     @Deprecated
-    public void put(String key, FileBinary file) {
+    public void AjaxParams(String key, FileBinary file) {
         fileParams.put(key, file);
     }
 
-    public void put(PostData postData) {
+    public void AjaxParams(PostData postData) {
         this.postData = postData;
     }
 
@@ -128,8 +134,9 @@ public class AjaxParams {
         return qid;
     }
 
-    public void setQid(long qid) {
+    public AjaxParams setQid(long qid) {
         this.qid = qid;
+        return this;
     }
 
     public ConcurrentHashMap<String, Binary> getFileParams() {

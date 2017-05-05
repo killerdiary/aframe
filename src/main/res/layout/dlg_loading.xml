@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/loading_txtLoadMsg"
-        style="@style/txtDefaultStyle"
+        style="@style/AppBaseTheme.TxtStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_normal"

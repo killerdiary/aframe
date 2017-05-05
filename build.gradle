@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
@@ -31,10 +31,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     //compile 'com.android.support:support-vector-drawable:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     //compile files('libs/gson-2.6.2.jar')
     //compile files('libs/volley_android23.jar')
     //compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'

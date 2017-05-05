@@ -12,7 +12,7 @@
         <item name="android:textStyle">normal</item>
 
         <item name="colorControlHighlight">@color/btn_highlight</item>
-        <item name="toolbarStyle">@style/CurToolbar</item>
+        <item name="toolbarStyle">@style/AppBaseTheme.CurToolbar</item>
         <item name="appHeaderHeight">@dimen/header_height</item>
         <item name="appBackground">@color/theme_bg</item>
         <item name="appThemeColor">@color/theme</item>
@@ -29,78 +29,39 @@
         <item name="background">?attr/appBackground</item>
     </style>
 
-    <style name="CurToolbar" parent="Widget.AppCompat.Toolbar">
+    <style name="AppBaseTheme.CurToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="contentInsetStart">0dp</item>
         <!-- 设置该属性解决空白部分-->
     </style>
 
-    <style name="txtDefaultStyle">
+    <style name="AppBaseTheme.TxtStyle" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/txt_black</item>
         <item name="android:textSize">@dimen/txt_default</item>
-
     </style>
 
-    <style name="txtBlueStyle">
-        <item name="android:textColor">@color/txt_blue</item>
-        <item name="android:textSize">@dimen/txt_default</item>
+    <style name="AppBaseTheme.EditStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@null</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingTop">10dip</item>
+        <item name="android:paddingBottom">10dip</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:textColorHint">@color/txt_gray_light</item>
     </style>
 
-    <style name="txtMediumStyle">
-        <item name="android:textColor">@color/txt_black</item>
-        <item name="android:textSize">@dimen/txt_medium</item>
-    </style>
-
-    <style name="txtBigStyle">
-        <item name="android:textColor">@color/txt_black</item>
-        <item name="android:textSize">@dimen/txt_big</item>
-    </style>
-
-    <style name="txtSmallStyle">
-        <item name="android:textColor">@color/txt_black</item>
-        <item name="android:textSize">@dimen/txt_small</item>
-    </style>
-
-    <style name="txtSmallWhiteStyle">
+    <style name="AppBaseTheme.BtnStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@null</item>
+        <item name="android:minWidth">0dip</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingTop">10dip</item>
+        <item name="android:paddingBottom">10dip</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/txt_small</item>
     </style>
 
-    <style name="txtSmallGrayStyle">
-        <item name="android:textColor">@color/txt_gray</item>
-        <item name="android:textSize">@dimen/txt_small</item>
-    </style>
-
-    <style name="txtDefaultGrayStyle">
-        <item name="android:textColor">@color/txt_gray</item>
-        <item name="android:textSize">@dimen/txt_default</item>
-    </style>
-
-    <style name="txtWhiteStyle">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/txt_default</item>
-    </style>
-
-    <style name="txtWhiteBigStyle">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/txt_big</item>
-    </style>
-
-    <style name="txtBlackBigStyle">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/txt_big</item>
-    </style>
-
-    <style name="txtWhiteMediumStyle">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/txt_medium</item>
-    </style>
-
-    <style name="txtWhiteSmallStyle">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/txt_small</item>
-    </style>
-
-    <style name="DialogTheme" parent="android:Theme.Dialog">
+    <style name="AppBaseTheme.DialogTheme" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="android:windowFrame">@null</item>
 
         <!-- 边框 -->

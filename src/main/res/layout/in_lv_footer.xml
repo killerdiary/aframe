@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/lv_rlyFoot"
         android:layout_width="match_parent"
         android:layout_height="@dimen/lv_heigth"
-        android:padding="10dip" >
+        android:padding="10dip">
 
         <!-- 箭头 -->
 
@@ -36,26 +36,28 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <!-- 提示 -->
 
             <TextView
                 android:id="@+id/lv_txtFootHint"
-                style="@style/txtDefaultGrayStyle"
+                style="@style/AppBaseTheme.TxtStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="松开查看更多" />
+                android:text="松开查看更多"
+                android:textColor="@color/txt_gray" />
 
             <!-- 最近更新 -->
 
             <TextView
                 android:id="@+id/lv_txtFootUpdateTime"
-                style="@style/txtDefaultGrayStyle"
+                style="@style/AppBaseTheme.TxtStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_normal"
-                android:text="上次更新：05-24 15:54" />
+                android:text="上次更新：05-24 15:54"
+                android:textColor="@color/txt_gray" />
         </LinearLayout>
     </RelativeLayout>
 
