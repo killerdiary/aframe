@@ -14,8 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.hy.frame.R;
+
 import com.github.jdsjlzx.progressindicator.indicators.BallPulseIndicator;
+import com.hy.frame.R;
 
 import static com.github.jdsjlzx.recyclerview.ProgressStyle.BallBeat;
 import static com.github.jdsjlzx.recyclerview.ProgressStyle.BallClipRotate;

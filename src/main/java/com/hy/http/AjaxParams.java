@@ -10,28 +10,23 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * AjaxParams for key/value (include Multipart file)
  *
- * @author panxw
+ * @author HeYan
+ * @time 2017/5/8 15:20
  */
 public class AjaxParams {
-    private static final String ENCODING = "UTF-8";
+    //private static final String ENCODING = "UTF-8";
     private long qid;
-    private ConcurrentHashMap<String, String> urlParams;
-    private ConcurrentHashMap<String, Binary> fileParams;
+    private Map<String, String> urlParams;
+    private Map<String, Binary> fileParams;
     private PostData postData;
 
     public AjaxParams() {
-        init();
     }
 
     public AjaxParams(String key, String value) {
-        init();
         put(key, value);
     }
 
-    private void init() {
-        urlParams = new ConcurrentHashMap<>();
-        fileParams = new ConcurrentHashMap<>();
-    }
 
     /**
      * Add {@link Object} param.
@@ -39,6 +34,7 @@ public class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
+    @Deprecated
     public void put(String key, Object value) {
         if (key != null && value != null) {
             put(key, String.valueOf(value));
@@ -48,11 +44,12 @@ public class AjaxParams {
     /**
      * Add {@link String} param.
      *
-     * @param key
-     * @param value
+     * @param key   param name.
+     * @param value param value.
      */
     public AjaxParams put(String key, String value) {
         if (key != null && value != null) {
+            if (urlParams == null) urlParams = new ConcurrentHashMap<>();
             urlParams.put(key, value);
         }
         return this;
@@ -114,24 +111,16 @@ public class AjaxParams {
     }
 
     /**
-     * @param key
-     * @param file
+     * Add {@link FileBinary} param.
+     *
+     * @param key  param name.
+     * @param file param value.
      */
-    @Deprecated
-    public void AjaxParams(String key, FileBinary file) {
+    public AjaxParams put(String key, FileBinary file) {
+        if (fileParams == null)
+            fileParams = new ConcurrentHashMap<>();
         fileParams.put(key, file);
-    }
-
-    public void AjaxParams(PostData postData) {
-        this.postData = postData;
-    }
-
-    public ConcurrentHashMap<String, String> getUrlParams() {
-        return urlParams;
-    }
-
-    public long getQid() {
-        return qid;
+        return this;
     }
 
     public AjaxParams setQid(long qid) {
@@ -139,16 +128,26 @@ public class AjaxParams {
         return this;
     }
 
-    public ConcurrentHashMap<String, Binary> getFileParams() {
-        return fileParams;
+    public long getQid() {
+        return qid;
+    }
+
+    public AjaxParams setPostData(PostData postData) {
+        this.postData = postData;
+        return this;
     }
 
     public PostData getPostData() {
         return postData;
     }
 
-    public void setFileParams(ConcurrentHashMap<String, Binary> fileParams) {
-        this.fileParams = fileParams;
+    public Map<String, String> getUrlParams() {
+        return urlParams;
+    }
+
+
+    public Map<String, Binary> getFileParams() {
+        return fileParams;
     }
 
     public String getUrlParamsString() {

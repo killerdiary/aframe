@@ -18,15 +18,14 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.github.jdsjlzx.recyclerview.LRecyclerView;
-import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
+import com.github.jdsjlzx.recyclerview.LuRecyclerViewAdapter;
 
-public class GridItemDecoration extends RecyclerView.ItemDecoration {
+public class LuGridItemDecoration extends RecyclerView.ItemDecoration {
     private int verticalSpace;
     private int horizontalSpace;
     private Paint mPaint;
 
-    public GridItemDecoration(int horizontalSpace, int verticalSpace, int colour) {
+    public LuGridItemDecoration(int horizontalSpace, int verticalSpace, int colour) {
         this.horizontalSpace = horizontalSpace;
         this.verticalSpace = verticalSpace;
         mPaint = new Paint();
@@ -53,10 +52,9 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
 
     public void drawHorizontal(Canvas c, RecyclerView parent) {
         int childCount = parent.getChildCount();
-        LRecyclerView recyclerView = (LRecyclerView) parent;
-        LRecyclerViewAdapter adapter = (LRecyclerViewAdapter) parent.getAdapter();
+        LuRecyclerViewAdapter adapter = (LuRecyclerViewAdapter) parent.getAdapter();
         for (int i = 0; i < childCount; i++) {
-            if ((recyclerView.isOnTop() && (adapter.isHeader(i) || adapter.isRefreshHeader(i))) || adapter.isFooter(i)) {
+            if ((adapter.isHeader(i)  || adapter.isFooter(i))) {
                 c.drawRect(0, 0, 0, 0, mPaint);
             } else {
                 final View child = parent.getChildAt(i);
@@ -71,10 +69,9 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
 
     public void drawVertical(Canvas c, RecyclerView parent) {
         final int childCount = parent.getChildCount();
-        LRecyclerView recyclerView = (LRecyclerView) parent;
-        LRecyclerViewAdapter adapter = (LRecyclerViewAdapter) parent.getAdapter();
+        LuRecyclerViewAdapter adapter = (LuRecyclerViewAdapter) parent.getAdapter();
         for (int i = 0; i < childCount; i++) {
-            if ((recyclerView.isOnTop() && (adapter.isHeader(i) || adapter.isRefreshHeader(i))) || adapter.isFooter(i)) {
+            if (adapter.isHeader(i) || adapter.isFooter(i)) {
                 c.drawRect(0, 0, 0, 0, mPaint);
             } else {
                 final View child = parent.getChildAt(i);
@@ -97,7 +94,7 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
      */
     private boolean isLastRaw(RecyclerView parent, int pos, int spanCount, int childCount) {
         LayoutManager layoutManager = parent.getLayoutManager();
-        LRecyclerViewAdapter adapter = (LRecyclerViewAdapter) parent.getAdapter();
+        LuRecyclerViewAdapter adapter = (LuRecyclerViewAdapter) parent.getAdapter();
         if (layoutManager instanceof GridLayoutManager) {
             int leftCount = childCount - childCount % spanCount;//3
             //leftCount:若childCount能被span整除为childCount否则为去掉最后一行的item总数
@@ -110,7 +107,7 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
 
     private boolean isLastColumn(RecyclerView parent, int pos, int spanCount) {
         LayoutManager layoutManager = parent.getLayoutManager();
-        LRecyclerViewAdapter adapter = (LRecyclerViewAdapter) parent.getAdapter();
+        LuRecyclerViewAdapter adapter = (LuRecyclerViewAdapter) parent.getAdapter();
         if (layoutManager instanceof GridLayoutManager) {
             if ((pos - adapter.getHeaderViews().size()) % spanCount == 0)
                 // 如果是最后一列，则不需要绘制右边
@@ -126,8 +123,8 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
         int itemPosition = parent.getChildAdapterPosition(view);
         int spanCount = getSpanCount(parent);
         int childCount = parent.getAdapter().getItemCount();
-        LRecyclerViewAdapter adapter = (LRecyclerViewAdapter) parent.getAdapter();
-        if (adapter.isFooter(itemPosition) || adapter.isHeader(itemPosition) || adapter.isRefreshHeader(itemPosition)) {
+        LuRecyclerViewAdapter adapter = (LuRecyclerViewAdapter) parent.getAdapter();
+        if (adapter.isFooter(itemPosition) || adapter.isHeader(itemPosition)) {
             //header，footer不进行绘制
             outRect.set(0, 0, 0, 0);
         } else {
@@ -236,8 +233,8 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
          *
          * @return a properly initialized DividerDecoration instance
          */
-        public GridItemDecoration build() {
-            return new GridItemDecoration(mHorizontal, mVertical, mColour);
+        public LuGridItemDecoration build() {
+            return new LuGridItemDecoration(mHorizontal, mVertical, mColour);
         }
     }
 

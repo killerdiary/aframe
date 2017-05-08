@@ -35,7 +35,7 @@ public class HyUtil {
     public static boolean isMobile(String str) {
         if (str == null)
             return false;
-        return Pattern.compile("^[1][3,4,5,6,7,8][0-9]{9}$").matcher(str).matches(); // 验证手机号
+        return Pattern.compile("^[1][3-8][0-9]{9}$").matcher(str).matches(); // 验证手机号
     }
 
     /**
@@ -209,6 +209,19 @@ public class HyUtil {
      */
     public static String formatToMoney(Object obj) {
         return new DecimalFormat("0.00").format(obj);
+    }
+
+    /**
+     * 是否包含特殊符号
+     *
+     * @param str
+     * @return
+     */
+    public boolean isContainSpecialSymbols(String str) {
+        String specialStr = "[^\\:\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~]*";
+        Pattern pattern = Pattern.compile(specialStr);
+        Matcher matcher = pattern.matcher(str);
+        return !matcher.matches();
     }
 
     /**
@@ -551,6 +564,18 @@ public class HyUtil {
      */
     public static String getCachePathImage(Context context) {
         return getCachePath(context, "Image");
+    }
+
+    /**
+     * 是否是图片
+     *
+     * @param path
+     * @return
+     */
+    public boolean isImage(String path) {
+        // 都可以用
+        return path.matches("(?i).+?\\.(png|jpg|gif|bmp)");
+        // return path.matches("\\w+\\.(jpg|gif|bmp|png)");
     }
 
     /**

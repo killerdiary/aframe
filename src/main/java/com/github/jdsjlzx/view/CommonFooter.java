@@ -6,12 +6,13 @@ import android.widget.RelativeLayout;
 
 import com.hy.frame.R;
 
+
 /**
  * RecyclerView的FooterView，简单的展示一个TextView
  */
 public class CommonFooter extends RelativeLayout {
 
-    public CommonFooter(Context context,int resId) {
+    public CommonFooter(Context context, int resId) {
         super(context);
         init(context, resId);
     }
@@ -31,7 +32,7 @@ public class CommonFooter extends RelativeLayout {
         inflate(context, R.layout.layout_recyclerview_footer, this);
     }
 
-    public void init(Context context,int resId) {
+    public void init(Context context, int resId) {
 
         inflate(context, resId, this);
     }

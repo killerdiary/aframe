@@ -17,10 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.hy.frame.R;
+
 import com.github.jdsjlzx.interfaces.IRefreshHeader;
 import com.github.jdsjlzx.progressindicator.AVLoadingIndicatorView;
 import com.github.jdsjlzx.recyclerview.ProgressStyle;
+import com.hy.frame.R;
 
 import java.util.Date;
 
@@ -207,29 +208,12 @@ public class ArrowRefreshHeader extends LinearLayout implements IRefreshHeader {
 
     @Override
     public void onReset() {
-        mArrowImageView.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.INVISIBLE);
-
-        if (mState == STATE_RELEASE_TO_REFRESH) {
-            mArrowImageView.startAnimation(mRotateDownAnim);
-        }
-        if (mState == STATE_REFRESHING) {
-            mArrowImageView.clearAnimation();
-        }
-        //mStatusTextView.setText(strInfo1);
-        mState = STATE_NORMAL;
+        setState(STATE_NORMAL);
     }
 
     @Override
     public void onPrepare() {
-        mArrowImageView.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.INVISIBLE);
-
-        if (mState != STATE_RELEASE_TO_REFRESH) {
-            mArrowImageView.clearAnimation();
-            mArrowImageView.startAnimation(mRotateUpAnim);
-        }
-        mState = STATE_RELEASE_TO_REFRESH;
+        setState(STATE_RELEASE_TO_REFRESH);
     }
 
     @Override

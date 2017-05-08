@@ -11,10 +11,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hy.frame.R;
+
 import com.github.jdsjlzx.interfaces.ILoadMoreFooter;
 import com.github.jdsjlzx.progressindicator.AVLoadingIndicatorView;
 import com.github.jdsjlzx.recyclerview.ProgressStyle;
+import com.hy.frame.R;
 
 public class LoadingFooter extends RelativeLayout implements ILoadMoreFooter{
 
