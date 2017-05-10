@@ -8,7 +8,13 @@ import android.widget.ImageView;
 
 import com.hy.frame.R;
 
-public class TintImageView extends ImageView {
+/**
+ * 可以着色的ImageView
+ *
+ * @author HeYan
+ * @time 2017/5/9 9:52
+ */
+public class TintImageView extends android.support.v7.widget.AppCompatImageView {
     private ColorStateList tint;
 
     public TintImageView(Context context) {
@@ -20,14 +26,14 @@ public class TintImageView extends ImageView {
         this(context, attrs, 0);
     }
 
-    public TintImageView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(context, attrs, defStyle);
+    public TintImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs, defStyleAttr);
     }
 
     //here, obtainStyledAttributes was asking for an array
-    private void init(Context context, AttributeSet attrs, int defStyle) {
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TintImageView, 0, 0);
+    private void init(Context context, AttributeSet attrs, int defStyleAttr) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TintImageView, defStyleAttr, 0);
         tint = a.getColorStateList(R.styleable.TintImageView_tint);
         a.recycle();
     }

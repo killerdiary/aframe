@@ -386,21 +386,21 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     /**
      * @see #startAct(Class, Bundle)
      */
-    protected void startAct(Class<?> cls) {
+    public void startAct(Class<?> cls) {
         startAct(cls, null);
     }
 
     /**
      * @see #startAct(Intent, Class, Bundle)
      */
-    protected void startAct(Class<?> cls, Bundle bundle) {
+    public void startAct(Class<?> cls, Bundle bundle) {
         startAct(null, cls, bundle);
     }
 
     /**
      * 启动Activity
      */
-    protected void startAct(Intent intent, Class<?> cls, Bundle bundle) {
+    public void startAct(Intent intent, Class<?> cls, Bundle bundle) {
         if (intent == null)
             intent = new Intent();
         if (bundle != null)
@@ -427,11 +427,11 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         startAct(intent, cls, null);
     }
 
-    protected void startActForResult(Class<?> cls, int requestCode) {
+    public void startActForResult(Class<?> cls, int requestCode) {
         startActForResult(cls, null, requestCode);
     }
 
-    protected void startActForResult(Class<?> cls, Bundle bundle, int requestCode) {
+    public void startActForResult(Class<?> cls, Bundle bundle, int requestCode) {
         Intent intent = new Intent(this, cls);
         intent.putExtra(LAST_ACT, this.getClass().getSimpleName());
         if (bundle != null)

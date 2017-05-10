@@ -1,9 +1,10 @@
 package android.webkit.safe;
 
 import android.text.TextUtils;
+import android.webkit.WebView;
 
 import com.hy.frame.util.MyLog;
-import com.tencent.smtt.sdk.WebView;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;

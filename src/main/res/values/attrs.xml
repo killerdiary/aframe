@@ -19,6 +19,7 @@
         <attr name="navChecked" format="boolean" />
         <attr name="navDrawRight" format="reference" />
         <attr name="navDrawRightWidth" format="dimension" />
+        <attr name="navDrawRightHeight" format="dimension" />
         <attr name="navText" format="string" />
         <attr name="navTextColor" format="reference|color" />
         <attr name="navTextSize" format="dimension" />
@@ -95,5 +96,16 @@
         <attr name="mTxtDrawTopWidth" format="dimension" />
         <attr name="mTxtDrawRightWidth" format="dimension" />
         <attr name="mTxtDrawBottomWidth" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="SwipeMenuView">
+        <attr name="swipeEnable" format="boolean"/>
+        <attr name="swipeIos" format="boolean"/>
+        <attr name="swipeLeftSwipe" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="BadgeTextView">
+        <attr name="badgeNubmer" format="integer"/>
+        <attr name="badgeMaxNubmer" format="integer"/>
+        <attr name="badgeBackground" format="reference"/>
+        <attr name="badgeRadius" format="dimension"/>
     </declare-styleable>
 </resources>

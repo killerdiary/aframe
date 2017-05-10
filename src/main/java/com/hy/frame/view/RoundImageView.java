@@ -13,7 +13,13 @@ import android.widget.ImageView;
 
 import com.hy.frame.R;
 
-public class RoundImageView extends ImageView {
+/**
+ * 圆角ImageView 默认15度
+ *
+ * @author HeYan
+ * @time 2017/5/9 9:52
+ */
+public class RoundImageView extends android.support.v7.widget.AppCompatImageView {
 
     /**
      * 圆角的大小

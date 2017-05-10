@@ -809,6 +809,22 @@ public abstract class MyHttpClient {
      * not main thread
      */
     @Deprecated
+    protected void onRequestSuccess(ResultInfo result) {
+        //MyLog.i("onRequestSuccess" + result.getRequestCode());
+        if (isDestroy) return;
+        result.setErrorCode(0);
+        initHandler();
+        if (handler != null) {
+            runnable.setSuccess(true);
+            runnable.setResult(result);
+            handler.post(runnable);
+        }
+    }
+
+    /**
+     * not main thread
+     */
+    @Deprecated
     protected void onRequestError(final ResultInfo result) {
         if (isDestroy) return;
         initHandler();
@@ -816,18 +832,6 @@ public abstract class MyHttpClient {
             runnable.setSuccess(false);
             runnable.setResult(result);
             handler.post(runnable);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    removeQueue(result.getRequestCode());
-                    hideLoading();
-                    if (listeners != null) {
-                        for (IMyHttpListener listener : listeners) {
-                            listener.onRequestError(result);
-                        }
-                    }
-                }
-            });
         }
     }
 
@@ -866,21 +870,6 @@ public abstract class MyHttpClient {
         }
     }
 
-    /**
-     * not main thread
-     */
-    @Deprecated
-    protected void onRequestSuccess(ResultInfo result) {
-        //MyLog.i("onRequestSuccess" + result.getRequestCode());
-        if (isDestroy) return;
-        result.setErrorCode(0);
-        initHandler();
-        if (handler != null) {
-            runnable.setSuccess(true);
-            runnable.setResult(result);
-            handler.post(runnable);
-        }
-    }
 
     /**
      * 显示加载对话框

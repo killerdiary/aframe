@@ -24,6 +24,7 @@ public class MyToast {
             if (toast != null)
                 toast.cancel();
             toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT);
+            //toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT);
             toast.show();
         } catch (Exception e) {
             if (MyLog.isLoggable)

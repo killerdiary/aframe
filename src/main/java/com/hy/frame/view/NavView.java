@@ -57,6 +57,7 @@ public class NavView extends FrameLayout implements Checkable {
         int drawHeight = a.getDimensionPixelSize(R.styleable.NavView_navDrawHeight, 0);
         int drawPadding = a.getDimensionPixelSize(R.styleable.NavView_navDrawPadding, 0);
         int drawRightWidth = a.getDimensionPixelSize(R.styleable.NavView_navDrawRightWidth, 0);
+        int drawRightHeight = a.getDimensionPixelSize(R.styleable.NavView_navDrawRightHeight, 0);
         a.recycle();
         llyContainer = new LinearLayout(context);
         llyContainer.setOrientation(horizontal ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
@@ -102,9 +103,11 @@ public class NavView extends FrameLayout implements Checkable {
             imgRight = new ImageView(getContext());
             LayoutParams rllp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             if (drawRightWidth > 0) {
+                if (drawRightHeight == 0)
+                    drawRightHeight = drawRightWidth;
                 imgRight.setScaleType(ImageView.ScaleType.FIT_XY);
                 rllp.width = drawRightWidth;
-                rllp.height = drawRightWidth;
+                rllp.height = drawRightHeight;
             }
             imgRight.setImageDrawable(drawRight);
             rllp.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
