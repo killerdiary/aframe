@@ -41,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     private FrameLayout flyMain;
     private LoadCache loadCache;
     private MyHttpClient client;
+    private boolean init;
 
     protected boolean isTranslucentStatus() {
         return false;
@@ -51,7 +52,16 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         super.onCreate(savedInstanceState);
         init();
         initView();
-        initData();
+        //initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!init) {
+            init = true;
+            initData();
+        }
     }
 
     /**
