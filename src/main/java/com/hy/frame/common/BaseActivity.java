@@ -56,8 +56,8 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if (!init) {
             init = true;
             initData();
