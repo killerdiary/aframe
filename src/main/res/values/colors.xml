@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--color-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="theme">@color/colorPrimary</color>
+    <color name="theme_bg">#F5F5F5</color>
+    <color name="theme_title">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#FE7F00</color>
+    <color name="black">#000000</color>
+    <color name="dimgray">#696969</color>
+    <color name="purple">#BD30AE</color>
+    <color name="red">#FF2222</color>
+    <color name="blue">#01ABE8</color>
+    <color name="green">#679C26</color>
+    <color name="transparent">#00000000</color>
+    <color name="translucence">#40000000</color>
+    <color name="txt_black">#454545</color>
+    <color name="txt_blue">#52CACB</color>
+    <color name="txt_gray">#787878</color>
+    <color name="txt_gray_light">#B3B3B3</color>
+    <color name="btn_disable">#B3B3B3</color>
+    <color name="btn_highlight">#10000000</color>
+    <color name="divider_gray">#d6d6d6</color>
+    <color name="divider_gray_light">#11000000</color>
+    <color name="red_tran">#99FF2222</color>
+    <!--color END-->
+</resources>

@@ -1,5 +1,5 @@
 <resources>
-    <!-- START 常用 -->
+    <!--dimen END-->
     <dimen name="header_height">45dip</dimen>
     <dimen name="header_func_width">60dip</dimen>
     <dimen name="margin_normal">10dip</dimen>
@@ -15,11 +15,10 @@
     <dimen name="txt_default">14sp</dimen>
     <dimen name="txt_medium">16sp</dimen>
     <dimen name="txt_big">18sp</dimen>
-    <!-- END 常用 -->
     <dimen name="lv_heigth">80dip</dimen>
-
     <dimen name="gallery_point_height">25dip</dimen>
     <dimen name="btn_radius">5dip</dimen>
+    <!--dimen END-->
 
     <dimen name="dp_066">0.66dp</dimen>
     <dimen name="dp_4">4dp</dimen>

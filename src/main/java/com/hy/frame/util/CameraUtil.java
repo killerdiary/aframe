@@ -29,10 +29,10 @@ import java.io.FileOutputStream;
  * time 2015/12/29 16:57
  */
 public class CameraUtil {
-    public static final int REQUEST_PERMISSION_CAMERA = 2001;
-    public static final int REQUEST_PERMISSION_STORAGE = 2002;
-    public static final int REQUEST_PERMISSION_LOCATION = 2003;
-    public static final int REQUEST_PERMISSION_AUDIO = 2004;
+    public static final int REQUEST_PERMISSION_CAMERA = 201;
+    public static final int REQUEST_PERMISSION_STORAGE = 202;
+    public static final int REQUEST_PERMISSION_LOCATION = 203;
+    public static final int REQUEST_PERMISSION_AUDIO = 204;
     /**
      * 拍照
      */
