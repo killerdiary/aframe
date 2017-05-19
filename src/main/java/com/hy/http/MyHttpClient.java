@@ -404,8 +404,9 @@ public abstract class MyHttpClient {
     public <T> void request(RequestMethod method, String url, RequestBody body, ResultInfo result, final Class<T> cls, final boolean list) {
         if (isDestroy) return;
         if (hasQueue(result.getRequestCode())) {
-            result.setMsg(getString(R.string.API_FLAG_REPEAT));
-            onRequestError(result);
+            MyLog.e("request", "what=" + result.getRequestCode() + ",msg=" + getString(R.string.API_FLAG_REPEAT));
+            //result.setMsg(getString(R.string.API_FLAG_REPEAT));
+            //onRequestError(result);
             return;
         }
         addQueue(result.getRequestCode());
@@ -502,8 +503,8 @@ public abstract class MyHttpClient {
                     MyLog.i("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
                     if (data.length() > 0) {
                         try {
-                            data = data.replaceAll("\\[\\]", "null");
-                            data = data.replaceAll("\"\"", "null");
+                            data = data.replaceAll(":\\[\\]", ":null");
+                            data = data.replaceAll(":\"\"", ":null");
                             switch (result.getRequestType()) {
                                 case REQUEST_TYPE_JSON:
                                     doSuccess(result, new JsonParser().parse(data).getAsJsonObject(), cls, list);

@@ -332,19 +332,26 @@ public class MCameraView extends RelativeLayout implements SurfaceHolder.Callbac
             camera.setPreviewDisplay(holder);
             camera.setDisplayOrientation(90);
             camera.startPreview();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            if (cameraViewListener != null)
+                cameraViewListener.onCameraError();
         }
 
     }
 
     private void releaseCamera() {
         MyLog.e(getClass(), "releaseCamera");
-        if (mCamera != null) {
-            mCamera.setPreviewCallback(null);
-            mCamera.stopPreview();
-            mCamera.release();
-            mCamera = null;
+        if (mCamera != null && mHolder != null) {
+            try {
+                mHolder.removeCallback(this);
+                mCamera.setPreviewCallback(null);
+                mCamera.stopPreview();
+                mCamera.release();
+                mCamera = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -468,6 +475,7 @@ public class MCameraView extends RelativeLayout implements SurfaceHolder.Callbac
     }
 
     public void onPause() {
+        if (!isResume) return;
         isResume = false;
         MyLog.e(getClass(), "onPause");
         releaseCamera();

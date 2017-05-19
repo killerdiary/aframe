@@ -93,9 +93,13 @@
     </declare-styleable>
     <declare-styleable name="MyTextView">
         <attr name="mTxtDrawLeftWidth" format="dimension" />
+        <attr name="mTxtDrawLeftHeight" format="dimension" />
         <attr name="mTxtDrawTopWidth" format="dimension" />
+        <attr name="mTxtDrawTopHeight" format="dimension" />
         <attr name="mTxtDrawRightWidth" format="dimension" />
+        <attr name="mTxtDrawRightHeight" format="dimension" />
         <attr name="mTxtDrawBottomWidth" format="dimension" />
+        <attr name="mTxtDrawBottomHeight" format="dimension" />
     </declare-styleable>
     <declare-styleable name="SwipeMenuView">
         <attr name="swipeEnable" format="boolean"/>

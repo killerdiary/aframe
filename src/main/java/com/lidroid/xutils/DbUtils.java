@@ -21,7 +21,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.hy.frame.util.MyLog;
-import com.lidroid.xutils.db.sqlite.*;
+import com.lidroid.xutils.db.sqlite.CursorUtils;
+import com.lidroid.xutils.db.sqlite.DbModelSelector;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.SqlInfo;
+import com.lidroid.xutils.db.sqlite.SqlInfoBuilder;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.db.table.DbModel;
 import com.lidroid.xutils.db.table.Id;
 import com.lidroid.xutils.db.table.Table;
@@ -45,7 +50,7 @@ public class DbUtils {
     /**
      * key: dbName
      */
-    private static HashMap<String, DbUtils> daoMap = new HashMap<String, DbUtils>();
+    private static HashMap<String, DbUtils> daoMap = new HashMap<>();
 
     private SQLiteDatabase database;
     private DaoConfig daoConfig;
@@ -210,7 +215,7 @@ public class DbUtils {
         }
     }
 
-    public void save(Object entity) throws DbException {
+    public long save(Object entity) throws DbException {
         try {
             beginTransaction();
 
@@ -221,6 +226,7 @@ public class DbUtils {
         } finally {
             endTransaction();
         }
+        return -1;
     }
 
     public void saveAll(List<?> entities) throws DbException {
@@ -312,7 +318,8 @@ public class DbUtils {
     }
 
     public void deleteAll(List<?> entities) throws DbException {
-        if (entities == null || entities.size() == 0 || !tableIsExist(entities.get(0).getClass())) return;
+        if (entities == null || entities.size() == 0 || !tableIsExist(entities.get(0).getClass()))
+            return;
         try {
             beginTransaction();
 
@@ -357,7 +364,8 @@ public class DbUtils {
     }
 
     public void updateAll(List<?> entities, String... updateColumnNames) throws DbException {
-        if (entities == null || entities.size() == 0 || !tableIsExist(entities.get(0).getClass())) return;
+        if (entities == null || entities.size() == 0 || !tableIsExist(entities.get(0).getClass()))
+            return;
         try {
             beginTransaction();
 
@@ -372,7 +380,8 @@ public class DbUtils {
     }
 
     public void updateAll(List<?> entities, WhereBuilder whereBuilder, String... updateColumnNames) throws DbException {
-        if (entities == null || entities.size() == 0 || !tableIsExist(entities.get(0).getClass())) return;
+        if (entities == null || entities.size() == 0 || !tableIsExist(entities.get(0).getClass()))
+            return;
         try {
             beginTransaction();
 

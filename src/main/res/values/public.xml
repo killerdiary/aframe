@@ -39,5 +39,25 @@
     <public name="divider_gray" type="color"/>
     <public name="divider_gray_light" type="color"/>
     <!--color END-->
-
+    <!--string-->
+    <public name="app_name" type="string"/>
+    <public name="load_more" type="string"/>
+    <public name="loading" type="string"/>
+    <public name="load_complete" type="string"/>
+    <public name="hint_net_fail" type="string"/>
+    <public name="hint_nodata" type="string"/>
+    <public name="back" type="string"/>
+    <public name="confirm" type="string"/>
+    <public name="complete" type="string"/>
+    <public name="cancel" type="string"/>
+    <public name="timer_send_re" type="string"/>
+    <public name="timer_sending" type="string"/>
+    <public name="empty" type="string"/>
+    <public name="number_zero" type="string"/>
+    <public name="number_max" type="string"/>
+    <public name="number_money" type="string"/>
+    <public name="edit_input_hint" type="string"/>
+    <public name="edit_empty_hint" type="string"/>
+    <public name="edit_format_error" type="string"/>
+    <!--string END-->
 </resources>

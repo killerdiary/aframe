@@ -10,11 +10,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.hy.frame.common.BaseActivity;
 import com.hy.frame.common.BaseFragment;
@@ -146,10 +146,10 @@ public class CameraUtil {
                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, seconds);
                 intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 480 * 800);
                 startActivityForResult(intent, FLAG_UPLOAD_TAKE_VIDEO);
-                MyLog.e(getClass(),"onDlgVideoClick 1");
+                MyLog.e(getClass(), "onDlgVideoClick 1");
             } catch (Exception e) {
                 e.printStackTrace();
-                MyLog.e(getClass(),"onDlgVideoClick 2");
+                MyLog.e(getClass(), "onDlgVideoClick 2");
             }
         }
     }
@@ -227,7 +227,7 @@ public class CameraUtil {
 //    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        MyLog.e(getClass(),"onActivityResult 4");
+        MyLog.e(getClass(), "onActivityResult 4");
         if (resultCode == Activity.RESULT_OK) {
             File f;
             String path;
@@ -280,7 +280,7 @@ public class CameraUtil {
                         }
                         break;
                     case FLAG_UPLOAD_TAKE_VIDEO:
-                        MyLog.e(getClass(),"onActivityResult 5");
+                        MyLog.e(getClass(), "onActivityResult 5");
                         if (data != null && data.getData() != null) {
                             path = CameraDocument.getPath(getContext(), data.getData());
                             if (path == null) return;
@@ -296,50 +296,41 @@ public class CameraUtil {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                MyLog.e(getClass(),"onActivityResult 6");
+                MyLog.e(getClass(), "onActivityResult 6");
             }
         }
     }
 
     public boolean requestCameraPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             return true;
-        Activity act = null;
         if (this.act != null)
-            act = this.act;
+            act.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
         if (this.fragment != null)
-            act = this.fragment.getActivity();
-        ActivityCompat.requestPermissions(act,
-                new String[]{Manifest.permission.CAMERA},
-                REQUEST_PERMISSION_CAMERA);
+            fragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
         return false;
     }
 
     public boolean requestAudioPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
             return true;
-        Activity act = null;
         if (this.act != null)
-            act = this.act;
+            act.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_PERMISSION_AUDIO);
         if (this.fragment != null)
-            act = this.fragment.getActivity();
-        ActivityCompat.requestPermissions(act,
-                new String[]{Manifest.permission.RECORD_AUDIO},
-                REQUEST_PERMISSION_AUDIO);
+            fragment.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_PERMISSION_AUDIO);
         return false;
     }
 
     public boolean requesStoragetPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
             return true;
-        Activity act = null;
         if (this.act != null)
-            act = this.act;
+            act.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
         if (this.fragment != null)
-            act = this.fragment.getActivity();
-        ActivityCompat.requestPermissions(act,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                REQUEST_PERMISSION_STORAGE);
+            fragment.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
         return false;
     }
 
