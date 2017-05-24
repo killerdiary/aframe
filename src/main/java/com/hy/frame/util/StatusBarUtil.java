@@ -14,7 +14,6 @@ public class StatusBarUtil {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void changeStatusColor(Activity activity, int statusColor) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (statusColor != INVALID_VAL) {
                 activity.getWindow().setStatusBarColor(statusColor);

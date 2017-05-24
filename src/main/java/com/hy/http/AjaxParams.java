@@ -18,7 +18,6 @@ public class AjaxParams {
     private long qid;
     private Map<String, String> urlParams;
     private Map<String, Binary> fileParams;
-    private PostData postData;
 
     public AjaxParams() {
     }
@@ -130,15 +129,6 @@ public class AjaxParams {
 
     public long getQid() {
         return qid;
-    }
-
-    public AjaxParams setPostData(PostData postData) {
-        this.postData = postData;
-        return this;
-    }
-
-    public PostData getPostData() {
-        return postData;
     }
 
     public Map<String, String> getUrlParams() {

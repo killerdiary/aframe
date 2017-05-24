@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,8 +12,7 @@ public class MyLetterView extends View {
 
     private OnTouchingLetterChangedListener onTouchingLetterChangedListener;
 
-    private String[] letters = { "@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
-            "Y", "Z", "#" };
+    private String[] letters = {"@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"};
 
     int choose = -1;
 
@@ -73,33 +71,33 @@ public class MyLetterView extends View {
         final int c = (int) (y / getHeight() * letters.length);
 
         switch (action) {
-        case MotionEvent.ACTION_DOWN:
-            showBkg = true;
-            if (oldChoose != c && listener != null) {
-                if (c > 0 && c < letters.length) {
-                    listener.onTouchingLetterChanged(letters[c], y, x);
-                    choose = c;
-                    invalidate();
+            case MotionEvent.ACTION_DOWN:
+                showBkg = true;
+                if (oldChoose != c && listener != null) {
+                    if (c > 0 && c < letters.length) {
+                        listener.onTouchingLetterChanged(letters[c], y, x);
+                        choose = c;
+                        invalidate();
+                    }
                 }
-            }
 
-            break;
-        case MotionEvent.ACTION_MOVE:
-            if (oldChoose != c && listener != null) {
-                if (c > 0 && c < letters.length) {
-                    listener.onTouchingLetterChanged(letters[c], y, x);
-                    choose = c;
-                    invalidate();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (oldChoose != c && listener != null) {
+                    if (c > 0 && c < letters.length) {
+                        listener.onTouchingLetterChanged(letters[c], y, x);
+                        choose = c;
+                        invalidate();
+                    }
                 }
-            }
-            break;
-        case MotionEvent.ACTION_UP:
-            showBkg = false;
-            choose = -1;
-            if (listener != null)
-                listener.onTouchingLetterEnd();
-            invalidate();
-            break;
+                break;
+            case MotionEvent.ACTION_UP:
+                showBkg = false;
+                choose = -1;
+                if (listener != null)
+                    listener.onTouchingLetterEnd();
+                invalidate();
+                break;
         }
         return true;
     }

@@ -57,7 +57,6 @@ public class MyEditText extends AppCompatEditText implements TextWatcher, View.O
         setOnFocusChangeListener(this);
         if (a.getBoolean(R.styleable.MyEditText_mEditTest, false))
             showDrawRight();
-
     }
 
     @Override
@@ -81,6 +80,7 @@ public class MyEditText extends AppCompatEditText implements TextWatcher, View.O
         }
         return super.onTouchEvent(event);
     }
+
 
     private void changePasswordStyle() {
         isShowPassword = !isShowPassword;

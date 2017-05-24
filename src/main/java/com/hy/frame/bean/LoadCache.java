@@ -8,6 +8,12 @@ import android.widget.TextView;
 
 import com.hy.frame.R;
 
+/**
+ * LoadCache
+ *
+ * @author HeYan
+ * @time 2017/5/23 10:51
+ */
 public class LoadCache {
     public LinearLayout llyLoad;
     public TextView txtMessage;

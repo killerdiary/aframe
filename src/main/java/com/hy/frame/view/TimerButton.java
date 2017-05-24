@@ -1,13 +1,14 @@
 package com.hy.frame.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
 import com.hy.frame.R;
 
 /**
- * 倒计时按钮 (hint = "%ss 后重发")
+ * 倒计时按钮 (startText = "%ss 后重发")
  *
  * @author HeYan
  * @time 2015年1月6日 下午5:11:46
@@ -19,17 +20,46 @@ public class TimerButton extends AppCompatButton implements Runnable {
     private final static int UPDATE_DOING = 2;
     private int timer = 0;
     private int status = 0;
+    private CharSequence prepareText;
+    private CharSequence startText;
+    private CharSequence endText;
 
     public TimerButton(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public TimerButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, R.attr.buttonStyle);
     }
 
-    public TimerButton(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public TimerButton(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs, defStyleAttr);
+    }
+
+    private void init(Context context, AttributeSet attrs, int defStyleAttr) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TimerButton, defStyleAttr, 0);
+        prepareText = a.getText(R.styleable.TimerButton_timerPrepareText);
+        startText = a.getText(R.styleable.TimerButton_timerStartText);
+        endText = a.getText(R.styleable.TimerButton_timerEndText);
+        a.recycle();
+    }
+
+    private void update(int time) {
+        if (startText != null && startText.toString().contains("s%")) {
+            setText(String.format(startText.toString(), time));
+        } else {
+            setText(String.valueOf(time));
+        }
+    }
+
+    /**
+     * 准备倒计时
+     */
+    public void prepare() {
+        if (prepareText != null)
+            setText(prepareText);
+        this.setEnabled(false);
     }
 
     /**
@@ -37,31 +67,6 @@ public class TimerButton extends AppCompatButton implements Runnable {
      */
     public void start() {
         start(DEFAULT_INTERVAL);
-    }
-
-    /**
-     * 结束倒计时
-     */
-    public void end() {
-        this.status = UPDATE_END;
-        this.setText(R.string.timer_send_re);
-        this.setEnabled(true);
-        if (listener != null) {
-            listener.onTimerEnd();
-        }
-    }
-
-    private void update(int time) {
-        this.setText(String.format(getHint().toString(), time));
-        // this.setText(time + "秒后重新获取");
-    }
-
-    /**
-     * 准备倒计时
-     */
-    public void prepare() {
-        this.setText(R.string.timer_sending);
-        this.setEnabled(false);
     }
 
     /**
@@ -81,6 +86,19 @@ public class TimerButton extends AppCompatButton implements Runnable {
     public void start(int interval, TimerListener listener) {
         this.listener = listener;
         start(interval);
+    }
+
+    /**
+     * 结束倒计时
+     */
+    public void end() {
+        this.status = UPDATE_END;
+        if (endText != null)
+            setText(endText);
+        this.setEnabled(true);
+        if (listener != null) {
+            listener.onTimerEnd();
+        }
     }
 
     @Override

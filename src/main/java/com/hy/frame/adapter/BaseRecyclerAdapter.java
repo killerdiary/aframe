@@ -1,6 +1,7 @@
 package com.hy.frame.adapter;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -213,4 +214,79 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
      * bind child data
      */
     protected abstract void bindViewData(RecyclerView.ViewHolder holder, int position);
+
+    /**
+     * BaseRecyclerAdapter
+     * 自定义的ViewHolder，持有每个Item的的所有界面元素,static不是说只存在1个实例，而是可以访问外部类的静态变量，final修饰类则是不让该类继承
+     *
+     * @author HeYan
+     * @time 2017/5/23 10:13
+     */
+    protected class BaseHolder extends RecyclerView.ViewHolder {
+
+        public BaseHolder(View v) {
+            super(v);
+            if (v.getLayoutParams() == null) {
+                v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            }
+        }
+    }
+
+    protected class BaseClickHolder extends BaseHolder implements View.OnClickListener {
+
+        public BaseClickHolder(View v) {
+            super(v);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (listener != null) {
+                int position = getAdapterPosition();
+                if (position < 0) return;
+                position = getCurPosition(position);
+                if (position < 0) return;
+                listener.onViewClick(v, getItem(position), position);
+            }
+        }
+
+        public void setOnClickListener(View v) {
+            v.setOnClickListener(this);
+        }
+
+        protected <V extends View> V getViewAndClick(@IdRes int id) {
+            V v = getView(itemView, id);
+            setOnClickListener(v);
+            return v;
+        }
+    }
+
+    protected class BaseLongClickHolder extends BaseClickHolder implements View.OnLongClickListener {
+
+        public BaseLongClickHolder(View v) {
+            super(v);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public boolean onLongClick(View v) {
+            if (listener != null && listener instanceof IAdapterLongListener) {
+                int position = getAdapterPosition();
+                if (position < 0) return false;
+                position = getCurPosition(position);
+                if (position < 0) return false;
+                ((IAdapterLongListener) listener).onViewLongClick(v, getItem(position), position);
+            }
+            return false;
+        }
+
+        public void setOnLongClickListener(View v) {
+            v.setOnLongClickListener(this);
+        }
+
+        protected <V extends View> V getViewAndLongClick(@IdRes int id) {
+            V v = getView(itemView, id);
+            setOnLongClickListener(v);
+            return v;
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package com.hy.frame.bean;
 
-import com.hy.frame.util.MenuUtil;
-
 import java.util.HashMap;
 import java.util.Map;
 

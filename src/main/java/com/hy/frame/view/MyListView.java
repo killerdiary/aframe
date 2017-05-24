@@ -28,6 +28,7 @@ import java.util.Locale;
  * @title 自定义ListView(下拉刷新，点击查看更多)
  * @time 2013-6-27 下午2:59:52
  */
+@Deprecated
 public class MyListView extends ListView implements OnScrollListener {
 
     private final static int FLAG_DONE = 0;// 完成

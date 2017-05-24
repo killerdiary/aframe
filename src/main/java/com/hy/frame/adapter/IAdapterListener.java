@@ -2,6 +2,12 @@ package com.hy.frame.adapter;
 
 import android.view.View;
 
+/**
+ * IAdapterListener Click
+ *
+ * @author HeYan
+ * @time 2017/5/23 9:57
+ */
 public interface IAdapterListener<T> {
     /**
      * 点击事件

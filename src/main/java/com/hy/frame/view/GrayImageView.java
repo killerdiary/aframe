@@ -1,22 +1,19 @@
 package com.hy.frame.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * 可变灰色图
  * author HeYan
  * time 2015/12/31 10:06
  */
-public class GrayImageView extends ImageView {
+public class GrayImageView extends android.support.v7.widget.AppCompatImageView {
     public GrayImageView(Context context) {
         super(context);
     }
@@ -27,11 +24,6 @@ public class GrayImageView extends ImageView {
 
     public GrayImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public GrayImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     private boolean gray;
@@ -47,7 +39,7 @@ public class GrayImageView extends ImageView {
     @Override
     public void setImageBitmap(Bitmap bm) {
         if (bm == null) return;
-        if(gray) {
+        if (gray) {
             int width = bm.getWidth();
             int height = bm.getHeight();
             Bitmap grayBmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -59,7 +51,7 @@ public class GrayImageView extends ImageView {
             paint.setColorFilter(f);
             c.drawBitmap(bm, 0, 0, paint);
             super.setImageBitmap(grayBmp);
-        }else
+        } else
             super.setImageBitmap(bm);
     }
 }

@@ -59,28 +59,28 @@ public class RefreshScrollView extends ScrollView {
             // if (getScrollY() <= 1) {
             int y = (int) ev.getY();
             switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-                if (!isRecord) {
-                    isRecord = true;
-                    startY = y;
-                    height = 0;
-                    MyLog.e("ACTION_DOWN 记录当前位置:" + startY);
-                    listener.onRefreshEvent(MotionEvent.ACTION_DOWN, 0);
-                } else {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_MOVE:
+                    if (!isRecord) {
+                        isRecord = true;
+                        startY = y;
+                        height = 0;
+                        MyLog.e("ACTION_DOWN 记录当前位置:" + startY);
+                        listener.onRefreshEvent(MotionEvent.ACTION_DOWN, 0);
+                    } else {
+                        // int height = (y - startY) / RATIO;
+                        height += 10;
+                        MyLog.e("ACTION_MOVE 记录当前位置:" + y + " " + height);
+                        listener.onRefreshEvent(MotionEvent.ACTION_MOVE, height);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isRecord = false;
                     // int height = (y - startY) / RATIO;
-                    height += 10;
-                    MyLog.e("ACTION_MOVE 记录当前位置:" + y + " " + height);
-                    listener.onRefreshEvent(MotionEvent.ACTION_MOVE, height);
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                isRecord = false;
-                // int height = (y - startY) / RATIO;
-                listener.onRefreshEvent(MotionEvent.ACTION_UP, height);
-                MyLog.e("ACTION_UP 记录当前位置:" + height);
-                break;
+                    listener.onRefreshEvent(MotionEvent.ACTION_UP, height);
+                    MyLog.e("ACTION_UP 记录当前位置:" + height);
+                    break;
             }
             // } else {
             // isRecord = false;

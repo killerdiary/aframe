@@ -8,7 +8,7 @@ import android.view.View;
  * @title 公有接口
  * @time 2015/11/20 11:30
  */
-public abstract interface IBaseActivity {
+public interface IBaseActivity {
     /**
      * 初始化布局 可空,可以包含 Toolbar 否则 使用默认的 Toolbar
      */

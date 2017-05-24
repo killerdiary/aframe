@@ -4,6 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.GridView;
 
+/**
+ * MyGridView ScrollView 冲突
+ *
+ * @author HeYan
+ * @time 2017/5/24 14:01
+ */
+@Deprecated
 public class MyGridView extends GridView {
 
     public MyGridView(Context context) {

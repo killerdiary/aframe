@@ -169,7 +169,7 @@ public class CropActivity extends BaseActivity {
             //vOverlay.setOvalDimmedLayer( OverlayView.DEFAULT_OVAL_DIMMED_LAYER);
 
             vOverlay.setShowCropFrame(OverlayView.DEFAULT_SHOW_CROP_FRAME);
-            vOverlay.setCropFrameColor(getResources().getColor(R.color.red_tran));
+            vOverlay.setCropFrameColor(getResources().getColor(R.color.crop_red_tran));
             vOverlay.setCropFrameStrokeWidth(getResources().getDimensionPixelSize(R.dimen.ucrop_default_crop_frame_stoke_width));
 
             vOverlay.setShowCropGrid(OverlayView.DEFAULT_SHOW_CROP_GRID);

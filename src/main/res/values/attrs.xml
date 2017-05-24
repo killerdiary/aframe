@@ -102,14 +102,20 @@
         <attr name="mTxtDrawBottomHeight" format="dimension" />
     </declare-styleable>
     <declare-styleable name="SwipeMenuView">
-        <attr name="swipeEnable" format="boolean"/>
-        <attr name="swipeIos" format="boolean"/>
-        <attr name="swipeLeftSwipe" format="boolean"/>
+        <attr name="swipeEnable" format="boolean" />
+        <attr name="swipeIos" format="boolean" />
+        <attr name="swipeLeftSwipe" format="boolean" />
     </declare-styleable>
     <declare-styleable name="BadgeTextView">
-        <attr name="badgeNubmer" format="integer"/>
-        <attr name="badgeMaxNubmer" format="integer"/>
-        <attr name="badgeBackground" format="reference"/>
-        <attr name="badgeRadius" format="dimension"/>
+        <attr name="badgeNubmer" format="integer" />
+        <attr name="badgeMaxNubmer" format="integer" />
+        <attr name="badgeBackground" format="color" />
+        <attr name="badgeRadius" format="dimension" />
+        <attr name="badgeZeroHide" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="TimerButton">
+        <attr name="timerPrepareText" format="string" />
+        <attr name="timerStartText" format="string" />
+        <attr name="timerEndText" format="string" />
     </declare-styleable>
 </resources>

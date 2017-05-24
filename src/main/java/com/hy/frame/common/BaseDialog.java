@@ -71,6 +71,7 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
 
     protected void windowDeploy(float width, float height, int gravity) {
         Window window = getWindow();
+        if (window == null) return;
         LayoutParams params = getWindow().getAttributes(); // 获取对话框当前的参数值
         if (width == 0) {
             params.width = LayoutParams.WRAP_CONTENT;

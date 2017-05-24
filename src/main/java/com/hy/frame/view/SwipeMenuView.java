@@ -153,22 +153,20 @@ public class SwipeMenuView extends ViewGroup {
         isIos = true;
         //左滑右滑的开关,默认左滑打开菜单
         isLeftSwipe = true;
-        TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SwipeMenuView, defStyleAttr, 0);
-        int count = ta.getIndexCount();
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenuView, defStyleAttr, 0);
+        int count = a.getIndexCount();
         for (int i = 0; i < count; i++) {
-            int attr = ta.getIndex(i);
+            int attr = a.getIndex(i);
             //如果引用成AndroidLib 资源都不是常量，无法使用switch case
             if (attr == R.styleable.SwipeMenuView_swipeEnable) {
-                isSwipeEnable = ta.getBoolean(attr, true);
+                isSwipeEnable = a.getBoolean(attr, true);
             } else if (attr == R.styleable.SwipeMenuView_swipeIos) {
-                isIos = ta.getBoolean(attr, true);
+                isIos = a.getBoolean(attr, true);
             } else if (attr == R.styleable.SwipeMenuView_swipeLeftSwipe) {
-                isLeftSwipe = ta.getBoolean(attr, true);
+                isLeftSwipe = a.getBoolean(attr, true);
             }
         }
-        ta.recycle();
-
-
+        a.recycle();
     }
 
     @Override

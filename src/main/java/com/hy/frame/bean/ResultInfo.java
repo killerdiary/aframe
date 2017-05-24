@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 服务器返回数据
- * Created by HeYan on 2015/10/17.
+ * ResultInfo 服务器返回数据
+ *
+ * @author HeYan
+ * @time 2017/5/23 10:51
  */
 public class ResultInfo {
     /**

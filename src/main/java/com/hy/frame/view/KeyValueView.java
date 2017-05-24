@@ -20,7 +20,7 @@ import com.hy.frame.R;
  * author HeYan
  * time 2015/12/24 14:30
  */
-public class KeyValueView extends LinearLayout {
+public class KeyValueView extends LinearLayout{
 
     private TextView txtKey, txtValue;
     private ImageView imgRight;

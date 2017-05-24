@@ -59,6 +59,8 @@
     <string name="list_footer_network_error">点击重新加载</string>
     <string name="list_footer_end">已全部加载完</string>
 
+    <string name="badge_overflow">%1$d+</string>
+
     <string name="text_just">刚刚</string>
     <string name="text_seconds_ago">秒前</string>
     <string name="text_minute_ago">分钟前</string>
