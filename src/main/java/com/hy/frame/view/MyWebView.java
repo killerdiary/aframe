@@ -72,7 +72,7 @@ public class MyWebView extends WebView {
                         intent.setData(Uri.parse(url));
                          getContext().startActivity(intent);
                     } catch (android.content.ActivityNotFoundException e) {
-                        MyLog.e("Error dialing " + url + ": " + e.toString());
+                        MyLog.INSTANCE.e("Error dialing " + url + ": " + e.toString());
                     }
                 }
                 // If displaying map (geo:0,0?q=address)
@@ -82,7 +82,7 @@ public class MyWebView extends WebView {
                         intent.setData(Uri.parse(url));
                         getContext().startActivity(intent);
                     } catch (android.content.ActivityNotFoundException e) {
-                        MyLog.e("Error showing map " + url + ": " + e.toString());
+                        MyLog.INSTANCE.e("Error showing map " + url + ": " + e.toString());
                     }
                 }
                 // If sending email (mailto:abc@corp.com)
@@ -92,7 +92,7 @@ public class MyWebView extends WebView {
                         intent.setData(Uri.parse(url));
                         getContext().startActivity(intent);
                     } catch (android.content.ActivityNotFoundException e) {
-                        MyLog.e("Error sending email " + url + ": " + e.toString());
+                        MyLog.INSTANCE.e("Error sending email " + url + ": " + e.toString());
                     }
                 }
                 // If sms:5551212?body=This is the message
@@ -120,7 +120,7 @@ public class MyWebView extends WebView {
                         intent.setType("vnd.android-dir/mms-sms");
                         getContext().startActivity(intent);
                     } catch (android.content.ActivityNotFoundException e) {
-                        MyLog.e("Error sending sms " + url + ":" + e.toString());
+                        MyLog.INSTANCE.e("Error sending sms " + url + ":" + e.toString());
                     }
                 }
                 // Android Market
@@ -130,7 +130,7 @@ public class MyWebView extends WebView {
                         intent.setData(Uri.parse(url));
                         getContext().startActivity(intent);
                     } catch (android.content.ActivityNotFoundException e) {
-                        MyLog.e("Error loading Google Play Store: " + url + " " + e.toString());
+                        MyLog.INSTANCE.e("Error loading Google Play Store: " + url + " " + e.toString());
                     }
                 }
                 // If dialing phone (tel:5551212)
@@ -140,12 +140,12 @@ public class MyWebView extends WebView {
                         intent.setData(Uri.parse(url));
                         getContext().startActivity(intent);
                     } catch (android.content.ActivityNotFoundException e) {
-                        MyLog.e("Error dialing " + url + ": " + e.toString());
+                        MyLog.INSTANCE.e("Error dialing " + url + ": " + e.toString());
                     }
                 }
                 // All else
                 else {
-                    MyLog.d("url-----> " + url);
+                    MyLog.INSTANCE.d("url-----> " + url);
                     view.loadUrl(url);
                 }
                 return true;

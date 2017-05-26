@@ -90,7 +90,7 @@ public abstract class MyHttpClient {
     public MyHttpClient(Context context, IMyHttpListener listener, String host, int requestType) {
         super();
         if (context == null || host == null) {
-            MyLog.i("MyHttpClient init error!");
+            MyLog.INSTANCE.i("MyHttpClient init error!");
             return;
         }
         this.context = context;
@@ -108,7 +108,7 @@ public abstract class MyHttpClient {
     public MyHttpClient(Context context, IMyHttpListener listener, String host, boolean verify) {
         this(context, listener, host);
         if (verify) {
-            PackageInfo pi = HyUtil.getAppVersion(context);
+            PackageInfo pi = HyUtil.Companion.getAppVersion(context);
             if (pi != null) {
                 if (pi.signatures != null && pi.signatures.length > 0)
                     addHeader("signatures", pi.signatures[0].toCharsString());
@@ -358,8 +358,8 @@ public abstract class MyHttpClient {
      * @param list        结果是否是List
      */
     public <T> void request(boolean isGet, int requestCode, String url, AjaxParams params, final Class<T> cls, final boolean list) {
-        MyLog.i("request", url);
-        MyLog.i("params", params == null ? null : params.toString());
+        MyLog.INSTANCE.i("request", url);
+        MyLog.INSTANCE.i("params", params == null ? null : params.toString());
         ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
         result.setRequestType(REQUEST_TYPE_JSON);
@@ -404,7 +404,7 @@ public abstract class MyHttpClient {
     public <T> void request(RequestMethod method, String url, RequestBody body, ResultInfo result, final Class<T> cls, final boolean list) {
         if (isDestroy) return;
         if (hasQueue(result.getRequestCode())) {
-            MyLog.e("request", "what=" + result.getRequestCode() + ",msg=" + getString(R.string.API_FLAG_REPEAT));
+            MyLog.INSTANCE.e("request", "what=" + result.getRequestCode() + ",msg=" + getString(R.string.API_FLAG_REPEAT));
             //result.setMsg(getString(R.string.API_FLAG_REPEAT));
             //onRequestError(result);
             return;
@@ -470,7 +470,7 @@ public abstract class MyHttpClient {
             public void onFailure(Call call, IOException e) {
                 ResultInfo result = (ResultInfo) call.request().tag();
                 String msg = e != null ? e.getMessage() : null;
-                MyLog.i("onFailed", "what=" + result.getRequestCode() + ",msg=" + msg);
+                MyLog.INSTANCE.i("onFailed", "what=" + result.getRequestCode() + ",msg=" + msg);
                 int code = R.string.API_FLAG_CON_EXCEPTION;
                 if (msg != null) {
                     String thr = msg.toLowerCase(Locale.CHINA);
@@ -500,7 +500,7 @@ public abstract class MyHttpClient {
                         return;
                     }
                     String data = String.valueOf(response.body().string());
-                    MyLog.i("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
+                    MyLog.INSTANCE.i("onSucceed", "what=" + result.getRequestCode() + ",data=" + data);
                     if (data.length() > 0) {
                         try {
                             data = data.replaceAll(":\\[\\]", ":null");
@@ -521,7 +521,7 @@ public abstract class MyHttpClient {
                         }
                     }
                 } else {
-                    MyLog.i("onFail", "what=" + result.getRequestCode() + ",data=" + response.message());
+                    MyLog.INSTANCE.i("onFail", "what=" + result.getRequestCode() + ",data=" + response.message());
                 }
                 result.setMsg(getString(R.string.API_FLAG_NO_RESPONSE));
                 onRequestError(result);
@@ -536,7 +536,7 @@ public abstract class MyHttpClient {
     }
 
     public void download(int requestCode, String url, String fileFolder, String fileName, boolean isRange, boolean isDeleteOld, long qid) {
-        MyLog.i("download", url);
+        MyLog.INSTANCE.i("download", url);
         ResultInfo result = new ResultInfo();
         result.setRequestCode(requestCode);
         result.setRequestType(REQUEST_TYPE_FILE);
@@ -558,8 +558,8 @@ public abstract class MyHttpClient {
         if (body != null) {
             DownFile downFile = result.getObj();
             long total = body.contentLength();
-            MyLog.i("onProgress(File)", "what=" + result.getRequestCode() + ",total=" + total);
-            downFile.setState(DownFile.STATUS_START);
+            MyLog.INSTANCE.i("onProgress(File)", "what=" + result.getRequestCode() + ",total=" + total);
+            downFile.setState(DownFile.Companion.getSTATUS_START());
             downFile.setAllCount(total);
             onRequestSuccess(result);
             InputStream is = null;
@@ -575,8 +575,8 @@ public abstract class MyHttpClient {
                     fos.write(buf, 0, len);
                     sum += len;
                     int progress = (int) (sum * 1.0f / total * 100);
-                    MyLog.i("onProgress(File)", "what=" + result.getRequestCode() + ",progress=" + progress + ",fileCount=" + sum + ",total=" + total);
-                    downFile.setState(DownFile.STATUS_PROGRESS);
+                    MyLog.INSTANCE.i("onProgress(File)", "what=" + result.getRequestCode() + ",progress=" + progress + ",fileCount=" + sum + ",total=" + total);
+                    downFile.setState(DownFile.Companion.getSTATUS_PROGRESS());
                     downFile.setProgress(progress);
                     downFile.setFileCount(sum);
                     result.setObj(downFile);
@@ -590,17 +590,17 @@ public abstract class MyHttpClient {
                 //    MyLog.i("onSucceed", "文件下载成功");
                 //}
                 if (total > 0 && sum == total) {
-                    downFile.setState(DownFile.STATUS_SUCCESS);
+                    downFile.setState(DownFile.Companion.getSTATUS_SUCCESS());
                     File file = new File(downFile.getSaveDir(), downFile.getFileName());
                     cacheFile.renameTo(file);
-                    MyLog.i("onSucceed", "文件下载成功");
+                    MyLog.INSTANCE.i("onSucceed", "文件下载成功");
                 } else {
-                    downFile.setState(DownFile.STATUS_ERROR);
-                    MyLog.i("onSucceed", "文件下载中断");
+                    downFile.setState(DownFile.Companion.getSTATUS_ERROR());
+                    MyLog.INSTANCE.i("onSucceed", "文件下载中断");
                 }
             } catch (Exception e) {
-                MyLog.i("onSucceed", "文件下载失败");
-                downFile.setState(DownFile.STATUS_ERROR);
+                MyLog.INSTANCE.i("onSucceed", "文件下载失败");
+                downFile.setState(DownFile.Companion.getSTATUS_ERROR());
             } finally {
                 try {
                     if (is != null)
@@ -634,34 +634,6 @@ public abstract class MyHttpClient {
     protected <T> void doSuccess(ResultInfo result, String json, Class<T> cls, boolean list) {
         result.setObj(json);
         onRequestSuccess(result);
-//        try {
-//            int flag = 0;
-//            if (obj.has("state")) {
-//                flag = obj.getInt("state");
-//                result.setErrorCode(flag);
-//            }
-//            if (obj.has("msg")) {
-//                String msg = obj.getString("msg");
-//                result.setMsg(msg);
-//            }
-//            String data = null;
-//            if (obj.has("result")) {
-//                data = obj.getString("result");
-//                data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-//                data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-//            }
-//            // 成功
-//            if (flag == 1) {
-//                doSuccessData(result, data, cls, list);
-//            } else {
-//                onRequestError(result);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
-//            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
-//            onRequestError(result);
-//        }
     }
 
     /**
@@ -677,34 +649,6 @@ public abstract class MyHttpClient {
     protected <T> void doSuccess(ResultInfo result, JsonArray obj, Class<T> cls, boolean list) {
         result.setObj(obj);
         onRequestSuccess(result);
-//        try {
-//            int flag = 0;
-//            if (obj.has("state")) {
-//                flag = obj.getInt("state");
-//                result.setErrorCode(flag);
-//            }
-//            if (obj.has("msg")) {
-//                String msg = obj.getString("msg");
-//                result.setMsg(msg);
-//            }
-//            String data = null;
-//            if (obj.has("result")) {
-//                data = obj.getString("result");
-//                data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-//                data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-//            }
-//            // 成功
-//            if (flag == 1) {
-//                doSuccessData(result, data, cls, list);
-//            } else {
-//                onRequestError(result);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
-//            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
-//            onRequestError(result);
-//        }
     }
 
     /**
@@ -747,56 +691,7 @@ public abstract class MyHttpClient {
 //        }
     }
 
-    protected <T> void doSuccessData(ResultInfo result, String data, Class<T> cls, boolean list) {
-        if (HyUtil.isNoEmpty(data) && !TextUtils.equals(data, "[]")) {
-            try {
-                if (list) {
-                    // List<T> rlt = gson.fromJson(data, newTypeToken<T>() {}.getType());
-                    List<T> beans = null;
-                    JSONArray rlt = new JSONArray(data);
-                    if (rlt.length() > 0) {
-                        int size = rlt.length();
-                        beans = new ArrayList<>();
-                        for (int i = 0; i < size; i++) {
-                            String str = rlt.getString(i);
-                            T t = (T) doT(str, cls);
-                            beans.add(t);
-                        }
-                    }
-                    result.setObj(beans);
-                    onRequestSuccess(result);
-                } else {
-                    result.setObj(doT(data, cls));
-                    onRequestSuccess(result);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
-                result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
-                onRequestError(result);
-            }
-        } else
-            onRequestSuccess(result);
-    }
 
-    private <T> Object doT(String data, Class<T> cls) {
-        if (cls == String.class) {
-            return data;
-        } else if (cls == int.class || cls == Integer.class) {
-            return Integer.parseInt(data);
-        } else if (cls == float.class || cls == Float.class) {
-            return Float.parseFloat(data);
-        } else if (cls == double.class || cls == Double.class) {
-            return Double.parseDouble(data);
-        } else if (cls == long.class || cls == Long.class) {
-            return Long.parseLong(data);
-        } else if (cls == java.util.Date.class || cls == java.sql.Date.class) {
-            return HyUtil.stringToDateTime(data);
-        } else if (cls == boolean.class || cls == Boolean.class) {
-            return Boolean.parseBoolean(data);
-        }
-        return new Gson().fromJson(data, cls);
-    }
 
 
     /**
@@ -849,7 +744,7 @@ public abstract class MyHttpClient {
                     if (!hasQueue(result.getRequestCode())) return;
                     if (result.getRequestType() == REQUEST_TYPE_FILE) {
                         DownFile downFile = result.getObj();
-                        if (downFile.getState() == DownFile.STATUS_SUCCESS || downFile.getState() == DownFile.STATUS_ERROR) {
+                        if (downFile.getState() == DownFile.Companion.getSTATUS_SUCCESS() || downFile.getState() == DownFile.Companion.getSTATUS_ERROR()) {
                             removeQueue(result.getRequestCode());
                             hideLoading();
                         }
@@ -930,7 +825,7 @@ public abstract class MyHttpClient {
     @MainThread
     public void onDestroy() {
         //在这里销毁所有当前请求
-        MyLog.i(getClass(), "onDestroy");
+        MyLog.INSTANCE.i(getClass(), "onDestroy");
         isDestroy = true;
         listeners = null;
         loadingDialog = null;

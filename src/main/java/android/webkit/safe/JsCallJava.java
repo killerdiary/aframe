@@ -5,7 +5,6 @@ import android.webkit.WebView;
 
 import com.hy.frame.util.MyLog;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,7 +64,7 @@ public class JsCallJava {
             mPreloadInterfaceJS = sb.toString();
             sb.setLength(0);
         } catch (Exception e) {
-            MyLog.e(TAG, "init js error:" + e.getMessage());
+            MyLog.INSTANCE.e(TAG, "init js error:" + e.getMessage());
         }
     }
 
@@ -74,7 +73,7 @@ public class JsCallJava {
         Class[] argsTypes = method.getParameterTypes();
         for (String ignoreMethod : IGNORE_UNSAFE_METHODS) {
             if (ignoreMethod.equals(sign)) {
-                MyLog.w(TAG, "method(" + sign + ") is unsafe, will be pass");
+                MyLog.INSTANCE.w(TAG, "method(" + sign + ") is unsafe, will be pass");
                 return null;
             }
         }
@@ -107,7 +106,7 @@ public class JsCallJava {
 
     public String call(WebView webView, JSONObject jsonObject) {
         long time = 0;
-        if (MyLog.isLoggable) {
+        if (MyLog.INSTANCE.isLoggable()) {
             time = android.os.SystemClock.uptimeMillis();
         }
         if (jsonObject != null) {
@@ -197,7 +196,7 @@ public class JsCallJava {
             // insertRes = "\"".concat(String.valueOf(result)).concat("\"");
         }
         String resStr = String.format(RETURN_RESULT_FORMAT, stateCode, insertRes);
-        MyLog.d(TAG, "call time: " + (android.os.SystemClock.uptimeMillis() - time) + ", request: " + reqJson + ", result:" + resStr);
+        MyLog.INSTANCE.d(TAG, "call time: " + (android.os.SystemClock.uptimeMillis() - time) + ", request: " + reqJson + ", result:" + resStr);
         return resStr;
     }
 

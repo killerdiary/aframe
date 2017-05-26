@@ -27,7 +27,7 @@ public class MyToast {
             //toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT);
             toast.show();
         } catch (Exception e) {
-            if (MyLog.isLoggable)
+            if (MyLog.INSTANCE.getIsLoggable())
                 e.printStackTrace();
         }
     }
@@ -43,7 +43,7 @@ public class MyToast {
             toast.setView(v);
             toast.show();
         } catch (Exception e) {
-            if (MyLog.isLoggable)
+            if (MyLog.INSTANCE.getIsLoggable())
                 e.printStackTrace();
         }
     }

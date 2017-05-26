@@ -67,7 +67,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
         prlp.alignWithParent = true;
         prlp.addRule(RelativeLayout.ALIGN_BOTTOM);
         llyPoint.setGravity(Gravity.CENTER);
-        llyPoint.setPadding(HyUtil.dip2px(context, 2), HyUtil.dip2px(context, 2), HyUtil.dip2px(context, 2), HyUtil.dip2px(context, 2));
+        llyPoint.setPadding(HyUtil.Companion.dip2px(context, 2), HyUtil.Companion.dip2px(context, 2), HyUtil.Companion.dip2px(context, 2), HyUtil.Companion.dip2px(context, 2));
         addView(llyPoint, prlp);
     }
 
@@ -143,13 +143,13 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
 
     private void addPoint() {
         CircleImageView img = new CircleImageView(getContext());
-        int width = HyUtil.dip2px(getContext(), 8);
+        int width = HyUtil.Companion.dip2px(getContext(), 8);
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(width, width);
         if (pointResId != 0)
             img.setBackgroundResource(pointResId);
         else
             img.setBackgroundResource(R.drawable.btn_circle_selector);
-        int padding = HyUtil.dip2px(getContext(), 4);
+        int padding = HyUtil.Companion.dip2px(getContext(), 4);
         llp.setMargins(padding, padding, padding, padding);
         if (llyPoint.getChildCount() == 0) {
             img.setSelected(true);
@@ -229,7 +229,7 @@ public class MyScrollView extends RelativeLayout implements OnPageChangeListener
      */
     public void startAuto(int interval) {
         if (adapter == null) {
-            MyLog.e("NO CALLED SHOW!");
+            MyLog.INSTANCE.e("NO CALLED SHOW!");
             return;
         }
         // 防止重复开启

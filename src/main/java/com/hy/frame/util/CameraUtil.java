@@ -81,7 +81,7 @@ public class CameraUtil {
 
     private boolean initPhotoData() {
         if (!requesStoragetPermission()) return false;
-        String path = HyUtil.getCachePathCrop(getContext());
+        String path = HyUtil.Companion.getCachePathCrop(getContext());
         // 判断sd卡
         if (path == null) {
             MyToast.show(getContext(), "没有SD卡，不能拍照");
@@ -97,7 +97,7 @@ public class CameraUtil {
     }
 
     private Uri getNewCacheUri() {
-        String path = HyUtil.getCachePathCrop(getContext());
+        String path = HyUtil.Companion.getCachePathCrop(getContext());
         long time = System.currentTimeMillis();
         String imagePath = path + File.separator + "pic" + time + ".jpg";
         return Uri.parse("file://" + imagePath);
@@ -146,10 +146,10 @@ public class CameraUtil {
                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, seconds);
                 intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 480 * 800);
                 startActivityForResult(intent, FLAG_UPLOAD_TAKE_VIDEO);
-                MyLog.e(getClass(), "onDlgVideoClick 1");
+                MyLog.INSTANCE.e(getClass(), "onDlgVideoClick 1");
             } catch (Exception e) {
                 e.printStackTrace();
-                MyLog.e(getClass(), "onDlgVideoClick 2");
+                MyLog.INSTANCE.e(getClass(), "onDlgVideoClick 2");
             }
         }
     }
@@ -161,7 +161,7 @@ public class CameraUtil {
     public void cropImageUri(Uri cacheUri, int aspectX, int aspectY, int unit) {
         imageUri = getNewCacheUri();
         if (cacheUri == null || imageUri == null) {
-            MyLog.e(getClass(), "地址未初始化");
+            MyLog.INSTANCE.e(getClass(), "地址未初始化");
             return;
         }
 //        Intent intent = new Intent("com.android.camera.action.CROP");
@@ -227,7 +227,7 @@ public class CameraUtil {
 //    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        MyLog.e(getClass(), "onActivityResult 4");
+        MyLog.INSTANCE.e(getClass(), "onActivityResult 4");
         if (resultCode == Activity.RESULT_OK) {
             File f;
             String path;
@@ -247,7 +247,7 @@ public class CameraUtil {
                             if (listener != null)
                                 listener.onCameraTakeSuccess(path);
                         } else {
-                            MyLog.e(getClass(), "拍照存储异常");
+                            MyLog.INSTANCE.e(getClass(), "拍照存储异常");
                         }
                         break;
                     case FLAG_UPLOAD_CHOOICE_IMAGE:
@@ -260,7 +260,7 @@ public class CameraUtil {
                                 if (listener != null)
                                     listener.onCameraPickSuccess(path);
                             } else {
-                                MyLog.e(getClass(), "选择的图片不存在");
+                                MyLog.INSTANCE.e(getClass(), "选择的图片不存在");
                             }
                         }
                         break;
@@ -271,16 +271,16 @@ public class CameraUtil {
                             if (listener != null)
                                 listener.onCameraCutSuccess(imageUri.getPath());
                         } else if (data != null && data.getData() != null) {
-                            MyLog.e(getClass(), "剪切其他情况");
+                            MyLog.INSTANCE.e(getClass(), "剪切其他情况");
                             path = CameraDocument.getPath(getContext(), data.getData());
                             if (listener != null)
                                 listener.onCameraCutSuccess(path);
                         } else {
-                            MyLog.e(getClass(), "剪切未知情况");
+                            MyLog.INSTANCE.e(getClass(), "剪切未知情况");
                         }
                         break;
                     case FLAG_UPLOAD_TAKE_VIDEO:
-                        MyLog.e(getClass(), "onActivityResult 5");
+                        MyLog.INSTANCE.e(getClass(), "onActivityResult 5");
                         if (data != null && data.getData() != null) {
                             path = CameraDocument.getPath(getContext(), data.getData());
                             if (path == null) return;
@@ -289,14 +289,14 @@ public class CameraUtil {
                                 if (videoListener != null)
                                     videoListener.onVideoTakeSuccess(path);
                             } else {
-                                MyLog.e(getClass(), "选择的图片不存在");
+                                MyLog.INSTANCE.e(getClass(), "选择的图片不存在");
                             }
                         }
                         break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                MyLog.e(getClass(), "onActivityResult 6");
+                MyLog.INSTANCE.e(getClass(), "onActivityResult 6");
             }
         }
     }
@@ -391,7 +391,7 @@ public class CameraUtil {
             fOut.close();
             return true;
         } catch (Exception e) {
-            MyLog.e(getClass(), "saveFile Error");
+            MyLog.INSTANCE.e(getClass(), "saveFile Error");
         }
         return false;
     }

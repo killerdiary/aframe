@@ -71,7 +71,7 @@ public class SafeWebView extends WebView {
         setClient();
         if (mJsCallJavas != null) {
             injectJavaScript();
-            MyLog.d(TAG, "injectJavaScript, addJavascriptInterface.interfaceObj = " + interfaceObj + ", interfaceName = " + interfaceName);
+            MyLog.INSTANCE.d(TAG, "injectJavaScript, addJavascriptInterface.interfaceObj = " + interfaceObj + ", interfaceName = " + interfaceName);
         }
     }
 
@@ -219,7 +219,7 @@ public class SafeWebView extends WebView {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (mJsCallJavas != null) {
                 injectJavaScript();
-                MyLog.d(TAG, "injectJavaScript, onPageStarted.url = " + view.getUrl());
+                MyLog.INSTANCE.d(TAG, "injectJavaScript, onPageStarted.url = " + view.getUrl());
             }
             if (mInjectJavaScripts != null) {
                 injectExtraJavaScript();
@@ -237,7 +237,7 @@ public class SafeWebView extends WebView {
         public void onProgressChanged(WebView view, int newProgress) {
             if (mJsCallJavas != null) {
                 injectJavaScript();
-                MyLog.d(TAG, "injectJavaScript, onProgressChanged.newProgress = " + newProgress + ", url = " + view.getUrl());
+                MyLog.INSTANCE.d(TAG, "injectJavaScript, onProgressChanged.newProgress = " + newProgress + ", url = " + view.getUrl());
             }
             if (mInjectJavaScripts != null) {
                 injectExtraJavaScript();
@@ -273,11 +273,11 @@ public class SafeWebView extends WebView {
                 field.setAccessible(true);
                 field.set(null, null);
             } catch (NoSuchFieldException e) {
-                if (MyLog.isLoggable) {
+                if (MyLog.INSTANCE.isLoggable()) {
                     e.printStackTrace();
                 }
             } catch (IllegalAccessException e) {
-                if (MyLog.isLoggable) {
+                if (MyLog.INSTANCE.isLoggable()) {
                     e.printStackTrace();
                 }
             }
@@ -289,15 +289,15 @@ public class SafeWebView extends WebView {
                     sConfigCallback.set(null, null);
                 }
             } catch (NoSuchFieldException e) {
-                if (MyLog.isLoggable) {
+                if (MyLog.INSTANCE.isLoggable()) {
                     e.printStackTrace();
                 }
             } catch (ClassNotFoundException e) {
-                if (MyLog.isLoggable) {
+                if (MyLog.INSTANCE.isLoggable()) {
                     e.printStackTrace();
                 }
             } catch (IllegalAccessException e) {
-                if (MyLog.isLoggable) {
+                if (MyLog.INSTANCE.isLoggable()) {
                     e.printStackTrace();
                 }
             }
@@ -311,13 +311,13 @@ public class SafeWebView extends WebView {
      */
     @TargetApi(19)
     protected void trySetWebDebuggEnabled() {
-        if (MyLog.isLoggable && Build.VERSION.SDK_INT >= 19) {
+        if (MyLog.INSTANCE.isLoggable() && Build.VERSION.SDK_INT >= 19) {
             try {
                 Class<?> clazz = WebView.class;
                 Method method = clazz.getMethod("setWebContentsDebuggingEnabled", boolean.class);
                 method.invoke(null, true);
             } catch (Throwable e) {
-                if (MyLog.isLoggable) {
+                if (MyLog.INSTANCE.isLoggable()) {
                     e.printStackTrace();
                 }
             }
@@ -350,7 +350,7 @@ public class SafeWebView extends WebView {
                 return true;
             }
         } catch (Exception e) {
-            if (MyLog.isLoggable) {
+            if (MyLog.INSTANCE.isLoggable()) {
                 e.printStackTrace();
             }
         }
@@ -382,7 +382,7 @@ public class SafeWebView extends WebView {
                 mIsEnabledField.set(mAccessibilityManager, false);
                 mIsEnabledField.setAccessible(false);
             } catch (Exception e) {
-                if (MyLog.isLoggable) {
+                if (MyLog.INSTANCE.isLoggable()) {
                     e.printStackTrace();
                 }
             }

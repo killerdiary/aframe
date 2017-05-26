@@ -45,7 +45,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
      * 初始化工作
      */
     private void init() {
-        MyLog.d(getClass(), "initialize");
+        MyLog.INSTANCE.d(getClass(), "initialize");
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
@@ -65,7 +65,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        MyLog.d(getClass(), "surfaceCreated");
+        MyLog.INSTANCE.d(getClass(), "surfaceCreated");
         // The Surface has been created, now tell the camera where to draw the
         // preview.
         try {
@@ -74,7 +74,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         } catch (IOException e1) {
             e1.printStackTrace();
-            MyLog.d(getClass(),
+            MyLog.INSTANCE.d(getClass(),
                     "Error setting camera preview display: " + e1.getMessage());
         }
         try {
@@ -82,9 +82,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 mCamera.startPreview();
             }
 
-            MyLog.d(getClass(), "surfaceCreated successfully! ");
+            MyLog.INSTANCE.d(getClass(), "surfaceCreated successfully! ");
         } catch (Exception e) {
-            MyLog.d(getClass(),
+            MyLog.INSTANCE.d(getClass(),
                     "Error setting camera preview: " + e.getMessage());
         }
     }
@@ -93,7 +93,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
 
-        MyLog.d(getClass(), "surface changed");
+        MyLog.INSTANCE.d(getClass(), "surface changed");
         // If your preview can change or rotate, take care of those events here.
         // Make sure to stop the preview before resizing or reformatting it.
 
@@ -119,7 +119,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             requestLayout();
             mCamera.setParameters(parameters);
             mCamera.setDisplayOrientation(90);
-            MyLog.d(getClass(), "camera set parameters successfully!: " + parameters);
+            MyLog.INSTANCE.d(getClass(), "camera set parameters successfully!: " + parameters);
         }
         // 这里可以用来设置尺寸
         // start preview with new settings
@@ -129,13 +129,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 mCamera.startPreview();
             }
         } catch (Exception e) {
-            MyLog.d(getClass(), "Error starting camera preview: " + e.getMessage());
+            MyLog.INSTANCE.d(getClass(), "Error starting camera preview: " + e.getMessage());
         }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        MyLog.d(getClass(), "surfaceDestroyed");
+        MyLog.INSTANCE.d(getClass(), "surfaceDestroyed");
         if (null != mCamera) {
             mCamera.stopPreview();
             mCamera.release();

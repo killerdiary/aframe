@@ -64,7 +64,7 @@ public class JsCallback {
             }
         }
         String execJs = String.format(Locale.CHINA, CALLBACK_JS_FORMAT, mInjectedName, mIndex, mIsPermanent, sb.toString());
-        MyLog.d("JsCallBack", execJs);
+        MyLog.INSTANCE.d("JsCallBack", execJs);
         mWebViewRef.get().loadUrl(execJs);
         mCouldGoOn = mIsPermanent > 0;
     }

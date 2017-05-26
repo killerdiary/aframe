@@ -83,7 +83,7 @@ public class RefreshLayout extends SwipeRefreshLayout implements OnScrollListene
                 lvData = (ListView) childView;
                 // 设置滚动监听器给ListView, 使得滚动的情况下也可以自动加载
                 lvData.setOnScrollListener(this);
-                MyLog.d(VIEW_LOG_TAG, "### 找到listview");
+                MyLog.INSTANCE.d(VIEW_LOG_TAG, "### 找到listview");
             }
         }
     }

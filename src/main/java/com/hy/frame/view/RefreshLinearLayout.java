@@ -68,10 +68,10 @@ public class RefreshLinearLayout extends LinearLayout {
         setOrientation(VERTICAL);
         scroller = new Scroller(context);
         headView = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.in_lv_header, null);
-        imgHeadArrow = HyUtil.getView(headView, R.id.lv_imgHeadArrow);
-        proHead = HyUtil.getView(headView, R.id.lv_proHead);
-        txtHeadHint = HyUtil.getView(headView, R.id.lv_txtHeadHint);
-        txtHeadUpdateTime = HyUtil.getView(headView, R.id.lv_txtHeadUpdateTime);
+        imgHeadArrow = HyUtil.Companion.getView(headView, R.id.lv_imgHeadArrow);
+        proHead = HyUtil.Companion.getView(headView, R.id.lv_proHead);
+        txtHeadHint = HyUtil.Companion.getView(headView, R.id.lv_txtHeadHint);
+        txtHeadUpdateTime = HyUtil.Companion.getView(headView, R.id.lv_txtHeadUpdateTime);
         // measureView(headView);
         // headerHeight = headView.getMeasuredHeight();
         int headerHeight = getResources().getDimensionPixelSize(R.dimen.lv_heigth);
@@ -108,7 +108,7 @@ public class RefreshLinearLayout extends LinearLayout {
             break;
 
         case MotionEvent.ACTION_MOVE:
-            MyLog.i("ACTION_MOVE");
+            MyLog.INSTANCE.i("ACTION_MOVE");
             // y移动坐标
             int m = y - lastY;
             if (((m < 6) && (m > -1)) || (!isDragging)) {
@@ -119,7 +119,7 @@ public class RefreshLinearLayout extends LinearLayout {
             break;
 
         case MotionEvent.ACTION_UP:
-            MyLog.i("ACTION_UP");
+            MyLog.INSTANCE.i("ACTION_UP");
 
             fling();
 
@@ -133,7 +133,7 @@ public class RefreshLinearLayout extends LinearLayout {
      */
     private void fling() {
         LinearLayout.LayoutParams lp = (LayoutParams) headView.getLayoutParams();
-        MyLog.i("fling()" + lp.topMargin);
+        MyLog.INSTANCE.i("fling()" + lp.topMargin);
         if (lp.topMargin > 0) {// 拉到了触发可刷新事件
             refresh();
         } else {
@@ -217,7 +217,7 @@ public class RefreshLinearLayout extends LinearLayout {
     public void setListener(RefreshListener listener) {
         this.listener = listener;
         proHead.setVisibility(View.GONE);
-        txtHeadUpdateTime.setText(getResources().getString(R.string.refresh_last_time) + HyUtil.getNowTime());
+        txtHeadUpdateTime.setText(getResources().getString(R.string.refresh_last_time) + HyUtil.Companion.getNowTime());
     }
 
     // /**
@@ -233,10 +233,10 @@ public class RefreshLinearLayout extends LinearLayout {
      * 结束刷新事件
      */
     public void finishRefresh() {
-        MyLog.i("执行了=====finishRefresh");
+        MyLog.INSTANCE.i("执行了=====finishRefresh");
         imgHeadArrow.setVisibility(View.VISIBLE);
         proHead.setVisibility(View.GONE);
-        txtHeadUpdateTime.setText(getResources().getString(R.string.refresh_last_time) + HyUtil.getNowTime());
+        txtHeadUpdateTime.setText(getResources().getString(R.string.refresh_last_time) + HyUtil.Companion.getNowTime());
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) this.headView.getLayoutParams();
         int i = lp.topMargin;
         scroller.startScroll(0, i, 0, headMarginTop);

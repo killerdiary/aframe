@@ -117,7 +117,7 @@ public class CropActivity extends BaseActivity {
         Uri inputUri = bundle.getParcelable(EXTRA_INPUT_URI);
         outputUri = bundle.getParcelable(EXTRA_OUTPUT_URI);
         if (inputUri == null || outputUri == null) {
-            MyLog.e(getClass(), "地址未指定");
+            MyLog.INSTANCE.e(getClass(), "地址未指定");
             finish();
             return;
         }
@@ -132,7 +132,7 @@ public class CropActivity extends BaseActivity {
         try {
             imgCrop.setImageUri(inputUri);
         } catch (Exception e) {
-            MyLog.e(getClass(), "图片地址错误");
+            MyLog.INSTANCE.e(getClass(), "图片地址错误");
             finish();
             return;
         }
@@ -210,7 +210,7 @@ public class CropActivity extends BaseActivity {
                     setResult(RESULT_OK, new Intent().setData(outputUri));
                     finish();
                 } else {
-                    MyLog.e(getClass(), "剪切失败");
+                    MyLog.INSTANCE.e(getClass(), "剪切失败");
                     finish();
                 }
             } catch (Exception e) {

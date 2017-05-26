@@ -228,7 +228,7 @@ public class MyWheelView extends ScrollView {
         tv.setPadding(padding, padding, padding, padding);
         if (0 == itemHeight) {
             // itemHeight = tv.getMeasuredHeight();
-            itemHeight = HyUtil.getViewMeasuredHeight(tv);
+            itemHeight = HyUtil.Companion.getViewMeasuredHeight(tv);
             // Logger.d(TAG, "itemHeight: " + itemHeight);
             views.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight * displayItemCount));
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) this.getLayoutParams();
@@ -360,7 +360,7 @@ public class MyWheelView extends ScrollView {
         if (null == paint) {
             paint = new Paint();
             paint.setColor(lineColor == 0 ? getResources().getColor(R.color.txt_gray) : lineColor);
-            paint.setStrokeWidth(HyUtil.dip2px(context, 1f));
+            paint.setStrokeWidth(HyUtil.Companion.dip2px(context, 1f));
         }
 
         background = new Drawable() {
@@ -443,7 +443,7 @@ public class MyWheelView extends ScrollView {
                 Method method = cls.getMethod("getName");
                 return method.invoke(obj) + "";
             } catch (Exception e) {
-                MyLog.e(getClass(), "Object 如果不是 String or Integer 里面必须有getName和setName(String)");
+                MyLog.INSTANCE.e(getClass(), "Object 如果不是 String or Integer 里面必须有getName和setName(String)");
                 e.printStackTrace();
             }
         }

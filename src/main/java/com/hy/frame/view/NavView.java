@@ -78,7 +78,7 @@ public class NavView extends FrameLayout implements Checkable {
         if (textColor != null)
             txtKey.setTextColor(textColor);
         if (textSize > 0)
-            txtKey.setTextSize(HyUtil.floatToSpDimension(textSize, context));
+            txtKey.setTextSize(HyUtil.Companion.floatToSpDimension(textSize, context));
         if (horizontal && textRight) {
             LayoutParams txtFlp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             txtFlp.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;

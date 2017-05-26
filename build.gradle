@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 25
@@ -35,7 +36,11 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     //compile 'com.android.support:support-vector-drawable:25.2.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     //compile files('libs/gson-2.6.2.jar')
     //compile files('libs/volley_android23.jar')
     //compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+}
+repositories {
+    mavenCentral()
 }

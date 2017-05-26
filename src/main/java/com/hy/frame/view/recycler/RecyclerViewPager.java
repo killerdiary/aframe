@@ -168,8 +168,8 @@ public class RecyclerViewPager extends RecyclerView {
         }
 
         if (DEBUG) {
-            MyLog.d("@", "velocityX:" + velocityX);
-            MyLog.d("@", "velocityY:" + velocityY);
+            MyLog.INSTANCE.d("@", "velocityX:" + velocityX);
+            MyLog.INSTANCE.d("@", "velocityY:" + velocityY);
         }
         return flinging;
     }
@@ -177,7 +177,7 @@ public class RecyclerViewPager extends RecyclerView {
     @Override
     public void smoothScrollToPosition(int position) {
         if (DEBUG) {
-            MyLog.d("@", "smoothScrollToPosition:" + position);
+            MyLog.INSTANCE.d("@", "smoothScrollToPosition:" + position);
         }
         mSmoothScrollTargetPosition = position;
         if (getLayoutManager() != null && getLayoutManager() instanceof LinearLayoutManager) {
@@ -236,7 +236,7 @@ public class RecyclerViewPager extends RecyclerView {
     @Override
     public void scrollToPosition(int position) {
         if (DEBUG) {
-            MyLog.d("@", "scrollToPosition:" + position);
+            MyLog.INSTANCE.d("@", "scrollToPosition:" + position);
         }
         mPositionBeforeScroll = getCurrentPosition();
         mSmoothScrollTargetPosition = position;
@@ -296,8 +296,8 @@ public class RecyclerViewPager extends RecyclerView {
                 flingCount = Math.max(-1, Math.min(1, flingCount));
                 targetPosition = flingCount == 0 ? curPosition : mPositionOnTouchDown + flingCount;
                 if (DEBUG) {
-                    MyLog.d("@", "flingCount:" + flingCount);
-                    MyLog.d("@", "original targetPosition:" + targetPosition);
+                    MyLog.INSTANCE.d("@", "flingCount:" + flingCount);
+                    MyLog.INSTANCE.d("@", "original targetPosition:" + targetPosition);
                 }
             }
             targetPosition = Math.max(targetPosition, 0);
@@ -318,8 +318,8 @@ public class RecyclerViewPager extends RecyclerView {
                 }
             }
             if (DEBUG) {
-                MyLog.d("@", "mTouchSpan:" + mTouchSpan);
-                MyLog.d("@", "adjustPositionX:" + targetPosition);
+                MyLog.INSTANCE.d("@", "mTouchSpan:" + mTouchSpan);
+                MyLog.INSTANCE.d("@", "adjustPositionX:" + targetPosition);
             }
             smoothScrollToPosition(safeTargetPosition(targetPosition, mViewPagerAdapter.getItemCount()));
         }
@@ -379,8 +379,8 @@ public class RecyclerViewPager extends RecyclerView {
                 }
             }
             if (DEBUG) {
-                MyLog.d("@", "mTouchSpan:" + mTouchSpan);
-                MyLog.d("@", "adjustPositionY:" + targetPosition);
+                MyLog.INSTANCE.d("@", "mTouchSpan:" + mTouchSpan);
+                MyLog.INSTANCE.d("@", "adjustPositionY:" + targetPosition);
             }
             smoothScrollToPosition(safeTargetPosition(targetPosition, mViewPagerAdapter.getItemCount()));
         }
@@ -393,7 +393,7 @@ public class RecyclerViewPager extends RecyclerView {
                     ? ViewUtils.getCenterXChildPosition(this)
                     : ViewUtils.getCenterYChildPosition(this);
             if (DEBUG) {
-                MyLog.d("@", "mPositionOnTouchDown:" + mPositionOnTouchDown);
+                MyLog.INSTANCE.d("@", "mPositionOnTouchDown:" + mPositionOnTouchDown);
             }
         }
         return super.dispatchTouchEvent(ev);
@@ -427,7 +427,7 @@ public class RecyclerViewPager extends RecyclerView {
                     mHasCalledOnPageChanged = false;
                 }
                 if (DEBUG) {
-                    MyLog.d("@", "mPositionBeforeScroll:" + mPositionBeforeScroll);
+                    MyLog.INSTANCE.d("@", "mPositionBeforeScroll:" + mPositionBeforeScroll);
                 }
                 mFisrtLeftWhenDragging = mCurView.getLeft();
                 mFirstTopWhenDragging = mCurView.getTop();
@@ -479,7 +479,7 @@ public class RecyclerViewPager extends RecyclerView {
                 mCurView = null;
             } else if (mSmoothScrollTargetPosition != mPositionBeforeScroll) {
                 if (DEBUG) {
-                    MyLog.d("@", "onPageChanged:" + mSmoothScrollTargetPosition);
+                    MyLog.INSTANCE.d("@", "onPageChanged:" + mSmoothScrollTargetPosition);
                 }
                 if (mOnPageChangedListeners != null) {
                     for (OnPageChangedListener onPageChangedListener : mOnPageChangedListeners) {

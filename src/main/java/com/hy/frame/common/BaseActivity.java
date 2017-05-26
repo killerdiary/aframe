@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
             flyMain = getView(R.id.base_flyMain);
             View.inflate(context, initLayoutId(), flyMain);
         } else {
-            MyLog.e(getClass(), "initLayoutId not call");
+            MyLog.INSTANCE.e(getClass(), "initLayoutId not call");
         }
         initToolbar();
         initApp();
@@ -93,7 +93,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
         try {
             app = (BaseApplication) getApplication();
         } catch (Exception e) {
-            MyLog.e(getClass(), "BaseApplication Exception");
+            MyLog.INSTANCE.e(getClass(), "BaseApplication Exception");
             System.exit(0);
             return;
         }
@@ -173,7 +173,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
      */
     protected boolean initLoadView() {
         if (flyMain == null) {
-            MyLog.e(getClass(), "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!");
+            MyLog.INSTANCE.e(getClass(), "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!");
             return false;
         }
         if (loadCache != null) return true;
@@ -187,11 +187,11 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
                 View.inflate(context, R.layout.in_loading, flyMain);
         }
         loadCache = new LoadCache();
-        loadCache.llyLoad = getView(R.id.base_llyLoad);
-        loadCache.proLoading = getView(R.id.base_proLoading);
-        loadCache.imgMessage = getView(R.id.base_imgMessage);
-        loadCache.txtMessage = getView(R.id.base_txtMessage);
-        loadCache.txtMessage = getView(R.id.base_txtMessage);
+        loadCache.setLlyLoad(getView(R.id.base_llyLoad));
+        loadCache.setProLoading(getView(R.id.base_proLoading));
+        loadCache.setImgMessage(getView(R.id.base_imgMessage));
+        loadCache.setTxtMessage(getView(R.id.base_txtMessage));
+        loadCache.setTxtMessage(getView(R.id.base_txtMessage));
         return true;
     }
 
@@ -235,7 +235,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
     protected void allowRetry() {
         if (loadCache != null) {
             retry = true;
-            loadCache.llyLoad.setOnClickListener(this);
+            loadCache.getLlyLoad().setOnClickListener(this);
         }
     }
 
@@ -477,7 +477,7 @@ public abstract class BaseActivity extends AppCompatActivity implements android.
 
     @Override
     public void onClick(View v) {
-        if (HyUtil.isFastClick())
+        if (HyUtil.Companion.isFastClick())
             return;
         if (v.getId() == R.id.head_vLeft)
             onLeftClick();

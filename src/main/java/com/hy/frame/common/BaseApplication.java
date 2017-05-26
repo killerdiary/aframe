@@ -41,9 +41,9 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        String processName = HyUtil.getProcessName(this, android.os.Process.myPid());
+        String processName = HyUtil.Companion.getProcessName(this, android.os.Process.myPid());
         if (processName != null) {
-            MyLog.d(getClass(), "Application start! process:" + processName);
+            MyLog.INSTANCE.d(getClass(), "Application start! process:" + processName);
             boolean defaultProcess = TextUtils.equals(processName, getPackageName());
             if (defaultProcess) {
                 initAppForMainProcess();
@@ -56,7 +56,7 @@ public class BaseApplication extends Application {
     @Override
     public void onTerminate() {
         // 程序终止的时候执行
-        MyLog.d(getClass(), "Application closed! onTerminate");
+        MyLog.INSTANCE.d(getClass(), "Application closed! onTerminate");
         if (receiver != null) {
             try {
                 unregisterReceiver(receiver);
@@ -70,20 +70,20 @@ public class BaseApplication extends Application {
     @Override
     public void onLowMemory() {
         // 低内存的时候执行
-        MyLog.d(getClass(), "onLowMemory");
+        MyLog.INSTANCE.d(getClass(), "onLowMemory");
         super.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
         // 程序在内存清理的时候执行
-        MyLog.d(getClass(), "onTrimMemory");
+        MyLog.INSTANCE.d(getClass(), "onTrimMemory");
         super.onTrimMemory(level);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        MyLog.d(getClass(), "onConfigurationChanged");
+        MyLog.INSTANCE.d(getClass(), "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
@@ -185,7 +185,7 @@ public class BaseApplication extends Application {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         String action = intent.getAction();
-                        MyLog.d(getClass(), "action:" + action);
+                        MyLog.INSTANCE.d(getClass(), "action:" + action);
                         BaseApplication.this.onReceive(this, intent);
                     }
                 };

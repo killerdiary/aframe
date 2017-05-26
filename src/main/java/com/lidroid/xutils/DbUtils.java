@@ -787,7 +787,7 @@ public class DbUtils {
     ///////////////////////////////////// exec sql /////////////////////////////////////////////////////
     private void debugSql(String sql) {
         if (debug) {
-            MyLog.d(sql);
+            MyLog.INSTANCE.d(sql);
         }
     }
 

@@ -113,10 +113,10 @@ public class MyListView extends ListView implements OnScrollListener {
 
     private void initHeader() {
         headView = (LinearLayout) inflater.inflate(R.layout.in_lv_header, null);
-        imgHeadArrow = HyUtil.getView(headView, R.id.lv_imgHeadArrow);
-        proHead = HyUtil.getView(headView, R.id.lv_proHead);
-        txtHeadHint = HyUtil.getView(headView, R.id.lv_txtHeadHint);
-        txtHeadUpdateTime = HyUtil.getView(headView, R.id.lv_txtHeadUpdateTime);
+        imgHeadArrow = HyUtil.Companion.getView(headView, R.id.lv_imgHeadArrow);
+        proHead = HyUtil.Companion.getView(headView, R.id.lv_proHead);
+        txtHeadHint = HyUtil.Companion.getView(headView, R.id.lv_txtHeadHint);
+        txtHeadUpdateTime = HyUtil.Companion.getView(headView, R.id.lv_txtHeadUpdateTime);
         // measureView(headView);
         // headerHeight = headView.getMeasuredHeight();
         headerHeight = getResources().getDimensionPixelSize(R.dimen.lv_heigth);
@@ -128,10 +128,10 @@ public class MyListView extends ListView implements OnScrollListener {
 
     private void initFooter() {
         footView = (LinearLayout) inflater.inflate(R.layout.in_lv_footer, null);
-        imgFootArrow = HyUtil.getView(footView, R.id.lv_imgFootArrow);
-        proFoot = HyUtil.getView(footView, R.id.lv_proFoot);
-        txtFootHint = HyUtil.getView(footView, R.id.lv_txtFootHint);
-        txtFootUpdateTime = HyUtil.getView(footView, R.id.lv_txtFootUpdateTime);
+        imgFootArrow = HyUtil.Companion.getView(footView, R.id.lv_imgFootArrow);
+        proFoot = HyUtil.Companion.getView(footView, R.id.lv_proFoot);
+        txtFootHint = HyUtil.Companion.getView(footView, R.id.lv_txtFootHint);
+        txtFootUpdateTime = HyUtil.Companion.getView(footView, R.id.lv_txtFootUpdateTime);
         // measureView(footView);
         // footerHeight = footView.getMeasuredHeight();
         footerHeight = getResources().getDimensionPixelSize(R.dimen.lv_heigth);

@@ -24,9 +24,9 @@ public class FileBinary implements Binary {
 
     public FileBinary(File file, String fileName, String mimeType) {
         if (file == null) {
-            MyLog.w("File == null");
+            MyLog.INSTANCE.w("File == null");
         } else if (!file.exists()) {
-            MyLog.w("File isn't exists");
+            MyLog.INSTANCE.w("File isn't exists");
         }
         this.file = file;
         this.fileName = fileName;
@@ -54,7 +54,7 @@ public class FileBinary implements Binary {
     @Override
     public String getMimeType() {
         if (TextUtils.isEmpty(mimeType)) {
-            mimeType = FileUtil.getMimeTypeByUrl(file.getAbsolutePath());
+            mimeType = FileUtil.INSTANCE.getMimeTypeByUrl(file.getAbsolutePath());
             if (TextUtils.isEmpty(mimeType))
                 mimeType = MIME_TYPE_FILE;
         }

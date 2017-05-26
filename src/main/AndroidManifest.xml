@@ -1,6 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hy.frame">
+<manifest package="com.hy.frame">
 
-    <!--<application android:theme="@style/AppBaseTheme" />-->
-    <!--<uses-permission android:name="android.permission.CAMERA" />-->
 </manifest>
