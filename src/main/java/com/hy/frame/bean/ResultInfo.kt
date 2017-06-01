@@ -1,6 +1,6 @@
 package com.hy.frame.bean
 
-import java.util.HashMap
+import java.util.*
 
 /**
  * ResultInfo 服务器返回数据
@@ -42,9 +42,11 @@ class ResultInfo {
     var requestType: Int = 0
     private var maps: MutableMap<String, String>? = null//其他
 
+
     /**
      * 返回结果
      */
+    @Suppress("UNCHECKED_CAST")
     fun <T> getObj(): T {
         return obj as T
     }
