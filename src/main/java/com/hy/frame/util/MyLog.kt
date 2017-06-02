@@ -6,7 +6,7 @@ import android.util.Log
  * 日志
 
  * @author HeYan
- * *
+ *
  * @time 2014年12月17日 下午4:05:40
  */
 object MyLog {

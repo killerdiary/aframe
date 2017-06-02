@@ -1,21 +1,20 @@
 package com.hy.frame.util
 
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.PixelFormat
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 /**
  * Bitmap与DrawAble与byte[]与InputStream之间的转换工具类
 
  * @author HeYan
- * *
+ *
  * @time 2015-9-23 下午2:10:19
  */
 class FormatTools {

@@ -3,7 +3,6 @@ package com.hy.frame.audio
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.Handler
-import android.os.Message
 import android.util.Log
 
 class AudioPlayer : IPlayComplete {

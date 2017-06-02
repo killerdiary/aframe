@@ -1,6 +1,7 @@
 package com.lidroid.xutils.db.table;
 
 import android.database.Cursor;
+
 import com.lidroid.xutils.db.sqlite.ColumnDbType;
 import com.lidroid.xutils.db.sqlite.FinderLazyLoader;
 import com.lidroid.xutils.exception.DbException;

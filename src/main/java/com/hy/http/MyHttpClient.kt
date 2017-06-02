@@ -14,7 +14,7 @@ import com.hy.frame.R
 import com.hy.frame.bean.DownFile
 import com.hy.frame.bean.ResultInfo
 import com.hy.frame.util.MyLog
-import com.hy.frame.view.LoadingDialog
+import com.hy.frame.ui.LoadingDialog
 import okhttp3.*
 import java.io.File
 import java.io.FileOutputStream
@@ -37,7 +37,7 @@ import javax.net.ssl.TrustManagerFactory
  */
 abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpListener) {
     private var listeners: MutableList<IMyHttpListener>? = null
-    protected var showDialog: Boolean = false// 显示加载对话框
+    public var showDialog: Boolean = false// 显示加载对话框
     protected var loadingDialog: LoadingDialog? = null
     private var headerParams: MutableMap<String, String>? = null //默认头信息
     protected var isDestroy: Boolean = false
@@ -166,7 +166,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      * @param list        结果是否是List
      * @param url         请求地址
      */
-    fun <T> request(method: RequestMethod, requestCode: Int, params: AjaxParams?, cls: Class<T>?, list: Boolean = false, url: String) {
+    open fun <T> request(method: RequestMethod, requestCode: Int, params: AjaxParams?, cls: Class<T>?, list: Boolean = false, url: String) {
         var requestUrl = url
         MyLog.d("request", requestUrl)
         val result = ResultInfo()
@@ -330,7 +330,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
 
     }
 
-    @JvmOverloads fun download(requestCode: Int, url: String, fileFolder: String, fileName: String, isRange: Boolean, isDeleteOld: Boolean, qid: Long = 0) {
+    fun download(requestCode: Int, url: String, fileFolder: String, fileName: String, isRange: Boolean, isDeleteOld: Boolean, qid: Long = 0) {
         MyLog.i("download", url)
         val result = ResultInfo()
         result.requestCode = requestCode
@@ -348,7 +348,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         request<Any>(method, url, null, result, null, false)
     }
 
-    protected fun doSuccessFile(result: ResultInfo, body: ResponseBody?) {
+    private fun doSuccessFile(result: ResultInfo, body: ResponseBody?) {
         MyLog.d("doSuccessFile" + result.requestCode)
         if (body == null) {
             onRequestSuccess(result)
@@ -421,8 +421,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      * @param list
      * @param <T>
      */
-    @Deprecated("")
-    protected fun <T> doSuccess(result: ResultInfo, json: String, cls: Class<T>?, list: Boolean) {
+    protected open fun <T> doSuccess(result: ResultInfo, json: String, cls: Class<T>?, list: Boolean) {
         result.setObj(json)
         onRequestSuccess(result)
     }
@@ -435,7 +434,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      * @param list
      * @param <T>
      */
-    protected fun <T> doSuccess(result: ResultInfo, obj: JsonArray, cls: Class<T>?, list: Boolean) {
+    protected open fun <T> doSuccess(result: ResultInfo, obj: JsonArray, cls: Class<T>?, list: Boolean) {
         result.setObj(obj)
         onRequestSuccess(result)
     }
@@ -448,7 +447,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      * @param list
      * @param <T>
      */
-    protected fun <T> doSuccess(result: ResultInfo, obj: JsonObject, cls: Class<T>?, list: Boolean) {
+    protected open fun <T> doSuccess(result: ResultInfo, obj: JsonObject, cls: Class<T>?, list: Boolean) {
         //        try {
         //            int flag = 0;
         //            if (obj.has("state")) {
@@ -599,7 +598,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
 
     abstract fun getPath(resId: Int): String
 
-    protected fun getString(resId: Int): String? {
+    protected fun getString(resId: Int): String {
         return context.getString(resId)
     }
 

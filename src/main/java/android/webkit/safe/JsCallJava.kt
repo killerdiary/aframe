@@ -2,15 +2,11 @@ package android.webkit.safe
 
 import android.text.TextUtils
 import android.webkit.WebView
-
 import com.hy.frame.util.MyLog
-
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-
 import java.lang.reflect.Method
-import java.util.HashMap
+import java.util.*
 
 class JsCallJava(interfaceObj: Any, interfaceName: String) {
     private var mMethodsMap: HashMap<String, Method>? = null
@@ -123,7 +119,7 @@ class JsCallJava(interfaceObj: Any, interfaceName: String) {
                         values[k] = if (argsVals.isNull(k)) null else argsVals.getJSONObject(k)
                     } else if ("function" == currType) {
                         sign += "_F"
-                        values[k] = JsCallback(webView, mInterfacedName, argsVals.getInt(k))
+                        values[k] = JsCallback(webView, mInterfacedName!!, argsVals.getInt(k))
                     } else {
                         sign += "_P"
                     }
@@ -211,7 +207,7 @@ class JsCallJava(interfaceObj: Any, interfaceName: String) {
          * 是否是“Java接口类中方法调用”的内部消息；
 
          * @param message
-         * *
+         *
          * @return
          */
         internal fun isSafeWebViewCallMsg(message: String): Boolean {

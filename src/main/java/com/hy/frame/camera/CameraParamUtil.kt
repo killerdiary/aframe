@@ -3,15 +3,13 @@ package com.hy.frame.camera
 import android.hardware.Camera
 import android.hardware.Camera.Size
 import android.util.Log
-
-import java.util.Collections
-import java.util.Comparator
+import java.util.*
 
 /**
  * CameraParamUtil
 
  * @author HeYan
- * *
+ *
  * @time 2017/4/28 15:33
  */
 class CameraParamUtil private constructor() {

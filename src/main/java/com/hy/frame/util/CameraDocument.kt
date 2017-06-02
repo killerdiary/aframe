@@ -70,13 +70,13 @@ object CameraDocument {
      * MediaStore Uris, and other file-based ContentProviders.
 
      * @param context       The context.
-     * *
+     *
      * @param uri           The Uri to query.
-     * *
+     *
      * @param selection     (Optional) Filter used in the query.
-     * *
+     *
      * @param selectionArgs (Optional) Selection arguments used in the query.
-     * *
+     *
      * @return The value of the _data column, which is typically a file path.
      */
     fun getDataColumn(context: Context, uri: Uri, selection: String?, selectionArgs: Array<String>?): String? {
@@ -99,7 +99,7 @@ object CameraDocument {
 
     /**
      * @param uri The Uri to check.
-     * *
+     *
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
     fun isExternalStorageDocument(uri: Uri): Boolean {
@@ -108,7 +108,7 @@ object CameraDocument {
 
     /**
      * @param uri The Uri to check.
-     * *
+     *
      * @return Whether the Uri authority is DownloadsProvider.
      */
     fun isDownloadsDocument(uri: Uri): Boolean {
@@ -117,7 +117,7 @@ object CameraDocument {
 
     /**
      * @param uri The Uri to check.
-     * *
+     *
      * @return Whether the Uri authority is MediaProvider.
      */
     fun isMediaDocument(uri: Uri): Boolean {
@@ -126,7 +126,7 @@ object CameraDocument {
 
     /**
      * @param uri The Uri to check.
-     * *
+     *
      * @return Whether the Uri authority is Google Photos.
      */
     fun isGooglePhotosUri(uri: Uri): Boolean {

@@ -6,7 +6,7 @@ import java.util.*
  * ResultInfo 服务器返回数据
 
  * @author HeYan
- * *
+ *
  * @time 2017/5/23 10:51
  */
 class ResultInfo {
@@ -54,7 +54,7 @@ class ResultInfo {
     /**
      * 返回结果
      */
-    fun setObj(obj: Any) {
+    fun setObj(obj: Any?) {
         this.obj = obj
     }
 

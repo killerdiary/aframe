@@ -12,11 +12,11 @@ interface IWheelAdapter {
      * Gets a wheel item by index.
 
      * @param index
-     * *            the item index
-     * *
+     *            the item index
+     *
      * @return the wheel item text or null
      */
-    fun getItem(index: Int): String
+    fun getItem(index: Int): String?
 
     /**
      * Gets maximum item length. It is used to determine the wheel width. If -1

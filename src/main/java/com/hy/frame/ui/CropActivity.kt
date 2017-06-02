@@ -13,8 +13,8 @@ import com.hy.frame.common.BaseActivity
 import com.hy.frame.util.CameraDocument
 import com.hy.frame.util.ImageUtil
 import com.hy.frame.util.MyLog
-import com.hy.frame.view.NavView
-import com.hy.frame.view.TintImageView
+import com.hy.frame.widget.NavView
+import com.hy.frame.widget.TintImageView
 import com.yalantis.ucrop.util.BitmapLoadUtils
 import com.yalantis.ucrop.view.CropImageView
 import com.yalantis.ucrop.view.GestureCropImageView
@@ -29,6 +29,14 @@ import java.io.OutputStream
  * time 2016/8/23 11:09
  */
 class CropActivity : BaseActivity() {
+    override fun initSingleLayoutId(): Int {
+        return 0
+    }
+
+    override fun isTranslucentStatus(): Boolean {
+        return true
+    }
+
     private var imgCrop: GestureCropImageView? = null
     private var vOverlay: OverlayView? = null
     private var navTurnLeft: NavView? = null
@@ -43,8 +51,8 @@ class CropActivity : BaseActivity() {
 
     override fun initView() {
         val vUCrop = getView<UCropView>(R.id.crop_vUCrop)
-        imgCrop = vUCrop.cropImageView
-        vOverlay = vUCrop.overlayView
+        imgCrop = vUCrop?.cropImageView
+        vOverlay = vUCrop?.overlayView
         navTurnLeft = getViewAndClick(R.id.crop_navTurnLeft)
         navTurnRight = getViewAndClick(R.id.crop_navTurnRight)
         setOnClickListener(R.id.crop_txtConfirm)
@@ -112,7 +120,7 @@ class CropActivity : BaseActivity() {
         }
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(CameraDocument.getPath(context, inputUri), options)
+        BitmapFactory.decodeFile(CameraDocument.getPath(context!!, inputUri), options)
         if (options.outHeight >= 3000 && options.outHeight >= options.outWidth * 3) {
             isBigImage = true
             navTurnLeft!!.visibility = View.GONE
@@ -183,7 +191,7 @@ class CropActivity : BaseActivity() {
 
     override fun onRightClick() {
         if (isBigImage) {
-            if (ImageUtil.compressByPath(CameraDocument.getPath(context, imgCrop!!.imageUri), outputUri!!.path, quality, maxWidth, maxHeight)) {
+            if (ImageUtil.compressByPath(CameraDocument.getPath(context!!, imgCrop!!.imageUri!!)!!, outputUri!!.path, quality, maxWidth, maxHeight)) {
                 setResult(RESULT_OK, Intent().setData(outputUri))
             }
             finish()

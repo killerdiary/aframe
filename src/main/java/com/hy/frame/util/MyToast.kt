@@ -10,7 +10,7 @@ import android.widget.Toast
  * 自定义Toast
 
  * @author HeYan
- * *
+ *
  * @time 2014-7-21 上午9:44:27
  */
 object MyToast {

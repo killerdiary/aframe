@@ -16,6 +16,7 @@
 package com.lidroid.xutils.db.table;
 
 import android.text.TextUtils;
+
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
 import com.lidroid.xutils.db.converter.ColumnConverterFactory;

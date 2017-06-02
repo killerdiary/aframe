@@ -6,16 +6,13 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.util.Log
-
-import java.util.ArrayList
 
 /**
  * CheckPermissionsUtil
 
  * @author HeYan
- * *
+ *
  * @time 2017/4/28 15:33
  */
 class CheckPermissionsUtil(internal var mContext: Context) {

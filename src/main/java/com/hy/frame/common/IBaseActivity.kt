@@ -5,9 +5,9 @@ import android.view.View
 
 /**
  * @author HeYan
- * *
+ *
  * @title 公有接口
- * *
+ *
  * @time 2015/11/20 11:30
  */
 interface IBaseActivity {
@@ -30,6 +30,7 @@ interface IBaseActivity {
     //    /**
     //     * 初始化数据
     //     */
+
     //    void onStartData();
 
     /**

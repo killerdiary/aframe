@@ -2,6 +2,7 @@ package com.hy.frame.common
 
 import android.app.Activity
 import android.app.Application
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -18,10 +19,10 @@ import java.util.concurrent.CopyOnWriteArrayList
  * 应用
 
  * @author HeYan
- * *
+ *
  * @time 2014年12月17日 下午4:19:29
  */
-class BaseApplication : Application() {
+abstract class BaseApplication : Application() {
     /**
      * Activity栈
      */
@@ -32,7 +33,7 @@ class BaseApplication : Application() {
     private var hashMap: HashMap<String, Any>? = null
     private var receiver: BroadcastReceiver? = null
 
-    override fun onCreate() {
+     override fun onCreate() {
         super.onCreate()
         val processName = HyUtil.getProcessName(this, android.os.Process.myPid())
         if (processName != null) {
@@ -134,7 +135,7 @@ class BaseApplication : Application() {
      * 存数据
 
      * @param key
-     * *
+     *
      * @param value
      */
     fun putValue(key: String, value: Any) {
@@ -158,7 +159,7 @@ class BaseApplication : Application() {
      * 主线程方法
      */
     @CallSuper
-    protected fun initAppForMainProcess(filter: IntentFilter? = null) {
+    protected open fun initAppForMainProcess(filter: IntentFilter? = null) {
         if (filter != null) {
             filter.priority = IntentFilter.SYSTEM_LOW_PRIORITY
             if (receiver == null)
@@ -182,7 +183,5 @@ class BaseApplication : Application() {
 
     }
 
-    protected fun onReceive(receiver: BroadcastReceiver, intent: Intent) {
-
-    }
+    abstract fun onReceive(receiver: BroadcastReceiver, intent: Intent)
 }

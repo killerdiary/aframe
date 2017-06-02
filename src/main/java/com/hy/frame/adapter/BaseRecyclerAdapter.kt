@@ -13,7 +13,7 @@ import android.view.ViewGroup
  * @author HeYan
  * @time 2016/5/27 16:22
  */
-abstract class BaseRecyclerAdapter<T> @JvmOverloads constructor(protected val context: Context, datas: List<T>, listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
+abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, datas: List<T>, listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
 
     var datas: List<T>? = null
     protected var listener: IAdapterListener<T>? = null
@@ -151,7 +151,7 @@ abstract class BaseRecyclerAdapter<T> @JvmOverloads constructor(protected val co
      * 自定义的ViewHolder，持有每个Item的的所有界面元素,static不是说只存在1个实例，而是可以访问外部类的静态变量，final修饰类则是不让该类继承
 
      * @author HeYan
-     * *
+     *
      * @time 2017/5/23 10:13
      */
     open inner class BaseHolder(v: View) : RecyclerView.ViewHolder(v) {

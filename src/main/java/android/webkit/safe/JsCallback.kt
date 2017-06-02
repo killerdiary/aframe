@@ -2,15 +2,12 @@ package android.webkit.safe
 
 
 import android.webkit.WebView
-
 import com.hy.frame.util.MyLog
-
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-
 import java.lang.ref.WeakReference
-import java.util.Locale
+import java.util.*
 
 
 class JsCallback(view: WebView, private val mInjectedName: String, private val mIndex: Int) {
@@ -27,7 +24,7 @@ class JsCallback(view: WebView, private val mInjectedName: String, private val m
      * 向网页执行js回调；
 
      * @param args 参数
-     * *
+     *
      * @throws JsCallbackException
      */
     @Throws(JsCallbackException::class)

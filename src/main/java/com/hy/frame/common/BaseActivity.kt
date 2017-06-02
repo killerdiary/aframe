@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
+import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -26,18 +27,17 @@ import com.hy.http.MyHttpClient
  * time 2015/12/23 16:40
  */
 abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickListener, IBaseActivity {
-    var app: BaseApplication? = null
+    protected var app: BaseApplication? = null
     protected var context: Context? = null
     private var lastAct: Class<*>? = null// 上一级 Activity
-    var lastSkipAct: String? = null //获取上一级的Activity名
+    private var lastSkipAct: String? = null //获取上一级的Activity名
     private var toolbar: Toolbar? = null
     private var flyMain: FrameLayout? = null
     protected var loadCache: LoadCache? = null
-    protected var client: MyHttpClient? = null
+    protected open var client: MyHttpClient? = null
     private var init: Boolean = false
 
-    val isTranslucentStatus: Boolean
-        get() = false
+    abstract fun isTranslucentStatus(): Boolean
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +57,8 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     /**
      * 唯一布局ID
      */
-    protected fun initSingleLayoutId(): Int {
-        return 0
-    }
+    @LayoutRes
+    protected abstract fun initSingleLayoutId(): Int
 
     private fun init() {
         context = this
@@ -88,7 +87,6 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             System.exit(0)
             return
         }
-
         app!!.addActivity(this)
     }
 
@@ -97,7 +95,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
         toolbar!!.title = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             val statusBarHeight = statusBarHeight
-            if (isTranslucentStatus && statusBarHeight > 0) {
+            if (isTranslucentStatus() && statusBarHeight > 0) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
                 toolbar!!.setPadding(0, statusBarHeight, 0, 0)
                 if (toolbar!!.layoutParams != null)
@@ -230,7 +228,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             toolbar!!.addView(v, tlp)
         }
         val txtTitle = getView<TextView>(R.id.head_vTitle, toolbar)
-        txtTitle.text = title
+        txtTitle?.text = title
     }
 
     protected fun hideHeader() {
@@ -242,11 +240,11 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             if (toolbar!!.findViewById(R.id.head_vLeft) == null) {
                 val v = View.inflate(context, R.layout.in_head_left, toolbar)
                 val img = getView<ImageView>(R.id.head_vLeft, v)
-                img.setOnClickListener(this)
-                img.setImageResource(left)
+                img?.setOnClickListener(this)
+                img?.setImageResource(left)
             } else {
                 val img = getView<ImageView>(R.id.head_vLeft, toolbar)
-                img.setImageResource(left)
+                img?.setImageResource(left)
             }
         }
     }
@@ -256,11 +254,11 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             if (toolbar!!.findViewById(R.id.head_vLeft) == null) {
                 val v = View.inflate(context, R.layout.in_head_tleft, toolbar)
                 val txt = getView<TextView>(R.id.head_vLeft, v)
-                txt.setOnClickListener(this)
-                txt.setText(left)
+                txt?.setOnClickListener(this)
+                txt?.setText(left)
             } else {
                 val txt = getView<TextView>(R.id.head_vLeft, toolbar)
-                txt.setText(left)
+                txt?.setText(left)
             }
         }
     }
@@ -270,11 +268,11 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             if (toolbar!!.findViewById(R.id.head_vRight) == null) {
                 val v = View.inflate(context, R.layout.in_head_right, toolbar)
                 val img = getView<ImageView>(R.id.head_vRight, v)
-                img.setOnClickListener(this)
-                img.setImageResource(right)
+                img?.setOnClickListener(this)
+                img?.setImageResource(right)
             } else {
                 val img = getView<ImageView>(R.id.head_vRight, toolbar)
-                img.setImageResource(right)
+                img?.setImageResource(right)
             }
         }
     }
@@ -282,17 +280,17 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
         val v = View.inflate(context, R.layout.in_head_right, null)
         val img = getView<ImageView>(R.id.head_vRight, v)
-        img.id = id
+        img?.id = id
         val array = theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
         val width = array.getDimensionPixelSize(0, 0)
         array.recycle()
         val params = Toolbar.LayoutParams(width, width)
         //params.setMargins(0, 0, width * (rightCount - 1), 0);
         params.gravity = Gravity.RIGHT
-        img.layoutParams = params
+        img?.layoutParams = params
         toolbar!!.addView(v)
-        img.setOnClickListener(this)
-        img.setImageResource(right)
+        img?.setOnClickListener(this)
+        img?.setImageResource(right)
     }
 
     protected fun setHeaderRightTxt(@StringRes right: Int) {
@@ -300,11 +298,11 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             if (toolbar!!.findViewById(R.id.head_vRight) == null) {
                 val v = View.inflate(context, R.layout.in_head_tright, toolbar)
                 val txt = getView<TextView>(R.id.head_vRight, v)
-                txt.setOnClickListener(this)
-                txt.setText(right)
+                txt?.setOnClickListener(this)
+                txt?.setText(right)
             } else {
                 val txt = getView<TextView>(R.id.head_vRight, toolbar)
-                txt.setText(right)
+                txt?.setText(right)
             }
         }
     }
@@ -412,10 +410,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      * @param v  Layout
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T : View> getView(@IdRes id: Int, v: View? = null): T {
+    fun <T : View> getView(@IdRes id: Int, v: View? = null): T? {
+        var view: View?
         if (v == null)
-            return findViewById(id) as T
-        return v.findViewById(id) as T
+            view = findViewById(id)
+        else
+            view = v.findViewById(id)
+        return if (view == null) null else view as T
     }
 
     /**
@@ -426,13 +427,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     @Suppress("UNCHECKED_CAST")
     protected fun <T : View> getViewAndClick(@IdRes id: Int, v: View? = null): T {
         val view = getView<View>(id, v)
-        view.setOnClickListener(this)
+        view!!.setOnClickListener(this)
         return view as T
     }
 
     protected fun setOnClickListener(@IdRes id: Int, v: View? = null) {
         val view = getView<View>(id, v)
-        view.setOnClickListener(this)
+        view?.setOnClickListener(this)
     }
 
     /**

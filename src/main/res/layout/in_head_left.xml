@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hy.frame.view.TintImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hy.frame.widget.TintImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/head_vLeft"
     android:layout_width="?attr/appHeaderHeight"
     android:layout_height="?attr/appHeaderHeight"

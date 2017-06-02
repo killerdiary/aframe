@@ -16,6 +16,7 @@
 package com.lidroid.xutils.db.sqlite;
 
 import android.text.TextUtils;
+
 import com.lidroid.xutils.db.converter.ColumnConverterFactory;
 import com.lidroid.xutils.db.table.ColumnUtils;
 

@@ -9,24 +9,24 @@ import android.view.View
  * FoucsView
 
  * @author HeYan
- * *
+ *
  * @time 2017/4/28 15:36
  */
 class FoucsView : View {
-    private val foucsView_size: Int
+    private var foucsView_size: Int = 0
     private var x: Int = 0
     private var y: Int = 0
     private var length: Int = 0
-    private val mPaint: Paint
+    private var mPaint: Paint? = null
 
     constructor(context: Context, size: Int) : super(context) {
         foucsView_size = size
         mPaint = Paint()
-        mPaint.isAntiAlias = true
-        mPaint.isDither = true
-        mPaint.color = 0xFF00CC00.toInt()
-        mPaint.strokeWidth = 1f
-        mPaint.style = Paint.Style.STROKE
+        mPaint!!.isAntiAlias = true
+        mPaint!!.isDither = true
+        mPaint!!.color = 0xFF00CC00.toInt()
+        mPaint!!.strokeWidth = 1f
+        mPaint!!.style = Paint.Style.STROKE
     }
 
     private constructor(context: Context) : super(context) {}

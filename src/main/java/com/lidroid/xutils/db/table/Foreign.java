@@ -16,6 +16,7 @@
 package com.lidroid.xutils.db.table;
 
 import android.database.Cursor;
+
 import com.lidroid.xutils.db.converter.ColumnConverter;
 import com.lidroid.xutils.db.converter.ColumnConverterFactory;
 import com.lidroid.xutils.db.sqlite.ColumnDbType;

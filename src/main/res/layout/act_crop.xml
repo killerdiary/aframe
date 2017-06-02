@@ -189,7 +189,7 @@
         <!--</FrameLayout>-->
 
 
-        <com.hy.frame.view.NavView
+        <com.hy.frame.widget.NavView
             android:id="@+id/crop_navTurnLeft"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -201,7 +201,7 @@
             app:navDrawWidth="@dimen/crop_action_width"
             app:navHorizontal="true" />
 
-        <com.hy.frame.view.NavView
+        <com.hy.frame.widget.NavView
             android:id="@+id/crop_navTurnRight"
             android:layout_width="0dp"
             android:layout_height="match_parent"

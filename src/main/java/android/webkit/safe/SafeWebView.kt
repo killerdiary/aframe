@@ -1,5 +1,6 @@
 package android.webkit.safe
 
+
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,22 +8,9 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
-import android.webkit.CookieManager
-import android.webkit.CookieSyncManager
-import android.webkit.JsPromptResult
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
-
+import android.webkit.*
 import com.hy.frame.util.MyLog
-
-
-import org.json.JSONObject
-
-import java.lang.reflect.Field
-import java.lang.reflect.Method
-import java.util.HashMap
+import java.util.*
 
 /**
  * Created by zhangguojun on 2015/6/21.
@@ -32,7 +20,7 @@ import java.util.HashMap
  * 乌云上的介绍：http://www.wooyun.org/bugs/wooyun-2010-067676
  * 测试方法：让自己的WebView加载http://drops.wooyun.org/webview.html
  */
-class SafeWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : WebView(context, attrs) {
+class SafeWebView  constructor(context: Context, attrs: AttributeSet? = null) : WebView(context, attrs) {
     private var mJsCallJavas: MutableMap<String, JsCallJava>? = null
     private var mInjectJavaScripts: MutableMap<Int, String>? = null
     private var mWebChromeClient: SafeWebChromeClient? = null
@@ -165,9 +153,9 @@ class SafeWebView @JvmOverloads constructor(context: Context, attrs: AttributeSe
      * 构建一个“不会重复注入”的js脚本；
 
      * @param key
-     * *
+     *
      * @param js
-     * *
+     *
      * @return
      */
     fun buildNotRepeatInjectJS(key: String, js: String): String {
@@ -189,7 +177,7 @@ class SafeWebView @JvmOverloads constructor(context: Context, attrs: AttributeSe
      * 构建一个“带try catch”的js脚本；
 
      * @param js
-     * *
+     *
      * @return
      */
     fun buildTryCatchInjectJS(js: String): String {

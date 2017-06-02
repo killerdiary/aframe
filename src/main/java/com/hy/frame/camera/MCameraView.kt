@@ -1,13 +1,8 @@
 package com.hy.frame.camera
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.ImageFormat
-import android.graphics.Matrix
+import android.graphics.*
 import android.hardware.Camera
-import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Environment
 import android.util.AttributeSet
@@ -19,10 +14,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.VideoView
-
 import com.hy.frame.R
 import com.hy.frame.util.MyLog
-
 import java.io.File
 import java.io.IOException
 
@@ -30,11 +23,11 @@ import java.io.IOException
  * MCameraView
 
  * @author HeYan
- * *
+ *
  * @time 2017/4/28 15:33
  */
-class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wakeLock = null;
-        private val mContext: Context, attrs: AttributeSet = null, defStyleAttr: Int = 0) : RelativeLayout(mContext, attrs, defStyleAttr), SurfaceHolder.Callback, Camera.AutoFocusCallback, CameraFocusListener {
+class MCameraView  constructor(//private PowerManager.WakeLock wakeLock = null;
+        private val mContext: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : RelativeLayout(mContext, attrs, defStyleAttr), SurfaceHolder.Callback, Camera.AutoFocusCallback, CameraFocusListener {
 
     val TAG = "MCameraView"
     private var mVideoView: VideoView? = null
@@ -128,7 +121,7 @@ class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wake
 
             override fun getRecordResult() {
                 if (cameraViewListener != null) {
-                    cameraViewListener!!.recordSuccess(fileName)
+                    cameraViewListener!!.recordSuccess(fileName!!)
                 }
                 mVideoView!!.stopPlayback()
                 releaseCamera()
@@ -254,7 +247,7 @@ class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wake
     private var isGetCamera: Boolean = false
 
     //获取Camera
-    private fun getCamera(position: Int): Camera {
+    private fun getCamera(position: Int): Camera? {
         MyLog.e(javaClass, "getCamera")
         var camera: Camera? = null
         try {
@@ -279,7 +272,7 @@ class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wake
     }
 
 
-    private fun setStartPreview(camera: Camera?, holder: SurfaceHolder) {
+    private fun setStartPreview(camera: Camera?, holder: SurfaceHolder?) {
         MyLog.e(javaClass, "setStartPreview")
         if (camera == null) {
             //Log.i(TAG, "Camera is null");

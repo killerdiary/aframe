@@ -9,7 +9,7 @@ import android.view.View
  * @author HeYan
  * @time 2017/5/23 9:35
  */
-abstract class BaseAdapter<T> @JvmOverloads constructor(private val context: Context, listener: IAdapterListener<T>? = null) : android.widget.BaseAdapter() {
+abstract class BaseAdapter<T>  constructor(private val context: Context, listener: IAdapterListener<T>? = null) : android.widget.BaseAdapter() {
     protected var listener: IAdapterListener<T>? = null
 
     init {

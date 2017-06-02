@@ -1,20 +1,17 @@
 package com.hy.frame.util
 
-import java.io.IOException
-import java.util.ArrayList
-
-import org.xmlpull.v1.XmlPullParserException
-
 import android.content.Context
 import android.content.res.XmlResourceParser
-
 import com.hy.frame.bean.MenuInfo
+import org.xmlpull.v1.XmlPullParserException
+import java.io.IOException
+import java.util.*
 
 /**
  * 菜单加载器
 
  * @author HeYan
- * *
+ *
  * @time 2014-7-21 下午3:22:06
  */
 object MenuUtil {
@@ -25,7 +22,7 @@ object MenuUtil {
      * 获取菜单列表
 
      * @param res 菜单xml文件的ResourceId
-     * *
+     *
      * @return
      */
     operator fun get(context: Context, res: Int): List<MenuInfo> {

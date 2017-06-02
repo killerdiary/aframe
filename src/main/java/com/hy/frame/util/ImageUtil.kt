@@ -2,18 +2,13 @@ package com.hy.frame.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 
 /**
  * @author HeYan
- * *
+ *
  * @title
- * *
+ *
  * @time 2015/10/22 10:25
  */
 class ImageUtil {

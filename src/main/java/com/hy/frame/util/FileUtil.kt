@@ -22,9 +22,9 @@ object FileUtil {
      * 获取文件指定文件的指定单位的大小
 
      * @param filePath 文件路径
-     * *
+     *
      * @param sizeType 获取大小的类型1为B、2为KB、3为MB、4为GB
-     * *
+     *
      * @return double值的大小
      */
     fun getFileOrFilesSize(filePath: String, sizeType: Int): Double {
@@ -48,7 +48,7 @@ object FileUtil {
      * 调用此方法自动计算指定文件或指定文件夹的大小
 
      * @param filePath 文件路径
-     * *
+     *
      * @return 计算好的带B、KB、MB、GB的字符串
      */
     fun getAutoFileOrFilesSize(filePath: String): String {
@@ -72,9 +72,9 @@ object FileUtil {
      * 获取指定文件大小
 
      * @param file File
-     * *
+     *
      * @return
-     * *
+     *
      * @throws Exception
      */
     @Throws(Exception::class)
@@ -96,9 +96,9 @@ object FileUtil {
      * 获取指定文件夹
 
      * @param f
-     * *
+     *
      * @return
-     * *
+     *
      * @throws Exception
      */
     @Throws(Exception::class)
@@ -119,7 +119,7 @@ object FileUtil {
      * 转换文件大小
 
      * @param fileS
-     * *
+     *
      * @return
      */
     private fun FormetFileSize(fileS: Long): String {
@@ -145,9 +145,9 @@ object FileUtil {
      * 转换文件大小,指定转换的类型
 
      * @param fileS
-     * *
+     *
      * @param sizeType
-     * *
+     *
      * @return
      */
     private fun FormetFileSize(fileS: Long, sizeType: Int): Double {
@@ -168,7 +168,7 @@ object FileUtil {
      * 删除该路径下的所有文件
 
      * @param path
-     * *
+     *
      * @return
      */
     fun delAllFile(path: String?) {
@@ -212,7 +212,7 @@ object FileUtil {
      * Access to a directory available size.
 
      * @param path path.
-     * *
+     *
      * @return Long size.
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -234,7 +234,7 @@ object FileUtil {
      * If the folder can be written.
 
      * @param path path.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun canWrite(path: String): Boolean {
@@ -245,7 +245,7 @@ object FileUtil {
      * If the folder can be read.
 
      * @param path path.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun canRead(path: String): Boolean {
@@ -256,7 +256,7 @@ object FileUtil {
      * Create a folder, If the folder exists is not created.
 
      * @param folderPath folder path.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun createFolder(folderPath: String): Boolean {
@@ -271,7 +271,7 @@ object FileUtil {
      * Create a folder, If the folder exists is not created.
 
      * @param targetFolder folder path.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun createFolder(targetFolder: File): Boolean {
@@ -284,7 +284,7 @@ object FileUtil {
      * Create a file, If the file exists is not created.
 
      * @param filePath file path.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun createFile(filePath: String): Boolean {
@@ -299,7 +299,7 @@ object FileUtil {
      * Create a file, If the file exists is not created.
 
      * @param targetFile file.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun createFile(targetFile: File): Boolean {
@@ -317,7 +317,7 @@ object FileUtil {
      * Create a new file, if the file exists, delete and create again.
 
      * @param filePath file path.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun createNewFile(filePath: String): Boolean {
@@ -332,7 +332,7 @@ object FileUtil {
      * Create a new file, if the file exists, delete and create again.
 
      * @param targetFile file.
-     * *
+     *
      * @return True: success, or false: failure.
      */
     fun createNewFile(targetFile: File): Boolean {
@@ -350,7 +350,7 @@ object FileUtil {
      * Return the MIME type for the given url.
 
      * @param url the url, path…
-     * *
+     *
      * @return The MIME type for the given extension or null iff there is none.
      */
     fun getMimeTypeByUrl(url: String): String {

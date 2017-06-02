@@ -7,10 +7,10 @@ import android.content.SharedPreferences
  * SharedPreferences工具
 
  * @author HeYan
- * *
+ *
  * @time 2014年12月17日 下午5:47:46
  */
-class MyShare @JvmOverloads constructor(context: Context, shareName: String = MyShare.SHARE_DEFAULT) {
+class MyShare  constructor(context: Context, shareName: String = MyShare.SHARE_DEFAULT) {
     private val share: SharedPreferences
 
     init {
@@ -22,7 +22,7 @@ class MyShare @JvmOverloads constructor(context: Context, shareName: String = My
                 Context.MODE_PRIVATE)
     }
 
-    fun getString(key: String): String {
+    fun getString(key: String): String? {
         return share.getString(key, null)
     }
 
@@ -46,7 +46,7 @@ class MyShare @JvmOverloads constructor(context: Context, shareName: String = My
         return share.contains(key)
     }
 
-    fun putString(key: String, value: String) {
+    fun putString(key: String, value: String?) {
         share.edit().putString(key, value).apply()
     }
 
@@ -64,7 +64,6 @@ class MyShare @JvmOverloads constructor(context: Context, shareName: String = My
     }
 
     fun putBoolean(key: String, value: Boolean) {
-
         share.edit().putBoolean(key, value).apply()
     }
 

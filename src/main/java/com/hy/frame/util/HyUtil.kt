@@ -19,7 +19,7 @@ import java.util.regex.Pattern
  * 工具
 
  * @author HeYan
- * *
+ *
  * @time 2014年12月24日 下午1:43:34
  */
 class HyUtil {
@@ -55,7 +55,7 @@ class HyUtil {
          * 是否是数字
 
          * @param str
-         * *
+         *
          * @return 验证通过返回true
          */
         fun isNumber(str: String?): Boolean {
@@ -76,7 +76,7 @@ class HyUtil {
          * 是否是中文
 
          * @param str
-         * *
+         *
          * @return
          */
         fun isChinese(str: String?): Boolean {
@@ -89,7 +89,7 @@ class HyUtil {
          * 是否是IP地址
 
          * @param str
-         * *
+         *
          * @return
          */
         fun isIpAddress(str: String?): Boolean {
@@ -102,7 +102,7 @@ class HyUtil {
          * 是否是身份证
 
          * @param str
-         * *
+         *
          * @return
          */
         fun isIdentity(text: String): Boolean {
@@ -122,7 +122,7 @@ class HyUtil {
          * 电话号码验证
 
          * @param str
-         * *
+         *
          * @return 验证通过返回true
          */
         fun isPhone(text: String?): Boolean {
@@ -152,7 +152,7 @@ class HyUtil {
          * 邮箱验证
 
          * @param str
-         * *
+         *
          * @return 验证通过返回true
          */
         fun isEmail(str: String?): Boolean {
@@ -167,7 +167,7 @@ class HyUtil {
          * 是否是银行卡号
 
          * @param str
-         * *
+         *
          * @return
          */
         fun isBankCard(str: String): Boolean {
@@ -177,7 +177,7 @@ class HyUtil {
             return pattern.matcher(str).matches()
         }
 
-        fun isNoEmpty(str: String): Boolean {
+        fun isNoEmpty(str: String?): Boolean {
             return !isEmpty(str)
         }
 
@@ -193,7 +193,7 @@ class HyUtil {
             return false
         }
 
-        fun isNoEmpty(datas: List<*>): Boolean {
+        fun isNoEmpty(datas: List<*>?): Boolean {
             return !isEmpty(datas)
         }
 
@@ -209,7 +209,7 @@ class HyUtil {
          * 去掉多余的0
 
          * @param str
-         * *
+         *
          * @return
          */
         fun removeNumberZero(text: String): String {
@@ -228,7 +228,7 @@ class HyUtil {
          * 转换成Money格式
 
          * @param obj
-         * *
+         *
          * @return
          */
         fun formatToMoney(obj: Any): String {
@@ -269,7 +269,7 @@ class HyUtil {
         /**
          * 获取当前时间Date
          */
-        @JvmOverloads fun getDateTime(ltime: Long, type: String? = null): String {
+         fun getDateTime(ltime: Long, type: String? = null): String {
             var time = ltime
             var ttype = type
             if ((ltime.toString() + "").length == 10) time *= 1000L
@@ -279,7 +279,7 @@ class HyUtil {
             return formatter.format(d)
         }
 
-        @JvmOverloads fun stringToDateTime(strDate: String?, type: String? = null): Date? {
+         fun stringToDateTime(strDate: String?, type: String? = null): Date? {
             var type = type
             if (strDate != null) {
                 if (type == null) type = "yyyy-MM-dd HH:mm:ss"
@@ -314,7 +314,7 @@ class HyUtil {
          * 将px值转换为sp值，保证文字大小不变
 
          * @param pxValue
-         * *
+         *
          * @return
          */
         fun px2sp(context: Context, pxValue: Float): Int {
@@ -326,7 +326,7 @@ class HyUtil {
          * 将sp值转换为px值，保证文字大小不变
 
          * @param spValue
-         * *
+         *
          * @return
          */
         fun sp2px(context: Context, spValue: Float): Int {
@@ -338,7 +338,7 @@ class HyUtil {
          * 获取控件的高度，如果获取的高度为0，则重新计算尺寸后再返回高度
 
          * @param view
-         * *
+         *
          * @return
          */
         fun getViewMeasuredHeight(view: View): Int {
@@ -354,7 +354,7 @@ class HyUtil {
          * 获取控件的宽度，如果获取的宽度为0，则重新计算尺寸后再返回宽度
 
          * @param view
-         * *
+         *
          * @return
          */
         fun getViewMeasuredWidth(view: View): Int {
@@ -398,9 +398,9 @@ class HyUtil {
          * 检测该包名所对应的应用是否存在
 
          * @param context
-         * *
+         *
          * @param packageName
-         * *
+         *
          * @return
          */
         fun checkPackage(context: Context, packageName: String): Boolean {
@@ -445,7 +445,7 @@ class HyUtil {
          * 是否是车牌号
 
          * @param str
-         * *
+         *
          * @return
          */
         fun isCarNumber(str: String): Boolean {
@@ -460,7 +460,7 @@ class HyUtil {
          * 获取周几
 
          * @param week
-         * *
+         *
          * @return
          */
         fun getWeekName(week: Int): String? {
@@ -574,7 +574,7 @@ class HyUtil {
          * 获取缓存大小
 
          * @param context
-         * *
+         *
          * @return
          */
         fun getCacheSize(context: Context): String? {

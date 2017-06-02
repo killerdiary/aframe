@@ -6,7 +6,7 @@ import android.content.Context
  * MyArrayAdapter
 
  * @author HeYan
- * *
+ *
  * @time 2017/5/23 10:09
  */
 abstract class MyArrayAdapter<T> : BaseAdapter<T> {

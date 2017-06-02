@@ -11,7 +11,7 @@ import com.hy.frame.common.BaseFragment
  * author HeYan
  * time 2016/3/8 13:08
  */
-class FragPagerAdapter @JvmOverloads constructor(manager: FragmentManager, private val fragments: List<BaseFragment>?, private val titles: Array<String>? = null) : FragmentPagerAdapter(manager) {
+class FragPagerAdapter constructor(manager: FragmentManager, private val fragments: List<BaseFragment>?, private val titles: Array<String>? = null) : FragmentPagerAdapter(manager) {
 
     override fun getItem(arg0: Int): Fragment {
         return fragments!![arg0]

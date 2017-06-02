@@ -4,11 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
@@ -21,10 +17,10 @@ import android.widget.Toast
  * CaptureButton
 
  * @author HeYan
- * *
+ *
  * @time 2017/4/28 15:36
  */
-class CaptureButton @JvmOverloads constructor(private val mContext: Context, attrs: AttributeSet = null, defStyleAttr: Int = 0) : View(mContext, attrs, defStyleAttr) {
+class CaptureButton  constructor(private val mContext: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(mContext, attrs, defStyleAttr) {
 
     val TAG = "CaptureButtom"
 

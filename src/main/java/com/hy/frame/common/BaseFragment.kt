@@ -35,13 +35,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     protected var loadCache: LoadCache? = null
     var showCount: Int = 0
     var isInit: Boolean = false
-    protected var client: MyHttpClient? = null
+    protected open var client: MyHttpClient? = null
 
     protected val isTranslucentStatus: Boolean
         get() {
             if (activity != null && activity is BaseActivity) {
                 val act = activity as BaseActivity
-                return act.isTranslucentStatus
+                return act.isTranslucentStatus()
             }
             return false
         }

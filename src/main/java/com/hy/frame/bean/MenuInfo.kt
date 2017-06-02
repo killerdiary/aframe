@@ -1,12 +1,12 @@
 package com.hy.frame.bean
 
-import java.util.HashMap
+import java.util.*
 
 /**
  * 自定义菜单信息
 
  * @author HeYan
- * *
+ *
  * @time 2014-7-21 下午3:19:08
  */
 class MenuInfo {
