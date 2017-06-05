@@ -11,7 +11,7 @@ import com.hy.frame.R
  *
  * @time 2015年1月6日 下午5:11:46
  */
-class TimerButton @JvmOverloads  constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.buttonStyle) : android.support.v7.widget.AppCompatButton(context, attrs, defStyleAttr), Runnable {
+class TimerButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.buttonStyle) : android.support.v7.widget.AppCompatButton(context, attrs, defStyleAttr), Runnable {
     private var timer = 0
     private var status = 0
     private var prepareText: CharSequence? = null

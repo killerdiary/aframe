@@ -194,9 +194,11 @@ public class WhereBuilder {
                 }
                 if (items != null) {
                     Iterator<?> iterator = items.iterator();
-                    if (!iterator.hasNext()) throw new IllegalArgumentException("value must have tow items.");
+                    if (!iterator.hasNext())
+                        throw new IllegalArgumentException("value must have tow items.");
                     Object start = iterator.next();
-                    if (!iterator.hasNext()) throw new IllegalArgumentException("value must have tow items.");
+                    if (!iterator.hasNext())
+                        throw new IllegalArgumentException("value must have tow items.");
                     Object end = iterator.next();
 
                     Object startColValue = ColumnUtils.convert2DbColumnValueIfNeeded(start);

@@ -21,7 +21,7 @@ import com.hy.frame.util.MyLog
  *
  * @time 2015/11/23 18:35
  */
-class MyWebView  constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : WebView(context, attrs, defStyleAttr) {
+class MyWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : WebView(context, attrs, defStyleAttr) {
 
     init {
         init()

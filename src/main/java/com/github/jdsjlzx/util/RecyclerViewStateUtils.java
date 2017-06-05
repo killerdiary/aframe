@@ -12,6 +12,7 @@ import com.github.jdsjlzx.view.LoadingFooter;
 /**
  * 分页展示数据时，RecyclerView的FooterView State 操作工具类
  * RecyclerView一共有几种State：Normal/Loading/Error/TheEnd
+ *
  * @author lizhixian
  * @time 16/9/10 09:56
  */
@@ -48,14 +49,14 @@ public class RecyclerViewStateUtils {
         LoadingFooter footerView;
         //已经有footerView了
         if (lRecyclerViewAdapter.getFooterViewsCount() > 0) {
-            footerView = (LoadingFooter)lRecyclerViewAdapter.getFooterView();
+            footerView = (LoadingFooter) lRecyclerViewAdapter.getFooterView();
             footerView.setState(state);
             footerView.setVisibility(View.VISIBLE);
 
             if (state == LoadingFooter.State.NetWorkError) {
                 footerView.setOnClickListener(errorListener);
-            } else if (state == LoadingFooter.State.NoMore){
-                ((LRecyclerView)recyclerView).setNoMore(true);
+            } else if (state == LoadingFooter.State.NoMore) {
+                ((LRecyclerView) recyclerView).setNoMore(true);
             }
 
         }
@@ -93,14 +94,14 @@ public class RecyclerViewStateUtils {
         LoadingFooter footerView;
         //已经有footerView了
         if (lRecyclerViewAdapter.getFooterViewsCount() > 0) {
-            footerView = (LoadingFooter)lRecyclerViewAdapter.getFooterView();
+            footerView = (LoadingFooter) lRecyclerViewAdapter.getFooterView();
             footerView.setState(state);
             footerView.setVisibility(View.VISIBLE);
 
             if (state == LoadingFooter.State.NetWorkError) {
                 footerView.setOnClickListener(errorListener);
-            } else if (state == LoadingFooter.State.NoMore){
-                ((LRecyclerView)recyclerView).setNoMore(true);
+            } else if (state == LoadingFooter.State.NoMore) {
+                ((LRecyclerView) recyclerView).setNoMore(true);
             }
 
         }

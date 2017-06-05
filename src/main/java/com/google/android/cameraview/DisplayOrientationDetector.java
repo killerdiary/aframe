@@ -30,7 +30,9 @@ abstract class DisplayOrientationDetector {
 
     private final OrientationEventListener mOrientationEventListener;
 
-    /** Mapping from Surface.Rotation_n to degrees. */
+    /**
+     * Mapping from Surface.Rotation_n to degrees.
+     */
     static final SparseIntArray DISPLAY_ORIENTATIONS = new SparseIntArray();
 
     static {

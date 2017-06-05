@@ -123,7 +123,7 @@ class NavView @JvmOverloads constructor(context: Context, attrs: AttributeSet? =
         isChecked = !mChecked
     }
 
-    fun setText(text: CharSequence) {
+    fun setText(text: CharSequence?) {
         txtKey!!.text = text
     }
 

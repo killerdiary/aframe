@@ -33,7 +33,7 @@ abstract class BaseApplication : Application() {
     private var hashMap: HashMap<String, Any>? = null
     private var receiver: BroadcastReceiver? = null
 
-     override fun onCreate() {
+    override fun onCreate() {
         super.onCreate()
         val processName = HyUtil.getProcessName(this, android.os.Process.myPid())
         if (processName != null) {
@@ -138,11 +138,14 @@ abstract class BaseApplication : Application() {
      *
      * @param value
      */
-    fun putValue(key: String, value: Any) {
+    fun putValue(key: String, value: Any?) {
         if (hashMap == null) {
             hashMap = HashMap<String, Any>()
         }
-        hashMap!!.put(key, value)
+        if (value == null)
+            hashMap!!.remove(key)
+        else
+            hashMap!!.put(key, value)
     }
 
     /**

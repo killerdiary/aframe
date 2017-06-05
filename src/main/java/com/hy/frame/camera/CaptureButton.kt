@@ -20,7 +20,7 @@ import android.widget.Toast
  *
  * @time 2017/4/28 15:36
  */
-class CaptureButton  constructor(private val mContext: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(mContext, attrs, defStyleAttr) {
+class CaptureButton @JvmOverloads constructor(private val mContext: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(mContext, attrs, defStyleAttr) {
 
     val TAG = "CaptureButtom"
 

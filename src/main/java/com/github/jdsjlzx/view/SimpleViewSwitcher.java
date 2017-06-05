@@ -44,14 +44,14 @@ public class SimpleViewSwitcher extends ViewGroup {
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
             if (child.getVisibility() != View.GONE) {
-                child.layout(0, 0,  r - l,  b - t);
+                child.layout(0, 0, r - l, b - t);
 
             }
         }
     }
 
     public void setView(View view) {
-        if (this.getChildCount() != 0){
+        if (this.getChildCount() != 0) {
             this.removeViewAt(0);
         }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(64, 64);

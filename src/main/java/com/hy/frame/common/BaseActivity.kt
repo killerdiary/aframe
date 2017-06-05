@@ -30,7 +30,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     protected var app: BaseApplication? = null
     protected var context: Context? = null
     private var lastAct: Class<*>? = null// 上一级 Activity
-    private var lastSkipAct: String? = null //获取上一级的Activity名
+    public var lastSkipAct: String? = null //获取上一级的Activity名
     private var toolbar: Toolbar? = null
     private var flyMain: FrameLayout? = null
     protected var loadCache: LoadCache? = null
@@ -169,7 +169,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     }
 
     //R.drawable.img_hint_net_fail
-    fun showNoData(msg: String = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
+    open fun showNoData(msg: String = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
         if (initLoadView()) {
             val count = flyMain!!.childCount
             for (i in 0..count - 1) {
@@ -189,7 +189,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
         }
     }
 
-    protected fun onRetryRequest() {
+    protected open fun onRetryRequest() {
 
     }
 
@@ -411,7 +411,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      */
     @Suppress("UNCHECKED_CAST")
     fun <T : View> getView(@IdRes id: Int, v: View? = null): T? {
-        var view: View?
+        val view: View?
         if (v == null)
             view = findViewById(id)
         else
@@ -425,9 +425,9 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      * @param v  Layout
      */
     @Suppress("UNCHECKED_CAST")
-    protected fun <T : View> getViewAndClick(@IdRes id: Int, v: View? = null): T {
+    protected fun <T : View> getViewAndClick(@IdRes id: Int, v: View? = null): T? {
         val view = getView<View>(id, v)
-        view!!.setOnClickListener(this)
+        view?.setOnClickListener(this) ?: return null
         return view as T
     }
 
@@ -453,9 +453,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     }
 
     override fun onDestroy() {
-        if (client != null) {
-            client!!.onDestroy()
-        }
+        client?.onDestroy()
         super.onDestroy()
     }
 

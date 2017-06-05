@@ -152,7 +152,7 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
             setup()
         }
 
-    override fun setImageBitmap(bm: Bitmap) {
+    override fun setImageBitmap(bm: Bitmap?) {
         super.setImageBitmap(bm)
         mBitmap = bm
         setup()

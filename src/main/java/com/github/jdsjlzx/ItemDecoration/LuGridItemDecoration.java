@@ -54,7 +54,7 @@ public class LuGridItemDecoration extends RecyclerView.ItemDecoration {
         int childCount = parent.getChildCount();
         LuRecyclerViewAdapter adapter = (LuRecyclerViewAdapter) parent.getAdapter();
         for (int i = 0; i < childCount; i++) {
-            if ((adapter.isHeader(i)  || adapter.isFooter(i))) {
+            if ((adapter.isHeader(i) || adapter.isFooter(i))) {
                 c.drawRect(0, 0, 0, 0, mPaint);
             } else {
                 final View child = parent.getChildAt(i);

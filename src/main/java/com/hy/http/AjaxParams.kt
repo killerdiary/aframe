@@ -2,6 +2,11 @@ package com.hy.http
 
 import com.hy.http.file.Binary
 import com.hy.http.file.FileBinary
+import java.lang.Boolean
+import java.lang.Double
+import java.lang.Float
+import java.lang.Long
+import java.lang.String
 import java.util.concurrent.ConcurrentHashMap
 
 /**

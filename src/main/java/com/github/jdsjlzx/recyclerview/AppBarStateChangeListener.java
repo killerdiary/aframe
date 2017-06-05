@@ -3,10 +3,8 @@ package com.github.jdsjlzx.recyclerview;
 import android.support.design.widget.AppBarLayout;
 
 /**
- * 
  * @author lizhixian
  * @created 2016/8/26 15:50
- *
  */
 
 public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffsetChangedListener {
@@ -38,6 +36,7 @@ public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffset
             mCurrentState = State.IDLE;
         }
     }
+
     public abstract void onStateChanged(AppBarLayout appBarLayout, State state);
 }
 

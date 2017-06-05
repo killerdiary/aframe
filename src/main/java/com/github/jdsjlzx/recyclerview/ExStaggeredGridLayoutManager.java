@@ -16,7 +16,7 @@ public class ExStaggeredGridLayoutManager extends StaggeredGridLayoutManager {
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
     GridLayoutManager.SpanSizeLookup mSpanSizeLookup;
 
-    public ExStaggeredGridLayoutManager(int spanCount, int orientation,LRecyclerViewAdapter adapter) {
+    public ExStaggeredGridLayoutManager(int spanCount, int orientation, LRecyclerViewAdapter adapter) {
         super(spanCount, orientation);
         this.mLRecyclerViewAdapter = adapter;
     }
@@ -46,7 +46,7 @@ public class ExStaggeredGridLayoutManager extends StaggeredGridLayoutManager {
         int itemCount = mLRecyclerViewAdapter.getItemCount();
         for (int i = 0; i < itemCount; i++) {
             Log.d(TAG, "lookup  i = " + i + " itemCount = " + itemCount);
-            Log.e(TAG,"mSpanSizeLookup.getSpanSize(i) " + mSpanSizeLookup.getSpanSize(i));
+            Log.e(TAG, "mSpanSizeLookup.getSpanSize(i) " + mSpanSizeLookup.getSpanSize(i));
             /*if (mSpanSizeLookup.getSpanSize(i) > 1) {
 
                 View view = recycler.getViewForPosition(i);

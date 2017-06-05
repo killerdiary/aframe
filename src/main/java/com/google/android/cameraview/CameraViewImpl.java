@@ -50,11 +50,11 @@ abstract class CameraViewImpl {
 
     abstract int getFacing();
 
-    Surface getSurface(){
+    Surface getSurface() {
         return mPreview.getSurface();
     }
 
-    SurfaceHolder getSurfaceHolder(){
+    SurfaceHolder getSurfaceHolder() {
         return mPreview.getSurfaceHolder();
     }
 

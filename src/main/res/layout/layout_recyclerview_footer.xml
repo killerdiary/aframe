@@ -24,7 +24,6 @@
 
     <View
         android:layout_width="@dimen/dp_72"
-        android:layout_height="@dimen/dp_066"
-         />
+        android:layout_height="@dimen/dp_066" />
 
 </LinearLayout>

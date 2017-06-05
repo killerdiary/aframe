@@ -28,10 +28,10 @@ public class UCropView extends FrameLayout {
     private void init(Context context, AttributeSet attrs) {
         int padding = getResources().getDimensionPixelSize(R.dimen.margin_normal);
         mGestureCropImageView = new GestureCropImageView(context);
-        mGestureCropImageView.setPadding(padding,padding,padding,padding);
+        mGestureCropImageView.setPadding(padding, padding, padding, padding);
         addView(mGestureCropImageView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mViewOverlay = new OverlayView(context);
-        mViewOverlay.setPadding(padding,padding,padding,padding);
+        mViewOverlay.setPadding(padding, padding, padding, padding);
         addView(mViewOverlay, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mGestureCropImageView.setCropBoundsChangeListener(new CropImageView.CropBoundsChangeListener() {
             @Override

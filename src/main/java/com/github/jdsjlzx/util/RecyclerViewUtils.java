@@ -6,9 +6,9 @@ import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 
 /**
  * RecyclerView设置Header/Footer所用到的工具类
+ *
  * @author Lzx
  * @created 2016/9/30 10:36
- *
  */
 public class RecyclerViewUtils {
 

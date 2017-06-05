@@ -6,7 +6,6 @@ import android.view.View;
 import com.github.jdsjlzx.recyclerview.LuRecyclerViewAdapter;
 
 /**
- *
  * @author lizhixian
  * @time 16/9/10 09:54
  */

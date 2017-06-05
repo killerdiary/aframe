@@ -19,7 +19,7 @@ import com.hy.frame.util.HyUtil
 abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseTheme_DialogTheme), View.OnClickListener {
     var listener: IConfirmListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(initLayoutId())
         initWindow()

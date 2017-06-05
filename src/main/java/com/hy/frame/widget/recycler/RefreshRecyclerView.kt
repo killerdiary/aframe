@@ -6,15 +6,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
-
-import com.github.jdsjlzx.interfaces.OnLoadMoreListener
-import com.github.jdsjlzx.interfaces.OnRefreshListener
 import com.github.jdsjlzx.recyclerview.LRecyclerView
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter
 import com.hy.frame.R
 import com.hy.frame.adapter.BaseRecyclerAdapter
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * RecyclerView 上下拉刷新加载更多 适用于为ListView格式 版本>=11

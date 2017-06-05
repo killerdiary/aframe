@@ -27,6 +27,7 @@ class CameraPreview @JvmOverloads constructor(context: Context, attrs: Attribute
     init {
         init()
     }
+
     /**
      * 初始化工作
      */

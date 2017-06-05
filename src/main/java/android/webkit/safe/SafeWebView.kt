@@ -20,7 +20,7 @@ import java.util.*
  * 乌云上的介绍：http://www.wooyun.org/bugs/wooyun-2010-067676
  * 测试方法：让自己的WebView加载http://drops.wooyun.org/webview.html
  */
-class SafeWebView  constructor(context: Context, attrs: AttributeSet? = null) : WebView(context, attrs) {
+class SafeWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : WebView(context, attrs) {
     private var mJsCallJavas: MutableMap<String, JsCallJava>? = null
     private var mInjectJavaScripts: MutableMap<Int, String>? = null
     private var mWebChromeClient: SafeWebChromeClient? = null

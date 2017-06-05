@@ -14,7 +14,7 @@ import com.hy.frame.util.MyLog
  * author HeYan
  * time 2016/1/15 16:52
  */
-class MyWebViewClient : WebViewClient() {
+open class MyWebViewClient : WebViewClient() {
     var isLoadError: Boolean = false
 
 
@@ -110,7 +110,7 @@ class MyWebViewClient : WebViewClient() {
     //
     //    }
 
-    override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
+    open override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
 
     }
 }

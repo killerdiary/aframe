@@ -11,11 +11,11 @@ import com.github.jdsjlzx.recyclerview.LuRecyclerViewAdapter;
 
 /**
  * Adds spaces (between) between Item views.
- *
+ * <p>
  * Supports GridLayoutManager and LinearLayoutManager. Extend this class and override the
  * {@link #getSpanLookup(View, RecyclerView)} method to support other
  * LayoutManagers.
- *
+ * <p>
  * Currently only supports LayoutManagers in VERTICAL orientation.
  */
 public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
@@ -63,11 +63,11 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
             throw new RuntimeException("the adapter must be LuRecyclerViewAdapter");
         }
 
-        drawHorizontal(c,parent,LuRecyclerViewAdapter);
-        drawVertical(c,parent,LuRecyclerViewAdapter);
+        drawHorizontal(c, parent, LuRecyclerViewAdapter);
+        drawVertical(c, parent, LuRecyclerViewAdapter);
     }
 
-    public void drawHorizontal(Canvas c, RecyclerView parent,LuRecyclerViewAdapter adapter) {
+    public void drawHorizontal(Canvas c, RecyclerView parent, LuRecyclerViewAdapter adapter) {
         int count = parent.getChildCount();
 
         for (int i = 0; i < count; i++) {
@@ -75,16 +75,16 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
             final int top = child.getBottom();
             final int bottom = top + verticalSpacing;
 
-            int left = child.getLeft() ;
+            int left = child.getLeft();
             int right = child.getRight();
 
             int position = parent.getChildAdapterPosition(child);
 
             c.save();
 
-            if (adapter. isHeader(position) || adapter.isFooter(position)) {
+            if (adapter.isHeader(position) || adapter.isFooter(position)) {
                 c.drawRect(0, 0, 0, 0, mPaint);
-            }else {
+            } else {
                 c.drawRect(left, top, right, bottom, mPaint);
             }
 
@@ -92,7 +92,7 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void drawVertical(Canvas c, RecyclerView parent,LuRecyclerViewAdapter adapter) {
+    public void drawVertical(Canvas c, RecyclerView parent, LuRecyclerViewAdapter adapter) {
         int count = parent.getChildCount();
 
         for (int i = 0; i < count; i++) {
@@ -102,15 +102,15 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
             //final int bottom = child.getBottom() + params.bottomMargin;
             final int bottom = child.getBottom() + verticalSpacing; //这里使用verticalSpacing 代替 params.bottomMargin
             final int left = child.getRight() + params.rightMargin;
-            final int right = left + itemSplitMarginEven*2;
+            final int right = left + itemSplitMarginEven * 2;
 
             int position = parent.getChildAdapterPosition(child);
 
             c.save();
 
-            if (adapter. isHeader(position) || adapter.isFooter(position)) {
+            if (adapter.isHeader(position) || adapter.isFooter(position)) {
                 c.drawRect(0, 0, 0, 0, mPaint);
-            }else {
+            } else {
                 c.drawRect(left, top, right, bottom, mPaint);
             }
 
@@ -135,7 +135,7 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
 
         SpanLookup spanLookup = getSpanLookup(view, parent);
         applyItemHorizontalOffsets(spanLookup, itemPosition, outRect);
-        applyItemVerticalOffsets(outRect, itemPosition, childCount, spanLookup.getSpanCount(), spanLookup,LuRecyclerViewAdapter);
+        applyItemVerticalOffsets(outRect, itemPosition, childCount, spanLookup.getSpanCount(), spanLookup, LuRecyclerViewAdapter);
     }
 
     protected SpanLookup getSpanLookup(View view, RecyclerView parent) {
@@ -146,9 +146,9 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
         return SpanLookupFactory.singleSpan();
     }
 
-    private void applyItemVerticalOffsets(Rect outRect, int itemPosition, int childCount, int spanCount, SpanLookup spanLookup,LuRecyclerViewAdapter adapter) {
-        outRect.top = getItemTopSpacing(spanLookup, verticalSpacing, itemPosition, spanCount, childCount,adapter);
-        outRect.bottom = getItemBottomSpacing(spanLookup, verticalSpacing, itemPosition, childCount,adapter);
+    private void applyItemVerticalOffsets(Rect outRect, int itemPosition, int childCount, int spanCount, SpanLookup spanLookup, LuRecyclerViewAdapter adapter) {
+        outRect.top = getItemTopSpacing(spanLookup, verticalSpacing, itemPosition, spanCount, childCount, adapter);
+        outRect.bottom = getItemBottomSpacing(spanLookup, verticalSpacing, itemPosition, childCount, adapter);
     }
 
     private void applyItemHorizontalOffsets(SpanLookup spanLookup, int itemPosition, Rect offsets) {
@@ -204,7 +204,7 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     private static int getItemTopSpacing(SpanLookup spanLookup, int verticalSpacing, int itemPosition, int spanCount, int childCount, LuRecyclerViewAdapter adapter) {
-        if(adapter.isHeader(itemPosition) || adapter.isFooter(itemPosition)) {
+        if (adapter.isHeader(itemPosition) || adapter.isFooter(itemPosition)) {
             return 0;
         } else {
             if (itemIsOnTheTopRow(spanLookup, itemPosition, spanCount, childCount)) {
@@ -230,7 +230,7 @@ public class LuSpacesItemDecoration extends RecyclerView.ItemDecoration {
 
     private static int getItemBottomSpacing(SpanLookup spanLookup, int verticalSpacing, int itemPosition, int childCount, LuRecyclerViewAdapter adapter) {
 
-        if(adapter.isHeader(itemPosition) || adapter.isFooter(itemPosition)) {
+        if (adapter.isHeader(itemPosition) || adapter.isFooter(itemPosition)) {
             return 0;
         } else {
             if (itemIsOnTheBottomRow(spanLookup, itemPosition, childCount)) {

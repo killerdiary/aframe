@@ -11,14 +11,12 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-
 import com.bumptech.glide.Glide
 import com.hy.frame.R
 import com.hy.frame.adapter.ViewPagerAdapter
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * 显示ViewPager功能
@@ -27,7 +25,7 @@ import java.util.ArrayList
  *
  * @time 2014年9月4日 下午2:37:10
  */
-class MyScrollView  constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RelativeLayout(context, attrs, defStyle), OnPageChangeListener, Runnable {
+class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RelativeLayout(context, attrs, defStyle), OnPageChangeListener, Runnable {
     private var isOpenAuto: Boolean = false
     private var timer: Long = 0// 间隔时间
     private var scrollCount: Int = 0// 次数
@@ -109,7 +107,7 @@ class MyScrollView  constructor(context: Context, attrs: AttributeSet? = null, d
         addPoint()
     }
 
-     fun show(views: MutableList<View>) {
+    fun show(views: MutableList<View>) {
         this.views = views
         if (adapter == null) {
             adapter = ViewPagerAdapter(views)
@@ -196,7 +194,7 @@ class MyScrollView  constructor(context: Context, attrs: AttributeSet? = null, d
 
      * @param interval 倒计时时间(秒)
      */
-     fun startAuto(interval: Int = DEFAULT_INTERVAL) {
+    fun startAuto(interval: Int = DEFAULT_INTERVAL) {
         if (adapter == null) {
             MyLog.e("NO CALLED SHOW!")
             return

@@ -8,5 +8,5 @@ package com.hy.frame.common
  * @time 2014年8月11日 下午2:59:49
  */
 interface IFragmentListener {
-    fun sendMsg(flag: Int, obj: Any)
+    fun sendMsg(flag: Int, obj: Any?)
 }

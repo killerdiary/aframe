@@ -20,7 +20,7 @@ object MyToast {
         show(context, context.resources.getString(msgId))
     }
 
-    fun show(context: Context, msg: String) {
+    fun show(context: Context, msg: String?) {
         try {
             if (toast != null)
                 toast!!.cancel()

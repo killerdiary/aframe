@@ -26,7 +26,7 @@ import java.io.IOException
  *
  * @time 2017/4/28 15:33
  */
-class MCameraView  constructor(//private PowerManager.WakeLock wakeLock = null;
+class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wakeLock = null;
         private val mContext: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : RelativeLayout(mContext, attrs, defStyleAttr), SurfaceHolder.Callback, Camera.AutoFocusCallback, CameraFocusListener {
 
     val TAG = "MCameraView"

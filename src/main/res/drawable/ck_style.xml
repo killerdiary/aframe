@@ -4,5 +4,5 @@
     <item android:drawable="@mipmap/ck_style_true" android:state_selected="true"></item>
     <item android:drawable="@mipmap/ck_style_true" android:state_checked="true"></item>
     <item android:drawable="@mipmap/ck_style_false" android:state_checked="false"></item>
-    <item android:drawable="@mipmap/ck_style_false" ></item>
+    <item android:drawable="@mipmap/ck_style_false"></item>
 </selector>

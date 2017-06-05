@@ -64,9 +64,9 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
             c.save();
 
-            if (lRecyclerViewAdapter.isRefreshHeader(position) || lRecyclerViewAdapter. isHeader(position) || lRecyclerViewAdapter.isFooter(position)) {
+            if (lRecyclerViewAdapter.isRefreshHeader(position) || lRecyclerViewAdapter.isHeader(position) || lRecyclerViewAdapter.isFooter(position)) {
                 c.drawRect(0, 0, 0, 0, mPaint);
-            }else {
+            } else {
                 c.drawRect(left, top, right, bottom, mPaint);
             }
 
@@ -90,7 +90,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         int position = parent.getChildAdapterPosition(view);
 
-        if (lRecyclerViewAdapter.isRefreshHeader(position) || lRecyclerViewAdapter. isHeader(position) || lRecyclerViewAdapter.isFooter(position)) {
+        if (lRecyclerViewAdapter.isRefreshHeader(position) || lRecyclerViewAdapter.isHeader(position) || lRecyclerViewAdapter.isFooter(position)) {
             outRect.bottom = mHeight;
             outRect.set(0, 0, 0, 0);
         } else {
@@ -121,6 +121,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Set the divider height in pixels
+         *
          * @param pixels height in pixels
          * @return the current instance of the Builder
          */
@@ -132,6 +133,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Set the divider height in dp
+         *
          * @param resource height resource id
          * @return the current instance of the Builder
          */
@@ -142,6 +144,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Sets both the left and right padding in pixels
+         *
          * @param pixels padding in pixels
          * @return the current instance of the Builder
          */
@@ -154,6 +157,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Sets the left and right padding in dp
+         *
          * @param resource padding resource id
          * @return the current instance of the Builder
          */
@@ -165,6 +169,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Sets the left padding in pixels
+         *
          * @param pixelPadding left padding in pixels
          * @return the current instance of the Builder
          */
@@ -176,6 +181,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Sets the right padding in pixels
+         *
          * @param pixelPadding right padding in pixels
          * @return the current instance of the Builder
          */
@@ -187,6 +193,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Sets the left padding in dp
+         *
          * @param resource left padding resource id
          * @return the current instance of the Builder
          */
@@ -198,6 +205,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Sets the right padding in dp
+         *
          * @param resource right padding resource id
          * @return the current instance of the Builder
          */
@@ -209,17 +217,19 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Sets the divider colour
+         *
          * @param resource the colour resource id
          * @return the current instance of the Builder
          */
         public Builder setColorResource(@ColorRes int resource) {
-            setColor(ContextCompat.getColor(mContext,resource));
+            setColor(ContextCompat.getColor(mContext, resource));
 
             return this;
         }
 
         /**
          * Sets the divider colour
+         *
          * @param color the colour
          * @return the current instance of the Builder
          */
@@ -231,6 +241,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
         /**
          * Instantiates a DividerDecoration with the specified parameters.
+         *
          * @return a properly initialized DividerDecoration instance
          */
         public DividerDecoration build() {

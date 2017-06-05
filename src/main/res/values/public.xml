@@ -1,63 +1,63 @@
 <resources>
     <!--dimen-->
-    <public name="txt_smaller" type="dimen"/>
-    <public name="txt_small" type="dimen"/>
-    <public name="txt_default" type="dimen"/>
-    <public name="txt_medium" type="dimen"/>
-    <public name="txt_big" type="dimen"/>
+    <public name="txt_smaller" type="dimen" />
+    <public name="txt_small" type="dimen" />
+    <public name="txt_default" type="dimen" />
+    <public name="txt_medium" type="dimen" />
+    <public name="txt_big" type="dimen" />
 
-    <public name="margin_normal" type="dimen"/>
-    <public name="margin_default" type="dimen"/>
-    <public name="margin_big" type="dimen"/>
-    <public name="padding_normal" type="dimen"/>
-    <public name="padding_default" type="dimen"/>
+    <public name="margin_normal" type="dimen" />
+    <public name="margin_default" type="dimen" />
+    <public name="margin_big" type="dimen" />
+    <public name="padding_normal" type="dimen" />
+    <public name="padding_default" type="dimen" />
 
-    <public name="btn_radius" type="dimen"/>
+    <public name="btn_radius" type="dimen" />
     <!--dimen END-->
     <!--color-->
-    <public name="colorPrimary" type="color"/>
-    <public name="colorPrimaryDark" type="color"/>
-    <public name="colorAccent" type="color"/>
-    <public name="theme" type="color"/>
-    <public name="theme_bg" type="color"/>
-    <public name="theme_title" type="color"/>
-    <public name="white" type="color"/>
-    <public name="black" type="color"/>
-    <public name="yellow" type="color"/>
-    <public name="dimgray" type="color"/>
-    <public name="purple" type="color"/>
-    <public name="red" type="color"/>
-    <public name="blue" type="color"/>
-    <public name="green" type="color"/>
-    <public name="transparent" type="color"/>
-    <public name="translucence" type="color"/>
-    <public name="txt_black" type="color"/>
-    <public name="txt_gray" type="color"/>
-    <public name="txt_gray_light" type="color"/>
-    <public name="btn_disable" type="color"/>
-    <public name="btn_highlight" type="color"/>
-    <public name="divider_gray" type="color"/>
-    <public name="divider_gray_light" type="color"/>
+    <public name="colorPrimary" type="color" />
+    <public name="colorPrimaryDark" type="color" />
+    <public name="colorAccent" type="color" />
+    <public name="theme" type="color" />
+    <public name="theme_bg" type="color" />
+    <public name="theme_title" type="color" />
+    <public name="white" type="color" />
+    <public name="black" type="color" />
+    <public name="yellow" type="color" />
+    <public name="dimgray" type="color" />
+    <public name="purple" type="color" />
+    <public name="red" type="color" />
+    <public name="blue" type="color" />
+    <public name="green" type="color" />
+    <public name="transparent" type="color" />
+    <public name="translucence" type="color" />
+    <public name="txt_black" type="color" />
+    <public name="txt_gray" type="color" />
+    <public name="txt_gray_light" type="color" />
+    <public name="btn_disable" type="color" />
+    <public name="btn_highlight" type="color" />
+    <public name="divider_gray" type="color" />
+    <public name="divider_gray_light" type="color" />
     <!--color END-->
     <!--string-->
-    <public name="app_name" type="string"/>
-    <public name="load_more" type="string"/>
-    <public name="loading" type="string"/>
-    <public name="load_complete" type="string"/>
-    <public name="hint_net_fail" type="string"/>
-    <public name="hint_nodata" type="string"/>
-    <public name="back" type="string"/>
-    <public name="confirm" type="string"/>
-    <public name="complete" type="string"/>
-    <public name="cancel" type="string"/>
-    <public name="timer_send_re" type="string"/>
-    <public name="timer_sending" type="string"/>
-    <public name="empty" type="string"/>
-    <public name="number_zero" type="string"/>
-    <public name="number_max" type="string"/>
-    <public name="number_money" type="string"/>
-    <public name="edit_input_hint" type="string"/>
-    <public name="edit_empty_hint" type="string"/>
-    <public name="edit_format_error" type="string"/>
+    <public name="app_name" type="string" />
+    <public name="load_more" type="string" />
+    <public name="loading" type="string" />
+    <public name="load_complete" type="string" />
+    <public name="hint_net_fail" type="string" />
+    <public name="hint_nodata" type="string" />
+    <public name="back" type="string" />
+    <public name="confirm" type="string" />
+    <public name="complete" type="string" />
+    <public name="cancel" type="string" />
+    <public name="timer_send_re" type="string" />
+    <public name="timer_sending" type="string" />
+    <public name="empty" type="string" />
+    <public name="number_zero" type="string" />
+    <public name="number_max" type="string" />
+    <public name="number_money" type="string" />
+    <public name="edit_input_hint" type="string" />
+    <public name="edit_empty_hint" type="string" />
+    <public name="edit_format_error" type="string" />
     <!--string END-->
 </resources>

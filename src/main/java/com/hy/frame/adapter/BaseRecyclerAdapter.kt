@@ -13,7 +13,7 @@ import android.view.ViewGroup
  * @author HeYan
  * @time 2016/5/27 16:22
  */
-abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, datas: List<T>, listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
+abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, datas: List<T>?, listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
 
     var datas: List<T>? = null
     protected var listener: IAdapterListener<T>? = null
@@ -123,8 +123,8 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         return datas!![position]
     }
 
-    fun refresh(datas: List<T>) {
-        this.datas = datas
+    fun refresh(beans: List<T>?) {
+        this.datas = beans
         this.notifyDataSetChanged()
     }
 
@@ -163,7 +163,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         }
     }
 
-    protected open inner class BaseClickHolder(v: View) : BaseHolder(v), View.OnClickListener {
+    open inner class BaseClickHolder(v: View) : BaseHolder(v), View.OnClickListener {
 
         override fun onClick(v: View) {
             if (listener != null) {
@@ -186,7 +186,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         }
     }
 
-    protected open inner class BaseLongClickHolder(v: View) : BaseClickHolder(v), View.OnLongClickListener {
+    open inner class BaseLongClickHolder(v: View) : BaseClickHolder(v), View.OnLongClickListener {
 
         override fun onLongClick(v: View): Boolean {
             if (listener != null && listener is IAdapterLongListener<T>) {

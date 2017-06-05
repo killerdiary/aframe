@@ -51,7 +51,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
 
      * @return
      */
-    protected fun initSingleLayoutId(): Int {
+    protected open fun initSingleLayoutId(): Int {
         return 0
     }
 
@@ -169,7 +169,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
         }
     }
 
-    protected fun onRetryRequest() {}
+    protected open fun onRetryRequest() {}
 
     /**
      * 显示内容View
@@ -205,7 +205,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             toolbar!!.addView(v, tlp)
         }
         val txtTitle = getView<TextView>(R.id.head_vTitle, toolbar)
-        txtTitle.text = title
+        txtTitle?.text = title
     }
 
     protected fun hideHeader() {
@@ -217,11 +217,11 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             if (toolbar!!.findViewById(R.id.head_vLeft) == null) {
                 val v = View.inflate(context, R.layout.in_head_left, toolbar)
                 val img = getView<ImageView>(R.id.head_vLeft, v)
-                img.setOnClickListener(this)
-                img.setImageResource(left)
+                img?.setOnClickListener(this)
+                img?.setImageResource(left)
             } else {
                 val img = getView<ImageView>(R.id.head_vLeft, toolbar)
-                img.setImageResource(left)
+                img?.setImageResource(left)
             }
         }
     }
@@ -231,11 +231,11 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             if (toolbar!!.findViewById(R.id.head_vLeft) == null) {
                 val v = View.inflate(context, R.layout.in_head_tleft, toolbar)
                 val txt = getView<TextView>(R.id.head_vLeft, v)
-                txt.setOnClickListener(this)
-                txt.setText(left)
+                txt?.setOnClickListener(this)
+                txt?.setText(left)
             } else {
                 val txt = getView<TextView>(R.id.head_vLeft, toolbar)
-                txt.setText(left)
+                txt?.setText(left)
             }
         }
     }
@@ -245,11 +245,11 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             if (toolbar!!.findViewById(R.id.head_vRight) == null) {
                 val v = View.inflate(context, R.layout.in_head_right, toolbar)
                 val img = getView<ImageView>(R.id.head_vRight, v)
-                img.setOnClickListener(this)
-                img.setImageResource(right)
+                img?.setOnClickListener(this)
+                img?.setImageResource(right)
             } else {
                 val img = getView<ImageView>(R.id.head_vRight, toolbar)
-                img.setImageResource(right)
+                img?.setImageResource(right)
             }
         }
     }
@@ -257,17 +257,17 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
         val v = View.inflate(context, R.layout.in_head_right, null)
         val img = getView<ImageView>(R.id.head_vRight, v)
-        img.id = id
+        img?.id = id
         val array = activity.theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
         val width = array.getDimensionPixelSize(0, 0)
         array.recycle()
         val params = Toolbar.LayoutParams(width, width)
         //params.setMargins(0, 0, width * (rightCount - 1), 0);
         params.gravity = Gravity.RIGHT
-        img.layoutParams = params
+        img?.layoutParams = params
         toolbar!!.addView(v)
-        img.setOnClickListener(this)
-        img.setImageResource(right)
+        img?.setOnClickListener(this)
+        img?.setImageResource(right)
     }
 
     protected fun setHeaderRightTxt(@StringRes right: Int) {
@@ -275,11 +275,11 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             if (toolbar!!.findViewById(R.id.head_vRight) == null) {
                 val v = View.inflate(context, R.layout.in_head_tright, toolbar)
                 val txt = getView<TextView>(R.id.head_vRight, v)
-                txt.setOnClickListener(this)
-                txt.setText(right)
+                txt?.setOnClickListener(this)
+                txt?.setText(right)
             } else {
                 val txt = getView<TextView>(R.id.head_vRight, toolbar)
-                txt.setText(right)
+                txt?.setText(right)
             }
         }
     }
@@ -321,7 +321,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             i.putExtra(BaseActivity.BUNDLE, bundle)
         i.putExtra(BaseActivity.LAST_ACT, this.javaClass.simpleName)
         i.setClass(activity, cls)
-        startActivity(intent)
+        startActivity(i)
     }
 
     fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle? = null) {
@@ -360,10 +360,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * @param v  Layout
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T : View> getView(@IdRes id: Int, v: View? = null): T {
+    fun <T : View> getView(@IdRes id: Int, v: View? = null): T? {
+        val view: View?
         if (v == null)
-            return contentView!!.findViewById(id) as T
-        return v.findViewById(id) as T
+            view = contentView!!.findViewById(id)
+        else
+            view = v.findViewById(id)
+        return if (view == null) null else view as T
     }
 
     /**
@@ -372,15 +375,15 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * @param v  Layout
      */
     @Suppress("UNCHECKED_CAST")
-    protected fun <T : View> getViewAndClick(@IdRes id: Int, v: View? = null): T {
+    protected fun <T : View> getViewAndClick(@IdRes id: Int, v: View? = null): T? {
         val view = getView<View>(id, v)
-        view.setOnClickListener(this)
+        view?.setOnClickListener(this) ?: return null
         return view as T
     }
 
     protected fun setOnClickListener(@IdRes id: Int, v: View? = null) {
         val view = getView<View>(id, v)
-        view.setOnClickListener(this)
+        view?.setOnClickListener(this)
     }
 
     /**
@@ -394,9 +397,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     override fun onRightClick() {}
 
     override fun onDestroy() {
-        if (client != null) {
-            client!!.onDestroy()
-        }
+        client?.onDestroy()
         super.onDestroy()
     }
 }

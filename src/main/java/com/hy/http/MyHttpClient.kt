@@ -13,8 +13,8 @@ import com.google.gson.JsonParser
 import com.hy.frame.R
 import com.hy.frame.bean.DownFile
 import com.hy.frame.bean.ResultInfo
-import com.hy.frame.util.MyLog
 import com.hy.frame.ui.LoadingDialog
+import com.hy.frame.util.MyLog
 import okhttp3.*
 import java.io.File
 import java.io.FileOutputStream
@@ -149,11 +149,11 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         //        }
     }
 
-    fun <T> get(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
+    @JvmOverloads fun <T> get(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
         request(RequestMethod.GET, requestCode, params, cls, list, if (url.isNullOrEmpty()) getPath(requestCode) else url!!)
     }
 
-    fun <T> post(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
+    @JvmOverloads fun <T> post(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
         request(RequestMethod.POST, requestCode, params, cls, list, if (url.isNullOrEmpty()) getPath(requestCode) else url!!)
     }
 

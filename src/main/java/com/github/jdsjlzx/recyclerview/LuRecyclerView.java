@@ -18,10 +18,8 @@ import com.github.jdsjlzx.interfaces.OnNetWorkErrorListener;
 import com.github.jdsjlzx.view.LoadingFooter;
 
 /**
- *
  * @author Lzx
  * @created 2016/9/9 16:45
- *
  */
 public class LuRecyclerView extends RecyclerView {
     private boolean mLoadMoreEnabled = true;
@@ -122,7 +120,7 @@ public class LuRecyclerView extends RecyclerView {
         mWrapAdapter.getInnerAdapter().registerAdapterDataObserver(mDataObserver);
         mDataObserver.onChanged();
 
-        if (mLoadMoreEnabled && mWrapAdapter.getFooterViewsCount()==0) {
+        if (mLoadMoreEnabled && mWrapAdapter.getFooterViewsCount() == 0) {
             mWrapAdapter.addFooterView(mFootView);
         }
 
@@ -158,7 +156,7 @@ public class LuRecyclerView extends RecyclerView {
 
             if (mWrapAdapter != null) {
                 mWrapAdapter.notifyDataSetChanged();
-                if(mWrapAdapter.getInnerAdapter().getItemCount() < mPageSize ) {
+                if (mWrapAdapter.getInnerAdapter().getItemCount() < mPageSize) {
                     mFootView.setVisibility(GONE);
                 }
             }
@@ -178,7 +176,7 @@ public class LuRecyclerView extends RecyclerView {
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
             mWrapAdapter.notifyItemRangeRemoved(positionStart + mWrapAdapter.getHeaderViewsCount() + 1, itemCount);
-            if(mWrapAdapter.getInnerAdapter().getItemCount() < mPageSize ) {
+            if (mWrapAdapter.getInnerAdapter().getItemCount() < mPageSize) {
                 mFootView.setVisibility(GONE);
             }
 
@@ -218,7 +216,6 @@ public class LuRecyclerView extends RecyclerView {
     }
 
     /**
-     *
      * @param pageSize 一页加载的数量
      */
     public void refreshComplete(int pageSize) {
@@ -226,7 +223,7 @@ public class LuRecyclerView extends RecyclerView {
         if (mRefreshing) {
             isNoMore = false;
             mRefreshing = false;
-            if(mWrapAdapter.getInnerAdapter().getItemCount() < pageSize) {
+            if (mWrapAdapter.getInnerAdapter().getItemCount() < pageSize) {
                 mFootView.setVisibility(GONE);
             }
         } else if (mLoadingData) {
@@ -238,12 +235,13 @@ public class LuRecyclerView extends RecyclerView {
 
     /**
      * 设置是否已加载全部
+     *
      * @param noMore
      */
-    public void setNoMore(boolean noMore){
+    public void setNoMore(boolean noMore) {
         mLoadingData = false;
         isNoMore = noMore;
-        if(isNoMore) {
+        if (isNoMore) {
             mLoadMoreFooter.onNoMore();
         } else {
             mLoadMoreFooter.onComplete();
@@ -263,7 +261,7 @@ public class LuRecyclerView extends RecyclerView {
      * 到底加载是否可用
      */
     public void setLoadMoreEnabled(boolean enabled) {
-        if(mWrapAdapter == null){
+        if (mWrapAdapter == null) {
             throw new NullPointerException("mWrapAdapter cannot be null, please make sure the variable mWrapAdapter have been initialized.");
         }
         mLoadMoreEnabled = enabled;
@@ -310,6 +308,7 @@ public class LuRecyclerView extends RecyclerView {
 
     /**
      * 设置Footer文字颜色
+     *
      * @param indicatorColor
      * @param hintColor
      * @param backgroundColor
@@ -317,7 +316,7 @@ public class LuRecyclerView extends RecyclerView {
     public void setFooterViewColor(int indicatorColor, int hintColor, int backgroundColor) {
         if (mLoadMoreFooter != null && mLoadMoreFooter instanceof LoadingFooter) {
             LoadingFooter loadingFooter = ((LoadingFooter) mLoadMoreFooter);
-            loadingFooter.setIndicatorColor(ContextCompat.getColor(getContext(),indicatorColor));
+            loadingFooter.setIndicatorColor(ContextCompat.getColor(getContext(), indicatorColor));
             loadingFooter.setHintTextColor(hintColor);
             loadingFooter.setViewBackgroundColor(backgroundColor);
         }
@@ -481,17 +480,17 @@ public class LuRecyclerView extends RecyclerView {
             }
             p = p.getParent();
         }
-        if(p instanceof CoordinatorLayout) {
-            CoordinatorLayout coordinatorLayout = (CoordinatorLayout)p;
+        if (p instanceof CoordinatorLayout) {
+            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) p;
             final int childCount = coordinatorLayout.getChildCount();
             for (int i = childCount - 1; i >= 0; i--) {
                 final View child = coordinatorLayout.getChildAt(i);
-                if(child instanceof AppBarLayout) {
-                    appBarLayout = (AppBarLayout)child;
+                if (child instanceof AppBarLayout) {
+                    appBarLayout = (AppBarLayout) child;
                     break;
                 }
             }
-            if(appBarLayout != null) {
+            if (appBarLayout != null) {
                 appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
                     @Override
                     public void onStateChanged(AppBarLayout appBarLayout, State state) {

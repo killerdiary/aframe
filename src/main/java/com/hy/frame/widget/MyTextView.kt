@@ -13,7 +13,7 @@ import com.hy.frame.R
  *
  * @time 2017/4/11 11:29
  */
-class MyTextView constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.textViewStyle) : AppCompatTextView(context, attrs, defStyleAttr) {
+class MyTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.textViewStyle) : AppCompatTextView(context, attrs, defStyleAttr) {
     private var drawLeftWidth: Int = 0
     private var drawLeftHeight: Int = 0
     private var drawTopWidth: Int = 0

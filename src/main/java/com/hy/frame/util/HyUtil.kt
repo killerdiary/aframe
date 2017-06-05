@@ -269,17 +269,17 @@ class HyUtil {
         /**
          * 获取当前时间Date
          */
-         fun getDateTime(ltime: Long, type: String? = null): String {
+        fun getDateTime(ltime: Long, type: String? = null): String {
             var time = ltime
             var ttype = type
-            if ((ltime.toString() + "").length == 10) time *= 1000L
+            if ((time.toString() + "").length == 10) time *= 1000L
             if (ttype == null) ttype = "yyyy-MM-dd HH:mm:ss"
-            val d = Date(ltime)
+            val d = Date(time)
             val formatter = SimpleDateFormat(ttype, Locale.CHINA)
             return formatter.format(d)
         }
 
-         fun stringToDateTime(strDate: String?, type: String? = null): Date? {
+        fun stringToDateTime(strDate: String?, type: String? = null): Date? {
             var type = type
             if (strDate != null) {
                 if (type == null) type = "yyyy-MM-dd HH:mm:ss"
