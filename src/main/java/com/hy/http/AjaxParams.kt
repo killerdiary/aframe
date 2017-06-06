@@ -2,11 +2,6 @@ package com.hy.http
 
 import com.hy.http.file.Binary
 import com.hy.http.file.FileBinary
-import java.lang.Boolean
-import java.lang.Double
-import java.lang.Float
-import java.lang.Long
-import java.lang.String
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -16,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class AjaxParams {
     //private static final String ENCODING = "UTF-8";
-    private var qid: Long = 0
+    private var qid: Long = 0L
     private var urlParams: MutableMap<String, String>? = null
     private var fileParams: MutableMap<String, Binary>? = null
 
@@ -32,8 +27,8 @@ class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
-    fun put(key: String?, value: Any?) {
-        if (key != null && value != null) {
+    fun put(key: String, value: Any?) {
+        if (value != null) {
             put(key, value.toString())
         }
     }
@@ -43,8 +38,8 @@ class AjaxParams {
      * @param key   param name.
      * @param value param value.
      */
-    fun put(key: String?, value: String?): AjaxParams {
-        if (key != null && value != null) {
+    fun put(key: String, value: String?): AjaxParams {
+        if (value != null) {
             if (urlParams == null) urlParams = ConcurrentHashMap()
             urlParams!!.put(key, value)
         }
