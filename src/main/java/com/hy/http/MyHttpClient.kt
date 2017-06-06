@@ -98,10 +98,16 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      * @param key
      * @param value
      */
-    fun addHeader(key: String, value: String) {
-        if (headerParams == null)
-            headerParams = HashMap<String, String>()
-        headerParams!!.put(key, value)
+    fun addHeader(key: String, value: String?) {
+        if (headerParams == null) headerParams = ConcurrentHashMap()
+        if (value == null) {
+            if (headerParams != null)
+                headerParams!!.remove(key)
+        } else {
+            if (headerParams == null)
+                headerParams = ConcurrentHashMap()
+            headerParams!!.put(key, value)
+        }
     }
 
     //    /**
@@ -180,7 +186,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             }
             result.qid = params.getQid()
         }
-        request(method, requestUrl, buildBody(method, params), result, cls, list)
+        request(method, requestUrl, buildBody(method, params), result, cls, list, params?.getHeaderParams())
     }
 
     private fun buildBody(method: RequestMethod, params: AjaxParams?): RequestBody? {
@@ -210,7 +216,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
     }
 
     @MainThread
-    fun <T> request(method: RequestMethod, url: String, body: RequestBody?, result: ResultInfo, cls: Class<T>?, list: Boolean) {
+    fun <T> request(method: RequestMethod, url: String, body: RequestBody?, result: ResultInfo, cls: Class<T>?, list: Boolean, headers: Map<String, String>? = null) {
         if (isDestroy) return
         if (hasQueue(result.requestCode)) {
             MyLog.e("request", "what=" + result.requestCode + ",msg=" + getString(R.string.API_FLAG_REPEAT))
@@ -245,8 +251,8 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             obuilder.writeTimeout((30).toLong(), TimeUnit.SECONDS)
         else
             obuilder.writeTimeout((10 * 60).toLong(), TimeUnit.SECONDS)
-        obuilder.connectTimeout(30, TimeUnit.SECONDS)
-        obuilder.readTimeout(30, TimeUnit.SECONDS)
+        obuilder.connectTimeout(30L, TimeUnit.SECONDS)
+        obuilder.readTimeout(30L, TimeUnit.SECONDS)
         val client = obuilder.build()
         addQueue(result.requestCode, client)
         val builder = Request.Builder().url(url)
@@ -254,6 +260,11 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         builder.tag(result)
         if (headerParams != null) {
             for ((key, value) in headerParams!!) {
+                builder.addHeader(key, value)
+            }
+        }
+        if (headers != null) {
+            for ((key, value) in headers) {
                 builder.addHeader(key, value)
             }
         }
@@ -269,6 +280,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 val msg = e?.message
                 MyLog.e("onFailed", "what=" + result.requestCode + ",msg=" + msg)
                 var code = R.string.API_FLAG_CON_EXCEPTION
+                r.errorCode = ResultInfo.CODE_ERROR_NET
                 if (msg != null) {
                     val thr = msg.toLowerCase(Locale.CHINA)
                     if (thr.contains("broken pipe"))
@@ -278,6 +290,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                     else if (thr.contains("unknownhostexception"))
                         code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION
                 }
+
                 r.msg = getString(code)
                 onRequestError(r)
             }
@@ -323,6 +336,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 } else {
                     MyLog.i("onFail", "what=" + r.requestCode + ",data=" + response.message())
                 }
+                r.errorCode = ResultInfo.CODE_ERROR_DEFAULT
                 r.msg = getString(R.string.API_FLAG_NO_RESPONSE)
                 onRequestError(r)
             }

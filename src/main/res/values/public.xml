@@ -12,6 +12,9 @@
     <public name="padding_normal" type="dimen" />
     <public name="padding_default" type="dimen" />
 
+    <public name="header_height" type="dimen" />
+    <public name="header_func_width" type="dimen" />
+
     <public name="btn_radius" type="dimen" />
     <!--dimen END-->
     <!--color-->
@@ -60,4 +63,28 @@
     <public name="edit_empty_hint" type="string" />
     <public name="edit_format_error" type="string" />
     <!--string END-->
+    <!--attr-->
+    <public name="appBackground" type="attr" />
+    <public name="appThemeColor" type="attr" />
+    <public name="appTitleSize" type="attr" />
+    <public name="appHeaderHeight" type="attr" />
+    <public name="appTitleColor" type="attr" />
+    <public name="appTitleBarBg" type="attr" />
+    <public name="appLoadingDraw" type="attr" />
+    <public name="appLoadingSmallDraw" type="attr" />
+    <!--attr END-->
+    <!--layout-->
+    <public name="in_head_left" type="layout" />
+    <public name="in_head_right" type="layout" />
+    <public name="in_head_tleft" type="layout" />
+    <public name="in_head_tright" type="layout" />
+    <public name="in_head_title" type="layout" />
+    <public name="in_header" type="layout" />
+    <public name="in_loading" type="layout" />
+    <!--attr END-->
+    <!--drawable-->
+    <public name="btn_selector" type="drawable" />
+    <public name="default_selector" type="drawable" />
+    <public name="rotate_loading_circle" type="drawable" />
+    <!--drawable END-->
 </resources>
