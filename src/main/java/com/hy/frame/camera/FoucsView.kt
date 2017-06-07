@@ -7,9 +7,7 @@ import android.view.View
 
 /**
  * FoucsView
-
  * @author HeYan
- *
  * @time 2017/4/28 15:36
  */
 class FoucsView : View {

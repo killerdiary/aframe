@@ -8,9 +8,7 @@ import com.hy.frame.R
 
 /**
  * 带自定义Draw宽高
-
  * @author HeYan
- *
  * @time 2017/4/11 11:29
  */
 class MyTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.textViewStyle) : AppCompatTextView(context, attrs, defStyleAttr) {

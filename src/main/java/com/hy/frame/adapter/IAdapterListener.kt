@@ -4,9 +4,7 @@ import android.view.View
 
 /**
  * IAdapterListener Click
-
  * @author HeYan
- *
  * @time 2017/5/23 9:57
  */
 interface IAdapterListener<in T> {

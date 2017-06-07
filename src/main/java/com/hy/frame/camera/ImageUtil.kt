@@ -5,9 +5,7 @@ import android.graphics.Matrix
 
 /**
  * ImageUtil
-
  * @author HeYan
- *
  * @time 2017/4/28 15:36
  */
 object ImageUtil {

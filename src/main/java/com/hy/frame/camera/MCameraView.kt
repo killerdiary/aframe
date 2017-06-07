@@ -21,9 +21,7 @@ import java.io.IOException
 
 /**
  * MCameraView
-
  * @author HeYan
- *
  * @time 2017/4/28 15:33
  */
 class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wakeLock = null;

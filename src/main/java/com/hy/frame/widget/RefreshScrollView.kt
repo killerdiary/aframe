@@ -9,9 +9,7 @@ import com.hy.frame.util.MyLog
 
 /**
  * 显示ViewPager功能
-
  * @author HeYan
- *
  * @time 2014年9月4日 下午2:37:10
  */
 class RefreshScrollView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : ScrollView(context, attrs, defStyle) {

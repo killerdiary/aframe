@@ -15,9 +15,7 @@ import com.hy.frame.util.MyLog
 
 /**
  * 带刷新的LinearLayout
-
  * @author HeYan
- *
  * @time 2014年12月31日 下午12:29:10
  */
 class RefreshLinearLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {

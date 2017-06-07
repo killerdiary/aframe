@@ -4,9 +4,7 @@ import java.util.*
 
 /**
  * ResultInfo 服务器返回数据
-
  * @author HeYan
- *
  * @time 2017/5/23 10:51
  */
 class ResultInfo {

@@ -7,9 +7,7 @@ import java.util.*
 
 /**
  * CameraParamUtil
-
  * @author HeYan
- *
  * @time 2017/4/28 15:33
  */
 class CameraParamUtil private constructor() {

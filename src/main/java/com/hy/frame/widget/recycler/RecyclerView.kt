@@ -12,9 +12,7 @@ import com.hy.frame.adapter.BaseRecyclerAdapter
 
 /**
  * RecyclerView
-
  * @author HeYan
- * *
  * @time 2016/5/28 9:19
  */
 class RecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {

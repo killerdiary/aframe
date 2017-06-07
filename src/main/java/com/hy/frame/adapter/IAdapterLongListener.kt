@@ -4,9 +4,7 @@ import android.view.View
 
 /**
  * IAdapterLongListener Long Click
-
  * @author HeYan
- *
  * @time 2017/5/23 9:56
  */
 interface IAdapterLongListener<in T> : IAdapterListener<T> {

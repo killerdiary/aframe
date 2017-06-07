@@ -6,9 +6,7 @@ import com.hy.frame.R
 
 /**
  * 倒计时按钮 (startText = "%ss 后重发")
-
  * @author HeYan
- *
  * @time 2015年1月6日 下午5:11:46
  */
 class TimerButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.buttonStyle) : android.support.v7.widget.AppCompatButton(context, attrs, defStyleAttr), Runnable {

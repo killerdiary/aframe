@@ -12,9 +12,7 @@ import java.io.InputStream
 
 /**
  * Bitmap与DrawAble与byte[]与InputStream之间的转换工具类
-
  * @author HeYan
- *
  * @time 2015-9-23 下午2:10:19
  */
 class FormatTools {

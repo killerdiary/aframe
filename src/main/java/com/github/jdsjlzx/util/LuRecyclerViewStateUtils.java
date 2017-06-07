@@ -11,7 +11,6 @@ import com.github.jdsjlzx.view.LoadingFooter;
 /**
  * 分页展示数据时，RecyclerView的FooterView State 操作工具类
  * RecyclerView一共有几种State：Normal/Loading/Error/TheEnd
- *
  * @author lizhixian
  * @time 16/9/10 09:56
  */

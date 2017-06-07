@@ -10,9 +10,7 @@ import com.hy.frame.R
 
 /**
  * LoadCache
-
  * @author HeYan
- *
  * @time 2017/5/23 10:51
  */
 class LoadCache {

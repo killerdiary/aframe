@@ -17,9 +17,7 @@ import java.util.regex.Pattern
 
 /**
  * 工具
-
  * @author HeYan
- *
  * @time 2014年12月24日 下午1:43:34
  */
 class HyUtil {

@@ -13,9 +13,7 @@ import com.hy.frame.R
 
 /**
  * 可以左滑的ViewGroup
-
  * @author HeYan
- *
  * @time 2017/5/9 9:47
  */
 class SwipeMenuView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {

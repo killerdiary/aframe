@@ -10,9 +10,7 @@ import com.hy.frame.R
 
 /**
  * BadgeView 数字角标
-
  * @author HeYan
- *
  * @time 2017/5/9 9:51
  */
 class BadgeTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.textViewStyle) : android.support.v7.widget.AppCompatTextView(context, attrs, defStyleAttr) {

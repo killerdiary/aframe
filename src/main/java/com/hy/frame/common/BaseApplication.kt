@@ -17,9 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * 应用
-
  * @author HeYan
- *
  * @time 2014年12月17日 下午4:19:29
  */
 abstract class BaseApplication : Application() {

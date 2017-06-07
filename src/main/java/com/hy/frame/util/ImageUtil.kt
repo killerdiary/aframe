@@ -6,9 +6,7 @@ import java.io.*
 
 /**
  * @author HeYan
- *
  * @title
- *
  * @time 2015/10/22 10:25
  */
 class ImageUtil {

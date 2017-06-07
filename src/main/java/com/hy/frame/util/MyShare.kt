@@ -5,9 +5,7 @@ import android.content.SharedPreferences
 
 /**
  * SharedPreferences工具
-
  * @author HeYan
- *
  * @time 2014年12月17日 下午5:47:46
  */
 class MyShare constructor(context: Context, shareName: String = MyShare.SHARE_DEFAULT) {

@@ -10,9 +10,7 @@ import com.hy.frame.R
 
 /**
  * LoadMoreHolder
-
  * @author HeYan LoadMoreHolder
- * *
  * @time 2016/5/27 16:35
  */
 @Deprecated("")

@@ -15,11 +15,8 @@ import com.hy.frame.R
 import com.hy.frame.util.MyLog
 
 /**
-
  * 上下拉刷新
-
  * @author HeYan
- * *
  * @time 2015-9-15 上午10:49:43
  */
 class RefreshLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : SwipeRefreshLayout(context, attrs), OnScrollListener {

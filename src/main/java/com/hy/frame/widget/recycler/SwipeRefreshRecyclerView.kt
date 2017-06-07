@@ -16,9 +16,7 @@ import java.util.*
 
 /**
  * RecyclerView 上下拉刷新加载更多 适用于为ListView格式 版本>=11
-
  * @author HeYan
- * *
  * @time 2016/5/28 9:19
  */
 class SwipeRefreshRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : SwipeRefreshLayout(context, attrs) {

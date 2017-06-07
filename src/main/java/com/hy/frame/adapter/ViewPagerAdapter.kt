@@ -8,9 +8,7 @@ import android.view.ViewGroup
 
 /**
  * List<View>类型
-
  * @author HeYan
- *
  * @time 2014年7月26日 上午10:27:41
 </View> */
 class ViewPagerAdapter(// 界面列表

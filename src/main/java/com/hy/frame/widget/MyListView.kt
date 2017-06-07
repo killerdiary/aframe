@@ -16,9 +16,7 @@ import java.util.*
 
 /**
  * @author heyan
- *
  * @title 自定义ListView(下拉刷新，点击查看更多)
- *
  * @time 2013-6-27 下午2:59:52
  */
 @Deprecated("不建议使用ListView")

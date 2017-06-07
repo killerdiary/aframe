@@ -11,9 +11,7 @@ import java.io.IOException
 
 /**
  * FileUtil
-
  * @author HeYan
- *
  * @time 2017/4/28 15:33
  */
 object FileUtil {

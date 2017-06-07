@@ -6,9 +6,7 @@ import android.widget.GridView
 
 /**
  * MyGridView ScrollView 冲突
-
  * @author HeYan
- *
  * @time 2017/5/24 14:01
  */
 @Deprecated("不建议使用GridView")

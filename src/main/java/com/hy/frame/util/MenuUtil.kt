@@ -9,9 +9,7 @@ import java.util.*
 
 /**
  * 菜单加载器
-
  * @author HeYan
- *
  * @time 2014-7-21 下午3:22:06
  */
 object MenuUtil {

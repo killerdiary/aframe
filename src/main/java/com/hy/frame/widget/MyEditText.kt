@@ -17,9 +17,7 @@ import com.hy.frame.R
 
 /**
  * 带清除的
-
  * @author HeYan
- *
  * @time 2017/4/11 11:29
  */
 class MyEditText @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.editTextStyle) : AppCompatEditText(context, attrs, defStyleAttr), TextWatcher, View.OnFocusChangeListener {

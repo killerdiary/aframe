@@ -5,9 +5,7 @@ import android.view.View
 
 /**
  * @author HeYan
- *
  * @title 公有接口
- *
  * @time 2015/11/20 11:30
  */
 interface IBaseActivity {

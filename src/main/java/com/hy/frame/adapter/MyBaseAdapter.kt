@@ -5,9 +5,7 @@ import android.view.View
 
 /**
  * MyBaseAdapter for ListView or GridView
-
  * @author HeYan
- *
  * @time 2017/5/23 10:07
  */
 abstract class MyBaseAdapter<T> : BaseAdapter<T> {

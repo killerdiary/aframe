@@ -11,9 +11,7 @@ import com.hy.frame.util.HyUtil
 
 /**
  * @author HeYan
- *
  * @title 父类对话框
- *
  * @time 2015/11/16 13:25
  */
 abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseTheme_DialogTheme), View.OnClickListener {

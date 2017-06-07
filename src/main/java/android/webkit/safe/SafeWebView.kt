@@ -15,7 +15,6 @@ import java.util.*
 /**
  * Created by zhangguojun on 2015/6/21.
  *
- *
  * Android4.2.2以下版本WebView有远程执行代码漏洞
  * 乌云上的介绍：http://www.wooyun.org/bugs/wooyun-2010-067676
  * 测试方法：让自己的WebView加载http://drops.wooyun.org/webview.html

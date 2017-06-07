@@ -6,7 +6,6 @@ import android.view.ViewGroup
 /**
  * RecyclerViewPagerAdapter
  * Adapter wrapper.
-
  * @author Green
  */
 open class RecyclerViewPagerAdapter<VH : RecyclerView.ViewHolder>(private val mViewPager: RecyclerViewPager, internal var mAdapter: RecyclerView.Adapter<VH>) : RecyclerView.Adapter<VH>() {

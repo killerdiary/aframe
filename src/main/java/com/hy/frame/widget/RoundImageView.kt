@@ -7,9 +7,7 @@ import com.hy.frame.R
 
 /**
  * 圆角ImageView 默认15度
-
  * @author HeYan
- *
  * @time 2017/5/9 9:52
  */
 class RoundImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : android.support.v7.widget.AppCompatImageView(context, attrs, defStyle) {
