@@ -12,6 +12,7 @@ import com.hy.frame.R
 class TimerButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.buttonStyle) : android.support.v7.widget.AppCompatButton(context, attrs, defStyleAttr), Runnable {
     private var timer = 0
     private var status = 0
+    private var initText: CharSequence? = null
     private var prepareText: CharSequence? = null
     private var startText: CharSequence? = null
     private var endText: CharSequence? = null
@@ -26,14 +27,20 @@ class TimerButton @JvmOverloads constructor(context: Context, attrs: AttributeSe
         startText = a.getText(R.styleable.TimerButton_timerStartText)
         endText = a.getText(R.styleable.TimerButton_timerEndText)
         a.recycle()
+        initText = text
     }
 
     private fun update(time: Int) {
-        if (startText != null && startText!!.toString().contains("s%")) {
+        if (startText != null && startText!!.contains("%s")) {
             text = String.format(startText!!.toString(), time)
         } else {
             text = time.toString()
         }
+    }
+
+    fun reset() {
+        text = initText
+        this.isEnabled = true
     }
 
     /**

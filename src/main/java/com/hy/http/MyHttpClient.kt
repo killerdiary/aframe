@@ -6,7 +6,6 @@ import android.os.Looper
 import android.support.annotation.MainThread
 import android.support.annotation.StringRes
 import android.support.annotation.UiThread
-import android.text.TextUtils
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -258,16 +257,21 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         val builder = Request.Builder().url(url)
         builder.method(method.toString(), body)
         builder.tag(result)
+        val sb: StringBuilder = StringBuilder();
         if (headerParams != null) {
             for ((key, value) in headerParams!!) {
                 builder.addHeader(key, value)
+                sb.append("$key=$value&")
             }
         }
         if (headers != null) {
             for ((key, value) in headers) {
                 builder.addHeader(key, value)
+                sb.append("$key=$value&")
             }
         }
+        if (sb.isNotEmpty())
+            MyLog.d("headers", sb.toString().dropLast(1))
         when (result.requestType) {
             REQUEST_TYPE_JSON, REQUEST_TYPE_JSONARRAY -> builder.addHeader(Headers.HEAD_KEY_ACCEPT, Headers.HEAD_ACCEPT_JSON)
             REQUEST_TYPE_STRING -> builder.addHeader(Headers.HEAD_KEY_ACCEPT, Headers.HEAD_ACCEPT_STRING)
@@ -301,9 +305,9 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 //hideLoading();
                 val r = call.request().tag() as ResultInfo
                 if (response.isSuccessful) {
-                    val token = response.header("token")
-                    if (!TextUtils.isEmpty(token)) {
-                        r.putValue("token", token!!)
+                    if (response.headers() != null && response.headers().size() > 0) {
+                        for (i in 0..response.headers().size() - 1)
+                            r.putValue(response.headers().name(i), response.headers().value(i))
                     }
                     if (r.requestType == REQUEST_TYPE_FILE) {
                         doSuccessFile(r, response.body())

@@ -39,10 +39,4 @@ abstract class MyBaseAdapter<T> : BaseAdapter<T> {
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
-
-    fun setOnClickListener(v: View, position: Int) {
-        if (listener != null) {
-            v.setOnClickListener(ViewOnClick(getItem(position), position))
-        }
-    }
 }

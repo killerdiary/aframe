@@ -227,12 +227,11 @@ class NavGroup : LinearLayout, View.OnClickListener {
         if (v.id != View.NO_ID && v is NavView) {
             if (!v.isChecked) {
                 val size = childCount
-                for (i in 0..size - 1) {
-                    val child = getChildAt(i)
-                    if (v.getId() != child.id && child is NavView) {
-                        child.isChecked = false
-                    }
-                }
+                (0..size - 1)
+                        .map { getChildAt(it) }
+                        .filter { v.getId() != it.id }
+                        .filterIsInstance<NavView>()
+                        .forEach { it.isChecked = false }
                 check(v.getId())
             }
         }

@@ -17,7 +17,7 @@ class TintImageView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     init {
         init(context, attrs, defStyleAttr)
-        MyLog.e(javaClass, "init")
+        //MyLog.e(javaClass, "init")
     }
 
     //here, obtainStyledAttributes was asking for an array

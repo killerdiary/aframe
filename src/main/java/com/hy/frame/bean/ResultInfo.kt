@@ -67,6 +67,8 @@ class ResultInfo {
         return null
     }
 
+    fun getMaps(): MutableMap<String, String>? = maps
+
     companion object {
         /**
          * 本地错误 默认
