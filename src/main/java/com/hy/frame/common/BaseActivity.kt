@@ -169,7 +169,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     }
 
     //R.drawable.img_hint_net_fail
-    open fun showNoData(msg: String = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
+    open fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
         if (initLoadView()) {
             val count = flyMain!!.childCount
             for (i in 0..count - 1) {

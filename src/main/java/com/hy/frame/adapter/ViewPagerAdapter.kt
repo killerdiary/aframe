@@ -48,7 +48,7 @@ class ViewPagerAdapter(// 界面列表
 
     }
 
-    fun refresh(views: List<View>) {
+    fun refresh(views: List<View>?) {
         this.views = views
         this.notifyDataSetChanged()
     }

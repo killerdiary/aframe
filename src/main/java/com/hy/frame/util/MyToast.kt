@@ -22,8 +22,8 @@ object MyToast {
         try {
             if (toast != null)
                 toast!!.cancel()
-            toast = Toast.makeText(context.applicationContext, msg, Toast.LENGTH_SHORT)
-            //toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT);
+            //toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+            toast = Toast.makeText(context.applicationContext, msg, Toast.LENGTH_SHORT);
             toast!!.show()
         } catch (e: Exception) {
             if (MyLog.isLoggable)

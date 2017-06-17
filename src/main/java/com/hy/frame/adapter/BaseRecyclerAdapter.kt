@@ -25,7 +25,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     }
 
 
-    protected fun inflate(parent: ViewGroup, resId: Int): View {
+    protected fun inflate(resId: Int): View {
         return LayoutInflater.from(context).inflate(resId, null)
     }
 
@@ -53,11 +53,10 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     override fun onBindViewHolder(holder: BaseHolder, position: Int) {
         if (dividerHorizontalSize > 0 || dividerVerticalSize > 0 || topPadding > 0 || bottomPadding > 0) {
             val padding = dividerVerticalSize
-            var left = 0
-            var top = 0
-            var right = 0
-            var bottom = 0
-            left = holder.itemView.paddingLeft
+            var left: Int = holder.itemView.paddingLeft
+            var top: Int = 0
+            var right: Int
+            var bottom: Int
             right = holder.itemView.paddingRight
             bottom = holder.itemView.paddingBottom
             if (position == 0 && topPadding > 0) {
@@ -71,7 +70,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
                     bottom = bottomPadding
                 } else if (gridCount > 1) {
                     val curPosition = getCurPosition(position) + 1
-                    var lastLinePosition = 0
+                    val lastLinePosition: Int
                     val surplus = itemCount % gridCount
                     if (surplus == 0) {
                         lastLinePosition = itemCount - gridCount
@@ -121,6 +120,10 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
 
     fun getItem(position: Int): T {
         return datas!![position]
+    }
+
+    fun refresh() {
+        this.notifyDataSetChanged()
     }
 
     fun refresh(beans: List<T>?) {

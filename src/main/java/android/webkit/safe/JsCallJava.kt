@@ -162,8 +162,8 @@ class JsCallJava(interfaceObj: Any, interfaceName: String) {
         }
     }
 
-    private fun getReturn(reqJson: JSONObject?, stateCode: Int, result: Any?, time: Long): String {
-        var result = result
+    private fun getReturn(reqJson: JSONObject?, stateCode: Int, r: Any?, time: Long): String {
+        var result = r
         val insertRes: String
         if (result == null) {
             insertRes = "null"
@@ -214,8 +214,8 @@ class JsCallJava(interfaceObj: Any, interfaceName: String) {
             return message.startsWith(MSG_PROMPT_HEADER)
         }
 
-        internal fun getMsgJSONObject(message: String): JSONObject {
-            var message = message
+        internal fun getMsgJSONObject(m: String): JSONObject {
+            var message = m
             message = message.substring(MSG_PROMPT_HEADER.length)
             var jsonObject: JSONObject
             try {
@@ -228,7 +228,7 @@ class JsCallJava(interfaceObj: Any, interfaceName: String) {
             return jsonObject
         }
 
-        internal fun getInterfacedName(jsonObject: JSONObject): String {
+        internal fun getInterfacedName(jsonObject: JSONObject): String? {
             return jsonObject.optString(KEY_OBJ)
         }
     }

@@ -45,8 +45,8 @@ class ResultInfo {
      * 返回结果
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T> getObj(): T {
-        return obj as T
+    fun <T> getObj(): T? {
+        return if (obj == null) null else (obj as T)
     }
 
     /**

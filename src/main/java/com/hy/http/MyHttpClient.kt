@@ -278,7 +278,9 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             REQUEST_TYPE_FILE -> builder.addHeader(Headers.HEAD_KEY_ACCEPT, Headers.HEAD_ACCEPT_FILE)
         }
         showLoading()
-        client.newCall(builder.build()).enqueue(object : Callback {
+        val request: Request = builder.build()
+        //MyLog.d("Request", "headers=" + request.headers().toString())
+        client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException?) {
                 val r = call.request().tag() as ResultInfo
                 val msg = e?.message
@@ -302,6 +304,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 if (isDestroy) return
+                //MyLog.d("onResponse", "headers=" + response.headers().toString())
                 //hideLoading();
                 val r = call.request().tag() as ResultInfo
                 if (response.isSuccessful) {
@@ -357,11 +360,11 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         val method = RequestMethod.GET
 
         val downFile = DownFile()
-        downFile.saveDir = fileFolder
-        downFile.isRange = isRange
-        downFile.url = url
-        downFile.fileName = fileName
-        downFile.isDeleteOld = isDeleteOld
+        downFile?.saveDir = fileFolder
+        downFile?.isRange = isRange
+        downFile?.url = url
+        downFile?.fileName = fileName
+        downFile?.isDeleteOld = isDeleteOld
         result.setObj(downFile)
         request<Any>(method, url, null, result, null, false)
     }
@@ -375,8 +378,8 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         val downFile = result.getObj<DownFile>()
         val total = body.contentLength()
         MyLog.d("onProgress(File)", "what=" + result.requestCode + ",total=" + total)
-        downFile.state = DownFile.STATUS_START
-        downFile.allCount = total
+        downFile?.state = DownFile.STATUS_START
+        downFile?.allCount = total
         onRequestSuccess(result)
         var input: InputStream? = null
         var fos: FileOutputStream? = null
@@ -384,7 +387,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         var length: Int = 0
         try {
             input = body.byteStream()
-            val cacheFile = File(downFile.saveDir, downFile.fileName!! + ".cache")
+            val cacheFile = File(downFile?.saveDir, downFile?.fileName!! + ".cache")
             fos = FileOutputStream(cacheFile)
             var sum: Long = 0
             length = input.read(buf)
@@ -393,26 +396,26 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 sum += length.toLong()
                 val progress = (sum * 1.0f / total * 100).toInt()
                 MyLog.d("onProgress(File)", "what=" + result.requestCode + ",progress=" + progress + ",fileCount=" + sum + ",total=" + total)
-                downFile.state = DownFile.STATUS_PROGRESS
-                downFile.progress = progress
-                downFile.fileCount = sum
+                downFile?.state = DownFile.STATUS_PROGRESS
+                downFile?.progress = progress
+                downFile?.fileCount = sum
                 result.setObj(downFile)
                 onRequestSuccess(result)
                 length = input.read(buf)
             }
             fos.flush()
             if (total > 0 && sum == total) {
-                downFile.state = DownFile.STATUS_SUCCESS
-                val file = File(downFile.saveDir, downFile.fileName!!)
+                downFile?.state = DownFile.STATUS_SUCCESS
+                val file = File(downFile?.saveDir, downFile?.fileName!!)
                 cacheFile.renameTo(file)
                 MyLog.i("onSucceed", "文件下载成功")
             } else {
-                downFile.state = DownFile.STATUS_ERROR
+                downFile?.state = DownFile.STATUS_ERROR
                 MyLog.i("onSucceed", "文件下载中断")
             }
         } catch (e: Exception) {
             MyLog.i("onSucceed", "文件下载失败")
-            downFile.state = DownFile.STATUS_ERROR
+            downFile?.state = DownFile.STATUS_ERROR
         } finally {
             try {
                 if (input != null)
@@ -537,7 +540,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                     if (!hasQueue(r.requestCode)) return
                     if (r.requestType == REQUEST_TYPE_FILE) {
                         val downFile = r.getObj<DownFile>()
-                        if (downFile.state == DownFile.STATUS_SUCCESS || downFile.state == DownFile.STATUS_ERROR) {
+                        if (downFile?.state == DownFile.STATUS_SUCCESS || downFile?.state == DownFile.STATUS_ERROR) {
                             removeQueue(r.requestCode)
                             hideLoading()
                         }

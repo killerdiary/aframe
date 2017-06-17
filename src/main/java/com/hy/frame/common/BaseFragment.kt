@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
+import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
@@ -48,12 +49,9 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
 
     /**
      * 唯一布局ID
-
-     * @return
      */
-    protected open fun initSingleLayoutId(): Int {
-        return 0
-    }
+    @LayoutRes
+    protected abstract fun initSingleLayoutId(): Int
 
     override fun onStart() {
         super.onStart()
@@ -149,7 +147,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     }
 
     //R.drawable.img_hint_net_fail
-    protected fun showNoData(msg: String = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
+    protected fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
         if (initLoadView()) {
             val count = flyMain!!.childCount
             for (i in 0..count - 1) {

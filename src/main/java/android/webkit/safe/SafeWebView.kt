@@ -373,15 +373,9 @@ class SafeWebView @JvmOverloads constructor(context: Context, attrs: AttributeSe
      * 向网页更新Cookie，设置cookie后不需要页面刷新即可生效；
      */
     protected fun updateCookies(url: String, value: String) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) { // 2.3及以下
-            CookieSyncManager.createInstance(context.applicationContext)
-        }
         val cookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
         cookieManager.setCookie(url, value)
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) { // 2.3及以下
-            CookieSyncManager.getInstance().sync()
-        }
     }
 
     companion object {

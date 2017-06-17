@@ -23,8 +23,9 @@ import java.util.*
  * @author HeYan
  * @time 2014年9月4日 下午2:37:10
  */
-class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RelativeLayout(context, attrs, defStyle), OnPageChangeListener, Runnable {
+class BannerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RelativeLayout(context, attrs, defStyle), OnPageChangeListener, Runnable {
     private var isOpenAuto: Boolean = false
+    private var isPause: Boolean = false
     private var timer: Long = 0// 间隔时间
     private var scrollCount: Int = 0// 次数
     var viewPager: ViewPager? = null
@@ -50,19 +51,13 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
         rlp.addRule(RelativeLayout.ALIGN_TOP)
         addView(viewPager, rlp)
         // vPager.addView(llyContainer, llp);
-        llyPoint = LinearLayout(context)
-        val prlp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, resources.getDimensionPixelSize(R.dimen.gallery_point_height))
-        prlp.alignWithParent = true
-        prlp.addRule(RelativeLayout.ALIGN_BOTTOM)
-        llyPoint!!.gravity = Gravity.CENTER
-        llyPoint!!.setPadding(HyUtil.dip2px(context, 2f), HyUtil.dip2px(context, 2f), HyUtil.dip2px(context, 2f), HyUtil.dip2px(context, 2f))
-        addView(llyPoint, prlp)
+
     }
 
     fun clear() {
         if (views != null) {
             views!!.clear()
-            adapter!!.refresh(views!!)
+            adapter!!.refresh(views)
         }
     }
 
@@ -105,13 +100,14 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
         addPoint()
     }
 
-    fun show(views: MutableList<View>) {
-        this.views = views
+    fun show(views: MutableList<View>? = null) {
+        if (views != null)
+            this.views = views
         if (adapter == null) {
-            adapter = ViewPagerAdapter(views)
+            adapter = ViewPagerAdapter(this.views)
             viewPager!!.adapter = adapter
         } else
-            adapter!!.refresh(views)
+            adapter!!.refresh(this.views)
     }
 
     private var pointResId: Int = 0
@@ -121,6 +117,16 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     private fun addPoint() {
+        if (hidePoint) return
+        if (llyPoint == null) {
+            llyPoint = LinearLayout(context)
+            val prlp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, resources.getDimensionPixelSize(R.dimen.gallery_point_height))
+            prlp.alignWithParent = true
+            prlp.addRule(RelativeLayout.ALIGN_BOTTOM)
+            llyPoint!!.gravity = Gravity.CENTER
+            llyPoint!!.setPadding(HyUtil.dip2px(context, 2f), HyUtil.dip2px(context, 2f), HyUtil.dip2px(context, 2f), HyUtil.dip2px(context, 2f))
+            addView(llyPoint, prlp)
+        }
         val img = CircleImageView(context)
         val width = HyUtil.dip2px(context, 8f)
         val llp = LinearLayout.LayoutParams(width, width)
@@ -141,15 +147,17 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
             llyPoint!!.gravity = gravity
     }
 
+    var hidePoint: Boolean = false
     /**
      * 隐藏后不再显示
      */
     fun hidePoint() {
+        hidePoint = true
         if (llyPoint != null)
             llyPoint!!.visibility = View.GONE
     }
 
-    private val count: Int
+    val count: Int
         get() = if (views == null) 0 else views!!.size
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -174,13 +182,12 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     override fun onPageSelected(position: Int) {
         isDrag = false
-        val size = llyPoint!!.childCount
-        for (i in 0..size - 1) {
-            val v = llyPoint!!.getChildAt(i)
-            if (position == i)
-                v.isSelected = true
-            else
-                v.isSelected = false
+        if (llyPoint != null) {
+            val size = llyPoint!!.childCount
+            for (i in 0..size - 1) {
+                val v = llyPoint!!.getChildAt(i)
+                v.isSelected = position == i
+            }
         }
         if (scrollCount >= 3)
             scrollCount = 2
@@ -209,6 +216,14 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
         isOpenAuto = false
     }
 
+    fun onResume() {
+        isPause = false
+    }
+
+    fun onPause() {
+        isPause = true
+    }
+
     override fun run() {
         // MyLog.e("isActivated:"+isActivated());
         // MyLog.e("isAttachedToWindow:"+isAttachedToWindow());
@@ -226,7 +241,7 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
             return
         if (!isOpenAuto || viewPager == null)
             return
-        if (!isShown || count <= 1)
+        if (isPause || count <= 1)
             return
         val pager = viewPager!!.currentItem
         //MyLog.e("pager:" + pager + "| getCount:" + getCount());
@@ -250,6 +265,3 @@ class MyScrollView @JvmOverloads constructor(context: Context, attrs: AttributeS
         private val DEFAULT_INTERVAL = 3000// 间隔时间3秒
     }
 }
-/**
- * 开启倒计时
- */
