@@ -278,11 +278,11 @@ class HyUtil {
         }
 
         fun stringToDateTime(strDate: String?, type: String? = null): Date? {
-            var type = type
+            var t = type
             if (strDate != null) {
-                if (type == null) type = "yyyy-MM-dd HH:mm:ss"
+                if (type == null) t = "yyyy-MM-dd HH:mm:ss"
                 try {
-                    val sdf = SimpleDateFormat(type, Locale.CHINA)
+                    val sdf = SimpleDateFormat(t, Locale.CHINA)
                     return sdf.parse(strDate)
                 } catch (e: ParseException) {
                     e.printStackTrace()

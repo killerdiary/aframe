@@ -22,6 +22,7 @@
     <color name="txt_gray">#787878</color>
     <color name="txt_gray_light">#B3B3B3</color>
     <color name="btn_disable">#B3B3B3</color>
+    <color name="edit_disable">#EEEEEE</color>
     <color name="btn_highlight">#1F000000</color>
     <color name="divider_gray">#d6d6d6</color>
     <color name="divider_gray_light">#11000000</color>
