@@ -360,11 +360,11 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         val method = RequestMethod.GET
 
         val downFile = DownFile()
-        downFile?.saveDir = fileFolder
-        downFile?.isRange = isRange
-        downFile?.url = url
-        downFile?.fileName = fileName
-        downFile?.isDeleteOld = isDeleteOld
+        downFile.saveDir = fileFolder
+        downFile.isRange = isRange
+        downFile.url = url
+        downFile.fileName = fileName
+        downFile.isDeleteOld = isDeleteOld
         result.setObj(downFile)
         request<Any>(method, url, null, result, null, false)
     }
@@ -375,7 +375,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             onRequestSuccess(result)
             return
         }
-        val downFile = result.getObj<DownFile>()
+        val downFile: DownFile? = result.getObj<DownFile>()
         val total = body.contentLength()
         MyLog.d("onProgress(File)", "what=" + result.requestCode + ",total=" + total)
         downFile?.state = DownFile.STATUS_START
