@@ -53,7 +53,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     override fun onBindViewHolder(holder: BaseHolder, position: Int) {
         if (dividerHorizontalSize > 0 || dividerVerticalSize > 0 || topPadding > 0 || bottomPadding > 0) {
             val padding = dividerVerticalSize
-            var left: Int = holder.itemView.paddingLeft
+            val left: Int = holder.itemView.paddingLeft
             var top: Int = 0
             var right: Int
             var bottom: Int
