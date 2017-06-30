@@ -23,7 +23,7 @@ class TintImageView @JvmOverloads constructor(context: Context, attrs: Attribute
     //here, obtainStyledAttributes was asking for an array
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.TintImageView, defStyleAttr, 0)
-        tint = a.getColorStateList(R.styleable.TintImageView_tint)
+        tint = a.getColorStateList(R.styleable.TintImageView_tivTint)
         a.recycle()
     }
 

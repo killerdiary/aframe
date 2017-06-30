@@ -1,6 +1,7 @@
 package com.hy.frame.adapter
 
 import android.content.Context
+import android.support.annotation.IdRes
 import android.view.LayoutInflater
 import android.view.View
 
@@ -30,9 +31,24 @@ abstract class BaseAdapter<T> constructor(private val context: Context, listener
             v.setOnLongClickListener(ViewOnLongClick(t, position))
     }
 
-    @Suppress("UNCHECKED_CAST")
-    protected fun <V> getView(v: View, resId: Int): V {
-        return v.findViewById(resId) as V
+    /**
+     * 获取 控件
+     * @param id 行布局中某个组件的id
+     * @param parent  parent
+     */
+    fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
+        return parent?.findViewById(id)
+    }
+
+    /**
+     * 获取并绑定点击
+     * @param id 行布局中某个组件的id
+     * @param parent  parent
+     */
+    protected fun <T : View> setOnClickListener(@IdRes id: Int, parent: View?, listener: View.OnClickListener): T? {
+        val view = findViewById<T>(id, parent)
+        view?.setOnClickListener(listener) ?: return null
+        return view
     }
 
     internal inner class ViewOnClick(var obj: T, var position: Int) : android.view.View.OnClickListener {

@@ -23,7 +23,7 @@ object StatusBarUtil {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             var color = COLOR_DEFAULT
-            val contentView = activity.findViewById(android.R.id.content) as ViewGroup
+            val contentView = activity.findViewById<ViewGroup>(android.R.id.content)
             if (statusColor != INVALID_VAL) {
                 color = statusColor
             }

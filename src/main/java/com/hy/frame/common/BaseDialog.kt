@@ -79,25 +79,24 @@ abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseThe
         // window.setWindowAnimations(R.style.winAnimFadeInFadeOut);
     }
 
-
-    @Suppress("UNCHECKED_CAST")
-    protected fun <T> getView(resId: Int): T {
-        return findViewById(resId) as T
+    /**
+     * 获取 控件
+     * @param id 行布局中某个组件的id
+     * @param parent  parent
+     */
+    fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
+        return parent?.findViewById(id) ?: findViewById(id)
     }
 
     /**
      * 获取并绑定点击
-
-     * @param id id
+     * @param id 行布局中某个组件的id
+     * @param parent  parent
      */
-    protected fun <T : View> getViewAndClick(@IdRes id: Int): T {
-        val v = getView<T>(id)
-        v.setOnClickListener(this)
-        return v
-    }
-
-    protected fun setOnClickListener(resId: Int) {
-        findViewById(resId).setOnClickListener(this)
+    protected fun <T : View> setOnClickListener(@IdRes id: Int, parent: View? = null): T? {
+        val view = findViewById<T>(id, parent)
+        view?.setOnClickListener(this) ?: return null
+        return view
     }
 
     var tag: Any? = null

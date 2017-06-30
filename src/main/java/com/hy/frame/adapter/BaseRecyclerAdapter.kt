@@ -29,11 +29,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         return LayoutInflater.from(context).inflate(resId, null)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    protected fun <V> getView(v: View, resId: Int): V {
-        return v.findViewById(resId) as V
-    }
-
     private var gridCount: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder {
@@ -150,6 +145,27 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     protected abstract fun bindViewData(holder: RecyclerView.ViewHolder, position: Int)
 
     /**
+     * 获取 控件
+     * @param id 行布局中某个组件的id
+     * @param parent  parent
+     */
+    fun <V : View> findViewById(@IdRes id: Int, parent: View?): V? {
+        return parent?.findViewById(id)
+    }
+
+    /**
+     * 获取并绑定点击
+     * @param id 行布局中某个组件的id
+     * @param parent  parent
+     */
+    protected fun <V : View> setOnClickListener(@IdRes id: Int, parent: View?, listener: View.OnClickListener): V? {
+        val view = findViewById<V>(id, parent)
+        view?.setOnClickListener(listener) ?: return null
+        return view
+    }
+
+
+    /**
      * BaseRecyclerAdapter
      * 自定义的ViewHolder，持有每个Item的的所有界面元素,static不是说只存在1个实例，而是可以访问外部类的静态变量，final修饰类则是不让该类继承
 
@@ -178,14 +194,12 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
             }
         }
 
-        fun setOnClickListener(v: View) {
-            v.setOnClickListener(this)
+        fun setOnClickListener(v: View?) {
+            v?.setOnClickListener(this)
         }
 
-        protected fun <V : View> getViewAndClick(@IdRes id: Int): V {
-            val v = getView<V>(itemView, id)
-            setOnClickListener(v)
-            return v
+        protected fun <V : View> setOnClickListener(@IdRes id: Int): V? {
+            return setOnClickListener(id, itemView, this)
         }
     }
 
@@ -202,12 +216,12 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
             return false
         }
 
-        fun setOnLongClickListener(v: View) {
-            v.setOnLongClickListener(this)
+        fun setOnLongClickListener(v: View?) {
+            v?.setOnLongClickListener(this)
         }
 
-        protected fun <V : View> getViewAndLongClick(@IdRes id: Int): V {
-            val v = getView<V>(itemView, id)
+        protected fun <V : View> setOnLongClickListener(@IdRes id: Int): V? {
+            val v = findViewById<V>(id, itemView)
             setOnLongClickListener(v)
             return v
         }

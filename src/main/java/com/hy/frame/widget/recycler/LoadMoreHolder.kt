@@ -22,8 +22,8 @@ class LoadMoreHolder(v: View) : RecyclerView.ViewHolder(v) {
         if (v.layoutParams == null) {
             v.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
-        proFoot = v.findViewById(R.id.footer_proFoot) as ProgressBar
-        txtFootHint = v.findViewById(R.id.footer_txtFootHint) as TextView
+        proFoot = v.findViewById<ProgressBar>(R.id.footer_proFoot)
+        txtFootHint = v.findViewById<TextView>(R.id.footer_txtFootHint)
     }
 
     fun onChangeState(state: Int) {

@@ -12,7 +12,7 @@
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>
     <declare-styleable name="TintImageView">
-        <attr name="tint" format="reference|color" />
+        <attr name="tivTint" format="reference|color" />
     </declare-styleable>
     <declare-styleable name="NavView">
         <attr name="navHorizontal" format="boolean" />

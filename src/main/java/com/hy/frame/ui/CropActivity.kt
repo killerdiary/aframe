@@ -50,13 +50,13 @@ class CropActivity : BaseActivity() {
     }
 
     override fun initView() {
-        val vUCrop = getView<UCropView>(R.id.crop_vUCrop)
+        val vUCrop = findViewById<UCropView>(R.id.crop_vUCrop)
         imgCrop = vUCrop?.cropImageView
         vOverlay = vUCrop?.overlayView
-        navTurnLeft = getViewAndClick(R.id.crop_navTurnLeft)
-        navTurnRight = getViewAndClick(R.id.crop_navTurnRight)
-        setOnClickListener(R.id.crop_txtConfirm)
-        setOnClickListener(R.id.crop_txtCancel)
+        navTurnLeft = setOnClickListener(R.id.crop_navTurnLeft)
+        navTurnRight = setOnClickListener(R.id.crop_navTurnRight)
+        setOnClickListener<View>(R.id.crop_txtConfirm)
+        setOnClickListener<View>(R.id.crop_txtCancel)
     }
 
     override fun initData() {

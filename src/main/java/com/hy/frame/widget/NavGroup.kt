@@ -118,13 +118,13 @@ class NavGroup : LinearLayout, View.OnClickListener {
     private fun setCheckedId(@IdRes id: Int) {
         checkedNavViewId = id
         if (mOnCheckedChangeListener != null) {
-            val nav = findViewById(id) as NavView
+            val nav = findViewById<NavView>(id)
             mOnCheckedChangeListener!!.onCheckedChanged(this, nav, checkedNavViewId)
         }
     }
 
     private fun setCheckedStateForView(viewId: Int, checked: Boolean) {
-        val checkedView = findViewById(viewId)
+        val checkedView = findViewById<View>(viewId)
         if (checkedView != null && checkedView is NavView) {
             checkedView.isChecked = checked
         }
@@ -219,7 +219,7 @@ class NavGroup : LinearLayout, View.OnClickListener {
     }
 
     fun setCheckedChildById(id: Int) {
-        val v = findViewById(id)
+        val v = findViewById<View>(id)
         onChildClick(v)
     }
 

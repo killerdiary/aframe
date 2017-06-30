@@ -462,7 +462,8 @@ class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wake
         mediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.CAMCORDER)
         mediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         mediaRecorder!!.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-        mediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        mediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+        //mediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
         if (mParam == null) {
             mParam = mCamera!!.parameters

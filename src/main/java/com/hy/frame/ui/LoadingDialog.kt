@@ -27,7 +27,7 @@ class LoadingDialog constructor(context: Context, private var loadMsg: String? =
     }
 
     override fun initView() {
-        txtLoadMsg = getView<TextView>(R.id.loading_txtLoadMsg)
+        txtLoadMsg = findViewById(R.id.loading_txtLoadMsg)
     }
 
     override fun initData() {

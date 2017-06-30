@@ -242,8 +242,8 @@ class HyUtil {
             return value / context.resources.displayMetrics.scaledDensity
         }
 
-        fun <T> getView(v: View, resId: Int): T {
-            return v.findViewById(resId) as T
+        fun <T : View> findViewById(resId: Int, v: View?): T? {
+            return v?.findViewById(resId)
         }
 
         /**
