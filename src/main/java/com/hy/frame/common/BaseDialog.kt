@@ -84,8 +84,10 @@ abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseThe
      * @param id 行布局中某个组件的id
      * @param parent  parent
      */
-    fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
-        return parent?.findViewById(id) ?: findViewById(id)
+    @Suppress("UNCHECKED_CAST")
+    fun <T : View> findView(@IdRes id: Int, parent: View? = null): T? {
+        val view = parent?.findViewById<View>(id) ?: findViewById<View>(id)
+        return if (view == null) null else view as T
     }
 
     /**
@@ -94,7 +96,7 @@ abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseThe
      * @param parent  parent
      */
     protected fun <T : View> setOnClickListener(@IdRes id: Int, parent: View? = null): T? {
-        val view = findViewById<T>(id, parent)
+        val view = findView<T>(id, parent)
         view?.setOnClickListener(this) ?: return null
         return view
     }

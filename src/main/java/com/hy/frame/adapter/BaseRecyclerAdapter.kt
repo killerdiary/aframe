@@ -137,20 +137,22 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     /**
      * create child View
      */
-    protected abstract fun createView(parent: ViewGroup): BaseHolder
+    abstract fun createView(parent: ViewGroup): BaseHolder
 
     /**
      * bind child data
      */
-    protected abstract fun bindViewData(holder: RecyclerView.ViewHolder, position: Int)
+    abstract fun bindViewData(holder: RecyclerView.ViewHolder, position: Int)
 
     /**
      * 获取 控件
      * @param id 行布局中某个组件的id
      * @param parent  parent
      */
-    fun <V : View> findViewById(@IdRes id: Int, parent: View?): V? {
-        return parent?.findViewById(id)
+    @Suppress("UNCHECKED_CAST")
+    fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
+        val view = parent?.findViewById<View>(id)
+        return if(view ==null) null else view as T
     }
 
     /**

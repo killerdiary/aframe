@@ -36,8 +36,10 @@ abstract class BaseAdapter<T> constructor(private val context: Context, listener
      * @param id 行布局中某个组件的id
      * @param parent  parent
      */
+    @Suppress("UNCHECKED_CAST")
     fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
-        return parent?.findViewById(id)
+        val view = parent?.findViewById<View>(id)
+        return if(view ==null) null else view as T
     }
 
     /**

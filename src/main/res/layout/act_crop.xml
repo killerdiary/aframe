@@ -184,7 +184,7 @@
         <!--android:id="@+id/crop_imgScale"-->
         <!--style="@style/ImageActionStyle"-->
         <!--android:src="@mipmap/ico_crop_scale"-->
-        <!--app:tint="@color/txt_gray_light" />-->
+        <!--app:tivTint="@color/txt_gray_light" />-->
 
         <!--</FrameLayout>-->
 

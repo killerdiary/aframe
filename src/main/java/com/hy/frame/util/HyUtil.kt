@@ -235,15 +235,20 @@ class HyUtil {
 
         /**
          * 把字体结果dimen转化成原sp值
-
          * @return
          */
         fun floatToSpDimension(value: Float, context: Context): Float {
             return value / context.resources.displayMetrics.scaledDensity
         }
-
-        fun <T : View> findViewById(resId: Int, v: View?): T? {
-            return v?.findViewById(resId)
+        /**
+         * 获取 控件
+         * @param id 行布局中某个组件的id
+         * @param parent  parent
+         */
+        @Suppress("UNCHECKED_CAST")
+        fun <T : View> findView(resId: Int, v: View?): T? {
+            val view = v?.findViewById<View>(resId)
+            return if (view == null) null else view as T
         }
 
         /**

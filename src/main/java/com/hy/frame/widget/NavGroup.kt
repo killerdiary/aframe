@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.hy.frame.util.HyUtil
 
 class NavGroup : LinearLayout, View.OnClickListener {
     // holds the checked id; the selection is empty by default
@@ -118,8 +119,8 @@ class NavGroup : LinearLayout, View.OnClickListener {
     private fun setCheckedId(@IdRes id: Int) {
         checkedNavViewId = id
         if (mOnCheckedChangeListener != null) {
-            val nav = findViewById<NavView>(id)
-            mOnCheckedChangeListener!!.onCheckedChanged(this, nav, checkedNavViewId)
+            val nav = HyUtil.findView<NavView>(id, this)
+            mOnCheckedChangeListener!!.onCheckedChanged(this, nav!!, checkedNavViewId)
         }
     }
 

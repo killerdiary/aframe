@@ -50,7 +50,7 @@ class CropActivity : BaseActivity() {
     }
 
     override fun initView() {
-        val vUCrop = findViewById<UCropView>(R.id.crop_vUCrop)
+        val vUCrop = findView<UCropView>(R.id.crop_vUCrop)
         imgCrop = vUCrop?.cropImageView
         vOverlay = vUCrop?.overlayView
         navTurnLeft = setOnClickListener(R.id.crop_navTurnLeft)

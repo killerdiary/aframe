@@ -7,6 +7,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 
 import com.hy.frame.R
+import com.hy.frame.util.HyUtil
 
 /**
  * LoadMoreHolder
@@ -22,8 +23,8 @@ class LoadMoreHolder(v: View) : RecyclerView.ViewHolder(v) {
         if (v.layoutParams == null) {
             v.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
-        proFoot = v.findViewById<ProgressBar>(R.id.footer_proFoot)
-        txtFootHint = v.findViewById<TextView>(R.id.footer_txtFootHint)
+        proFoot = HyUtil.findView(R.id.footer_proFoot, v)!!
+        txtFootHint =  HyUtil.findView(R.id.footer_txtFootHint, v)!!
     }
 
     fun onChangeState(state: Int) {

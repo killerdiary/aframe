@@ -32,7 +32,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     protected var app: BaseApplication? = null
     protected var context: Context? = null
     private var lastAct: Class<*>? = null// 上一级 Activity
-    public var lastSkipAct: String? = null //获取上一级的Activity名
+    var lastSkipAct: String? = null //获取上一级的Activity名
     private var toolbar: Toolbar? = null
     private var flyMain: FrameLayout? = null
     protected var loadCache: LoadCache? = null
@@ -67,12 +67,12 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
         context = this
         if (initSingleLayoutId() != 0) {
             setContentView(initSingleLayoutId())
-            toolbar = findViewById(R.id.head_toolBar)
-            flyMain = findViewById(R.id.base_flyMain)
+            toolbar = findView(R.id.head_toolBar)
+            flyMain = findView(R.id.base_flyMain)
         } else if (initLayoutId() != 0) {
             setContentView(R.layout.act_base)
-            toolbar = findViewById(R.id.head_toolBar)
-            flyMain = findViewById(R.id.base_flyMain)
+            toolbar = findView(R.id.head_toolBar)
+            flyMain = findView(R.id.base_flyMain)
             View.inflate(context, initLayoutId(), flyMain)
         } else {
             MyLog.e(javaClass, "initLayoutId not call")
@@ -135,7 +135,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             return false
         }
         if (loadCache != null) return true
-        var loadView: View? = findViewById(R.id.base_llyLoad)
+        var loadView: View? = findView(R.id.base_llyLoad)
         //You need to add the layout
         if (loadView == null) {
             if (flyMain!!.childCount > 0) {
@@ -145,11 +145,11 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
                 View.inflate(context, R.layout.in_loading, flyMain)
         }
         loadCache = LoadCache()
-        loadCache!!.llyLoad = findViewById(R.id.base_llyLoad)
-        loadCache!!.proLoading = findViewById(R.id.base_proLoading)
-        loadCache!!.imgMessage = findViewById(R.id.base_imgMessage)
-        loadCache!!.txtMessage = findViewById(R.id.base_txtMessage)
-        loadCache!!.txtMessage = findViewById(R.id.base_txtMessage)
+        loadCache!!.llyLoad = findView(R.id.base_llyLoad)
+        loadCache!!.proLoading = findView(R.id.base_proLoading)
+        loadCache!!.imgMessage = findView(R.id.base_imgMessage)
+        loadCache!!.txtMessage = findView(R.id.base_txtMessage)
+        loadCache!!.txtMessage = findView(R.id.base_txtMessage)
         return true
     }
 
@@ -217,13 +217,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      * 设置标题
      */
     override fun setTitle(title: CharSequence) {
-        if (toolbar!!.findViewById<View>(R.id.head_vTitle) == null) {
+        if (findView<View>(R.id.head_vTitle, toolbar) == null) {
             val v = View.inflate(context, R.layout.in_head_title, null)
             val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
             tlp.gravity = Gravity.CENTER
             toolbar!!.addView(v, tlp)
         }
-        findViewById<TextView>(R.id.head_vTitle, toolbar)?.text = title
+        findView<TextView>(R.id.head_vTitle, toolbar)?.text = title
     }
 
     protected fun hideHeader() {
@@ -232,13 +232,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
 
     protected fun setHeaderLeft(@DrawableRes left: Int) {
         if (left > 0) {
-            if (toolbar!!.findViewById<View>(R.id.head_vLeft) == null) {
+            if (findView<View>(R.id.head_vLeft, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_left, toolbar)
-                val img = findViewById<ImageView>(R.id.head_vLeft, v)
+                val img = findView<ImageView>(R.id.head_vLeft, v)
                 img?.setOnClickListener(this)
                 img?.setImageResource(left)
             } else {
-                val img = findViewById<ImageView>(R.id.head_vLeft, toolbar)
+                val img = findView<ImageView>(R.id.head_vLeft, toolbar)
                 img?.setImageResource(left)
             }
         }
@@ -246,13 +246,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
 
     protected fun setHeaderLeftTxt(@StringRes left: Int) {
         if (left > 0) {
-            if (toolbar!!.findViewById<View>(R.id.head_vLeft) == null) {
+            if (findView<View>(R.id.head_vLeft, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_tleft, toolbar)
-                val txt = findViewById<TextView>(R.id.head_vLeft, v)
+                val txt = findView<TextView>(R.id.head_vLeft, v)
                 txt?.setOnClickListener(this)
                 txt?.setText(left)
             } else {
-                val txt = findViewById<TextView>(R.id.head_vLeft, toolbar)
+                val txt = findView<TextView>(R.id.head_vLeft, toolbar)
                 txt?.setText(left)
             }
         }
@@ -260,13 +260,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
 
     protected fun setHeaderRight(@DrawableRes right: Int) {
         if (right > 0) {
-            if (toolbar!!.findViewById<View>(R.id.head_vRight) == null) {
+            if (findView<View>(R.id.head_vRight, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_right, toolbar)
-                val img = findViewById<ImageView>(R.id.head_vRight, v)
+                val img = findView<ImageView>(R.id.head_vRight, v)
                 img?.setOnClickListener(this)
                 img?.setImageResource(right)
             } else {
-                val img = findViewById<ImageView>(R.id.head_vRight, toolbar)
+                val img = findView<ImageView>(R.id.head_vRight, toolbar)
                 img?.setImageResource(right)
             }
         }
@@ -274,7 +274,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
 
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
         val v = View.inflate(context, R.layout.in_head_right, null)
-        val img = findViewById<ImageView>(R.id.head_vRight, v)
+        val img = findView<ImageView>(R.id.head_vRight, v)
         img?.id = id
         val array = theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
         val width = array.getDimensionPixelSize(0, 0)
@@ -290,13 +290,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
 
     protected fun setHeaderRightTxt(@StringRes right: Int) {
         if (right > 0) {
-            if (toolbar!!.findViewById<View>(R.id.head_vRight) == null) {
+            if (findView<View>(R.id.head_vRight, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_tright, toolbar)
-                val txt = findViewById<TextView>(R.id.head_vRight, v)
+                val txt = findView<TextView>(R.id.head_vRight, v)
                 txt?.setOnClickListener(this)
                 txt?.setText(right)
             } else {
-                val txt = findViewById<TextView>(R.id.head_vRight, toolbar)
+                val txt = findView<TextView>(R.id.head_vRight, toolbar)
                 txt?.setText(right)
             }
         }
@@ -317,13 +317,13 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
         }
 
     protected val headerTitle: View
-        get() = toolbar!!.findViewById(R.id.head_vTitle)
+        get() = findView(R.id.head_vTitle, toolbar)!!
 
     protected val headerLeft: View
-        get() = toolbar!!.findViewById(R.id.head_vLeft)
+        get() = findView<View>(R.id.head_vLeft, toolbar)!!
 
     protected val headerRight: View
-        get() = toolbar!!.findViewById(R.id.head_vRight)
+        get() = findView<View>(R.id.head_vRight, toolbar)!!
 
     val mainView: View
         get() = flyMain!!
@@ -404,8 +404,19 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      * @param id 行布局中某个组件的id
      * @param parent  parent
      */
+    @Suppress("UNCHECKED_CAST")
+    fun <T : View> findView(@IdRes id: Int, parent: View? = null): T? {
+        val view = parent?.findViewById<View>(id) ?: findViewById<View>(id)
+        return if (view == null) null else view as T
+    }
+
+    /**
+     * 获取 控件
+     * @param id 行布局中某个组件的id
+     * @param parent  parent
+     */
     fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
-        return parent?.findViewById(id) ?: findViewById(id)
+        return findView(id, parent)
     }
 
     /**
@@ -414,7 +425,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      * @param parent  parent
      */
     protected fun <T : View> setOnClickListener(@IdRes id: Int, parent: View? = null): T? {
-        val view = findViewById<T>(id, parent)
+        val view = findView<T>(id, parent)
         view?.setOnClickListener(this) ?: return null
         return view
     }
