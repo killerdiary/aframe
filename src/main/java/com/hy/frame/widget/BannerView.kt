@@ -57,7 +57,7 @@ class BannerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     fun clear() {
         if (views != null) {
             views!!.clear()
-            adapter!!.refresh(views)
+            adapter?.refresh(views)
         }
     }
 
