@@ -180,6 +180,10 @@ class BannerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             return 0
         }
 
+    fun setCurrentItem(position: Int) {
+        viewPager?.currentItem = position
+    }
+
     override fun onPageSelected(position: Int) {
         isDrag = false
         if (llyPoint != null) {

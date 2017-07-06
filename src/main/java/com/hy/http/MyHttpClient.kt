@@ -36,7 +36,7 @@ import javax.net.ssl.TrustManagerFactory
  */
 abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpListener) {
     private var listeners: MutableList<IMyHttpListener>? = null
-    public var showDialog: Boolean = false// 显示加载对话框
+    var showDialog: Boolean = false// 显示加载对话框
     protected var loadingDialog: LoadingDialog? = null
     private var headerParams: MutableMap<String, String>? = null //默认头信息
     protected var isDestroy: Boolean = false
@@ -56,6 +56,9 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
 //        }
     }
 
+    /**
+     * set Listener
+     */
     fun setListener(listener: IMyHttpListener) {
         if (this.listeners != null)
             this.listeners!!.clear()
@@ -63,8 +66,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
     }
 
     /**
-     * 慎用
-     * @param listener
+     * add Listener
      */
     fun addListener(listener: IMyHttpListener) {
         if (this.listeners == null)
@@ -230,7 +232,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 val certificateFactory = CertificateFactory.getInstance("X.509")
                 val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
                 keyStore.load(null)
-                val certificate = context.getAssets().open(cerName)
+                val certificate = context.assets.open(cerName)
                 keyStore.setCertificateEntry(Integer.toString(0), certificateFactory.generateCertificate(certificate))
                 try {
                     certificate?.close()
@@ -384,21 +386,20 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         var input: InputStream? = null
         var fos: FileOutputStream? = null
         val buf = ByteArray(2048)
-        var length: Int = 0
         try {
             input = body.byteStream()
             val cacheFile = File(downFile?.saveDir, downFile?.fileName!! + ".cache")
             fos = FileOutputStream(cacheFile)
             var sum: Long = 0
-            length = input.read(buf)
+            var length = input.read(buf)
             while (length != -1) {
                 fos.write(buf, 0, length)
                 sum += length.toLong()
                 val progress = (sum * 1.0f / total * 100).toInt()
                 MyLog.d("onProgress(File)", "what=" + result.requestCode + ",progress=" + progress + ",fileCount=" + sum + ",total=" + total)
-                downFile?.state = DownFile.STATUS_PROGRESS
-                downFile?.progress = progress
-                downFile?.fileCount = sum
+                downFile.state = DownFile.STATUS_PROGRESS
+                downFile.progress = progress
+                downFile.fileCount = sum
                 result.setObj(downFile)
                 onRequestSuccess(result)
                 length = input.read(buf)
@@ -431,7 +432,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             }
         }
         result.setObj(downFile)
-        onRequestSuccess(result);
+        onRequestSuccess(result)
     }
 
     /**
