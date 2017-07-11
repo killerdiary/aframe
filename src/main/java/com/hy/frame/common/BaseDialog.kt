@@ -85,7 +85,7 @@ abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseThe
      * @param parent  parent
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T : View> findView(@IdRes id: Int, parent: View? = null): T? {
+    fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
         val view = parent?.findViewById<View>(id) ?: findViewById<View>(id)
         return if (view == null) null else view as T
     }
@@ -96,7 +96,7 @@ abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseThe
      * @param parent  parent
      */
     protected fun <T : View> setOnClickListener(@IdRes id: Int, parent: View? = null): T? {
-        val view = findView<T>(id, parent)
+        val view = findViewById<T>(id, parent)
         view?.setOnClickListener(this) ?: return null
         return view
     }
