@@ -142,7 +142,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     /**
      * bind child data
      */
-    abstract fun bindViewData(holder: RecyclerView.ViewHolder, position: Int)
+    abstract fun bindViewData(holder: BaseHolder, position: Int)
 
     /**
      * 获取 控件
@@ -152,7 +152,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     @Suppress("UNCHECKED_CAST")
     fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
         val view = parent?.findViewById<View>(id)
-        return if(view ==null) null else view as T
+        return if (view == null) null else view as T
     }
 
     /**
@@ -182,6 +182,16 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
                 v.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
+
+        /**
+         * 获取 控件
+         * @param id 行布局中某个组件的id
+         * @param parent  parent
+         */
+        fun <V : View> findViewById(@IdRes id: Int, parent: View? = null): V? {
+            val view = parent?.findViewById<V>(id) ?: itemView.findViewById<V>(id)
+            return view
+        }
     }
 
     open inner class BaseClickHolder(v: View) : BaseHolder(v), View.OnClickListener {
@@ -200,9 +210,20 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
             v?.setOnClickListener(this)
         }
 
-        protected fun <V : View> setOnClickListener(@IdRes id: Int): V? {
-            return setOnClickListener(id, itemView, this)
+        /**
+         * 获取并绑定点击
+         * @param id 行布局中某个组件的id
+         * @param parent  parent
+         */
+        protected fun <V : View> setOnClickListener(@IdRes id: Int, parent: View? = null): V? {
+            val view = findViewById<V>(id, parent)
+            view?.setOnClickListener(this)
+            return view
         }
+
+//        protected fun <V : View> setOnClickListener(@IdRes id: Int): V? {
+//            return setOnClickListener(id, itemView, this)
+//        }
     }
 
     open inner class BaseLongClickHolder(v: View) : BaseClickHolder(v), View.OnLongClickListener {
@@ -222,8 +243,8 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
             v?.setOnLongClickListener(this)
         }
 
-        protected fun <V : View> setOnLongClickListener(@IdRes id: Int): V? {
-            val v = findViewById<V>(id, itemView)
+        fun <V : View> setOnLongClickListener(@IdRes id: Int, parent: View? = null): V? {
+            val v = findViewById<V>(id, parent)
             setOnLongClickListener(v)
             return v
         }

@@ -104,6 +104,6 @@ abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseThe
     var tag: Any? = null
 
     interface IConfirmListener {
-        fun onDlgConfirm(dlg: BaseDialog)
+        fun onDlgConfirm(dialog: BaseDialog)
     }
 }
