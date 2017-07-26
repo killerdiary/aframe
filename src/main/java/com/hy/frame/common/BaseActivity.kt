@@ -135,7 +135,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             return false
         }
         if (loadCache != null) return true
-        var loadView: View? = findView(R.id.base_llyLoad)
+        var loadView: View? = findViewById(R.id.base_llyLoad)
         //You need to add the layout
         if (loadView == null) {
             if (flyMain!!.childCount > 0) {
@@ -145,11 +145,11 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
                 View.inflate(context, R.layout.in_loading, flyMain)
         }
         loadCache = LoadCache()
-        loadCache!!.llyLoad = findView(R.id.base_llyLoad)
-        loadCache!!.proLoading = findView(R.id.base_proLoading)
-        loadCache!!.imgMessage = findView(R.id.base_imgMessage)
-        loadCache!!.txtMessage = findView(R.id.base_txtMessage)
-        loadCache!!.txtMessage = findView(R.id.base_txtMessage)
+        loadCache!!.llyLoad = findViewById(R.id.base_llyLoad)
+        loadCache!!.proLoading = findViewById(R.id.base_proLoading)
+        loadCache!!.imgMessage = findViewById(R.id.base_imgMessage)
+        loadCache!!.txtMessage = findViewById(R.id.base_txtMessage)
+        loadCache!!.txtMessage = findViewById(R.id.base_txtMessage)
         return true
     }
 
@@ -216,7 +216,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     /**
      * 设置标题
      */
-    override fun setTitle(title: CharSequence) {
+    override fun setTitle(title: CharSequence?) {
         if (findView<View>(R.id.head_vTitle, toolbar) == null) {
             val v = View.inflate(context, R.layout.in_head_title, null)
             val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)

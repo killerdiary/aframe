@@ -197,7 +197,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     /**
      * 设置标题
      */
-    protected fun setTitle(title: CharSequence) {
+    protected fun setTitle(title: CharSequence?) {
         if (findView<View>(R.id.head_vTitle, toolbar) == null) {
             val v = View.inflate(context, R.layout.in_head_title, null)
             val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
