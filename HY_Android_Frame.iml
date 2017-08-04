@@ -114,27 +114,29 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="support-annotations-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="kotlin-stdlib-1.1.3" level="project" />
-    <orderEntry type="library" exported="" name="kotlin-stdlib-jre7-1.1.3" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="support-compat-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="glide-okhttp3-integration-4.0.0-RC0" level="project" />
+    <orderEntry type="library" exported="" name="support-fragment-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-core-ui-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-media-compat-26.0.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.8.0" level="project" />
+    <orderEntry type="library" exported="" name="support-compat-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="glide-4.0.0" level="project" />
     <orderEntry type="library" exported="" name="okio-1.13.0" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-26.0.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="annotations-13.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-3.8.0" level="project" />
-    <orderEntry type="library" exported="" name="glide-full-4.0.0-RC0" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="support-core-utils-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="transition-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="glide-gifencoder-integration-4.0.0-RC0" level="project" />
-    <orderEntry type="library" exported="" name="support-vector-drawable-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="support-fragment-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="support-core-ui-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="support-media-compat-26.0.0-beta2" level="project" />
-    <orderEntry type="library" exported="" name="design-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="support-vector-drawable-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-core-utils-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="annotations-4.0.0" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="kotlin-stdlib-jre7-1.1.3-2" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-3.8.1" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="design-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-26.0.0" level="project" />
+    <orderEntry type="library" exported="" name="kotlin-stdlib-1.1.3-2" level="project" />
+    <orderEntry type="library" exported="" name="gifdecoder-4.0.0" level="project" />
+    <orderEntry type="library" exported="" name="disklrucache-4.0.0" level="project" />
+    <orderEntry type="library" exported="" name="transition-26.0.0" level="project" />
   </component>
 </module>

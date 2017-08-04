@@ -13,11 +13,18 @@ import com.hy.frame.R
  * @author HeYan
  * @time 2017/5/23 10:51
  */
-class LoadCache {
+class LoadCache(var parent: View? = null) {
     var llyLoad: LinearLayout? = null
     var txtMessage: TextView? = null
     var imgMessage: ImageView? = null
     var proLoading: ProgressBar? = null
+
+    fun init() {
+        llyLoad = parent?.findViewById(R.id.base_llyLoad)
+        proLoading = parent?.findViewById(R.id.base_proLoading)
+        imgMessage = parent?.findViewById(R.id.base_imgMessage)
+        txtMessage = parent?.findViewById(R.id.base_txtMessage)
+    }
 
     fun showLoading(msg: String) {
         llyLoad!!.visibility = View.VISIBLE

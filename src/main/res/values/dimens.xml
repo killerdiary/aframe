@@ -17,6 +17,7 @@
     <dimen name="txt_big">18sp</dimen>
     <dimen name="lv_heigth">80dip</dimen>
     <dimen name="gallery_point_height">25dip</dimen>
+    <dimen name="btn_height">40dip</dimen>
     <dimen name="btn_radius">5dip</dimen>
     <!--dimen END-->
 
@@ -37,4 +38,6 @@
     <dimen name="sp_16">16sp</dimen>
 
     <dimen name="textandiconmargin">10dp</dimen>
+    <dimen name="btn_picker_height">36dp</dimen>
+    <dimen name="btn_picker_radius">18dp</dimen>
 </resources>

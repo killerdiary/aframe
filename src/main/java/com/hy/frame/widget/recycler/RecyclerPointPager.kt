@@ -97,7 +97,7 @@ class RecyclerPointPager @JvmOverloads constructor(context: Context, attrs: Attr
         if (pointResId != 0)
             img.setBackgroundResource(pointResId)
         else
-            img.setBackgroundResource(R.drawable.btn_circle_selector)
+            img.setBackgroundResource(R.drawable.vpager_point_selector)
         val padding = HyUtil.dip2px(context, 4f)
         llp.setMargins(padding, padding, padding, padding)
         if (llyPoint!!.childCount == 0) {

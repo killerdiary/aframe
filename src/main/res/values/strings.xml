@@ -45,6 +45,9 @@
     <string name="edit_input_hint">请输入</string>
     <string name="edit_empty_hint">不能为空</string>
     <string name="edit_format_error">格式错误</string>
+    <string name="edit_input_hint_format">请输入%1$s</string>
+    <string name="edit_empty_hint_format">%1$s不能为空</string>
+    <string name="edit_format_error_format">%1$s格式错误</string>
 
     <string name="listview_header_hint_normal">下拉刷新</string>
     <string name="listview_header_hint_release">释放立即刷新</string>
@@ -68,4 +71,9 @@
     <string name="text_day_ago">天前</string>
     <string name="text_month_ago">月前</string>
     <string name="text_year_ago">年前</string>
+
+    <string name="date_picker_title">%1$d年 %2$d月 %3$d日 星期%4$s</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
 </resources>

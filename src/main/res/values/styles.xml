@@ -58,12 +58,12 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@null</item>
         <item name="android:minWidth">0dip</item>
-        <item name="android:minHeight">40dp</item>
+        <item name="android:minHeight">@dimen/btn_height</item>
         <item name="android:paddingTop">10dip</item>
         <item name="android:paddingBottom">10dip</item>
         <item name="android:paddingLeft">10dip</item>
         <item name="android:paddingRight">10dip</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/txt_black</item>
     </style>
 
     <style name="AppBaseTheme.DialogTheme" parent="ThemeOverlay.AppCompat.Dialog">
@@ -103,5 +103,10 @@
         <item name="minHeight">36dip</item>
         <item name="maxHeight">36dip</item>
         <item name="indicatorName">LineSpinFadeLoaderIndicator</item>
+    </style>
+
+    <style name="animBottomInBottomOutStyle">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
     </style>
 </resources>

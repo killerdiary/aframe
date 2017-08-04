@@ -35,29 +35,8 @@ class MyTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         drawRightHeight = a.getDimensionPixelSize(R.styleable.MyTextView_mTxtDrawRightHeight, drawRightWidth)
         drawBottomWidth = a.getDimensionPixelSize(R.styleable.MyTextView_mTxtDrawBottomWidth, 0)
         drawBottomHeight = a.getDimensionPixelSize(R.styleable.MyTextView_mTxtDrawBottomHeight, drawBottomWidth)
-        //        if (drawLeftWidth > 0 && getCompoundDrawables()[0] != null)
-        //            getCompoundDrawables()[0].setBounds(0, 0, drawLeftWidth, drawLeftHeight);
-        //        if (drawTopWidth > 0 && getCompoundDrawables()[1] != null)
-        //            getCompoundDrawables()[1].setBounds(0, 0, drawTopWidth, drawTopHeight);
-        //        if (drawRightWidth > 0 && getCompoundDrawables()[2] != null)
-        //            getCompoundDrawables()[2].setBounds(0, 0, drawRightWidth, drawRightHeight);
-        //        if (drawBottomWidth > 0 && getCompoundDrawables()[3] != null)
-        //            getCompoundDrawables()[3].setBounds(0, 0, drawBottomWidth, drawBottomHeight);
         setCompoundDrawables(compoundDrawables[0], compoundDrawables[1], compoundDrawables[2], compoundDrawables[3])
     }
-
-    //    @Override
-    //    public void setCompoundDrawablesWithIntrinsicBounds(@Nullable Drawable left, @Nullable Drawable top, @Nullable Drawable right, @Nullable Drawable bottom) {
-    //        if (drawLeftWidth > 0 && left != null)
-    //            left.setBounds(0, 0, drawLeftWidth, drawLeftHeight);
-    //        if (drawTopWidth > 0 && top != null)
-    //            top.setBounds(0, 0, drawTopWidth, drawTopHeight);
-    //        if (drawRightWidth > 0 && right != null)
-    //            right.setBounds(0, 0, drawRightWidth, drawRightHeight);
-    //        if (drawBottomWidth > 0 && bottom != null)
-    //            bottom.setBounds(0, 0, drawBottomWidth, drawBottomHeight);
-    //        super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
-    //    }
 
     override fun setCompoundDrawables(left: Drawable?, top: Drawable?, right: Drawable?, bottom: Drawable?) {
         if (drawLeftWidth > 0 && left != null)

@@ -118,4 +118,21 @@
         <attr name="timerStartText" format="string" />
         <attr name="timerEndText" format="string" />
     </declare-styleable>
+    <declare-styleable name="LoopWheelView">
+        <attr name="lwvTextSize" format="dimension" />
+        <attr name="lwvLineSpace" format="float" />
+        <attr name="lwvCenterTextColor" format="color" />
+        <attr name="lwvOuterTextColor" format="color" />
+        <attr name="lwvDividerColor" format="color" />
+        <attr name="lwvDividerHeight" format="dimension" />
+        <attr name="lwvItemsVisibleCount" format="integer" />
+        <attr name="lwvIsLoop" format="boolean" />
+        <attr name="lwvInitialPosition" format="integer" />
+        <attr name="lwvScaleX" format="float" />
+        <attr name="lwvGradientColor" format="color" />
+        <attr name="lwvUnitText" format="string" />
+        <attr name="lwvUnitTextColor" format="color" />
+        <attr name="lwvUnitTextSize" format="dimension" />
+        <attr name="lwvUnitPadding" format="dimension" />
+    </declare-styleable>
 </resources>
