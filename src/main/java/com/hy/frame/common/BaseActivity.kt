@@ -217,13 +217,15 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      * 设置标题
      */
     override fun setTitle(title: CharSequence?) {
-        if (findViewById<View>(R.id.head_vTitle, toolbar) == null) {
-            val v = View.inflate(context, R.layout.in_head_title, null)
-            val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
-            tlp.gravity = Gravity.CENTER
-            toolbar!!.addView(v, tlp)
+        if (toolbar != null) {
+            if (findViewById<View>(R.id.head_vTitle, toolbar) == null) {
+                val v = View.inflate(context, R.layout.in_head_title, null)
+                val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
+                tlp.gravity = Gravity.CENTER
+                toolbar?.addView(v, tlp)
+            }
+            findViewById<TextView>(R.id.head_vTitle, toolbar)?.text = title
         }
-        findViewById<TextView>(R.id.head_vTitle, toolbar)?.text = title
     }
 
     protected fun hideHeader() {
@@ -231,7 +233,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     }
 
     protected fun setHeaderLeft(@DrawableRes left: Int) {
-        if (left > 0) {
+        if (toolbar != null && left > 0) {
             if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_left, toolbar)
                 val img = findViewById<ImageView>(R.id.head_vLeft, v)
@@ -245,7 +247,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     }
 
     protected fun setHeaderLeftTxt(@StringRes left: Int) {
-        if (left > 0) {
+        if (toolbar != null && left > 0) {
             if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_tleft, toolbar)
                 val txt = findViewById<TextView>(R.id.head_vLeft, v)
