@@ -218,12 +218,8 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      */
     override fun setTitle(title: CharSequence?) {
         if (toolbar != null) {
-            if (findViewById<View>(R.id.head_vTitle, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_title, null)
-                val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
-                tlp.gravity = Gravity.CENTER
-                toolbar?.addView(v, tlp)
-            }
+            if (findViewById<View>(R.id.head_vTitle, toolbar) == null)
+                View.inflate(context, R.layout.in_head_title, toolbar)
             findViewById<TextView>(R.id.head_vTitle, toolbar)?.text = title
         }
     }
@@ -234,75 +230,62 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
 
     protected fun setHeaderLeft(@DrawableRes left: Int) {
         if (toolbar != null && left > 0) {
-            if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_left, toolbar)
-                val img = findViewById<ImageView>(R.id.head_vLeft, v)
-                img?.setOnClickListener(this)
-                img?.setImageResource(left)
-            } else {
-                val img = findViewById<ImageView>(R.id.head_vLeft, toolbar)
-                img?.setImageResource(left)
-            }
+            if (findViewById<View>(R.id.head_vLeft, toolbar) == null)
+                View.inflate(context, R.layout.in_head_left, toolbar)
+            val img = findViewById<ImageView>(R.id.head_vLeft, toolbar)
+            img?.setOnClickListener(this)
+            img?.setImageResource(left)
         }
     }
 
     protected fun setHeaderLeftTxt(@StringRes left: Int) {
         if (toolbar != null && left > 0) {
-            if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_tleft, toolbar)
-                val txt = findViewById<TextView>(R.id.head_vLeft, v)
-                txt?.setOnClickListener(this)
-                txt?.setText(left)
-            } else {
-                val txt = findViewById<TextView>(R.id.head_vLeft, toolbar)
-                txt?.setText(left)
-            }
+            if (findViewById<View>(R.id.head_vLeft, toolbar) == null)
+                View.inflate(context, R.layout.in_head_tleft, toolbar)
+            val txt = findViewById<TextView>(R.id.head_vLeft, toolbar)
+            txt?.setOnClickListener(this)
+            txt?.setText(left)
         }
     }
 
     protected fun setHeaderRight(@DrawableRes right: Int) {
-        if (right > 0) {
-            if (findViewById<View>(R.id.head_vRight, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_right, toolbar)
-                val img = findViewById<ImageView>(R.id.head_vRight, v)
-                img?.setOnClickListener(this)
-                img?.setImageResource(right)
-            } else {
-                val img = findViewById<ImageView>(R.id.head_vRight, toolbar)
-                img?.setImageResource(right)
-            }
+        if (toolbar != null && right > 0) {
+            if (findViewById<View>(R.id.head_vRight, toolbar) == null)
+                View.inflate(context, R.layout.in_head_right, toolbar)
+            val img = findViewById<ImageView>(R.id.head_vRight, toolbar)
+            img?.setOnClickListener(this)
+            img?.setImageResource(right)
+        }
+    }
+
+    protected fun setHeaderRightTxt(@StringRes right: Int) {
+        if (toolbar != null && right > 0) {
+            if (findViewById<View>(R.id.head_vRight, toolbar) == null)
+                View.inflate(context, R.layout.in_head_tright, toolbar)
+            val txt = findViewById<TextView>(R.id.head_vRight, toolbar)
+            txt?.setOnClickListener(this)
+            txt?.setText(right)
         }
     }
 
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
-        val v = View.inflate(context, R.layout.in_head_right, null)
-        val img = findViewById<ImageView>(R.id.head_vRight, v)
-        img?.id = id
-        val array = theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
-        val width = array.getDimensionPixelSize(0, 0)
-        array.recycle()
-        val params = Toolbar.LayoutParams(width, width)
-        //params.setMargins(0, 0, width * (rightCount - 1), 0);
-        params.gravity = Gravity.RIGHT
-        img?.layoutParams = params
-        toolbar!!.addView(v)
-        img?.setOnClickListener(this)
-        img?.setImageResource(right)
-    }
-
-    protected fun setHeaderRightTxt(@StringRes right: Int) {
-        if (right > 0) {
-            if (findViewById<View>(R.id.head_vRight, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_tright, toolbar)
-                val txt = findViewById<TextView>(R.id.head_vRight, v)
-                txt?.setOnClickListener(this)
-                txt?.setText(right)
-            } else {
-                val txt = findViewById<TextView>(R.id.head_vRight, toolbar)
-                txt?.setText(right)
-            }
+        if (toolbar != null && right > 0) {
+            val v = View.inflate(context, R.layout.in_head_right, null)
+            val img = findViewById<ImageView>(R.id.head_vRight, v)
+            img?.id = id
+            val array = theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
+            val width = array.getDimensionPixelSize(0, 0)
+            array.recycle()
+            val params = Toolbar.LayoutParams(width, width)
+            //params.setMargins(0, 0, width * (rightCount - 1), 0);
+            params.gravity = Gravity.RIGHT
+            img?.layoutParams = params
+            toolbar!!.addView(v)
+            img?.setOnClickListener(this)
+            img?.setImageResource(right)
         }
     }
+
 
     /**
      * 头部
