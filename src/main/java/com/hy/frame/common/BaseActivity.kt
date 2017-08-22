@@ -195,7 +195,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     protected fun showCView() {
         if (initLoadView()) {
             val count = flyMain!!.childCount
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 val v = flyMain!!.getChildAt(i)
                 if (i == 0)
                     v.visibility = View.GONE
@@ -376,12 +376,12 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     override fun onClick(v: View) {
         if (HyUtil.isFastClick)
             return
-        if (v.id == R.id.head_vLeft)
-            onLeftClick()
-        else if (v.id == R.id.head_vRight)
-            onRightClick()
-        else
-            onViewClick(v)
+        when (v.id) {
+            R.id.head_vLeft -> onLeftClick()
+            R.id.head_vRight -> onRightClick()
+            R.id.base_llyLoad -> onRetryRequest()
+            else -> onViewClick(v)
+        }
     }
 
     /**

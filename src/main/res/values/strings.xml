@@ -76,4 +76,7 @@
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>
+    <string name="test_date">2017–07–07 07:07</string>
+    <string name="test_date_short">2017–07–07</string>
+    <string name="test_date_time">07:07</string>
 </resources>

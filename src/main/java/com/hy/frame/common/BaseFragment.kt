@@ -343,14 +343,12 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     override fun onClick(v: View) {
         if (HyUtil.isFastClick)
             return
-        if (v.id == R.id.head_vLeft)
-            onLeftClick()
-        else if (v.id == R.id.head_vRight)
-            onRightClick()
-        else if (v.id == R.id.base_llyLoad)
-            onRetryRequest()
-        else
-            onViewClick(v)
+        when (v.id) {
+            R.id.head_vLeft -> onLeftClick()
+            R.id.head_vRight -> onRightClick()
+            R.id.base_llyLoad -> onRetryRequest()
+            else -> onViewClick(v)
+        }
     }
 
     /**
