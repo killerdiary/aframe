@@ -60,9 +60,7 @@ public abstract class Indicator extends Drawable implements Animatable {
     }
 
     @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
+    public void setColorFilter(ColorFilter colorFilter) {}
 
     @Override
     public void draw(Canvas canvas) {

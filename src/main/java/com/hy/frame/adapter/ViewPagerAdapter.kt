@@ -40,13 +40,9 @@ class ViewPagerAdapter(// 界面列表
         return null
     }
 
-    override fun startUpdate(container: ViewGroup) {
+    override fun startUpdate(container: ViewGroup) {}
 
-    }
-
-    override fun finishUpdate(arg0: View?) {
-
-    }
+    override fun finishUpdate(arg0: View?) {}
 
     fun refresh(views: List<View>?) {
         this.views = views

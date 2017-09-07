@@ -2,6 +2,7 @@ package com.hy.frame.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
@@ -12,13 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * 可控制图标大小TextView
+ * 可控制图标大小TextView，另外只支持drawableLeft居中
  *
  * @author HeYan
  * @time 2017/8/16 13:54
  */
 public class MyTextView extends AppCompatTextView {
     private int drawLeftWidth, drawLeftHeight, drawTopWidth, drawTopHeight, drawRightWidth, drawRightHeight, drawBottomWidth, drawBottomHeight;
+    private boolean drawCenter;
 
     public MyTextView(@NotNull Context context) {
         this(context, null);
@@ -43,7 +45,9 @@ public class MyTextView extends AppCompatTextView {
         drawRightHeight = a.getDimensionPixelSize(R.styleable.MyTextView_mTxtDrawRightHeight, drawRightWidth);
         drawBottomWidth = a.getDimensionPixelSize(R.styleable.MyTextView_mTxtDrawBottomWidth, 0);
         drawBottomHeight = a.getDimensionPixelSize(R.styleable.MyTextView_mTxtDrawBottomHeight, drawBottomWidth);
-        setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1], getCompoundDrawables()[2], getCompoundDrawables()[3]);
+        drawCenter = a.getBoolean(R.styleable.MyTextView_mTxtDrawCenter, false);
+        Drawable[] drawables = getCompoundDrawables();
+        setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawables[3]);
     }
 
     @Override
@@ -57,5 +61,19 @@ public class MyTextView extends AppCompatTextView {
         if (drawBottomWidth > 0 && bottom != null)
             bottom.setBounds(0, 0, drawBottomWidth, drawBottomHeight);
         super.setCompoundDrawables(left, top, right, bottom);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        Drawable[] drawables = getCompoundDrawables();
+        Drawable drawableLeft = drawables[0];
+        if (drawCenter && drawableLeft != null) {
+            float textWidth = getPaint().measureText(getText().toString());
+            int drawablePadding = getCompoundDrawablePadding();
+            int drawableWidth = drawLeftWidth;
+            float bodyWidth = textWidth + drawableWidth + drawablePadding;
+            canvas.translate((getWidth() - bodyWidth) / 2, 0);
+        }
+        super.onDraw(canvas);
     }
 }

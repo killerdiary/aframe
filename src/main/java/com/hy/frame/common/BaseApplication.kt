@@ -180,9 +180,7 @@ abstract class BaseApplication : Application() {
     /**
      * 其它线程方法
      */
-    protected fun initAppForOtherProcess(process: String) {
-
-    }
+    protected fun initAppForOtherProcess(process: String) {}
 
     abstract fun onReceive(receiver: BroadcastReceiver, intent: Intent)
 }

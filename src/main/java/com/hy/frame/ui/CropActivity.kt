@@ -71,13 +71,9 @@ class CropActivity : BaseActivity() {
         initImageData()
     }
 
-    override fun requestData() {
+    override fun requestData() {}
 
-    }
-
-    override fun updateUI() {
-
-    }
+    override fun updateUI() {}
 
     private var aspectX: Int = 0
     private var aspectY: Int = 0

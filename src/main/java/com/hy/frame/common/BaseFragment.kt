@@ -105,8 +105,11 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             val statusBarHeight = (activity as BaseActivity).statusBarHeight
             if (isTranslucentStatus && statusBarHeight > 0) {
                 toolbar!!.setPadding(0, statusBarHeight, 0, 0)
-                if (toolbar!!.layoutParams != null)
-                    toolbar!!.layoutParams.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
+                if (toolbar!!.layoutParams != null) {
+                    val params = toolbar!!.layoutParams
+                    params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
+                    toolbar!!.layoutParams = params
+                }
             }
         }
     }
@@ -152,7 +155,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     protected fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
         if (initLoadView()) {
             val count = flyMain!!.childCount
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 val v = flyMain!!.getChildAt(i)
                 if (i > 0) v.visibility = View.GONE
             }
@@ -177,7 +180,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     protected fun showCView() {
         if (initLoadView()) {
             val count = flyMain!!.childCount
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 val v = flyMain!!.getChildAt(i)
                 if (i == 0)
                     v.visibility = View.GONE

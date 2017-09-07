@@ -35,9 +35,7 @@ class LoadingDialog constructor(context: Context, private var loadMsg: String? =
             txtLoadMsg!!.text = loadMsg
     }
 
-    override fun onViewClick(v: View) {
-
-    }
+    override fun onViewClick(v: View) {}
 
     fun updateMsg(msg: String) {
         if (txtLoadMsg != null) {

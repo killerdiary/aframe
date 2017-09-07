@@ -162,9 +162,7 @@ class RefreshLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         this.listener = listener
     }
 
-    override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
-
-    }
+    override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {}
 
     override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
         // 滚动时到了最底部也可以加载更多

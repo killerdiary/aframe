@@ -110,7 +110,5 @@ open class MyWebViewClient : WebViewClient() {
     //
     //    }
 
-    open override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
-
-    }
+    open override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {}
 }

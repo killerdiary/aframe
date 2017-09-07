@@ -100,8 +100,11 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             if (isTranslucentStatus() && statusBarHeight > 0) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
                 toolbar!!.setPadding(0, statusBarHeight, 0, 0)
-                if (toolbar!!.layoutParams != null)
-                    toolbar!!.layoutParams.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
+                if (toolbar!!.layoutParams != null) {
+                    val params = toolbar!!.layoutParams
+                    params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
+                    toolbar!!.layoutParams = params
+                }
             } else {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             }
@@ -185,9 +188,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
         }
     }
 
-    protected open fun onRetryRequest() {
-
-    }
+    protected open fun onRetryRequest() {}
 
     /**
      * 显示内容View
