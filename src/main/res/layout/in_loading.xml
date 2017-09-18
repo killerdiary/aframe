@@ -17,7 +17,7 @@
         android:id="@+id/base_imgMessage"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/img_empty"
+        android:src="@drawable/def_empty"
         android:visibility="gone" />
 
     <TextView

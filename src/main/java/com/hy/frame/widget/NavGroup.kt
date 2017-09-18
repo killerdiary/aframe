@@ -228,7 +228,7 @@ class NavGroup : LinearLayout, View.OnClickListener {
         if (v.id != View.NO_ID && v is NavView) {
             if (!v.isChecked) {
                 val size = childCount
-                (0..size - 1)
+                (0 until size)
                         .map { getChildAt(it) }
                         .filter { v.getId() != it.id }
                         .filterIsInstance<NavView>()

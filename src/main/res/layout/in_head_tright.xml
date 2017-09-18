@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
     android:layout_gravity="right"
-    android:background="@drawable/default_selector"
+    android:background="@drawable/transparent_selector"
     android:gravity="center"
     android:textColor="?attr/appTitleColor"
     android:minWidth="?attr/appHeaderHeight"

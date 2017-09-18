@@ -5,7 +5,7 @@
     android:layout_height="?attr/appHeaderHeight"
     android:layout_alignParentRight="true"
     android:layout_gravity="right"
-    android:background="@drawable/default_selector"
+    android:background="@drawable/transparent_selector"
     android:contentDescription="@string/app_name"
     android:padding="@dimen/titlebar_margin"
     android:src="@mipmap/btn_help" />

@@ -391,7 +391,6 @@ class CameraUtil {
     companion object {
         val REQUEST_PERMISSION_CAMERA = 201
         val REQUEST_PERMISSION_STORAGE = 202
-        val REQUEST_PERMISSION_LOCATION = 203
         val REQUEST_PERMISSION_AUDIO = 204
         /**
          * 拍照

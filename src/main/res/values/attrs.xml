@@ -148,4 +148,7 @@
         <attr name="lwvUnitTextSize" format="dimension" />
         <attr name="lwvUnitPadding" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="MyRadioGroup">
+        <attr name="mrgMultiChoice" format="boolean" />
+    </declare-styleable>
 </resources>
