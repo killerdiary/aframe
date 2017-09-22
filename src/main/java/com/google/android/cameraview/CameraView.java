@@ -217,6 +217,7 @@ public class CameraView extends FrameLayout {
             //store the state ,and restore this state after fall back o Camera1
             Parcelable state = onSaveInstanceState();
             // Camera2 uses legacy hardware layer; fall back to Camera1
+            MyLog.INSTANCE.e(getClass(), "Camera2 uses legacy hardware layer; fall back to Camera1");
             mImpl = new Camera1(mCallbacks, preview);
             onRestoreInstanceState(state);
             mImpl.start();

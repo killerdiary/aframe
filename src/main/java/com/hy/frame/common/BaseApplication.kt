@@ -1,18 +1,13 @@
 package com.hy.frame.common
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.Application
-
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.res.Configuration
 import android.support.annotation.CallSuper
 import android.text.TextUtils
-import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
-import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -28,12 +23,12 @@ abstract class BaseApplication : Application() {
     /**
      * 全局数据
      */
-    private var hashMap: HashMap<String, Any>? = null
-    private var receiver: BroadcastReceiver? = null
+    private var hashMap: MutableMap<String, Any>? = null
 
     override fun onCreate() {
         super.onCreate()
-        val processName = HyUtil.getProcessName(this, android.os.Process.myPid())
+        MyLog.isLoggable = isLoggable()
+        val processName = getProcessName(this, android.os.Process.myPid())
         if (processName != null) {
             MyLog.d(javaClass, "Application start! process:" + processName)
             val defaultProcess = TextUtils.equals(processName, packageName)
@@ -48,31 +43,23 @@ abstract class BaseApplication : Application() {
     override fun onTerminate() {
         // 程序终止的时候执行
         MyLog.d(javaClass, "Application closed! onTerminate")
-        if (receiver != null) {
-            try {
-                unregisterReceiver(receiver)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        }
         super.onTerminate()
     }
 
     override fun onLowMemory() {
         // 低内存的时候执行
-        MyLog.d(javaClass, "onLowMemory")
+        MyLog.d(javaClass, "Application onLowMemory")
         super.onLowMemory()
     }
 
     override fun onTrimMemory(level: Int) {
         // 程序在内存清理的时候执行
-        MyLog.d(javaClass, "onTrimMemory")
+        MyLog.d(javaClass, "Application onTrimMemory level=$level")
         super.onTrimMemory(level)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        MyLog.d(javaClass, "onConfigurationChanged")
+        MyLog.d(javaClass, "Application onConfigurationChanged newConfig=" + newConfig)
         super.onConfigurationChanged(newConfig)
     }
 
@@ -83,7 +70,9 @@ abstract class BaseApplication : Application() {
     fun addActivity(activity: Activity) {
         //防止重复添加
         remove(activity)
-        acts!!.add(activity)
+        if (acts == null)
+            acts = CopyOnWriteArrayList<Activity>()
+        acts?.add(activity)
     }
 
     /**
@@ -98,24 +87,16 @@ abstract class BaseApplication : Application() {
      * 清理activity栈
      */
     fun remove(activity: Activity) {
-        if (acts != null && !acts!!.isEmpty()) {
-            acts!!.remove(activity)
-        }
+        acts?.remove(activity)
     }
 
     /**
      * 清理activity栈
      */
     fun clear(cls: Class<*>? = null) {
-        if (acts != null && !acts!!.isEmpty()) {
+        if (acts != null && acts!!.isNotEmpty()) {
             if (cls != null) {
-                var activity: Activity? = null
-                for (item in acts!!) {
-                    if (TextUtils.equals(item.javaClass.name, cls.name)) {
-                        activity = item
-                        break
-                    }
-                }
+                val activity: Activity? = acts!!.firstOrNull { TextUtils.equals(it.javaClass.name, cls.name) }
                 if (activity != null) {
                     activity.finish()
                     acts!!.remove(activity)
@@ -138,7 +119,7 @@ abstract class BaseApplication : Application() {
      */
     fun putValue(key: String, value: Any?) {
         if (hashMap == null) {
-            hashMap = HashMap<String, Any>()
+            hashMap = HashMap()
         }
         if (value == null)
             hashMap!!.remove(key)
@@ -160,27 +141,24 @@ abstract class BaseApplication : Application() {
      * 主线程方法
      */
     @CallSuper
-    protected open fun initAppForMainProcess(filter: IntentFilter? = null) {
-        if (filter != null) {
-            filter.priority = IntentFilter.SYSTEM_LOW_PRIORITY
-            if (receiver == null)
-                receiver = object : BroadcastReceiver() {
-                    override fun onReceive(context: Context, intent: Intent) {
-                        val action = intent.action
-                        MyLog.d(javaClass, "action:" + action)
-                        this@BaseApplication.onReceive(this, intent)
-                    }
-                }
-            registerReceiver(receiver, filter)
-        }
-        acts = CopyOnWriteArrayList<Activity>()
-        hashMap = HashMap<String, Any>()
+    protected open fun initAppForMainProcess() {
+
     }
 
     /**
      * 其它线程方法
      */
-    protected fun initAppForOtherProcess(process: String) {}
+    protected open fun initAppForOtherProcess(process: String) {
 
-    abstract fun onReceive(receiver: BroadcastReceiver, intent: Intent)
+    }
+
+    private fun getProcessName(cxt: Context, pid: Int): String? {
+        val am = cxt.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningApps = am.runningAppProcesses ?: return null
+        return runningApps
+                .firstOrNull { it.pid == pid }
+                ?.processName
+    }
+
+    abstract fun isLoggable(): Boolean
 }
