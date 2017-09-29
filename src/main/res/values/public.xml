@@ -87,4 +87,8 @@
     <public name="default_selector" type="drawable" />
     <public name="rotate_loading_circle" type="drawable" />
     <!--drawable END-->
+    <!--drawable-->
+    <public name="ic_warn" type="mipmap" />
+
+    <!--drawable END-->
 </resources>

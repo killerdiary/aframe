@@ -10,7 +10,7 @@ import android.widget.TextView
 
 class AutoFitTextView : TextView {
     private var mTextPaint: Paint? = null
-    private var mTextSize: Float = 0.toFloat()
+    private var mTextSize: Float = 0f
 
     constructor(context: Context) : super(context)
 

@@ -33,8 +33,8 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
     private var mBitmapWidth: Int = 0
     private var mBitmapHeight: Int = 0
 
-    private var mDrawableRadius: Float = 0.toFloat()
-    private var mBorderRadius: Float = 0.toFloat()
+    private var mDrawableRadius: Float = 0f
+    private var mBorderRadius: Float = 0f
 
     private var mColorFilter: ColorFilter? = null
 

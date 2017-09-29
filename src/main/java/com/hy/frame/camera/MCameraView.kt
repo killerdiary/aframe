@@ -53,7 +53,7 @@ class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wake
     private var autoFoucs: Boolean = false
     private var isPlay = false
     private var isRecorder = false
-    private var screenProp: Float = 0.toFloat()
+    private var screenProp: Float = 0f
 
     private var fileName: String? = null
     private var pictureBitmap: Bitmap? = null

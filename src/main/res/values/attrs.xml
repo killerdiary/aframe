@@ -151,4 +151,15 @@
     <declare-styleable name="MyRadioGroup">
         <attr name="mrgMultiChoice" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="WaterDropView">
+        <attr name="wdvMaxCircleRadius" format="dimension"/>
+        <attr name="wdvMinCircleRadius" format="dimension"/>
+        <attr name="wdvWaterDropColor" format="color"/>
+        <attr name="wdvTopCircleX" format="dimension"/>
+        <attr name="wdvTopCircleY" format="dimension"/>
+        <attr name="wdvBottomCircleX" format="dimension"/>
+        <attr name="wdvBottomCircleY" format="dimension"/>
+        <attr name="wdvPercent" format="float"/>
+        <attr name="wdvStrokeWidth" format="dimension"/>
+    </declare-styleable>
 </resources>

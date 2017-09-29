@@ -147,19 +147,14 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
             } else
                 View.inflate(context, R.layout.in_loading, flyMain)
         }
-        loadCache = LoadCache()
-        loadCache!!.llyLoad = findViewById(R.id.base_llyLoad)
-        loadCache!!.proLoading = findViewById(R.id.base_proLoading)
-        loadCache!!.imgMessage = findViewById(R.id.base_imgMessage)
-        loadCache!!.txtMessage = findViewById(R.id.base_txtMessage)
-        loadCache!!.txtMessage = findViewById(R.id.base_txtMessage)
+        loadCache = LoadCache(loadView)
         return true
     }
 
     protected fun showLoading(msg: String = getString(R.string.loading)) {
         if (initLoadView()) {
             val count = flyMain!!.childCount
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 val v = flyMain!!.getChildAt(i)
                 if (i > 0) v.visibility = View.GONE
             }
@@ -171,7 +166,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     open fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.img_hint_nodata) {
         if (initLoadView()) {
             val count = flyMain!!.childCount
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 val v = flyMain!!.getChildAt(i)
                 if (i > 0) v.visibility = View.GONE
             }

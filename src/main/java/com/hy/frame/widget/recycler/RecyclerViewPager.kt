@@ -24,7 +24,7 @@ open class RecyclerViewPager @JvmOverloads constructor(context: Context, attrs: 
     private var mViewPagerAdapter: RecyclerViewPagerAdapter<*>? = null
     var triggerOffset = 0.25f
     var flingFactor = 0.15f
-    private var mTouchSpan: Float = 0.toFloat()
+    private var mTouchSpan: Float = 0f
     private var mOnPageChangedListeners: MutableList<OnPageChangedListener>? = null
     private var mSmoothScrollTargetPosition = -1
     private var mPositionBeforeScroll = -1

@@ -13,17 +13,12 @@ import android.view.ViewGroup
  * @author HeYan
  * @time 2016/5/27 16:22
  */
-abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, datas: List<T>?, listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
+abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, protected var datas: List<T>?, protected var listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
 
-    var datas: List<T>? = null
-    protected var listener: IAdapterListener<T>? = null
+    private var mHeaderViews: MutableList<View>? = null
+    private var mFooterViews: MutableList<View>? = null
+
     var headerCount: Int = 0
-
-    init {
-        this.datas = datas
-        this.listener = listener
-    }
-
 
     protected fun inflate(resId: Int): View {
         return LayoutInflater.from(context).inflate(resId, null)
@@ -32,8 +27,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     private var gridCount: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder {
-        //if (viewType == TYPE_MORE)
-        //    return new LoadMoreHolder(inflate(parent, R.layout.in_recycler_footer));
         val isGrid = (parent as RecyclerView).layoutManager is GridLayoutManager
         if (isGrid) {
             gridCount = (parent.layoutManager as GridLayoutManager).spanCount
@@ -85,6 +78,24 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         bindViewData(holder, position)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
+    }
+
+    override fun getItemCount(): Int {
+        return if (datas == null) 0 else datas!!.size
+    }
+
+    override fun onViewAttachedToWindow(holder: BaseHolder) {
+        super.onViewAttachedToWindow(holder)
+        val viewType = holder.itemViewType
+
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+    }
+
     private var dividerHorizontalSize: Int = 0
     private var dividerVerticalSize: Int = 0
     private var topPadding: Int = 0
@@ -126,13 +137,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         this.notifyDataSetChanged()
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
-    }
-
-    override fun getItemCount(): Int {
-        return if (datas == null) 0 else datas!!.size
-    }
 
     /**
      * create child View
@@ -166,15 +170,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         return view
     }
 
-
-    /**
-     * BaseRecyclerAdapter
-     * 自定义的ViewHolder，持有每个Item的的所有界面元素,static不是说只存在1个实例，而是可以访问外部类的静态变量，final修饰类则是不让该类继承
-
-     * @author HeYan
-     *
-     * @time 2017/5/23 10:13
-     */
     open inner class BaseHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         init {
@@ -220,10 +215,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
             view?.setOnClickListener(this)
             return view
         }
-
-//        protected fun <V : View> setOnClickListener(@IdRes id: Int): V? {
-//            return setOnClickListener(id, itemView, this)
-//        }
     }
 
     open inner class BaseLongClickHolder(v: View) : BaseClickHolder(v), View.OnLongClickListener {
@@ -248,5 +239,15 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
             setOnLongClickListener(v)
             return v
         }
+    }
+
+    companion object {
+        val HEADER_VIEW = 0x00000111
+        val LOADING_VIEW = 0x00000222
+        val FOOTER_VIEW = 0x00000333
+        val EMPTY_VIEW = 0x00000555
+
+        val TYPE_HEADER = 0x00000111
+        val TYPE_EMPTY = 0x00000222
     }
 }

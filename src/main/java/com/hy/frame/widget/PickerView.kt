@@ -41,7 +41,7 @@ class PickerView : View {
     private var mViewHeight: Int = 0
     private var mViewWidth: Int = 0
 
-    private var mLastDownY: Float = 0.toFloat()
+    private var mLastDownY: Float = 0f
     /**
      * 滑动的距离
      */

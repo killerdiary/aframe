@@ -26,13 +26,13 @@ class GifView @JvmOverloads constructor(context: Context, attrs: AttributeSet? =
     /**
      * Position for drawing animation frames in the center of the view.
      */
-    private var mLeft: Float = 0.toFloat()
-    private var mTop: Float = 0.toFloat()
+    private var mLeft: Float = 0f
+    private var mTop: Float = 0f
 
     /**
      * Scaling factor to fit the animation within view bounds.
      */
-    private var mScale: Float = 0.toFloat()
+    private var mScale: Float = 0f
 
     /**
      * Scaled movie frames width and height.

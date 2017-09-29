@@ -100,11 +100,14 @@ class CameraUtil {
         }
     }
 
-    fun onDlgPhotoClick() {
+    fun onDlgPhotoClick(multiple: Boolean = false) {
         if (initPhotoData())
             try {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.type = "image/*"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple)
+                }
                 startActivityForResult(intent, FLAG_UPLOAD_CHOOICE_IMAGE)
             } catch (e: Exception) {
                 e.printStackTrace()

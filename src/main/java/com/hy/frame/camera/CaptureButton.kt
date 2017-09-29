@@ -24,22 +24,22 @@ class CaptureButton @JvmOverloads constructor(private val mContext: Context, att
 
     private val mPaint: Paint
 
-    private var btn_center_Y: Float = 0.toFloat()
-    private var btn_center_X: Float = 0.toFloat()
+    private var btn_center_Y: Float = 0f
+    private var btn_center_X: Float = 0f
 
-    private var btn_inside_radius: Float = 0.toFloat()
-    private var btn_outside_radius: Float = 0.toFloat()
+    private var btn_inside_radius: Float = 0f
+    private var btn_outside_radius: Float = 0f
     //before radius
-    private var btn_before_inside_radius: Float = 0.toFloat()
-    private var btn_before_outside_radius: Float = 0.toFloat()
+    private var btn_before_inside_radius: Float = 0f
+    private var btn_before_outside_radius: Float = 0f
     //after radius
-    private var btn_after_inside_radius: Float = 0.toFloat()
-    private var btn_after_outside_radius: Float = 0.toFloat()
+    private var btn_after_inside_radius: Float = 0f
+    private var btn_after_outside_radius: Float = 0f
 
 
-    private var btn_left_X: Float = 0.toFloat()
-    private var btn_right_X: Float = 0.toFloat()
-    private var btn_result_radius: Float = 0.toFloat()
+    private var btn_left_X: Float = 0f
+    private var btn_right_X: Float = 0f
+    private var btn_result_radius: Float = 0f
 
     //state
     private var STATE_SELECTED: Int = 0
@@ -52,7 +52,7 @@ class CaptureButton @JvmOverloads constructor(private val mContext: Context, att
     private val STATE_READYQUIT = 6
     private val STATE_RECORDED = 7
 
-    private var key_down_Y: Float = 0.toFloat()
+    private var key_down_Y: Float = 0f
 
     private var rectF: RectF? = null
     private var progress = 0f
@@ -100,7 +100,7 @@ class CaptureButton @JvmOverloads constructor(private val mContext: Context, att
 
     private var paintArc: Paint? = null
     private var paintText: Paint? = null
-    private var textSize: Float = 0.toFloat()
+    private var textSize: Float = 0f
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
