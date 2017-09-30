@@ -15,6 +15,7 @@ import com.hy.frame.adapter.BaseRecyclerAdapter
  * @author HeYan
  * @time 2016/5/28 9:19
  */
+@Deprecated("")
 class RecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
     var recyclerView: android.support.v7.widget.RecyclerView? = null
     private var header: RecyclerViewHeader? = null

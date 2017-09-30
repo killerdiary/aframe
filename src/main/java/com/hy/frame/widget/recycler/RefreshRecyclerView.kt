@@ -17,6 +17,7 @@ import java.util.*
  * @author HeYan
  * @time 2016/5/28 9:19
  */
+@Deprecated("")
 class RefreshRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : LRecyclerView(context, attrs, defStyle) {
     private var loadMoreListener: ILoadMoreListener? = null
     private var refreshListener: IRefreshListener? = null

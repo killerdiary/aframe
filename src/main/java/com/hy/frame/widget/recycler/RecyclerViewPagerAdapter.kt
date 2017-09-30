@@ -8,6 +8,7 @@ import android.view.ViewGroup
  * Adapter wrapper.
  * @author Green
  */
+@Deprecated("")
 open class RecyclerViewPagerAdapter<VH : RecyclerView.ViewHolder>(private val mViewPager: RecyclerViewPager, internal var mAdapter: RecyclerView.Adapter<VH>) : RecyclerView.Adapter<VH>() {
 
 

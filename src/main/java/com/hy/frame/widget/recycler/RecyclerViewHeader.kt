@@ -28,7 +28,7 @@ import android.widget.RelativeLayout
 
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
-
+@Deprecated("")
 class RecyclerViewHeader : RelativeLayout {
 
     @Visibility

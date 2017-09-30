@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 
 import java.lang.reflect.Field
-
+@Deprecated("")
 class LoopRecyclerViewPagerAdapter<VH : RecyclerView.ViewHolder>(viewPager: RecyclerViewPager, adapter: RecyclerView.Adapter<VH>) : RecyclerViewPagerAdapter<VH>(viewPager, adapter) {
 
     private var mPositionField: Field? = null

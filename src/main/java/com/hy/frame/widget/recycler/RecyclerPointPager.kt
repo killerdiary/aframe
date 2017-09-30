@@ -20,6 +20,7 @@ import com.hy.frame.widget.CircleImageView
  * author HeYan
  * time 2016/8/16 14:21
  */
+@Deprecated("")
 class RecyclerPointPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RelativeLayout(context, attrs, defStyle), Runnable, RecyclerViewPager.OnPageChangedListener {
     private var isOpenAuto: Boolean = false
     private var timer: Long = 0// 间隔时间

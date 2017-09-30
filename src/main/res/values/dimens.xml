@@ -40,4 +40,7 @@
     <dimen name="textandiconmargin">10dp</dimen>
     <dimen name="btn_picker_height">36dp</dimen>
     <dimen name="btn_picker_radius">18dp</dimen>
+
+    <dimen name="recycler_indicator_width">30dp</dimen>
+    <dimen name="recycler_loadmore_height">60dip</dimen>
 </resources>

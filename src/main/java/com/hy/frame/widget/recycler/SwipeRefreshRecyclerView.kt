@@ -19,6 +19,7 @@ import java.util.*
  * @author HeYan
  * @time 2016/5/28 9:19
  */
+@Deprecated("")
 class SwipeRefreshRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : SwipeRefreshLayout(context, attrs) {
     private var mRecyclerView: LuRecyclerView? = null
     private var loadMoreListener: ILoadMoreListener? = null

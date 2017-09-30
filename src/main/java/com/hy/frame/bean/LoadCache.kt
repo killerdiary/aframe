@@ -18,7 +18,7 @@ class LoadCache(var parent: View? = null) {
     var imgMessage: ImageView? = null
     var proLoading: AVLoadingIndicatorView? = null
 
-    fun init() {
+    init {
         llyLoad = parent?.findViewById(R.id.base_llyLoad)
         proLoading = parent?.findViewById(R.id.base_proLoading)
         imgMessage = parent?.findViewById(R.id.base_imgMessage)
@@ -39,9 +39,9 @@ class LoadCache(var parent: View? = null) {
         imgMessage?.visibility = View.VISIBLE
         txtMessage?.visibility = View.VISIBLE
         if (msg == null)
-            txtMessage!!.setText(R.string.hint_nodata)
+            txtMessage?.setText(R.string.hint_nodata)
         else
-            txtMessage!!.text = msg
-        imgMessage!!.setImageResource(drawId)
+            txtMessage?.text = msg
+        imgMessage?.setImageResource(drawId)
     }
 }

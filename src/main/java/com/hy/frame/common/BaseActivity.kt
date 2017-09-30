@@ -145,7 +145,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
                 loadView = View.inflate(context, R.layout.in_loading, null)
                 flyMain!!.addView(loadView, 0)
             } else
-                View.inflate(context, R.layout.in_loading, flyMain)
+                loadView = View.inflate(context, R.layout.in_loading, flyMain)
         }
         loadCache = LoadCache(loadView)
         return true

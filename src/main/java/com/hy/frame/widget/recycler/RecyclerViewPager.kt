@@ -19,6 +19,7 @@ import java.util.*
  * RecyclerViewPager
  * @author Green
  */
+@Deprecated("")
 open class RecyclerViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RecyclerView(context, attrs, defStyle) {
 
     private var mViewPagerAdapter: RecyclerViewPagerAdapter<*>? = null

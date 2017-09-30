@@ -31,4 +31,5 @@
     <!--color END-->
     <color name="badge_bg">#fd403e</color>
     <color name="crop_red_tran">#99FF2222</color>
+    <color name="progress">#FF4081</color>
 </resources>

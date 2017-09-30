@@ -13,6 +13,7 @@ import android.view.ViewGroup
  * @author HeYan
  * @time 2016/5/27 16:22
  */
+@Deprecated("")
 abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, protected var datas: List<T>?, protected var listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
 
     private var mHeaderViews: MutableList<View>? = null

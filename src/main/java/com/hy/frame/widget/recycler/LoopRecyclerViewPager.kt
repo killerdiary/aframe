@@ -3,7 +3,7 @@ package com.hy.frame.widget.recycler
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
-
+@Deprecated("")
 class LoopRecyclerViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RecyclerViewPager(context, attrs, defStyle) {
 
     override fun setAdapter(adapter: Adapter<*>) {

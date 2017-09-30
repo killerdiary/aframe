@@ -80,7 +80,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         this.queues!!.put(requestCode, client)
     }
 
-    private fun hasQueue(requestCode: Int): Boolean {
+    fun hasQueue(requestCode: Int): Boolean {
         if (queues != null)
             return queues!!.containsKey(requestCode)
         return false
