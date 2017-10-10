@@ -12,17 +12,17 @@ import com.hy.frame.widget.AVLoadingIndicatorView
  * @author HeYan
  * @time 2017/5/23 10:51
  */
-class LoadCache(var parent: View? = null) {
+class LoadCache(var v: View? = null) {
     var llyLoad: LinearLayout? = null
     var txtMessage: TextView? = null
     var imgMessage: ImageView? = null
     var proLoading: AVLoadingIndicatorView? = null
 
     init {
-        llyLoad = parent?.findViewById(R.id.base_llyLoad)
-        proLoading = parent?.findViewById(R.id.base_proLoading)
-        imgMessage = parent?.findViewById(R.id.base_imgMessage)
-        txtMessage = parent?.findViewById(R.id.base_txtMessage)
+        llyLoad = v?.findViewById(R.id.base_llyLoad)
+        proLoading = v?.findViewById(R.id.base_proLoading)
+        imgMessage = v?.findViewById(R.id.base_imgMessage)
+        txtMessage = v?.findViewById(R.id.base_txtMessage)
     }
 
     fun showLoading(msg: String) {

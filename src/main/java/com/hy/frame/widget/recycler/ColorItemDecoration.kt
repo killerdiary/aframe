@@ -117,7 +117,7 @@ class ColorItemDecoration : RecyclerView.ItemDecoration {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         init(parent)
         val params = view.layoutParams as RecyclerView.LayoutParams
-        var viewAdapterPosition = params.viewAdapterPosition
+        val viewAdapterPosition = params.viewAdapterPosition
         val viewType = adapter?.getItemViewType(viewAdapterPosition) ?: 0
         if (viewType == BaseRecyclerAdapter.TYPE_ITEM) {
             if (layoutManager is GridLayoutManager) {

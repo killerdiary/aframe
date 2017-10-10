@@ -25,7 +25,7 @@ class LoadMoreView(var v: View) {
     private var isBindClickListener = false
 
     init {
-
+        loadComplete()
     }
 
     fun onViewAttachedToWindow() {

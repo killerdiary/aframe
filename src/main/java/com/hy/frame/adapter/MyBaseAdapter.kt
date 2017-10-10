@@ -11,11 +11,11 @@ import android.view.View
 abstract class MyBaseAdapter<T> : BaseAdapter<T> {
     private var datas: List<T>? = null
 
-    constructor(context: Context, datas: List<T>) : super(context) {
+    constructor(context: Context, datas: MutableList<T>) : super(context) {
         this.datas = datas
     }
 
-    constructor(context: Context, datas: List<T>, listener: IAdapterListener<T>) : super(context, listener) {
+    constructor(context: Context, datas: MutableList<T>, listener: IAdapterListener<T>) : super(context, listener) {
         this.datas = datas
     }
 

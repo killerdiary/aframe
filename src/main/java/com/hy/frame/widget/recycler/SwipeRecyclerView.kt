@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import com.hy.frame.R
-import com.hy.frame.bean.LoadCache
 
 
 /**
@@ -22,13 +21,17 @@ class SwipeRecyclerView constructor(context: Context, attrs: AttributeSet? = nul
     private var mLoadMoreListener: ILoadMoreListener? = null
     private var mRefreshListener: IRefreshListener? = null
     private var loadMoreView: LoadMoreView? = null
-    private var refreshView: RefreshView? = null
-    private var loadCache: LoadCache? = null
+    //    private var refreshView: RefreshView? = null
+//    private var loadCache: LoadCache? = null
     var loadMoreEnabled: Boolean = false
         set(value) {
             field = value
             if (value && adapter != null && initLoadMore()) {
                 adapter?.setLoadMoreView(loadMoreView!!)
+            } else if (value && loadMoreView != null) {
+                loadMoreView?.loadComplete()
+            } else if (!value && loadMoreView != null) {
+                loadMoreView?.close()
             }
         }
     var refreshEnabled: Boolean
@@ -81,6 +84,8 @@ class SwipeRecyclerView constructor(context: Context, attrs: AttributeSet? = nul
         }
         get() = mRecyclerView.layoutManager
 
+    fun getRecyclerView(): RecyclerView = mRecyclerView
+
     fun addItemDecoration(decor: RecyclerView.ItemDecoration) {
         mRecyclerView.addItemDecoration(decor)
     }
@@ -126,7 +131,8 @@ class SwipeRecyclerView constructor(context: Context, attrs: AttributeSet? = nul
 
     private var itemCount: Int = 0//一页数量
 
-    fun setRefreshListener(refreshListener: IRefreshListener) {
+    fun setRefreshListener(refreshListener: IRefreshListener, refreshEnabled: Boolean = true) {
+        this.refreshEnabled = refreshEnabled
         this.mRefreshListener = refreshListener
         setOnRefreshListener {
             //itemCount = 1

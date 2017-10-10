@@ -8,8 +8,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.hy.frame.R
 import com.hy.frame.adapter.IAdapterListener
 import com.hy.frame.adapter.IAdapterLongListener
+import com.hy.frame.bean.LoadCache
 
 
 /**
@@ -17,18 +19,18 @@ import com.hy.frame.adapter.IAdapterLongListener
  * @author HeYan
  * @time 2017/9/25 11:45
  */
-abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val context: Context, protected var datas: List<T>?, protected var listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseHolder>() {
+abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val context: Context, protected var datas: MutableList<T>?, protected var listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseHolder>() {
 
     private var mHeaderViews: MutableList<View>? = null
     private var mFooterViews: MutableList<View>? = null
-    private var mEmptyView: View? = null
+    private var emptyView: LoadCache? = null
     private var loadMoreView: LoadMoreView? = null
     private var refreshView: RefreshView? = null
 
     fun addHeaderView(v: View, index: Int = -1) {
         if (mHeaderViews == null)
             mHeaderViews = ArrayList()
-        else if (mHeaderViews!!.size >= HEADER_SIZE_MAX)
+        else if (getHeaderCount() >= HEADER_SIZE_MAX)
             throw IndexOutOfBoundsException("The maximum limit of $HEADER_SIZE_MAX more than HeaderView")
         if (index >= 0)
             mHeaderViews?.add(index, v)
@@ -41,30 +43,43 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
             mFooterViews = ArrayList()
         else if (mFooterViews!!.size >= FOOTER_SIZE_MAX)
             throw IndexOutOfBoundsException("The maximum limit of $FOOTER_SIZE_MAX more than FooterView")
-        var i = index
-        if (this.loadMoreView != null && i > 0)
-            i--
-        if (i >= 0)
-            mFooterViews?.add(i, v)
+        if (index >= 0)
+            mFooterViews?.add(index, v)
         else
             mFooterViews?.add(v)
     }
 
-    fun setEmptyView(v: View) {
-        mEmptyView = v
+    /**
+     * once
+     */
+    fun setEmptyView(emptyView: LoadCache = LoadCache(inflate(R.layout.in_loading))) {
+        if (this.emptyView != null) return
+        val vlp = emptyView.llyLoad!!.layoutParams ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        emptyView.llyLoad!!.layoutParams = vlp
+        emptyView.showNoData(context.resources.getString(R.string.hint_nodata), R.mipmap.img_hint_nodata)
+        this.emptyView = emptyView
     }
 
+    fun getEmptyView(): LoadCache? = emptyView
+
+    /**
+     * once
+     */
     fun setLoadMoreView(loadMoreView: LoadMoreView) {
         if (this.loadMoreView != null) return
-        addFooterView(loadMoreView.v)
         this.loadMoreView = loadMoreView
     }
 
+    fun getLoadMoreView(): LoadMoreView? = loadMoreView
+    /**
+     * once
+     */
     fun setRefreshView(refreshView: RefreshView) {
         if (this.refreshView != null) return
-        addHeaderView(refreshView.v, 0)
         this.refreshView = refreshView
     }
+
+    fun getRefreshView(): RefreshView? = refreshView
 
     protected fun inflate(resId: Int): View {
         return LayoutInflater.from(context).inflate(resId, null)
@@ -78,8 +93,15 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
 
     override fun getItemCount(): Int {
         var count = getDataCount()
-        if (count == 0 && mEmptyView != null)
-            count++
+        if (count == 0) {
+            if (emptyView != null)
+                count++
+        } else {
+            if (refreshView != null)
+                count++
+            if (loadMoreView != null)
+                count++
+        }
         count += getHeaderCount()
         count += getFooterCount()
         return count
@@ -89,18 +111,33 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     override fun getItemViewType(position: Int): Int {
         val headerCount = getHeaderCount()
         val dataCount = getDataCount()
-        if (position < headerCount)
-            return TYPE_HEADER + position
-        var footerLimit = headerCount + dataCount
         if (dataCount == 0) {
-            if (mEmptyView != null)
-                footerLimit++
-            if (position < footerLimit)
-                return TYPE_EMPTY
+            if (position < headerCount)
+                return TYPE_HEADER + position
+            var footerLimit = headerCount + dataCount
+            if (dataCount == 0) {
+                if (emptyView != null)
+                    footerLimit++
+                if (position < footerLimit)
+                    return TYPE_EMPTY
+            }
+            if (position >= footerLimit)
+                return TYPE_FOOTER + position - footerLimit
+            return getCurViewType(position - headerCount)
+        } else {
+            var headerTotalCount = headerCount
+            if (refreshView != null)
+                if (position == 0)
+                    return TYPE_REFRESH
+                else
+                    headerTotalCount++
+            if (position < headerTotalCount)
+                return TYPE_HEADER + position - (headerTotalCount - headerCount)
+            val footerLimit = headerTotalCount + dataCount
+            if (position >= footerLimit)
+                return if (loadMoreView != null && position == footerLimit + getFooterCount()) TYPE_LOADMORE else TYPE_FOOTER + position - footerLimit
+            return getCurViewType(position - headerCount)
         }
-        if (position >= footerLimit)
-            return TYPE_FOOTER + position - footerLimit
-        return getCurViewType(position - headerCount)
     }
 
     /**
@@ -112,12 +149,16 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
 
     @Deprecated("Deprecated")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder {
+        if (viewType == TYPE_REFRESH)
+            return BaseHolder(refreshView!!.v)
         if (viewType in TYPE_HEADER..TYPE_HEADER_END)
             return createHeaderView(parent, viewType - TYPE_HEADER)
-        if (viewType in TYPE_FOOTER..TYPE_FOOTER_END)
-            return createFooterView(parent, viewType - TYPE_FOOTER)
         if (viewType == TYPE_EMPTY)
             return createEmptyView(parent)
+        if (viewType in TYPE_FOOTER..TYPE_FOOTER_END)
+            return createFooterView(parent, viewType - TYPE_FOOTER)
+        if (viewType == TYPE_LOADMORE)
+            return BaseHolder(loadMoreView!!.v)
         return createView(parent, viewType)
     }
 
@@ -139,7 +180,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
                 val params = holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
                 params.isFullSpan = true
             }
-            if (viewType == TYPE_FOOTER + getFooterCount() - 1) {
+            if (viewType == TYPE_LOADMORE) {
                 loadMoreView?.onViewAttachedToWindow()
             }
         }
@@ -162,7 +203,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     }
 
     protected fun isFixedViewType(viewType: Int): Boolean {
-        return viewType in TYPE_HEADER..TYPE_HEADER_END || viewType in TYPE_FOOTER..TYPE_FOOTER_END || viewType == TYPE_EMPTY
+        return viewType == TYPE_REFRESH || viewType in TYPE_HEADER..TYPE_HEADER_END || viewType in TYPE_FOOTER..TYPE_FOOTER_END || viewType == TYPE_EMPTY || viewType == TYPE_LOADMORE
     }
 
     private var dividerHorizontalSize: Int = 0
@@ -170,18 +211,22 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     private var topPadding: Int = 0
     private var bottomPadding: Int = 0
 
+    @Deprecated("Deprecated")
     fun setDividerHorizontalSize(dividerHorizontalSize: Int) {
         this.dividerHorizontalSize = dividerHorizontalSize
     }
 
+    @Deprecated("Deprecated")
     fun setDividerVerticalSize(dividerVerticalSize: Int) {
         this.dividerVerticalSize = dividerVerticalSize
     }
 
+    @Deprecated("Deprecated")
     fun setTopPadding(topPadding: Int) {
         this.topPadding = topPadding
     }
 
+    @Deprecated("Deprecated")
     fun setBottomPadding(bottomPadding: Int) {
         this.bottomPadding = bottomPadding
     }
@@ -189,7 +234,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     /**
      * Cur True Position
      */
-    @Deprecated("")
+    @Deprecated("Deprecated")
     fun getCurPosition(position: Int): Int {
         return position - getHeaderCount()
     }
@@ -202,7 +247,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
         this.notifyDataSetChanged()
     }
 
-    fun refresh(beans: List<T>?) {
+    fun refresh(beans: MutableList<T>?) {
         this.datas = beans
         this.notifyDataSetChanged()
     }
@@ -221,7 +266,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     }
 
     protected open fun createEmptyView(parent: ViewGroup): BaseHolder {
-        return BaseHolder(mEmptyView!!)
+        return BaseHolder(emptyView!!.v!!)
     }
 
     protected open fun bindOtherViewData(holder: BaseHolder, viewType: Int) {
@@ -309,9 +354,11 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     companion object {
         val TYPE_ITEM = 0
         val TYPE_ITEM_END = 99
-        val TYPE_HEADER = 100
+        val TYPE_REFRESH = 100
+        val TYPE_HEADER = 101
         val TYPE_HEADER_END = 110
-        val TYPE_FOOTER = 200
+        val TYPE_LOADMORE = 200
+        val TYPE_FOOTER = 201
         val TYPE_FOOTER_END = 210
         val TYPE_EMPTY = 300
         val HEADER_SIZE_MAX = 10
