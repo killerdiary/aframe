@@ -56,7 +56,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
         if (this.emptyView != null) return
         val vlp = emptyView.llyLoad!!.layoutParams ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         emptyView.llyLoad!!.layoutParams = vlp
-        emptyView.showNoData(context.resources.getString(R.string.hint_nodata), R.mipmap.img_hint_nodata)
+        emptyView.showNoData(context.resources.getString(R.string.hint_nodata), R.mipmap.def_nodata)
         this.emptyView = emptyView
     }
 
@@ -236,7 +236,10 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
      */
     @Deprecated("Deprecated")
     fun getCurPosition(position: Int): Int {
-        return position - getHeaderCount()
+        val p = position - getHeaderCount()
+        if (getDataCount() > 0 && refreshView != null)
+            return p - 1
+        return p
     }
 
     fun getItem(position: Int): T {

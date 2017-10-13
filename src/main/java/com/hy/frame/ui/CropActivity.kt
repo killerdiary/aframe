@@ -60,7 +60,7 @@ class CropActivity : BaseActivity() {
     }
 
     override fun initData() {
-        setHeaderLeft(R.mipmap.ico_back)
+        setHeaderLeft(R.mipmap.ic_back)
         setTitle(R.string.crop)
         val txtTitle = headerTitle as TextView
         val color = txtTitle.currentTextColor

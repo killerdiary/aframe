@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:background="@drawable/transparent_selector"
-    android:drawableLeft="@mipmap/ico_back"
+    android:drawableLeft="@mipmap/ic_back"
     android:gravity="center"
     android:layout_gravity="left"
     android:textColor="?attr/appTitleColor"

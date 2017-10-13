@@ -81,7 +81,7 @@
     <public name="in_head_title" type="layout" />
     <public name="in_header" type="layout" />
     <public name="in_loading" type="layout" />
-    <!--attr END-->
+    <!--layout END-->
     <!--drawable-->
     <public name="btn_selector" type="drawable" />
     <public name="default_selector" type="drawable" />

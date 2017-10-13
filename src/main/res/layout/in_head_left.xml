@@ -8,4 +8,4 @@
     android:background="@drawable/transparent_selector"
     android:contentDescription="@string/app_name"
     android:padding="@dimen/titlebar_margin"
-    android:src="@mipmap/ico_back" />
+    android:src="@mipmap/ic_back" />

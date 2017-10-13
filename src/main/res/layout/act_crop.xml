@@ -110,7 +110,7 @@
 
                 <ImageView
                     style="@style/ImageActionStyle"
-                    android:src="@mipmap/ucrop_ic_reset" />
+                    android:src="@mipmap/ic_crop_reset" />
 
             </FrameLayout>
 
@@ -123,7 +123,7 @@
 
                 <ImageView
                     style="@style/ImageActionStyle"
-                    android:src="@mipmap/ucrop_ic_angle" />
+                    android:src="@mipmap/ic_crop_angle" />
 
             </FrameLayout>
 

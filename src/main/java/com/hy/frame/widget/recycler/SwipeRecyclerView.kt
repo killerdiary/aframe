@@ -135,6 +135,10 @@ class SwipeRecyclerView constructor(context: Context, attrs: AttributeSet? = nul
         this.refreshEnabled = refreshEnabled
         this.mRefreshListener = refreshListener
         setOnRefreshListener {
+            if (loadMoreView != null && loadMoreView!!.isLoading()) {
+                isRefreshing = false
+                return@setOnRefreshListener
+            }
             //itemCount = 1
             mRefreshListener?.onRefresh()
         }

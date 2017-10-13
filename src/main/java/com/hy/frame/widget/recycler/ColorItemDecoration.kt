@@ -17,6 +17,7 @@ import android.view.View
 class ColorItemDecoration : RecyclerView.ItemDecoration {
     private val dividerHeight: Int
     private var dividerVerticalWidth: Int = 0
+    private var dividerTopWidth: Int = 0
     private val drawable: Drawable?
     private val mPaint: Paint?
     private var rcyList: RecyclerView? = null
@@ -38,13 +39,20 @@ class ColorItemDecoration : RecyclerView.ItemDecoration {
         this.mPaint = null
     }
 
-    fun setDividerVerticalWidth(dividerVerticalWidth: Int): ColorItemDecoration {
+    fun setDividerVertical(dividerVerticalWidth: Int): ColorItemDecoration {
         this.dividerVerticalWidth = dividerVerticalWidth
+        return this
+    }
+
+    fun setDividerTop(dividerTopWidth: Int = 0): ColorItemDecoration {
+        this.dividerTopWidth = dividerTopWidth
         return this
     }
 
     private fun init(parent: RecyclerView) {
         if (rcyList == null) {
+            if (dividerVerticalWidth > 0 && parent.paddingLeft == 0)
+                parent.setPadding(dividerVerticalWidth, parent.paddingTop, parent.paddingTop, parent.paddingBottom)
             rcyList = parent
             adapter = parent.adapter
             layoutManager = parent.layoutManager
@@ -60,7 +68,7 @@ class ColorItemDecoration : RecyclerView.ItemDecoration {
             val lLayoutManager = layoutManager as LinearLayoutManager
             val orientation = lLayoutManager.orientation
             if (orientation == LinearLayoutManager.VERTICAL)
-                drawHorizontal(c, parent)
+                //drawHorizontal(c, parent)
             else
                 drawVertical(c, parent)
         }
@@ -120,13 +128,14 @@ class ColorItemDecoration : RecyclerView.ItemDecoration {
         val viewAdapterPosition = params.viewAdapterPosition
         val viewType = adapter?.getItemViewType(viewAdapterPosition) ?: 0
         if (viewType == BaseRecyclerAdapter.TYPE_ITEM) {
+            val position = (adapter as BaseRecyclerAdapter<*, *>).getCurPosition(viewAdapterPosition)
             if (layoutManager is GridLayoutManager) {
-                outRect.set(0, 0, dividerVerticalWidth, dividerHeight)
+                outRect.set(0, if (dividerTopWidth > 0 && (position >= 0 && position < (layoutManager as GridLayoutManager).spanCount)) dividerTopWidth else 0, dividerVerticalWidth, dividerHeight)
             } else if (layoutManager is LinearLayoutManager) {
                 val lLayoutManager = layoutManager as LinearLayoutManager
                 val orientation = lLayoutManager.orientation
                 if (orientation == LinearLayoutManager.VERTICAL)
-                    outRect.set(0, 0, 0, dividerHeight)
+                    outRect.set(0, if (dividerTopWidth > 0 && position == 0) dividerTopWidth else 0, 0, dividerHeight)
                 else
                     outRect.set(0, 0, dividerHeight, 0)
             }
