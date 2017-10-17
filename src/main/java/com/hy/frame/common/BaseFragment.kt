@@ -148,7 +148,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     }
 
     //R.drawable.img_hint_net_fail
-    protected fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.def_nodata) {
+    protected fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.ic_nodata) {
         if (initLoadView()) {
             val count = flyMain!!.childCount
             for (i in 0 until count) {

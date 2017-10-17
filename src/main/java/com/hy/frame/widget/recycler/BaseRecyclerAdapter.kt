@@ -56,7 +56,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
         if (this.emptyView != null) return
         val vlp = emptyView.llyLoad!!.layoutParams ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         emptyView.llyLoad!!.layoutParams = vlp
-        emptyView.showNoData(context.resources.getString(R.string.hint_nodata), R.mipmap.def_nodata)
+        emptyView.showNoData(context.resources.getString(R.string.hint_nodata), R.mipmap.ic_nodata)
         this.emptyView = emptyView
     }
 

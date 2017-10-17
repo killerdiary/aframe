@@ -117,12 +117,10 @@ object FileUtil {
 
     /**
      * 转换文件大小
-
      * @param fileS
-     *
      * @return
      */
-    private fun FormetFileSize(fileS: Long): String {
+    fun FormetFileSize(fileS: Long): String {
         val df = DecimalFormat("#.00")
         var fileSizeString: String?
         val wrongSize = "0B"
@@ -143,14 +141,11 @@ object FileUtil {
 
     /**
      * 转换文件大小,指定转换的类型
-
      * @param fileS
-     *
      * @param sizeType
-     *
      * @return
      */
-    private fun FormetFileSize(fileS: Long, sizeType: Int): Double {
+    fun FormetFileSize(fileS: Long, sizeType: Int): Double {
         val df = DecimalFormat("#.00")
         var fileSizeLong = 0.0
         when (sizeType) {
