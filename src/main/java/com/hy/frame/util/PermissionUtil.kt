@@ -5,7 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
-import java.util.ArrayList
+import java.util.*
 
 /**
  * BS_Studio
@@ -97,20 +97,19 @@ object PermissionUtil {
     }
 
     fun checkSelfPermission(context: Context, permission: String): Boolean {
-        if (ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED)
             return true
-        }
         MyToast.show(context, "您没有" + getPermissionFailMsg(permission) + "权限，请去权限管理中心开启")
         return false
     }
 
     fun getPermissionFailMsg(permission: String): String {
-        when (permission) {
-            Manifest.permission.CAMERA -> return "摄像头"
-            Manifest.permission.RECORD_AUDIO -> return "录音"
-            Manifest.permission.WRITE_EXTERNAL_STORAGE -> return "文件储存"
-            Manifest.permission.ACCESS_FINE_LOCATION -> return "定位"
-            else -> return "未知"
+        return when (permission) {
+            Manifest.permission.CAMERA -> "摄像头"
+            Manifest.permission.RECORD_AUDIO -> "录音"
+            Manifest.permission.WRITE_EXTERNAL_STORAGE -> "文件储存"
+            Manifest.permission.ACCESS_FINE_LOCATION -> "定位"
+            else -> "未知"
         }
     }
 

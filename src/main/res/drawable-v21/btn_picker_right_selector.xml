@@ -8,7 +8,7 @@
         </shape>
     </item>
     <item>
-        <ripple android:color="@color/btn_highlight">
+        <ripple android:color="?attr/colorControlHighlight">
             <item>
                 <shape android:shape="rectangle">
                     <solid android:color="@color/white" />

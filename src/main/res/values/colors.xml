@@ -18,6 +18,7 @@
     <color name="transparent">#00000000</color>
     <color name="translucence">#40000000</color>
     <color name="translucence_light">#20000000</color>
+    <color name="transparent_ed">#10000000</color>
     <color name="txt_black">#454545</color>
     <color name="txt_blue">#52CACB</color>
     <color name="txt_gray">#787878</color>

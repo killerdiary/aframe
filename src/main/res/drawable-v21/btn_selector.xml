@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/btn_disable" android:state_enabled="false" />
     <item>
-        <ripple android:color="@color/btn_highlight">
+        <ripple android:color="?attr/colorControlHighlight">
             <item android:drawable="@color/theme" />
         </ripple>
     </item>
