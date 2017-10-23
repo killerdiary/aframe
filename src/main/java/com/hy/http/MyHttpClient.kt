@@ -156,11 +156,13 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         //        }
     }
 
-    @JvmOverloads fun <T> get(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
+    @JvmOverloads
+    fun <T> get(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
         request(RequestMethod.GET, requestCode, params, cls, list, if (url.isNullOrEmpty()) getPath(requestCode) else url!!)
     }
 
-    @JvmOverloads fun <T> post(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
+    @JvmOverloads
+    fun <T> post(@StringRes requestCode: Int, params: AjaxParams? = null, cls: Class<T>? = null, list: Boolean = false, url: String? = null) {
         request(RequestMethod.POST, requestCode, params, cls, list, if (url.isNullOrEmpty()) getPath(requestCode) else url!!)
     }
 
@@ -221,6 +223,8 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         if (isDestroy) return
         if (hasQueue(result.requestCode)) {
             MyLog.e("request", "what=" + result.requestCode + ",msg=" + getString(R.string.API_FLAG_REPEAT))
+            val queue = queues?.get(result.requestCode) ?: return
+
             //result.setMsg(getString(R.string.API_FLAG_REPEAT));
             //onRequestError(result);
             return
@@ -311,7 +315,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 val r = call.request().tag() as ResultInfo
                 if (response.isSuccessful) {
                     if (response.headers() != null && response.headers().size() > 0) {
-                        for (i in 0..response.headers().size() - 1)
+                        for (i in 0 until response.headers().size())
                             r.putValue(response.headers().name(i), response.headers().value(i))
                     }
                     if (r.requestType == REQUEST_TYPE_FILE) {

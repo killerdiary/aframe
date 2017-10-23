@@ -4,9 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.hy.frame.R
-import java.util.*
 
 /**
  * OverflowLayout
@@ -27,60 +25,57 @@ class OverflowLayout @JvmOverloads constructor(context: Context, attrs: Attribut
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
         val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+
         val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
         val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
 
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
-        var width = 0
-        var height = 0
+        //var width = 0
+        var totalHeight = 0
 
         var row = 0 // The row counter.
         var rowWidth = 0 // Calc the current row width.
         var rowMaxHeight = 0 // Calc the max tag height, in current row.
-
+        var childWidth = 0
+        var childHeight = 0
         val count = childCount
         for (i in 0 until count) {
-            val child = getChildAt(i)
-            val childWidth = child.measuredWidth
-            val childHeight = child.measuredHeight
-
-            if (child.visibility != View.GONE) {
-                rowWidth += childWidth
-                if (rowWidth > widthSize) { // Next line.
-                    rowWidth = childWidth // The next row width.
-                    height += rowMaxHeight + verticalSpacing
-                    rowMaxHeight = childHeight // The next row max height.
-                    row++
-                } else { // This line.
-                    rowMaxHeight = Math.max(rowMaxHeight, childHeight)
-                }
-                rowWidth += horizontalSpacing
+            val child = getChildAt(i) ?: continue
+            if (child.visibility == View.GONE) continue
+            childWidth = child.measuredWidth
+            childHeight = child.measuredHeight
+            rowWidth += childWidth + horizontalSpacing
+            if (rowWidth > widthSize) { // Next line.
+                rowWidth = childWidth + horizontalSpacing // The next row width.
+                totalHeight += rowMaxHeight + verticalSpacing
+                rowMaxHeight = childHeight // The next row max height.
+                row++
+            } else { // This line.
+                rowMaxHeight = Math.max(rowMaxHeight, childHeight)
             }
         }
         // Account for the last row height.
-        height += rowMaxHeight
-
+        totalHeight += rowMaxHeight
         // Account for the padding too.
-        height += paddingTop + paddingBottom
-
+        totalHeight += paddingTop + paddingBottom
+        var totalWidth = 0
         // If the tags grouped in one row, set the width to wrap the tags.
         if (row == 0) {
-            width = rowWidth
-            width += paddingLeft + paddingRight
+            totalWidth = rowWidth
+            totalWidth += paddingLeft + paddingRight
         } else {// If the tags grouped exceed one line, set the width to match the parent.
-            width = widthSize
+            totalWidth = widthSize
         }
-
-        setMeasuredDimension(if (widthMode == View.MeasureSpec.EXACTLY) widthSize else width,
-                if (heightMode == View.MeasureSpec.EXACTLY) heightSize else height)
+        setMeasuredDimension(if (widthMode == View.MeasureSpec.EXACTLY) widthSize else totalWidth,
+                if (heightMode == View.MeasureSpec.EXACTLY) heightSize else totalHeight)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val parentLeft = paddingLeft
         val parentRight = r - l - paddingRight
         val parentTop = paddingTop
-        val parentBottom = b - t - paddingBottom
+        //val parentBottom = b - t - paddingBottom
 
         var childLeft = parentLeft
         var childTop = parentTop
@@ -92,19 +87,17 @@ class OverflowLayout @JvmOverloads constructor(context: Context, attrs: Attribut
             val child = getChildAt(i)
             val width = child.measuredWidth
             val height = child.measuredHeight
-
-            if (child.visibility != View.GONE) {
-                if (childLeft + width > parentRight) { // Next line
-                    childLeft = parentLeft
-                    childTop += rowMaxHeight + verticalSpacing
-                    rowMaxHeight = height
-                } else {
-                    rowMaxHeight = Math.max(rowMaxHeight, height)
-                }
-                child.layout(childLeft, childTop, childLeft + width, childTop + height)
-
-                childLeft += width + horizontalSpacing
+            if (child.visibility == View.GONE) continue
+            if (childLeft + width > parentRight) { // Next line
+                childLeft = parentLeft
+                childTop += rowMaxHeight + verticalSpacing
+                rowMaxHeight = height
+            } else {
+                rowMaxHeight = Math.max(rowMaxHeight, height)
             }
+            child.layout(childLeft, childTop, childLeft + width, childTop + height)
+
+            childLeft += width + horizontalSpacing
         }
     }
 

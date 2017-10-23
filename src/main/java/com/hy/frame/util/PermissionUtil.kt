@@ -4,7 +4,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.support.annotation.IntRange
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import java.util.*
 
 /**
@@ -20,12 +25,18 @@ object PermissionUtil {
     val REQUEST_PERMISSIONS_PHOTOGRAPH = 205
     val REQUEST_PERMISSIONS_AUDIO_RECORD = 206
     val REQUEST_PERMISSIONS_VIDEO_RECORD = 207
-    //public static final String[] photographPermissions = new String[]{};
 
     fun requestCameraPermission(act: Activity): Boolean {
         if (ActivityCompat.checkSelfPermission(act, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             return true
         ActivityCompat.requestPermissions(act, arrayOf(Manifest.permission.CAMERA), REQUEST_PERMISSION_CAMERA)
+        return false
+    }
+
+    fun requestCameraPermission(fragment: Fragment): Boolean {
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+            return true
+        fragment.requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_PERMISSION_CAMERA)
         return false
     }
 
@@ -36,10 +47,24 @@ object PermissionUtil {
         return false
     }
 
+    fun requesStoragetPermission(fragment: Fragment): Boolean {
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return true
+        fragment.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION_STORAGE)
+        return false
+    }
+
     fun requesLocationPermission(act: Activity): Boolean {
         if (ActivityCompat.checkSelfPermission(act, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             return true
         ActivityCompat.requestPermissions(act, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
+        return false
+    }
+
+    fun requesLocationPermission(fragment: Fragment): Boolean {
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            return true
+        fragment.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
         return false
     }
 
@@ -54,6 +79,17 @@ object PermissionUtil {
         return false
     }
 
+    fun requestPhotographPermission(fragment: Fragment): Boolean {
+        val permissions = ArrayList<String>()
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+            permissions.add(Manifest.permission.CAMERA)
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permissions.size == 0) return true
+        fragment.requestPermissions(permissions.toTypedArray(), REQUEST_PERMISSIONS_PHOTOGRAPH)
+        return false
+    }
+
     fun requestAudioRecordPermission(act: Activity): Boolean {
         val permissions = ArrayList<String>()
         if (ActivityCompat.checkSelfPermission(act, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
@@ -62,6 +98,18 @@ object PermissionUtil {
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (permissions.size == 0) return true
         ActivityCompat.requestPermissions(act, permissions.toTypedArray(), REQUEST_PERMISSIONS_AUDIO_RECORD)
+        return false
+    }
+
+
+    fun requestAudioRecordPermission(fragment: Fragment): Boolean {
+        val permissions = ArrayList<String>()
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+            permissions.add(Manifest.permission.RECORD_AUDIO)
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permissions.size == 0) return true
+        fragment.requestPermissions(permissions.toTypedArray(), REQUEST_PERMISSIONS_AUDIO_RECORD)
         return false
     }
 
@@ -75,6 +123,19 @@ object PermissionUtil {
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (permissions.size == 0) return true
         ActivityCompat.requestPermissions(act, permissions.toTypedArray(), REQUEST_PERMISSIONS_VIDEO_RECORD)
+        return false
+    }
+
+    fun requestVideoRecordPermission(fragment: Fragment): Boolean {
+        val permissions = ArrayList<String>()
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+            permissions.add(Manifest.permission.CAMERA)
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+            permissions.add(Manifest.permission.RECORD_AUDIO)
+        if (ActivityCompat.checkSelfPermission(fragment.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permissions.size == 0) return true
+        fragment.requestPermissions(permissions.toTypedArray(), REQUEST_PERMISSIONS_VIDEO_RECORD)
         return false
     }
 

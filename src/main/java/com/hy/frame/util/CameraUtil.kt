@@ -19,6 +19,7 @@ import java.io.File
  */
 class CameraUtil {
     private val act: Activity
+    private val fragment: Fragment?
     private val context: Context
         get() = act
     private val listener: CameraDealListener
@@ -27,11 +28,13 @@ class CameraUtil {
     private var cacheUri: Uri? = null
 
     constructor(act: Activity, listener: CameraDealListener) {
+        this.fragment = null
         this.act = act
         this.listener = listener
     }
 
     constructor(fragment: Fragment, listener: CameraDealListener) {
+        this.fragment = fragment
         this.act = fragment.activity
         this.listener = listener
     }
@@ -50,7 +53,8 @@ class CameraUtil {
         }
 
     fun onDlgCameraClick() {
-        if (!PermissionUtil.requestPhotographPermission(act)) return
+        if (fragment != null && !PermissionUtil.requestPhotographPermission(fragment)) return
+        if (fragment == null && !PermissionUtil.requestPhotographPermission(act)) return
         try {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             val values = ContentValues()
@@ -67,7 +71,8 @@ class CameraUtil {
     private var multiple: Int = 1
     fun onDlgPhotoClick(multiple: Int = 1) {
         this.multiple = multiple
-        if (!PermissionUtil.requesStoragetPermission(act)) return
+        if (fragment != null && !PermissionUtil.requesStoragetPermission(fragment)) return
+        if (fragment == null && !PermissionUtil.requesStoragetPermission(act)) return
         try {
             if (multiple <= 1) {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -85,7 +90,8 @@ class CameraUtil {
     fun onDlgVideoClick(quality: Int = 1, seconds: Int = 60) {
         this.quality = quality
         this.seconds = seconds
-        if (!PermissionUtil.requestVideoRecordPermission(act)) return
+        if (fragment != null && !PermissionUtil.requestVideoRecordPermission(fragment)) return
+        if (fragment == null && !PermissionUtil.requestVideoRecordPermission(act)) return
         try {
             val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
             val values = ContentValues()
@@ -155,7 +161,10 @@ class CameraUtil {
     }
 
     private fun startActForResult(intent: Intent, requestCode: Int) {
-        act.startActivityForResult(intent, requestCode)
+        if (fragment != null)
+            fragment.startActivityForResult(intent, requestCode)
+        else
+            act.startActivityForResult(intent, requestCode)
     }
 
 //    public Uri getCacheUri() {
