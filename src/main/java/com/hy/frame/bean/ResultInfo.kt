@@ -11,28 +11,23 @@ class ResultInfo {
     /**
      * 请求码，接口编号
      */
-    /**
-     * 请求码，接口编号
-     */
     var requestCode: Int = 0//请求码，接口编号
-    /**
-     * 队列ID
-     */
+
     /**
      * 队列ID
      */
     var qid: Long = 0//队列ID
+
+    /**
+     * DATA
+     */
     private var obj: Any? = null//返回结果
+
     /**
      * 错误码 250 本地错误 251 网络错误
      */
-    /**
-     * 错误码
-     */
     var errorCode: Int = 0//错误码
-    /**
-     * 描述
-     */
+
     /**
      * 描述
      */
@@ -58,7 +53,7 @@ class ResultInfo {
 
     fun putValue(key: String, value: String) {
         if (maps == null)
-            maps = HashMap<String, String>()
+            maps = HashMap()
         maps!!.put(key, value)
     }
 

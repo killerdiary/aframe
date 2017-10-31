@@ -11,11 +11,8 @@ interface IAdapterLongListener<in T> : IAdapterListener<T> {
 
     /**
      * 点击事件
-
      * @param v
-     *
      * @param item
-     *
      * @param position
      */
     fun onViewLongClick(v: View, item: T, position: Int)

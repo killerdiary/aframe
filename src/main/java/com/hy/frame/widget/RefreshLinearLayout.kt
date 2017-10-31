@@ -54,10 +54,10 @@ class RefreshLinearLayout @JvmOverloads constructor(context: Context, attrs: Att
         orientation = LinearLayout.VERTICAL
         scroller = Scroller(context)
         headView = LayoutInflater.from(context).inflate(R.layout.in_lv_header, null) as LinearLayout
-        imgHeadArrow = HyUtil.findView(R.id.lv_imgHeadArrow, headView)
-        proHead = HyUtil.findView(R.id.lv_proHead, headView)
-        txtHeadHint = HyUtil.findView(R.id.lv_txtHeadHint, headView)
-        txtHeadUpdateTime = HyUtil.findView(R.id.lv_txtHeadUpdateTime, headView)
+        imgHeadArrow = HyUtil.findViewById(R.id.lv_imgHeadArrow, headView)
+        proHead = HyUtil.findViewById(R.id.lv_proHead, headView)
+        txtHeadHint = HyUtil.findViewById(R.id.lv_txtHeadHint, headView)
+        txtHeadUpdateTime = HyUtil.findViewById(R.id.lv_txtHeadUpdateTime, headView)
         // measureView(headView);
         // headerHeight = headView.getMeasuredHeight();
         val headerHeight = resources.getDimensionPixelSize(R.dimen.lv_heigth)

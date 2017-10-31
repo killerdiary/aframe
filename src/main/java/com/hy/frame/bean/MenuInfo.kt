@@ -8,26 +8,9 @@ import java.util.*
  * @time 2014-7-21 下午3:19:08
  */
 class MenuInfo {
-    /**
-     * @return the id
-     */
-    /**
-     * @param id the id to set
-     */
+
     var id: Int = 0
-    /**
-     * @return the icon
-     */
-    /**
-     * @param icon the icon to set
-     */
     var icon: Int = 0
-    /**
-     * @return the title
-     */
-    /**
-     * @param title the title to set
-     */
     var title: Int = 0
     private var data: MutableMap<String, String>? = null
 
@@ -42,11 +25,11 @@ class MenuInfo {
 
     fun putValue(key: String, value: String) {
         if (data == null)
-            data = HashMap<String, String>()
+            data = HashMap()
         data!!.put(key, value)
     }
 
-    constructor() {}
+    constructor()
 
     constructor(id: Int, icon: Int, title: Int) {
         this.id = id

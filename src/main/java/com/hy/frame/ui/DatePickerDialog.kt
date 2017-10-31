@@ -68,7 +68,7 @@ class DatePickerDialog(context: Context) : BaseDialog(context) {
         cacheCal?.timeInMillis = System.currentTimeMillis()
         val curYear = cacheCal!!.get(Calendar.YEAR)
         val curMonth = cacheCal!!.get(Calendar.MONTH)
-        val curDay = cacheCal!!.get(Calendar.DAY_OF_MONTH)
+        //val curDay = cacheCal!!.get(Calendar.DAY_OF_MONTH)
         val yearStrs: MutableList<String> = ArrayList()
         (minYear..maxYear).mapTo(yearStrs) { it.toString() }
         lwvYear?.setItems(yearStrs)

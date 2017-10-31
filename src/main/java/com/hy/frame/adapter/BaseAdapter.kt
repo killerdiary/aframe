@@ -10,6 +10,7 @@ import android.view.View
  * @author HeYan
  * @time 2017/5/23 9:35
  */
+@Deprecated("Please use the RecyclerView instead")
 abstract class BaseAdapter<T> constructor(private val context: Context, listener: IAdapterListener<T>? = null) : android.widget.BaseAdapter() {
     protected var listener: IAdapterListener<T>? = null
 
@@ -36,10 +37,9 @@ abstract class BaseAdapter<T> constructor(private val context: Context, listener
      * @param id 行布局中某个组件的id
      * @param parent  parent
      */
-    @Suppress("UNCHECKED_CAST")
+
     fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
-        val view = parent?.findViewById<View>(id)
-        return if(view ==null) null else view as T
+        return parent?.findViewById(id)
     }
 
     /**

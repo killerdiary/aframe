@@ -13,8 +13,8 @@ import com.hy.frame.common.BaseFragment
  */
 class FragPagerAdapter constructor(manager: FragmentManager, private val fragments: List<BaseFragment>?, private val titles: Array<String?>? = null) : FragmentPagerAdapter(manager) {
 
-    override fun getItem(arg0: Int): Fragment {
-        return fragments!![arg0]
+    override fun getItem(position: Int): Fragment {
+        return fragments!![position]
     }
 
     override fun getCount(): Int {

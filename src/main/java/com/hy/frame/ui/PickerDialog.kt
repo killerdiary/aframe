@@ -25,9 +25,8 @@ class PickerDialog(context: Context) : BaseDialog(context) {
     private var btnConfirm: Button? = null
     var datas: MutableList<String>? = null
     var visibleNumber: Int = 0
-    override fun initLayoutId(): Int {
-        return R.layout.dlg_picker
-    }
+
+    override fun initLayoutId(): Int = R.layout.dlg_picker
 
     override fun initWindow() {
         windowDeploy(WindowManager.LayoutParams.MATCH_PARENT.toFloat(), WindowManager.LayoutParams.WRAP_CONTENT.toFloat(), Gravity.BOTTOM)

@@ -10,11 +10,8 @@ import android.view.View
 interface IAdapterListener<in T> {
     /**
      * 点击事件
-
      * @param v
-     *
      * @param item
-     *
      * @param position
      */
     fun onViewClick(v: View, item: T, position: Int)

@@ -13,11 +13,8 @@ import android.view.ViewGroup
  * @author HeYan
  * @time 2016/5/27 16:22
  */
-@Deprecated("")
+@Deprecated("Please use the com.hy.frame.widget.recycler.BaseRecyclerAdapter instead")
 abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, protected var datas: List<T>?, protected var listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseHolder>() {
-
-    private var mHeaderViews: MutableList<View>? = null
-    private var mFooterViews: MutableList<View>? = null
 
     var headerCount: Int = 0
 

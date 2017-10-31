@@ -28,7 +28,7 @@ abstract class MyArrayAdapter<T> : BaseAdapter<T> {
     }
 
     override fun getCount(): Int {
-        return if (datas == null) 0 else datas!!.size
+        return datas?.size ?: 0
     }
 
     override fun getItem(position: Int): T {

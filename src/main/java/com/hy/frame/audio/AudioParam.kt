@@ -3,9 +3,7 @@ package com.hy.frame.audio
 class AudioParam {
 
     private var mFrequency: Int = 0 // 采样率
-
     private var mChannel: Int = 0 // 声道
-
     private var mSampBit: Int = 0 // 采样精度
 
     /**

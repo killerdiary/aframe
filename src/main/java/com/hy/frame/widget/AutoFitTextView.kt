@@ -17,11 +17,8 @@ class AutoFitTextView : TextView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     /**
-     * Re size the font so the specified text fits in the text box assuming the
-     * text box is the specified width.
-
+     * Re size the font so the specified text fits in the text box assuming the text box is the specified width.
      * @param text
-     * *
      * @param textViewWidth
      */
     private fun refitText(text: String?, textViewWidth: Int) {

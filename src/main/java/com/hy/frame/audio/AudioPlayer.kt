@@ -43,7 +43,7 @@ class AudioPlayer : IPlayComplete {
         if (mData == null || mAudioParam == null) {
             return false
         }
-        if (mBReady == true) {
+        if (mBReady) {
             return true
         }
         try {
@@ -94,7 +94,7 @@ class AudioPlayer : IPlayComplete {
      * 暂停
      */
     fun pause(): Boolean {
-        if (mBReady == false) {
+        if (!mBReady) {
             return false
         }
         if (mPlayState == PlayState.MPS_PLAYING) {
@@ -108,7 +108,7 @@ class AudioPlayer : IPlayComplete {
      * 停止
      */
     fun stop(): Boolean {
-        if (mBReady == false) {
+        if (!mBReady) {
             return false
         }
         setPlayState(PlayState.MPS_PREPARE)

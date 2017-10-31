@@ -72,23 +72,23 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             val v: View?
             if (initSingleLayoutId() != 0) {
                 val v1 = inflater!!.inflate(initSingleLayoutId(), container, false)
-                flyMain = findView(R.id.base_flyMain, v1)
+                flyMain = findViewById(R.id.base_flyMain, v1)
                 if (flyMain == null) {
                     v = inflater.inflate(R.layout.act_base_fragment, container, false)
-                    flyMain = findView(R.id.base_flyMain, v)
+                    flyMain = findViewById(R.id.base_flyMain, v)
                     View.inflate(context, initSingleLayoutId(), flyMain)
                 } else {
                     v = v1
                 }
             } else if (initLayoutId() != 0) {
                 v = inflater!!.inflate(R.layout.act_base, container, false)
-                flyMain = findView(R.id.base_flyMain, v)
+                flyMain = findViewById(R.id.base_flyMain, v)
                 View.inflate(context, initLayoutId(), flyMain)
             } else {
                 MyLog.e(javaClass, "initLayoutId not call")
                 return null
             }
-            toolbar = findView(R.id.head_toolBar, v)
+            toolbar = findViewById(R.id.head_toolBar, v)
             contentView = v
             isInit = false
             initToolbar()
@@ -123,7 +123,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
             return false
         }
         if (loadCache != null) return true
-        var loadView: View? = findView(R.id.base_llyLoad)
+        var loadView: View? = findViewById(R.id.base_llyLoad)
         //You need to add the layout
         if (loadView == null) {
             if (flyMain!!.childCount > 0) {
@@ -197,13 +197,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * 设置标题
      */
     protected fun setTitle(title: CharSequence?) {
-        if (findView<View>(R.id.head_vTitle, toolbar) == null) {
+        if (findViewById<View>(R.id.head_vTitle, toolbar) == null) {
             val v = View.inflate(context, R.layout.in_head_title, null)
             val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
             tlp.gravity = Gravity.CENTER
             toolbar!!.addView(v, tlp)
         }
-        val txtTitle = findView<TextView>(R.id.head_vTitle, toolbar)
+        val txtTitle = findViewById<TextView>(R.id.head_vTitle, toolbar)
         txtTitle?.text = title
     }
 
@@ -213,13 +213,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
 
     protected fun setHeaderLeft(@DrawableRes left: Int) {
         if (left > 0) {
-            if (findView<View>(R.id.head_vLeft, toolbar) == null) {
+            if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_left, toolbar)
-                val img = findView<ImageView>(R.id.head_vLeft, v)
+                val img = findViewById<ImageView>(R.id.head_vLeft, v)
                 img?.setOnClickListener(this)
                 img?.setImageResource(left)
             } else {
-                val img = findView<ImageView>(R.id.head_vLeft, toolbar)
+                val img = findViewById<ImageView>(R.id.head_vLeft, toolbar)
                 img?.setImageResource(left)
             }
         }
@@ -227,13 +227,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
 
     protected fun setHeaderLeftTxt(@StringRes left: Int) {
         if (left > 0) {
-            if (findView<View>(R.id.head_vLeft, toolbar) == null) {
+            if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_tleft, toolbar)
-                val txt = findView<TextView>(R.id.head_vLeft, v)
+                val txt = findViewById<TextView>(R.id.head_vLeft, v)
                 txt?.setOnClickListener(this)
                 txt?.setText(left)
             } else {
-                val txt = findView<TextView>(R.id.head_vLeft, toolbar)
+                val txt = findViewById<TextView>(R.id.head_vLeft, toolbar)
                 txt?.setText(left)
             }
         }
@@ -241,13 +241,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
 
     protected fun setHeaderRight(@DrawableRes right: Int) {
         if (right > 0) {
-            if (findView<View>(R.id.head_vRight, toolbar) == null) {
+            if (findViewById<View>(R.id.head_vRight, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_right, toolbar)
-                val img = findView<ImageView>(R.id.head_vRight, v)
+                val img = findViewById<ImageView>(R.id.head_vRight, v)
                 img?.setOnClickListener(this)
                 img?.setImageResource(right)
             } else {
-                val img = findView<ImageView>(R.id.head_vRight, toolbar)
+                val img = findViewById<ImageView>(R.id.head_vRight, toolbar)
                 img?.setImageResource(right)
             }
         }
@@ -255,7 +255,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
 
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
         val v = View.inflate(context, R.layout.in_head_right, null)
-        val img = findView<ImageView>(R.id.head_vRight, v)
+        val img = findViewById<ImageView>(R.id.head_vRight, v)
         img?.id = id
         val array = activity.theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
         val width = array.getDimensionPixelSize(0, 0)
@@ -271,13 +271,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
 
     protected fun setHeaderRightTxt(@StringRes right: Int) {
         if (right > 0) {
-            if (findView<View>(R.id.head_vRight, toolbar) == null) {
+            if (findViewById<View>(R.id.head_vRight, toolbar) == null) {
                 val v = View.inflate(context, R.layout.in_head_tright, toolbar)
-                val txt = findView<TextView>(R.id.head_vRight, v)
+                val txt = findViewById<TextView>(R.id.head_vRight, v)
                 txt?.setOnClickListener(this)
                 txt?.setText(right)
             } else {
-                val txt = findView<TextView>(R.id.head_vRight, toolbar)
+                val txt = findViewById<TextView>(R.id.head_vRight, toolbar)
                 txt?.setText(right)
             }
         }
@@ -298,13 +298,13 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
         }
 
     protected val headerTitle: View
-        get() = findView(R.id.head_vTitle, toolbar)!!
+        get() = findViewById(R.id.head_vTitle, toolbar)!!
 
     protected val headerLeft: View
-        get() = findView<View>(R.id.head_vLeft, toolbar)!!
+        get() = findViewById(R.id.head_vLeft, toolbar)!!
 
     protected val headerRight: View
-        get() = findView<View>(R.id.head_vRight, toolbar)!!
+        get() = findViewById(R.id.head_vRight, toolbar)!!
 
     protected val mainView: View
         get() = flyMain!!
@@ -355,19 +355,8 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * @param id 行布局中某个组件的id
      * @param parent  parent
      */
-    @Suppress("UNCHECKED_CAST")
-    fun <T : View> findView(@IdRes id: Int, parent: View? = null): T? {
-        val view = parent?.findViewById<View>(id) ?: contentView?.findViewById<View>(id)
-        return if (view == null) null else view as T
-    }
-
-    /**
-     * 获取 控件
-     * @param id 行布局中某个组件的id
-     * @param parent  parent
-     */
     fun <T : View> findViewById(@IdRes id: Int, parent: View? = null): T? {
-        return findView(id, parent)
+        return parent?.findViewById(id) ?: contentView?.findViewById(id)
     }
 
     /**
@@ -376,7 +365,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * @param parent  parent
      */
     protected fun <T : View> setOnClickListener(@IdRes id: Int, parent: View? = null): T? {
-        val view = findView<T>(id, parent)
+        val view = findViewById<T>(id, parent)
         view?.setOnClickListener(this) ?: return null
         return view
     }

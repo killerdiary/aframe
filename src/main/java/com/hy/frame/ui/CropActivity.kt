@@ -29,13 +29,10 @@ import java.io.OutputStream
  * time 2016/8/23 11:09
  */
 class CropActivity : BaseActivity() {
-    override fun initSingleLayoutId(): Int {
-        return 0
-    }
 
-    override fun isTranslucentStatus(): Boolean {
-        return true
-    }
+    override fun initSingleLayoutId(): Int = 0
+
+    override fun isTranslucentStatus(): Boolean = true
 
     private var imgCrop: GestureCropImageView? = null
     private var vOverlay: OverlayView? = null
@@ -45,12 +42,10 @@ class CropActivity : BaseActivity() {
     private var quality: Int = 0
     private var isHor: Boolean = false
 
-    override fun initLayoutId(): Int {
-        return R.layout.act_crop
-    }
+    override fun initLayoutId(): Int = R.layout.act_crop
 
     override fun initView() {
-        val vUCrop = findView<UCropView>(R.id.crop_vUCrop)
+        val vUCrop = findViewById<UCropView>(R.id.crop_vUCrop)
         imgCrop = vUCrop?.cropImageView
         vOverlay = vUCrop?.overlayView
         navTurnLeft = setOnClickListener(R.id.crop_navTurnLeft)

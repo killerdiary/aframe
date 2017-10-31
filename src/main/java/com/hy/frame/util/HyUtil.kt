@@ -246,7 +246,7 @@ class HyUtil {
          * @param parent  parent
          */
         @Suppress("UNCHECKED_CAST")
-        fun <T : View> findView(resId: Int, v: View?): T? {
+        fun <T : View> findViewById(resId: Int, v: View?): T? {
             val view = v?.findViewById<View>(resId)
             return if (view == null) null else view as T
         }

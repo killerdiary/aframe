@@ -65,17 +65,19 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
 
     private fun init() {
         context = this
-        if (initSingleLayoutId() != 0) {
-            setContentView(initSingleLayoutId())
-            toolbar = findViewById(R.id.head_toolBar)
-            flyMain = findViewById(R.id.base_flyMain)
-        } else if (initLayoutId() != 0) {
-            setContentView(R.layout.act_base)
-            toolbar = findViewById(R.id.head_toolBar)
-            flyMain = findViewById(R.id.base_flyMain)
-            View.inflate(context, initLayoutId(), flyMain)
-        } else {
-            MyLog.e(javaClass, "initLayoutId not call")
+        when {
+            initSingleLayoutId() != 0 -> {
+                setContentView(initSingleLayoutId())
+                toolbar = findViewById(R.id.head_toolBar)
+                flyMain = findViewById(R.id.base_flyMain)
+            }
+            initLayoutId() != 0 -> {
+                setContentView(R.layout.act_base)
+                toolbar = findViewById(R.id.head_toolBar)
+                flyMain = findViewById(R.id.base_flyMain)
+                View.inflate(context, initLayoutId(), flyMain)
+            }
+            else -> MyLog.e(javaClass, "initLayoutId not call")
         }
         initToolbar()
     }
@@ -301,10 +303,10 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
         get() = findViewById(R.id.head_vTitle, toolbar)!!
 
     protected val headerLeft: View
-        get() = findViewById<View>(R.id.head_vLeft, toolbar)!!
+        get() = findViewById(R.id.head_vLeft, toolbar)!!
 
     protected val headerRight: View
-        get() = findViewById<View>(R.id.head_vRight, toolbar)!!
+        get() = findViewById(R.id.head_vRight, toolbar)!!
 
     val mainView: View
         get() = flyMain!!
@@ -385,20 +387,8 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
      * @param id 行布局中某个组件的id
      * @param parent  parent
      */
-    @Suppress("UNCHECKED_CAST")
-    @Deprecated("建议使用findViewById")
-    fun <T : View> findView(@IdRes id: Int, parent: View? = null): T? {
-        val view = parent?.findViewById<View>(id) ?: findViewById<View>(id)
-        return if (view == null) null else view as T
-    }
-
-    /**
-     * 获取 控件
-     * @param id 行布局中某个组件的id
-     * @param parent  parent
-     */
     fun <T : View> findViewById(@IdRes id: Int, parent: View?): T? {
-        return findView(id, parent)
+        return parent?.findViewById(id) ?: findViewById(id)
     }
 
     /**

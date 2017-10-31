@@ -88,8 +88,7 @@ class AVLoadingIndicatorView : View {
         mMinHeight = 24
         mMaxHeight = 48
 
-        val a = context.obtainStyledAttributes(
-                attrs, R.styleable.AVLoadingIndicatorView, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.AVLoadingIndicatorView, defStyleAttr, defStyleRes)
 
         mMinWidth = a.getDimensionPixelSize(R.styleable.AVLoadingIndicatorView_minWidth, mMinWidth)
         mMaxWidth = a.getDimensionPixelSize(R.styleable.AVLoadingIndicatorView_maxWidth, mMaxWidth)
@@ -111,8 +110,6 @@ class AVLoadingIndicatorView : View {
      * setIndicatorColor(Color.BLUE)
      * or
      * setIndicatorColor(Color.parseColor("#FF4081"))
-     * or
-     * setIndicatorColor(0xFF00FF00)
      * or
      * setIndicatorColor(getResources().getColor(android.R.color.black))
      * @param color Color

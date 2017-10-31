@@ -119,7 +119,7 @@ class NavGroup : LinearLayout, View.OnClickListener {
     private fun setCheckedId(@IdRes id: Int) {
         checkedNavViewId = id
         if (mOnCheckedChangeListener != null) {
-            val nav = HyUtil.findView<NavView>(id, this)
+            val nav = HyUtil.findViewById<NavView>(id, this)
             mOnCheckedChangeListener!!.onCheckedChanged(this, nav!!, checkedNavViewId)
         }
     }

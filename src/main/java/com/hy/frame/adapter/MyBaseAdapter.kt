@@ -1,7 +1,6 @@
 package com.hy.frame.adapter
 
 import android.content.Context
-import android.view.View
 
 /**
  * MyBaseAdapter for ListView or GridView

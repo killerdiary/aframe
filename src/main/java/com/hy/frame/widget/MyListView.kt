@@ -91,10 +91,10 @@ class MyListView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
     private fun initHeader() {
         headView = inflater!!.inflate(R.layout.in_lv_header, null) as LinearLayout
-        imgHeadArrow = HyUtil.findView<ImageView>(R.id.lv_imgHeadArrow, headView)
-        proHead = HyUtil.findView<ProgressBar>(R.id.lv_proHead, headView)
-        txtHeadHint = HyUtil.findView<TextView>(R.id.lv_txtHeadHint, headView)
-        txtHeadUpdateTime = HyUtil.findView<TextView>(R.id.lv_txtHeadUpdateTime, headView)
+        imgHeadArrow = HyUtil.findViewById<ImageView>(R.id.lv_imgHeadArrow, headView)
+        proHead = HyUtil.findViewById<ProgressBar>(R.id.lv_proHead, headView)
+        txtHeadHint = HyUtil.findViewById<TextView>(R.id.lv_txtHeadHint, headView)
+        txtHeadUpdateTime = HyUtil.findViewById<TextView>(R.id.lv_txtHeadUpdateTime, headView)
         // measureView(headView);
         // headerHeight = headView.getMeasuredHeight();
         headerHeight = resources.getDimensionPixelSize(R.dimen.lv_heigth)
@@ -106,10 +106,10 @@ class MyListView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
     private fun initFooter() {
         footView = inflater!!.inflate(R.layout.in_lv_footer, null) as LinearLayout
-        imgFootArrow = HyUtil.findView<ImageView>(R.id.lv_imgFootArrow, footView)
-        proFoot = HyUtil.findView<ProgressBar>(R.id.lv_proFoot, footView)
-        txtFootHint = HyUtil.findView<TextView>(R.id.lv_txtFootHint, footView)
-        txtFootUpdateTime = HyUtil.findView<TextView>(R.id.lv_txtFootUpdateTime, footView)
+        imgFootArrow = HyUtil.findViewById<ImageView>(R.id.lv_imgFootArrow, footView)
+        proFoot = HyUtil.findViewById<ProgressBar>(R.id.lv_proFoot, footView)
+        txtFootHint = HyUtil.findViewById<TextView>(R.id.lv_txtFootHint, footView)
+        txtFootUpdateTime = HyUtil.findViewById<TextView>(R.id.lv_txtFootUpdateTime, footView)
         // measureView(footView);
         // footerHeight = footView.getMeasuredHeight();
         footerHeight = resources.getDimensionPixelSize(R.dimen.lv_heigth)
