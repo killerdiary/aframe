@@ -128,7 +128,7 @@ class ColorItemDecoration : RecyclerView.ItemDecoration {
         val viewAdapterPosition = params.viewAdapterPosition
         val viewType = adapter?.getItemViewType(viewAdapterPosition) ?: 0
         if (viewType == BaseRecyclerAdapter.TYPE_ITEM) {
-            val position = (adapter as BaseRecyclerAdapter<*, *>).getCurPosition(viewAdapterPosition)
+            val position = (adapter as BaseRecyclerAdapter<*>).getCurPosition(viewAdapterPosition)
             if (layoutManager is GridLayoutManager) {
                 outRect.set(0, if (dividerTopWidth > 0 && (position >= 0 && position < (layoutManager as GridLayoutManager).spanCount)) dividerTopWidth else 0, dividerVerticalWidth, dividerHeight)
             } else if (layoutManager is LinearLayoutManager) {

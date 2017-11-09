@@ -505,7 +505,7 @@ class MCameraView @JvmOverloads constructor(//private PowerManager.WakeLock wake
             try {
                 mediaRecorder!!.stop()
                 isRecorder = false
-            } catch (e: IllegalStateException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 

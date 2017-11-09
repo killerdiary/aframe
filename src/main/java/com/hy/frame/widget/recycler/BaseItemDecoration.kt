@@ -25,7 +25,7 @@ abstract class BaseItemDecoration : RecyclerView.ItemDecoration {
     protected var paddingRight: Int = 0
     protected var paddingBottom: Int = 0
     protected val rcyList: RecyclerView
-    protected var adapter: BaseRecyclerAdapter<*, *>? = null
+    protected var adapter: BaseRecyclerAdapter<*>? = null
 
     constructor(rcyList: RecyclerView, divider: Int, color: Int) {
         this.rcyList = rcyList
@@ -80,8 +80,8 @@ abstract class BaseItemDecoration : RecyclerView.ItemDecoration {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if (adapter == null) {
-            if (parent.adapter == null || parent.adapter !is BaseRecyclerAdapter<*, *>) throw RuntimeException("adapter is not BaseRecyclerAdapter")
-            adapter = parent.adapter as BaseRecyclerAdapter<*, *>
+            if (parent.adapter == null || parent.adapter !is BaseRecyclerAdapter<*>) throw RuntimeException("adapter is not BaseRecyclerAdapter")
+            adapter = parent.adapter as BaseRecyclerAdapter<*>
             //initData()
         }
         configureItemOutRect(outRect, view)

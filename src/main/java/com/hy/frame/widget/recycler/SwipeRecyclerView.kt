@@ -52,7 +52,7 @@ class SwipeRecyclerView constructor(context: Context, attrs: AttributeSet? = nul
         isEnabled = false
     }
 
-    var adapter: BaseRecyclerAdapter<*, *>? = null
+    var adapter: BaseRecyclerAdapter<*>? = null
         set(value) {
             if (value == null) return
             if (loadMoreEnabled && initLoadMore()) {

@@ -80,4 +80,9 @@
     <string name="test_date">2017–07–07 07:07</string>
     <string name="test_date_short">2017–07–07</string>
     <string name="test_date_time">07:07</string>
+
+    <string name="album">相册</string>
+    <string name="album_pager_format">（%1$d/%2$d）</string>
+    <string name="album_more_format">多图选择（%1$d）</string>
+    <string name="album_single">单图选择</string>
 </resources>

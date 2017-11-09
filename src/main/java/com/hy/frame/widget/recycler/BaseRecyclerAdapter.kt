@@ -19,7 +19,7 @@ import com.hy.frame.bean.LoadCache
  * @author HeYan
  * @time 2017/9/25 11:45
  */
-abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val context: Context, protected var datas: MutableList<T>?, protected var listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseHolder>() {
+abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context, protected var datas: MutableList<T>?, protected var listener: IAdapterListener<T>? = null) : RecyclerView.Adapter<BaseHolder>() {
 
     private var mHeaderViews: MutableList<View>? = null
     private var mFooterViews: MutableList<View>? = null
@@ -167,7 +167,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
         val viewType = holder.itemViewType
         if (viewType in TYPE_ITEM..TYPE_ITEM_END)
             @Suppress("UNCHECKED_CAST")
-            bindViewData(holder as H, position - getHeaderCount())
+            bindViewData(holder, position - getHeaderCount())
         else
             bindOtherViewData(holder, viewType)
     }
@@ -258,7 +258,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     /**
      * create child View
      */
-    protected abstract fun createView(parent: ViewGroup, viewType: Int): H
+    protected abstract fun createView(parent: ViewGroup, viewType: Int): BaseHolder
 
     protected open fun createHeaderView(parent: ViewGroup, index: Int): BaseHolder {
         return BaseHolder(mHeaderViews!![index])
@@ -279,7 +279,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
     /**
      * bind child data
      */
-    protected abstract fun bindViewData(holder: H, position: Int)
+    protected abstract fun bindViewData(holder: BaseHolder, position: Int)
 
     /**
      * 获取 控件
@@ -302,7 +302,12 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
         return view
     }
 
-    open inner class BaseClickHolder(v: View) : BaseHolder(v), View.OnClickListener {
+    open inner class BaseClickHolder(v: View, bindItemClick: Boolean = false) : BaseHolder(v), View.OnClickListener {
+
+        init {
+            if (bindItemClick)
+                setOnClickListener(v)
+        }
 
         override fun onClick(v: View) {
             if (listener != null) {
@@ -330,7 +335,7 @@ abstract class BaseRecyclerAdapter<T, H : BaseHolder> constructor(protected val 
         }
     }
 
-    open inner class BaseLongClickHolder(v: View) : BaseClickHolder(v), View.OnLongClickListener {
+    open inner class BaseLongClickHolder(v: View, bindItemClick: Boolean = false) : BaseClickHolder(v, bindItemClick), View.OnLongClickListener {
 
         override fun onLongClick(v: View): Boolean {
             if (listener != null && listener is IAdapterLongListener<T>) {

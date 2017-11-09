@@ -1,3 +1,12 @@
-<manifest package="com.hy.frame">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hy.frame">
 
+    <application android:theme="@style/AppBaseTheme">
+        <activity
+            android:name=".ui.AlbumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlbumPagerActivity"
+            android:screenOrientation="portrait" />
+    </application>
 </manifest>

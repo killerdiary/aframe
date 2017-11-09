@@ -224,10 +224,12 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         if (hasQueue(result.requestCode)) {
             MyLog.e("request", "what=" + result.requestCode + ",msg=" + getString(R.string.API_FLAG_REPEAT))
             val queue = queues?.get(result.requestCode) ?: return
-
+            if (queue.dispatcher().queuedCallsCount() > 0)
+                return
+            removeQueue(result.requestCode)
             //result.setMsg(getString(R.string.API_FLAG_REPEAT));
             //onRequestError(result);
-            return
+            //return
         }
         val obuilder = OkHttpClient.Builder()
         if (!cerName.isNullOrEmpty()) {
@@ -263,7 +265,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         val builder = Request.Builder().url(url)
         builder.method(method.toString(), body)
         builder.tag(result)
-        val sb: StringBuilder = StringBuilder();
+        val sb = StringBuilder()
         if (headerParams != null) {
             for ((key, value) in headerParams!!) {
                 builder.addHeader(key, value)
@@ -473,36 +475,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      * @param list
      * @param <T>
      */
-    protected open fun <T> doSuccess(result: ResultInfo, obj: JsonObject, cls: Class<T>?, list: Boolean) {
-        //        try {
-        //            int flag = 0;
-        //            if (obj.has("state")) {
-        //                flag = obj.getInt("state");
-        //                result.setErrorCode(flag);
-        //            }
-        //            if (obj.has("msg")) {
-        //                String msg = obj.getString("msg");
-        //                result.setMsg(msg);
-        //            }
-        //            String data = null;
-        //            if (obj.has("result")) {
-        //                data = obj.getString("result");
-        //                data = data.replaceAll("\\\\", "").replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-        //                data = data.replaceAll("\"\\[", "\\[").replaceAll("\\]\"", "\\]");
-        //            }
-        //            // 成功
-        //            if (flag == 1) {
-        //                doSuccessData(result, data, cls, list);
-        //            } else {
-        //                onRequestError(result);
-        //            }
-        //        } catch (JSONException e) {
-        //            e.printStackTrace();
-        //            result.setErrorCode(ResultInfo.CODE_ERROR_DECODE);
-        //            result.setMsg(getString(R.string.API_FLAG_ANALYSIS_ERROR));
-        //            onRequestError(result);
-        //        }
-    }
+    protected open fun <T> doSuccess(result: ResultInfo, obj: JsonObject, cls: Class<T>?, list: Boolean) {}
 
     /**
      * not main thread
@@ -541,7 +514,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                     handler!!.removeCallbacks(runnable)
                     if (result == null) return
                     val r: ResultInfo = result!!
-                    MyLog.d("onRequest run" + r.requestCode);
+                    MyLog.d("onRequest run" + r.requestCode)
                     if (!hasQueue(r.requestCode)) return
                     if (r.requestType == REQUEST_TYPE_FILE) {
                         val downFile = r.getObj<DownFile>()
