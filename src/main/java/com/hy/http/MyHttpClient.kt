@@ -19,14 +19,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.security.KeyStore
-import java.security.SecureRandom
-import java.security.cert.CertificateFactory
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManagerFactory
 
 /**
  * 网络请求，不能直接使用<br></br>
@@ -38,14 +33,44 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
     private var listeners: MutableList<IMyHttpListener>? = null
     var showDialog: Boolean = false// 显示加载对话框
     protected var loadingDialog: LoadingDialog? = null
+        get() {
+            if (field == null)
+                field = LoadingDialog(context)
+            return field
+        }
+
     private var headerParams: MutableMap<String, String>? = null //默认头信息
     protected var isDestroy: Boolean = false
-    private var queues: MutableMap<Int, OkHttpClient>? = null
-    private val handler: Handler?
+    private var client: OkHttpClient? = null
+        get() {
+            if (field == null) {
+                val builder = OkHttpClient.Builder()
+                if (!cerName.isNullOrEmpty()) {
+                    val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                            .tlsVersions(TlsVersion.TLS_1_2)
+                            .cipherSuites(
+                                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                                    CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                                    CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256)
+                            .build()
+                    builder.connectionSpecs(Collections.singletonList(spec))
+                }
+                builder.writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                builder.connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                builder.readTimeout(readTimeout, TimeUnit.SECONDS)
+                field = builder.build()
+            }
+            return field
+        }
+    private var queues: MutableMap<Int, okhttp3.Call>? = null
+    private val handler: Handler = Handler(Looper.getMainLooper())
+
     private var cerName: String? = null//https签名证书name
+    var writeTimeout = TIMEOUT_WRITE
+    var connectTimeout = TIMEOUT_CONNECT
+    var readTimeout = TIMEOUT_READ
 
     init {
-        this.handler = Handler(Looper.getMainLooper())
         addListener(listener)
 //        if (false) {
 //            val pi = HyUtil.getAppVersion(context)
@@ -70,25 +95,24 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      */
     fun addListener(listener: IMyHttpListener) {
         if (this.listeners == null)
-            this.listeners = ArrayList<IMyHttpListener>()
+            this.listeners = ArrayList()
         this.listeners!!.add(listener)
     }
 
-    private fun addQueue(requestCode: Int, client: OkHttpClient) {
+    private fun addQueue(requestCode: Int, call: okhttp3.Call?) {
+        if (call == null) return
         if (this.queues == null)
             this.queues = ConcurrentHashMap()
-        this.queues!!.put(requestCode, client)
+        this.queues?.put(requestCode, call)
     }
 
     fun hasQueue(requestCode: Int): Boolean {
-        if (queues != null)
-            return queues!!.containsKey(requestCode)
-        return false
+        return queues?.containsKey(requestCode) ?: false
     }
 
     private fun removeQueue(requestCode: Int): Boolean {
         if (queues != null) {
-            queues!!.remove(requestCode)
+            queues?.remove(requestCode)
             return true
         }
         return false
@@ -109,51 +133,6 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 headerParams = ConcurrentHashMap()
             headerParams!!.put(key, value)
         }
-    }
-
-    //    /**
-    //     * 设置队列ID
-    //     *
-    //     * @param qid 队列ID
-    //     */
-    //    @Deprecated
-    //    public void setQid(int qid) {
-    //        this.qid = qid;
-    //    }
-    //
-    //    @Deprecated
-    //    public void setCacheMode(CacheMode cacheMode) {
-    //        this.cacheMode = cacheMode;
-    //    }
-    //    private SSLContext sslContext;
-
-
-    /**
-     * 忽略所有https证书
-     */
-    private fun overlockCard() {
-        //        final TrustManager[] trustAllCerts = new TrustManager[]{
-        //                new X509TrustManager() {
-        //                    @Override
-        //                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-        //                    }
-        //
-        //                    @Override
-        //                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-        //                    }
-        //
-        //                    @Override
-        //                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-        //                        X509Certificate[] x509Certificates = new X509Certificate[0];
-        //                        return x509Certificates;
-        //                    }
-        //                }};
-        //        try {
-        ////            sslContext = SSLContext.getInstance("SSL");
-        ////            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-        //        } catch (Exception e) {
-        //            MyLog.i("ssl出现异常");
-        //        }
     }
 
     @JvmOverloads
@@ -223,45 +202,11 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         if (isDestroy) return
         if (hasQueue(result.requestCode)) {
             MyLog.e("request", "what=" + result.requestCode + ",msg=" + getString(R.string.API_FLAG_REPEAT))
-            val queue = queues?.get(result.requestCode) ?: return
-            if (queue.dispatcher().queuedCallsCount() > 0)
+            val call = queues?.get(result.requestCode) ?: return
+            if (!call.isCanceled)
                 return
             removeQueue(result.requestCode)
-            //result.setMsg(getString(R.string.API_FLAG_REPEAT));
-            //onRequestError(result);
-            //return
         }
-        val obuilder = OkHttpClient.Builder()
-        if (!cerName.isNullOrEmpty()) {
-            //选择证书
-            try {
-                val certificateFactory = CertificateFactory.getInstance("X.509")
-                val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-                keyStore.load(null)
-                val certificate = context.assets.open(cerName)
-                keyStore.setCertificateEntry(Integer.toString(0), certificateFactory.generateCertificate(certificate))
-                try {
-                    certificate?.close()
-                } catch (e: IOException) {
-                }
-
-                val sslContext = SSLContext.getInstance("TLS")
-                val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-                trustManagerFactory.init(keyStore)
-                sslContext.init(null, trustManagerFactory.trustManagers, SecureRandom())
-                obuilder.sslSocketFactory(sslContext.socketFactory)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        if (body != null && body is MultipartBody)
-            obuilder.writeTimeout((30).toLong(), TimeUnit.SECONDS)
-        else
-            obuilder.writeTimeout((10 * 60).toLong(), TimeUnit.SECONDS)
-        obuilder.connectTimeout(30L, TimeUnit.SECONDS)
-        obuilder.readTimeout(30L, TimeUnit.SECONDS)
-        val client = obuilder.build()
-        addQueue(result.requestCode, client)
         val builder = Request.Builder().url(url)
         builder.method(method.toString(), body)
         builder.tag(result)
@@ -288,7 +233,9 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         showLoading()
         val request: Request = builder.build()
         //MyLog.d("Request", "headers=" + request.headers().toString())
-        client.newCall(request).enqueue(object : Callback {
+        val call = client?.newCall(request)
+        addQueue(result.requestCode, call)
+        call?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException?) {
                 val r = call.request().tag() as ResultInfo
                 val msg = e?.message
@@ -297,14 +244,12 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 r.errorCode = ResultInfo.CODE_ERROR_NET
                 if (msg != null) {
                     val thr = msg.toLowerCase(Locale.CHINA)
-                    if (thr.contains("broken pipe"))
-                        code = R.string.API_FLAG_CON_BROKEN
-                    else if (thr.contains("timed out"))
-                        code = R.string.API_FLAG_CON_TIMEOUT
-                    else if (thr.contains("unknownhostexception"))
-                        code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION
+                    when {
+                        thr.contains("broken pipe") -> code = R.string.API_FLAG_CON_BROKEN
+                        thr.contains("timed out") -> code = R.string.API_FLAG_CON_TIMEOUT
+                        thr.contains("unknownhostexception") -> code = R.string.API_FLAG_CON_UNKNOWNHOSTEXCEPTION
+                    }
                 }
-
                 r.msg = getString(code)
                 onRequestError(r)
             }
@@ -356,7 +301,6 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
                 onRequestError(r)
             }
         })
-
     }
 
     fun download(requestCode: Int, url: String, fileFolder: String, fileName: String, isRange: Boolean, isDeleteOld: Boolean, qid: Long = 0) {
@@ -383,18 +327,18 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             onRequestSuccess(result)
             return
         }
-        val downFile: DownFile? = result.getObj<DownFile>()
+        val downFile: DownFile = result.getObj<DownFile>() ?: return
         val total = body.contentLength()
         MyLog.d("onProgress(File)", "what=" + result.requestCode + ",total=" + total)
-        downFile?.state = DownFile.STATUS_START
-        downFile?.allCount = total
+        downFile.state = DownFile.STATUS_START
+        downFile.allCount = total
         onRequestSuccess(result)
         var input: InputStream? = null
         var fos: FileOutputStream? = null
         val buf = ByteArray(2048)
         try {
             input = body.byteStream()
-            val cacheFile = File(downFile?.saveDir, downFile?.fileName!! + ".cache")
+            val cacheFile = File(downFile.saveDir, downFile.fileName!! + ".cache")
             fos = FileOutputStream(cacheFile)
             var sum: Long = 0
             var length = input.read(buf)
@@ -412,17 +356,17 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
             }
             fos.flush()
             if (total > 0 && sum == total) {
-                downFile?.state = DownFile.STATUS_SUCCESS
-                val file = File(downFile?.saveDir, downFile?.fileName!!)
+                downFile.state = DownFile.STATUS_SUCCESS
+                val file = File(downFile.saveDir, downFile.fileName!!)
                 cacheFile.renameTo(file)
                 MyLog.i("onSucceed", "文件下载成功")
             } else {
-                downFile?.state = DownFile.STATUS_ERROR
+                downFile.state = DownFile.STATUS_ERROR
                 MyLog.i("onSucceed", "文件下载中断")
             }
         } catch (e: Exception) {
             MyLog.i("onSucceed", "文件下载失败")
-            downFile?.state = DownFile.STATUS_ERROR
+            downFile.state = DownFile.STATUS_ERROR
         } finally {
             try {
                 if (input != null)
@@ -481,15 +425,11 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      * not main thread
      */
     protected fun onRequestSuccess(result: ResultInfo) {
-        //MyLog.i("onRequestSuccess" + result.getRequestCode());
         if (isDestroy) return
         result.errorCode = 0
-        initHandler()
-        if (handler != null) {
-            runnable!!.isSuccess = true
-            runnable!!.result = result
-            handler.post(runnable)
-        }
+        runnable?.isSuccess = true
+        runnable?.result = result
+        handler.post(runnable)
     }
 
     /**
@@ -497,59 +437,56 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
      */
     protected fun onRequestError(result: ResultInfo) {
         if (isDestroy) return
-        initHandler()
-        if (handler != null) {
-            runnable!!.isSuccess = false
-            runnable!!.result = result
-            handler.post(runnable)
-        }
+        runnable?.isSuccess = false
+        runnable?.result = result
+        handler.post(runnable)
     }
 
     private var runnable: MyRunnable? = null
-
-    private fun initHandler() {
-        if (runnable == null) {
-            runnable = object : MyRunnable() {
-                override fun run() {
-                    handler!!.removeCallbacks(runnable)
-                    if (result == null) return
-                    val r: ResultInfo = result!!
-                    MyLog.d("onRequest run" + r.requestCode)
-                    if (!hasQueue(r.requestCode)) return
-                    if (r.requestType == REQUEST_TYPE_FILE) {
-                        val downFile = r.getObj<DownFile>()
-                        if (downFile?.state == DownFile.STATUS_SUCCESS || downFile?.state == DownFile.STATUS_ERROR) {
+        get() {
+            if (field == null) {
+                field = object : MyRunnable() {
+                    override fun run() {
+                        handler.removeCallbacks(runnable)
+                        if (result == null) return
+                        val r: ResultInfo = result!!
+                        MyLog.d("onRequest run" + r.requestCode)
+                        if (!hasQueue(r.requestCode)) return
+                        if (r.requestType == REQUEST_TYPE_FILE) {
+                            val downFile = r.getObj<DownFile>()
+                            if (downFile?.state == DownFile.STATUS_SUCCESS || downFile?.state == DownFile.STATUS_ERROR) {
+                                removeQueue(r.requestCode)
+                                hideLoading()
+                            }
+                        } else {
                             removeQueue(r.requestCode)
                             hideLoading()
                         }
-                    } else {
-                        removeQueue(r.requestCode)
-                        hideLoading()
-                    }
-                    if (listeners != null) {
-                        for (listener in listeners!!) {
-                            if (isSuccess)
-                                listener.onRequestSuccess(r)
-                            else
-                                listener.onRequestError(r)
+                        if (listeners != null) {
+                            for (listener in listeners!!) {
+                                if (isSuccess)
+                                    listener.onRequestSuccess(r)
+                                else
+                                    listener.onRequestError(r)
+                            }
                         }
                     }
                 }
             }
+            return field
         }
-    }
+
 
     /**
      * 显示加载框
      */
     @UiThread
-    protected fun showLoading() {
+    protected fun showLoading(loadMsg: String? = null) {
         if (isDestroy) return
         if (showDialog) {
-            if (loadingDialog == null) {
-                loadingDialog = LoadingDialog(context)
-            }
-            loadingDialog!!.show()
+            if (!loadMsg.isNullOrEmpty())
+                loadingDialog?.updateMsg(loadMsg!!)
+            loadingDialog?.show()
         }
     }
 
@@ -559,23 +496,13 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
     @UiThread
     protected fun hideLoading() {
         if (isDestroy) return
-        if (loadingDialog != null)
-            loadingDialog!!.dismiss()
+        loadingDialog?.dismiss()
     }
 
     @UiThread
-    protected fun updateLoadingMsg(msg: String?) {
+    protected fun updateLoadingMsg(loadMsg: String) {
         if (isDestroy) return
-        if (msg == null) {
-            showDialog = false
-            return
-        }
-        showDialog = true
-        if (loadingDialog == null) {
-            loadingDialog = LoadingDialog(context, msg)
-        } else {
-            loadingDialog!!.updateMsg(msg)
-        }
+        loadingDialog?.updateMsg(loadMsg)
     }
 
     /**
@@ -590,7 +517,8 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         loadingDialog = null
         if (queues != null && queues!!.isNotEmpty())
             for ((_, value) in queues!!) {
-                if (value.dispatcher() != null) value.dispatcher().cancelAll()
+                if (!value.isCanceled)
+                    value.cancel()
             }
         queues = null
     }
@@ -604,10 +532,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
     private open inner class MyRunnable : Runnable {
         var result: ResultInfo? = null
         var isSuccess: Boolean = false
-
-        override fun run() {
-
-        }
+        override fun run() {}
     }
 
     companion object {
@@ -615,5 +540,8 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         val REQUEST_TYPE_JSONARRAY = 1
         val REQUEST_TYPE_STRING = 2
         val REQUEST_TYPE_FILE = 3
+        val TIMEOUT_WRITE = 30L
+        val TIMEOUT_CONNECT = 30L
+        val TIMEOUT_READ = 30L
     }
 }
