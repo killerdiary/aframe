@@ -35,6 +35,7 @@ class AlbumPagerActivity : BaseActivity(), ViewPager.OnPageChangeListener {
 
     override fun initLayoutId(): Int = 0
     override fun isTranslucentStatus(): Boolean = true
+    override fun isPermissionDenied(): Boolean = false
     override fun initSingleLayoutId(): Int = R.layout.act_album_pager
 
     override fun initView() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/appBackground"
@@ -31,7 +32,8 @@
             android:layout_width="?attr/appHeaderHeight"
             android:layout_height="?attr/appHeaderHeight"
             android:layout_gravity="right"
-            android:background="@drawable/transparent_selector">
+            android:background="@drawable/transparent_selector"
+            tools:ignore="RtlHardcoded">
 
             <View
                 android:layout_width="20dp"

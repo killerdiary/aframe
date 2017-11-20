@@ -37,24 +37,21 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     private var flyMain: FrameLayout? = null
     protected var loadCache: LoadCache? = null
     protected open var client: MyHttpClient? = null
-    private var init: Boolean = false
 
     abstract fun isTranslucentStatus(): Boolean
+
+    abstract fun isPermissionDenied(): Boolean
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initApp()
+        if (isPermissionDenied()) {
+            finish()
+            return
+        }
         init()
         initView()
-        //initData();
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (!init) {
-            init = true
-            initData()
-        }
+        initData()
     }
 
     /**
@@ -134,7 +131,7 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     /**
      * 加载布局
      */
-    protected fun initLoadView(): Boolean {
+    protected open fun initLoadView(): Boolean {
         if (flyMain == null) {
             MyLog.e(javaClass, "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!")
             return false
@@ -333,7 +330,6 @@ abstract class BaseActivity : AppCompatActivity(), android.view.View.OnClickList
     /**
      * 启动Activity，清空栈 并添加到栈顶，慎用
      */
-    //@Deprecated("")
     protected fun startActClear(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null) {
         if (app != null) app!!.clear()
         startAct(cls, bundle, intent)

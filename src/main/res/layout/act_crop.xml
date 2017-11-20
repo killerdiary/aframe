@@ -220,7 +220,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="使用"
+            android:text="@string/confirm"
             android:textColor="@color/white"
             android:textSize="@dimen/txt_medium" />
 
@@ -230,7 +230,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="取消"
+            android:text="@string/cancel"
             android:textColor="@color/white"
             android:textSize="@dimen/txt_medium" />
 

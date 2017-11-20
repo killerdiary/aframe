@@ -26,8 +26,7 @@ import android.support.v4.util.SparseArrayCompat;
  */
 public class AspectRatio implements Comparable<AspectRatio>, Parcelable {
 
-    private final static SparseArrayCompat<SparseArrayCompat<AspectRatio>> sCache
-            = new SparseArrayCompat<>(16);
+    private final static SparseArrayCompat<SparseArrayCompat<AspectRatio>> sCache = new SparseArrayCompat<>(16);
 
     private final int mX;
     private final int mY;

@@ -42,6 +42,7 @@ class AlbumActivity : BaseActivity(), IAdapterLongListener<AlbumInfo>, Permissio
 
     override fun initSingleLayoutId(): Int = 0
     override fun isTranslucentStatus(): Boolean = true
+    override fun isPermissionDenied(): Boolean = false
     override fun initLayoutId(): Int = R.layout.act_recycler
 
     override fun initView() {

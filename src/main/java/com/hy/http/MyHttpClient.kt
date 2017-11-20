@@ -203,7 +203,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         if (hasQueue(result.requestCode)) {
             MyLog.e("request", "what=" + result.requestCode + ",msg=" + getString(R.string.API_FLAG_REPEAT))
             val call = queues?.get(result.requestCode) ?: return
-            if (!call.isCanceled)
+            if (!call.isExecuted)
                 return
             removeQueue(result.requestCode)
         }
@@ -517,7 +517,7 @@ abstract class MyHttpClient constructor(val context: Context, listener: IMyHttpL
         loadingDialog = null
         if (queues != null && queues!!.isNotEmpty())
             for ((_, value) in queues!!) {
-                if (!value.isCanceled)
+                if (!value.isExecuted)
                     value.cancel()
             }
         queues = null

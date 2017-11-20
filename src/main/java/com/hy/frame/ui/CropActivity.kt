@@ -31,8 +31,8 @@ import java.io.OutputStream
 class CropActivity : BaseActivity() {
 
     override fun initSingleLayoutId(): Int = 0
-
     override fun isTranslucentStatus(): Boolean = true
+    override fun isPermissionDenied(): Boolean = false
 
     private var imgCrop: GestureCropImageView? = null
     private var vOverlay: OverlayView? = null

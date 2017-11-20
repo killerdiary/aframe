@@ -16,6 +16,7 @@
 
     <ImageView
         android:id="@+id/base_imgMessage"
+        style="@style/AppBaseTheme.ImageStyle"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/def_empty"
@@ -27,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_default"
         android:gravity="center"
-        android:text="加载中 ..."
+        android:text="@string/loading"
         android:textColor="@color/txt_gray"
         android:textSize="@dimen/txt_small" />
 
