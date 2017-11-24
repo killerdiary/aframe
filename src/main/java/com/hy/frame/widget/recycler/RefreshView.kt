@@ -11,18 +11,18 @@ import com.hy.frame.widget.WaterDropView
  */
 class RefreshView(var v: View) {
 
-    private val vWater = v.findViewById<WaterDropView>(R.id.recycler_refreshview_i_vWater)!!
+    //private val vWater = v.findViewById<WaterDropView>(R.id.recycler_refreshview_i_vWater)!!
 
     /**
      * 完成的百分比
      * @param percent between[0,1]
      */
     fun updateComleteState(percent: Float) {
-        vWater.updateComleteState(percent)
+        //vWater.updateComleteState(percent)
     }
 
     fun clear() {
-        vWater.createAnimator()
+        //vWater.createAnimator()
     }
 
     interface ILoadMoreListener {

@@ -74,7 +74,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     /**
      * once
      */
-    fun setRefreshView(refreshView: RefreshView) {
+    fun setRefreshView(refreshView: RefreshView = RefreshView(inflate(R.layout.in_lv_header))) {
         if (this.refreshView != null) return
         this.refreshView = refreshView
     }
@@ -167,7 +167,10 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         val viewType = holder.itemViewType
         if (viewType in TYPE_ITEM..TYPE_ITEM_END)
             @Suppress("UNCHECKED_CAST")
-            bindViewData(holder, position - getHeaderCount())
+            if (refreshView == null)
+                bindViewData(holder, position - getHeaderCount())
+            else
+                bindViewData(holder, position - getHeaderCount() - 1)
         else
             bindOtherViewData(holder, viewType)
     }
@@ -204,31 +207,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
 
     protected fun isFixedViewType(viewType: Int): Boolean {
         return viewType == TYPE_REFRESH || viewType in TYPE_HEADER..TYPE_HEADER_END || viewType in TYPE_FOOTER..TYPE_FOOTER_END || viewType == TYPE_EMPTY || viewType == TYPE_LOADMORE
-    }
-
-    private var dividerHorizontalSize: Int = 0
-    private var dividerVerticalSize: Int = 0
-    private var topPadding: Int = 0
-    private var bottomPadding: Int = 0
-
-    @Deprecated("Deprecated")
-    fun setDividerHorizontalSize(dividerHorizontalSize: Int) {
-        this.dividerHorizontalSize = dividerHorizontalSize
-    }
-
-    @Deprecated("Deprecated")
-    fun setDividerVerticalSize(dividerVerticalSize: Int) {
-        this.dividerVerticalSize = dividerVerticalSize
-    }
-
-    @Deprecated("Deprecated")
-    fun setTopPadding(topPadding: Int) {
-        this.topPadding = topPadding
-    }
-
-    @Deprecated("Deprecated")
-    fun setBottomPadding(bottomPadding: Int) {
-        this.bottomPadding = bottomPadding
     }
 
     /**
