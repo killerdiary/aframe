@@ -1,16 +1,20 @@
 package com.hy.frame.widget
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import com.hy.frame.R
 
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 /**
  * OverflowLayout
  * @author HeYan
  * @time 2017/10/20 15:29
  */
+@Deprecated("")
 class OverflowLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
     private var horizontalSpacing: Int = 0
     private var verticalSpacing: Int = 0

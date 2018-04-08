@@ -1,10 +1,7 @@
 package com.hy.frame.widget
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.ColorFilter
-import android.graphics.Paint
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
@@ -16,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import com.hy.frame.R
+import com.hy.frame.util.DimensionUtil
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
 import java.util.*
@@ -26,6 +24,7 @@ import java.util.*
  * time 2015/12/29 13:39
  * 备注：Object 如果不是 String or Integer 里面必须有getName和setName(String)
  */
+@Deprecated("")
 class MyWheelView : ScrollView {
 
     class OnWheelViewListener {
@@ -322,7 +321,7 @@ class MyWheelView : ScrollView {
         if (null == paint) {
             paint = Paint()
             paint!!.color = if (lineColor == 0) resources.getColor(R.color.txt_gray) else lineColor
-            paint!!.strokeWidth = HyUtil.dip2px(context!!, 1f).toFloat()
+            paint!!.strokeWidth = DimensionUtil.dip2px(1f, context!!).toFloat()
         }
 
         background = object : Drawable() {
@@ -339,7 +338,7 @@ class MyWheelView : ScrollView {
 
             }
 
-            override fun getOpacity(): Int = 0
+            override fun getOpacity(): Int = PixelFormat.UNKNOWN
         }
 
         super.setBackgroundDrawable(background)

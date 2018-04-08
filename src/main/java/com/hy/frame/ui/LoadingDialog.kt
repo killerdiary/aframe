@@ -7,7 +7,7 @@ import android.view.WindowManager
 import android.widget.TextView
 
 import com.hy.frame.R
-import com.hy.frame.common.BaseDialog
+import com.hy.frame.app.BaseDialog
 
 /**
  * 加载对话框
@@ -18,7 +18,7 @@ class LoadingDialog constructor(context: Context, private var loadMsg: String? =
 
     private var txtLoadMsg: TextView? = null
 
-    override fun initLayoutId(): Int = R.layout.dlg_loading
+    override fun getLayoutId(): Int = R.layout.dlg_loading
     
     override fun initWindow() {
         windowDeploy(WindowManager.LayoutParams.WRAP_CONTENT.toFloat(), WindowManager.LayoutParams.WRAP_CONTENT.toFloat(), Gravity.CENTER)

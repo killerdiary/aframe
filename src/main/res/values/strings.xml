@@ -85,4 +85,12 @@
     <string name="album_pager_format">（%1$d/%2$d）</string>
     <string name="album_more_format">多图选择（%1$d）</string>
     <string name="album_single">单图选择</string>
+
+    <string name="sunday">周日</string>
+    <string name="monday">周一</string>
+    <string name="tuesday">周二</string>
+    <string name="wednesday">周三</string>
+    <string name="thursday">周四</string>
+    <string name="friday">周五</string>
+    <string name="saturday">周六</string>
 </resources>

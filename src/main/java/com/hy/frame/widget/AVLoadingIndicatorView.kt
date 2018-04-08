@@ -2,10 +2,8 @@ package com.hy.frame.widget
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -14,11 +12,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
-
 import com.hy.frame.R
 import com.hy.frame.widget.indicators.BallPulseIndicator
 import com.hy.frame.widget.indicators.Indicator
-
 
 class AVLoadingIndicatorView : View {
 
@@ -292,7 +288,8 @@ class AVLoadingIndicatorView : View {
         }
     }
 
-    @Synchronized override fun onDraw(canvas: Canvas) {
+    @Synchronized
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawTrack(canvas)
     }
@@ -316,7 +313,8 @@ class AVLoadingIndicatorView : View {
         }
     }
 
-    @Synchronized override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    @Synchronized
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var dw = 0
         var dh = 0
 

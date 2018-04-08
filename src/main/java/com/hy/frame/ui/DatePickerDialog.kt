@@ -7,7 +7,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import com.hy.frame.R
-import com.hy.frame.common.BaseDialog
+import com.hy.frame.app.BaseDialog
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
 import com.hy.frame.widget.loopview.LoopWheelView
@@ -31,9 +31,7 @@ class DatePickerDialog(context: Context) : BaseDialog(context) {
     private var cacheCal: Calendar? = null
     private val strs = arrayOf("天", "一", "二", "三", "四", "五", "六")
     private var minYear = 0
-    override fun initLayoutId(): Int {
-        return R.layout.dlg_date_picker
-    }
+    override fun getLayoutId(): Int = R.layout.dlg_date_picker
 
     override fun initWindow() {
         windowDeploy(WindowManager.LayoutParams.MATCH_PARENT.toFloat(), WindowManager.LayoutParams.WRAP_CONTENT.toFloat(), Gravity.BOTTOM)

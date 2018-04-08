@@ -8,8 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import com.hy.frame.common.BaseActivity
-import com.hy.frame.ui.CropActivity
+import com.hy.frame.app.BaseActivity
 import java.io.File
 
 /**
@@ -35,7 +34,7 @@ class CameraUtil {
 
     constructor(fragment: Fragment, listener: CameraDealListener) {
         this.fragment = fragment
-        this.act = fragment.activity
+        this.act = fragment.activity!!
         this.listener = listener
     }
 
@@ -145,19 +144,19 @@ class CameraUtil {
         //        uCrop.withOptions(options);
         //        uCrop.start(act == null ? fragment.getActivity() : act);
 
-        val intent = Intent(context, CropActivity::class.java)
-        val bundle = Bundle()
-        bundle.putInt(CropActivity.EXTRA_ASPECT_X, aspectX)
-        bundle.putInt(CropActivity.EXTRA_ASPECT_Y, aspectY)
-        bundle.putInt(CropActivity.EXTRA_ASPECT_UNIT, unit)
-        bundle.putParcelable(CropActivity.EXTRA_INPUT_URI, cacheUri)
-        bundle.putParcelable(CropActivity.EXTRA_OUTPUT_URI, imageUri)
-        intent.putExtra(BaseActivity.BUNDLE, bundle)
-        try {
-            startActForResult(intent, FLAG_IMAGE_CUT)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        val intent = Intent(context, CropActivity::class.java)
+//        val bundle = Bundle()
+//        bundle.putInt(CropActivity.EXTRA_ASPECT_X, aspectX)
+//        bundle.putInt(CropActivity.EXTRA_ASPECT_Y, aspectY)
+//        bundle.putInt(CropActivity.EXTRA_ASPECT_UNIT, unit)
+//        bundle.putParcelable(CropActivity.EXTRA_INPUT_URI, cacheUri)
+//        bundle.putParcelable(CropActivity.EXTRA_OUTPUT_URI, imageUri)
+//        intent.putExtra(BaseActivity.BUNDLE, bundle)
+//        try {
+//            startActForResult(intent, FLAG_IMAGE_CUT)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     private fun startActForResult(intent: Intent, requestCode: Int) {

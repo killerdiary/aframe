@@ -11,8 +11,8 @@ import android.view.MotionEvent
  * @time 2017/7/6 17:32
  */
 class CatchViewPager : ViewPager {
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         return try {

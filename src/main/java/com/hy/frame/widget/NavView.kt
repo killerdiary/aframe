@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.*
 import com.hy.frame.R
+import com.hy.frame.util.DimensionUtil
 import com.hy.frame.util.HyUtil
 
 /**
@@ -67,7 +68,7 @@ class NavView @JvmOverloads constructor(context: Context, attrs: AttributeSet? =
         if (textColor != null)
             txtKey!!.setTextColor(textColor)
         if (textSize > 0)
-            txtKey!!.textSize = HyUtil.floatToSpDimension(textSize, context)
+            txtKey!!.textSize = DimensionUtil.px2sp(textSize, context)
         if (horizontal && textRight) {
             val txtFlp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
             txtFlp.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL

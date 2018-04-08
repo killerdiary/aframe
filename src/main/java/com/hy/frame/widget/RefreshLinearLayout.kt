@@ -1,6 +1,8 @@
 package com.hy.frame.widget
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,11 +15,13 @@ import com.hy.frame.R
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
 
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 /**
  * 带刷新的LinearLayout
  * @author HeYan
  * @time 2014年12月31日 下午12:29:10
  */
+@Deprecated("")
 class RefreshLinearLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private var scroller: Scroller? = null

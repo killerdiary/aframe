@@ -1,4 +1,4 @@
-package com.hy.frame.common
+package com.hy.frame.app
 
 import android.app.Dialog
 import android.content.Context
@@ -14,38 +14,16 @@ import com.hy.frame.util.HyUtil
  * @title 父类对话框
  * @time 2015/11/16 13:25
  */
-abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseTheme_DialogTheme), View.OnClickListener {
+abstract class BaseDialog(context: Context) : Dialog(context, R.style.AppBaseTheme_DialogTheme), IBaseDialog, View.OnClickListener {
     var listener: IConfirmListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(initLayoutId())
+        setContentView(getLayoutId())
         initWindow()
         initView()
         initData()
     }
-
-    protected abstract fun initLayoutId(): Int
-
-    /**
-     * 初始化Window
-     */
-    protected abstract fun initWindow()
-
-    /**
-     * 初始化布局
-     */
-    protected abstract fun initView()
-
-    /**
-     * 初始化数据
-     */
-    protected abstract fun initData()
-
-    /**
-     * 控件点击事件
-     */
-    protected abstract fun onViewClick(v: View)
 
     override fun onClick(v: View) {
         if (HyUtil.isFastClick)

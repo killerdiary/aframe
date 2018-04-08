@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 
 /**
- * List<View>类型
+ * View类型Pager适配器
  * @author HeYan
  * @time 2014年7月26日 上午10:27:41
  */

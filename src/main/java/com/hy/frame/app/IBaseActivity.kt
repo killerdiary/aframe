@@ -1,4 +1,4 @@
-package com.hy.frame.common
+package com.hy.frame.app
 
 import android.support.annotation.LayoutRes
 import android.view.View
@@ -13,8 +13,27 @@ interface IBaseActivity {
      * 初始化布局 可空,可以包含 Toolbar 否则 使用默认的 Toolbar
      */
     @LayoutRes
-    fun initLayoutId(): Int
+    fun getLayoutId(): Int
 
+    /**
+     * 唯一布局ID
+     */
+    fun isSingleLayout(): Boolean
+
+    /**
+     * 判断是否拥有进入权限
+     */
+    fun isPermissionDenied(): Boolean
+
+    /**
+     * 是否开启透明状态栏
+     */
+    fun isTranslucentStatus(): Boolean
+
+    /**
+     * 状态栏高度
+     */
+    fun getStatusBarHeight(): Int
     /**
      * 初始化控件
      */
@@ -24,7 +43,7 @@ interface IBaseActivity {
      * 初始化数据
      */
     fun initData()
-    
+
     /**
      * 请求数据
      */

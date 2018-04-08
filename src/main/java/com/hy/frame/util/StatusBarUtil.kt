@@ -46,7 +46,9 @@ object StatusBarUtil {
         changeStatusColor(activity, INVALID_VAL)
     }
 
-
+    /**
+     * 获取StatusBar高度
+     */
     fun getStatusBarHeight(context: Context): Int {
         var result = 0
         val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")

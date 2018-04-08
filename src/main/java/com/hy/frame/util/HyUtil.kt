@@ -30,197 +30,9 @@ import java.util.regex.Pattern
  */
 object HyUtil {
 
-    /**
-     * 是否包含特殊符号
-     */
-    fun isContainSpecialSymbols(str: String?): Boolean {
-        if (str == null) return false
-        val regex = "[。，、：；？！‘’“”′.,﹑:;?!'\"〝〞＂+\\-*=<_~#\$&%‐﹡﹦﹤＿￣～﹟﹩﹠﹪@﹋﹉﹊｜‖^·¡…︴﹫﹏﹍﹎﹨\\\\ˇ¨¿—/（）〈〉‹›﹛﹜『』〖〗［］《》〔〕{}」【】︵︷︿︹﹁﹃︻︶︸﹀︺︾ˉ﹂﹄︼]"
-        return !Pattern.compile(regex).matcher(str).matches()
-    }
 
-    /**
-     * 是否是图片地址
-     */
-    fun isImagePath(str: String?): Boolean {
-        if (str == null) return false
-        return str.matches("(?i).+?\\.(png|jpg|gif|bmp)".toRegex())
-    }
 
-    /**
-     * 手机号验证
-     */
-    fun isMobile(str: String?): Boolean {
-        if (str == null) return false
-        return str.matches("^[1][3-8][0-9]{9}$".toRegex())
-    }
 
-    /**
-     * 是否是数字
-     * @param str
-     * @return 验证通过返回true
-     */
-    fun isNumber(str: String?): Boolean {
-        if (str.isNullOrEmpty()) return false
-        return Pattern.compile("[0-9]+").matcher(str).matches()
-    }
-
-    /**
-     * 是否是英文
-     */
-    fun isEnglish(str: String?): Boolean {
-        if (str == null)
-            return false
-        return Pattern.compile("[a-zA-Z]+").matcher(str).matches()
-    }
-
-    /**
-     * 是否是中文
-     * @param str
-     * @return
-     */
-    fun isChinese(str: String?): Boolean {
-        if (str == null)
-            return false
-        return Pattern.compile("^[\u4e00-\u9fa5]+$").matcher(str).matches()
-    }
-
-    /**
-     * 是否是IP地址
-     * @param str
-     * @return
-     */
-    fun isIpAddress(str: String?): Boolean {
-        if (str == null)
-            return false
-        return Pattern.compile("(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)){3}").matcher(str).matches()
-    }
-
-    /**
-     * 是否是身份证
-     * @param str
-     * @return
-     */
-    fun isIdentity(text: String): Boolean {
-        var str = text
-        if (isEmpty(str))
-            return false
-        if (str.length == 15)
-            return Pattern.compile("^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$").matcher(str).matches()
-        if (str.contains("x"))
-            str = str.replace("x".toRegex(), "X")
-        if (str.length == 18)
-            return Pattern.compile("^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$").matcher(str).matches()
-        return false
-    }
-
-    /**
-     * 电话号码验证
-     * @param str
-     * @return 验证通过返回true
-     */
-    fun isPhone(text: String?): Boolean {
-        var str: String? = text ?: return false
-        val p1: Pattern?
-        val p2: Pattern?
-        val m: Matcher?
-        var b = false
-        if (str == null) return false
-        str = str.replace("-".toRegex(), "")
-        // p1 = Pattern.compile("^[0][1-9]{2,3}-[0-9]{5,10}$"); // 验证带区号的
-        if (str.length == 11) {
-            p1 = Pattern.compile("^[0][1-9]{2,3}[0-9]{5,10}$") // 验证带区号的
-            m = p1!!.matcher(str)
-            b = m!!.matches()
-        } else if (str.length <= 9) {
-            p2 = Pattern.compile("^[1-9]{1}[0-9]{5,8}$") // 验证没有区号的
-            m = p2!!.matcher(str)
-            b = m!!.matches()
-        }
-        if (!b)
-            return isMobile(str)
-        return b
-    }
-
-    /**
-     * 邮箱验证
-     * @param str
-     * @return 验证通过返回true
-     */
-    fun isEmail(str: String?): Boolean {
-        if (str == null)
-            return false
-        return Pattern
-                .compile("^([a-zA-Z0-9_\\-.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$")
-                .matcher(str).matches()
-    }
-
-    /**
-     * 是否是银行卡号
-     */
-    fun isBankCard(str: String): Boolean {
-        if (isEmpty(str))
-            return false
-        val pattern = Pattern.compile("^(\\d{16}|\\d{19})$")
-        return pattern.matcher(str).matches()
-    }
-
-    fun isNoEmpty(str: String?): Boolean {
-        return !isEmpty(str)
-    }
-
-    fun isEmpty(str: String?): Boolean {
-        if (null == str)
-            return true
-        if (str.isNullOrEmpty())
-            return true
-        if (str.trim { it <= ' ' }.isEmpty())
-            return true
-        if (str.indexOf("null") == 0)
-            return true
-        return false
-    }
-
-    fun isNoEmpty(datas: List<*>?): Boolean {
-        return !isEmpty(datas)
-    }
-
-    fun isEmpty(datas: List<*>?): Boolean {
-        if (datas == null)
-            return true
-        if (datas.isEmpty())
-            return true
-        return false
-    }
-
-    /**
-     * 去掉多余的0
-     */
-    fun removeNumberZero(text: String): String {
-        var str = text
-        if (isEmpty(str)) {
-            return "0"
-        }
-        if (str.indexOf(".") > 0) {
-            str = str.replace("0+?$".toRegex(), "")// 去掉多余的0
-            str = str.replace("[.]$".toRegex(), "")// 如最后一位是.则去掉
-        }
-        return str
-    }
-
-    /**
-     * 转换成Money格式
-     */
-    fun formatToMoney(obj: Any): String {
-        return DecimalFormat("0.00").format(obj)
-    }
-
-    /**
-     * 把字体结果dimen转化成原sp值
-     */
-    fun floatToSpDimension(value: Float, context: Context): Float {
-        return value / context.resources.displayMetrics.scaledDensity
-    }
 
     /**
      * 获取 控件
@@ -276,37 +88,7 @@ object HyUtil {
         return null
     }
 
-    /**
-     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
-     */
-    fun dip2px(context: Context, dpValue: Float): Int {
-        val scale = context.resources.displayMetrics.density
-        return (dpValue * scale + 0.5f).toInt()
-    }
 
-    /**
-     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
-     */
-    fun px2dip(context: Context, pxValue: Float): Int {
-        val scale = context.resources.displayMetrics.density
-        return (pxValue / scale + 0.5f).toInt()
-    }
-
-    /**
-     * 将px值转换为sp值，保证文字大小不变
-     */
-    fun px2sp(context: Context, pxValue: Float): Int {
-        val fontScale = context.resources.displayMetrics.scaledDensity
-        return (pxValue / fontScale + 0.5f).toInt()
-    }
-
-    /**
-     * 将sp值转换为px值，保证文字大小不变
-     */
-    fun sp2px(context: Context, spValue: Float): Int {
-        val fontScale = context.resources.displayMetrics.scaledDensity
-        return (spValue * fontScale + 0.5f).toInt()
-    }
 
     /**
      * 获取控件的高度，如果获取的高度为0，则重新计算尺寸后再返回高度
@@ -387,31 +169,20 @@ object HyUtil {
         }
 
     /**
-     * 是否是车牌号
-     */
-    fun isCarNumber(str: String): Boolean {
-        if (isNoEmpty(str))
-            return Pattern.compile("^[\u4e00-\u9fa5|A-Z][A-Z][A-Z_0-9]{5}$").matcher(str).matches()
-        return false
-    }
-
-    val weeks = arrayOf<String>()
-
-    /**
      * 获取周几
      * @param week
      */
-    fun getWeekName(week: Int): String? {
+    fun getWeekName(week: Int,context: Context): String {
         when (week) {
-            Calendar.SUNDAY -> return "周日"
-            Calendar.MONDAY -> return "周一"
-            Calendar.TUESDAY -> return "周二"
-            Calendar.WEDNESDAY -> return "周三"
-            Calendar.THURSDAY -> return "周四"
-            Calendar.FRIDAY -> return "周五"
-            Calendar.SATURDAY -> return "周六"
+            java.util.Calendar.SUNDAY -> context.getString(R.string.sunday)
+            java.util.Calendar.MONDAY -> context.getString(R.string.monday)
+            java.util.Calendar.TUESDAY -> context.getString(R.string.tuesday)
+            java.util.Calendar.WEDNESDAY ->context.getString(R.string.wednesday)
+            java.util.Calendar.THURSDAY -> context.getString(R.string.thursday)
+            java.util.Calendar.FRIDAY -> context.getString(R.string.friday)
+            java.util.Calendar.SATURDAY -> context.getString(R.string.saturday)
         }
-        return null
+        return context.getString(R.string.empty)
     }
 
     /**
@@ -548,42 +319,5 @@ object HyUtil {
         }
     }
 
-    fun getStringFromJson(json: JsonObject?, key: String): String? {
-        if (json == null || !json.has(key) || json.get(key).isJsonNull) return null
-        return json.get(key).asString
-    }
 
-    fun getIntFromJson(json: JsonObject?, key: String): Int {
-        if (json == null || !json.has(key) || json.get(key).isJsonNull) return 0
-        return json.get(key).asInt
-    }
-
-    fun getBooleanFromJson(json: JsonObject?, key: String): Boolean {
-        if (json == null || !json.has(key) || json.get(key).isJsonNull) return false
-        return json.get(key).asBoolean
-    }
-
-    fun <T> getListFromJson(json: JsonObject?, key: String, cls: Class<T>): MutableList<T>? {
-        return getListFromJson(json?.get(key), cls)
-    }
-
-    fun <T> getListFromJson(data: JsonElement?, cls: Class<T>): MutableList<T>? {
-        if (data == null || !data.isJsonArray) return null
-        return try {
-            val beans: Array<T> = Gson().fromJson(data, TypeToken.getArray(cls).type)
-            val items = ArrayList(Arrays.asList(*beans))
-            items
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun <T> getObjectFromJson(data: JsonElement?, cls: Class<T>): T? {
-        if (data == null || !data.isJsonObject) return null
-        return try {
-            Gson().fromJson(data, cls)
-        } catch (e: Exception) {
-            null
-        }
-    }
 }

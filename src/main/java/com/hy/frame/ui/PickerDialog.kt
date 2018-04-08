@@ -7,11 +7,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import com.hy.frame.R
-import com.hy.frame.common.BaseDialog
-import com.hy.frame.util.HyUtil
-import com.hy.frame.util.MyLog
+import com.hy.frame.app.BaseDialog
 import com.hy.frame.widget.loopview.LoopWheelView
-import java.util.*
 
 /**
  * 选择器
@@ -26,7 +23,7 @@ class PickerDialog(context: Context) : BaseDialog(context) {
     var datas: MutableList<String>? = null
     var visibleNumber: Int = 0
 
-    override fun initLayoutId(): Int = R.layout.dlg_picker
+    override fun getLayoutId(): Int = R.layout.dlg_picker
 
     override fun initWindow() {
         windowDeploy(WindowManager.LayoutParams.MATCH_PARENT.toFloat(), WindowManager.LayoutParams.WRAP_CONTENT.toFloat(), Gravity.BOTTOM)

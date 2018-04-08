@@ -1,11 +1,11 @@
-package com.hy.frame.common
+package com.hy.frame.app
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
+import android.support.annotation.Nullable
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
@@ -18,98 +18,80 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.hy.frame.R
 import com.hy.frame.bean.LoadCache
+import com.hy.frame.mvp.IBasePresenter
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
-import com.hy.http.MyHttpClient
 
 /**
  * 父类Fragment
  * author HeYan
  * time 2015/12/23 17:12
  */
-abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFragmentListener, IBaseActivity {
-    private var contentView: View? = null
-    // private boolean custom;
-    var app: BaseApplication? = null
-    //protected var context: Context? = null
-    private var toolbar: Toolbar? = null
-    //private TextView txtTitle;
-    private var flyMain: FrameLayout? = null
-    protected var loadCache: LoadCache? = null
-    var showCount: Int = 0
-    var isInit: Boolean = false
-    protected open var client: MyHttpClient? = null
-
-    protected val isTranslucentStatus: Boolean
+abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.OnClickListener, IBaseFragment {
+    protected var mApp: IBaseApplication? = null
         get() {
-            if (activity != null && activity is BaseActivity) {
-                val act = activity as BaseActivity
-                return act.isTranslucentStatus()
-            }
-            return false
+            if (field == null && activity is IBaseApplication)
+                field = activity as IBaseApplication
+            return field
         }
+    private var mContentView: View? = null
+    private var mToolbar: Toolbar? = null
+    private var mFlyMain: FrameLayout? = null
+    protected var mLoadCache: LoadCache? = null
+    protected var mShowCount: Int = 0
+    protected var mInit: Boolean = false
+
+    @Nullable
+    protected var mPresenter: P? = null//如果当前页面逻辑简单, Presenter 可以为 null
+
+    override fun isTranslucentStatus(): Boolean {
+        if (activity != null && activity is IBaseActivity) {
+            val act = activity as IBaseActivity
+            return act.isTranslucentStatus()
+        }
+        return false
+    }
+
+    override fun getFragment(): Fragment  = this
 
     /**
-     * 唯一布局ID
+     * 避免重复init
      */
-    @LayoutRes
-    protected abstract fun initSingleLayoutId(): Int
-
     override fun onStart() {
         super.onStart()
-        if (!isInit) {
-            isInit = true
+        if (!mInit) {
+            mInit = true
             initData()
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // MyLog.d(getClass(), "onCreateView");
-        showCount++
-        if (contentView == null) {
-            //context = activity
-            app = activity.application as BaseApplication
-            val v: View?
-            if (initSingleLayoutId() != 0) {
-                val v1 = inflater!!.inflate(initSingleLayoutId(), container, false)
-                flyMain = findViewById(R.id.base_flyMain, v1)
-                if (flyMain == null) {
-                    v = inflater.inflate(R.layout.act_base_fragment, container, false)
-                    flyMain = findViewById(R.id.base_flyMain, v)
-                    View.inflate(context, initSingleLayoutId(), flyMain)
-                } else {
-                    v = v1
-                }
-            } else if (initLayoutId() != 0) {
-                v = inflater!!.inflate(R.layout.act_base, container, false)
-                flyMain = findViewById(R.id.base_flyMain, v)
-                View.inflate(context, initLayoutId(), flyMain)
-            } else {
-                MyLog.e(javaClass, "initLayoutId not call")
-                return null
-            }
-            toolbar = findViewById(R.id.head_toolBar, v)
-            contentView = v
-            isInit = false
+        mShowCount++
+        if (mContentView == null) {
+            val v: View? = inflater.inflate(if (isSingleLayout()) getLayoutId() else R.layout.act_base, container, false)
+            mFlyMain = findViewById(R.id.base_flyMain, v)
+            mToolbar = findViewById(R.id.head_toolBar, v)
+            if (isSingleLayout() && mFlyMain != null)
+                View.inflate(context, getLayoutId(), mFlyMain)
+            mContentView = v
+            mInit = false
             initToolbar()
             initView()
         }
-        return contentView
+        return mContentView
     }
 
     private fun initToolbar() {
-        if (toolbar == null) return
-        toolbar!!.title = ""
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //toolbar.setBackgroundResource(R.color.blue);
-            val statusBarHeight = (activity as BaseActivity).statusBarHeight
-            if (isTranslucentStatus && statusBarHeight > 0) {
-                toolbar!!.setPadding(0, statusBarHeight, 0, 0)
-                if (toolbar!!.layoutParams != null) {
-                    val params = toolbar!!.layoutParams
-                    params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
-                    toolbar!!.layoutParams = params
-                }
+        if (mToolbar == null) return
+        mToolbar!!.setTitle(R.string.empty)
+        val statusBarHeight = (activity as IBaseActivity).getStatusBarHeight()
+        if (isTranslucentStatus() && statusBarHeight > 0) {
+            mToolbar!!.setPadding(0, statusBarHeight, 0, 0)
+            if (mToolbar!!.layoutParams != null) {
+                val params = mToolbar!!.layoutParams
+                params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
+                mToolbar!!.layoutParams = params
             }
         }
     }
@@ -118,53 +100,53 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * 加载布局
      */
     protected fun initLoadView(): Boolean {
-        if (flyMain == null) {
+        if (mFlyMain == null) {
             MyLog.e(javaClass, "Your layout must include 'FrameLayout',the ID must be 'base_flyMain'!")
             return false
         }
-        if (loadCache != null) return true
+        if (mLoadCache != null) return true
         var loadView: View? = findViewById(R.id.base_llyLoad)
         //You need to add the layout
         if (loadView == null) {
-            if (flyMain!!.childCount > 0) {
+            if (mFlyMain!!.childCount > 0) {
                 loadView = View.inflate(context, R.layout.in_loading, null)
-                flyMain!!.addView(loadView, 0)
+                mFlyMain!!.addView(loadView, 0)
             } else
-                loadView = View.inflate(context, R.layout.in_loading, flyMain)
+                loadView = View.inflate(context, R.layout.in_loading, mFlyMain)
         }
-        loadCache = LoadCache(loadView)
+        mLoadCache = LoadCache(loadView)
         return true
     }
 
     protected fun showLoading(msg: String = getString(R.string.loading)) {
         if (initLoadView()) {
-            val count = flyMain!!.childCount
+            val count = mFlyMain!!.childCount
             for (i in 0 until count) {
-                val v = flyMain!!.getChildAt(i)
+                val v = mFlyMain!!.getChildAt(i)
                 if (i > 0) v.visibility = View.GONE
             }
-            loadCache!!.showLoading(msg)
+            mLoadCache!!.showLoading(msg)
         }
     }
 
     //R.drawable.img_hint_net_fail
     protected fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.ic_nodata) {
         if (initLoadView()) {
-            val count = flyMain!!.childCount
+            val count = mFlyMain!!.childCount
             for (i in 0 until count) {
-                val v = flyMain!!.getChildAt(i)
+                val v = mFlyMain!!.getChildAt(i)
                 if (i > 0) v.visibility = View.GONE
             }
-            loadCache!!.showNoData(msg, drawId)
+            mLoadCache!!.showNoData(msg, drawId)
         }
     }
 
     private var retry: Boolean = false//重试
 
     protected fun allowRetry() {
-        if (loadCache != null) {
+        if (mLoadCache != null) {
             retry = true
-            loadCache!!.llyLoad!!.setOnClickListener(this)
+            mLoadCache!!.llyLoad!!.setOnClickListener(this)
         }
     }
 
@@ -175,9 +157,9 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      */
     protected fun showCView() {
         if (initLoadView()) {
-            val count = flyMain!!.childCount
+            val count = mFlyMain!!.childCount
             for (i in 0 until count) {
-                val v = flyMain!!.getChildAt(i)
+                val v = mFlyMain!!.getChildAt(i)
                 if (i == 0)
                     v.visibility = View.GONE
                 else
@@ -197,87 +179,92 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * 设置标题
      */
     protected fun setTitle(title: CharSequence?) {
-        if (findViewById<View>(R.id.head_vTitle, toolbar) == null) {
+        if (findViewById<View>(R.id.head_vTitle, mToolbar) == null) {
             val v = View.inflate(context, R.layout.in_head_title, null)
             val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
             tlp.gravity = Gravity.CENTER
-            toolbar!!.addView(v, tlp)
+            mToolbar!!.addView(v, tlp)
         }
-        val txtTitle = findViewById<TextView>(R.id.head_vTitle, toolbar)
+        val txtTitle = findViewById<TextView>(R.id.head_vTitle, mToolbar)
         txtTitle?.text = title
     }
 
     protected fun hideHeader() {
-        if (toolbar != null) toolbar!!.visibility = View.GONE
+        if (mToolbar != null) mToolbar!!.visibility = View.GONE
     }
 
+    @SuppressLint("ResourceType")
     protected fun setHeaderLeft(@DrawableRes left: Int) {
         if (left > 0) {
-            if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_left, toolbar)
+            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null) {
+                val v = View.inflate(context, R.layout.in_head_left, mToolbar)
                 val img = findViewById<ImageView>(R.id.head_vLeft, v)
                 img?.setOnClickListener(this)
                 img?.setImageResource(left)
             } else {
-                val img = findViewById<ImageView>(R.id.head_vLeft, toolbar)
+                val img = findViewById<ImageView>(R.id.head_vLeft, mToolbar)
                 img?.setImageResource(left)
             }
         }
     }
 
+    @SuppressLint("ResourceType")
     protected fun setHeaderLeftTxt(@StringRes left: Int) {
         if (left > 0) {
-            if (findViewById<View>(R.id.head_vLeft, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_tleft, toolbar)
+            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null) {
+                val v = View.inflate(context, R.layout.in_head_tleft, mToolbar)
                 val txt = findViewById<TextView>(R.id.head_vLeft, v)
                 txt?.setOnClickListener(this)
                 txt?.setText(left)
             } else {
-                val txt = findViewById<TextView>(R.id.head_vLeft, toolbar)
+                val txt = findViewById<TextView>(R.id.head_vLeft, mToolbar)
                 txt?.setText(left)
             }
         }
     }
 
+    @SuppressLint("ResourceType")
     protected fun setHeaderRight(@DrawableRes right: Int) {
         if (right > 0) {
-            if (findViewById<View>(R.id.head_vRight, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_right, toolbar)
+            if (findViewById<View>(R.id.head_vRight, mToolbar) == null) {
+                val v = View.inflate(context, R.layout.in_head_right, mToolbar)
                 val img = findViewById<ImageView>(R.id.head_vRight, v)
                 img?.setOnClickListener(this)
                 img?.setImageResource(right)
             } else {
-                val img = findViewById<ImageView>(R.id.head_vRight, toolbar)
+                val img = findViewById<ImageView>(R.id.head_vRight, mToolbar)
                 img?.setImageResource(right)
             }
         }
     }
 
+    @SuppressLint("ResourceType")
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
         val v = View.inflate(context, R.layout.in_head_right, null)
         val img = findViewById<ImageView>(R.id.head_vRight, v)
         img?.id = id
-        val array = activity.theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
+        val array = activity!!.theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
         val width = array.getDimensionPixelSize(0, 0)
         array.recycle()
         val params = Toolbar.LayoutParams(width, width)
         //params.setMargins(0, 0, width * (rightCount - 1), 0);
         params.gravity = Gravity.RIGHT
         img?.layoutParams = params
-        toolbar!!.addView(v)
+        mToolbar!!.addView(v)
         img?.setOnClickListener(this)
         img?.setImageResource(right)
     }
 
+    @SuppressLint("ResourceType")
     protected fun setHeaderRightTxt(@StringRes right: Int) {
         if (right > 0) {
-            if (findViewById<View>(R.id.head_vRight, toolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_tright, toolbar)
+            if (findViewById<View>(R.id.head_vRight, mToolbar) == null) {
+                val v = View.inflate(context, R.layout.in_head_tright, mToolbar)
                 val txt = findViewById<TextView>(R.id.head_vRight, v)
                 txt?.setOnClickListener(this)
                 txt?.setText(right)
             } else {
-                val txt = findViewById<TextView>(R.id.head_vRight, toolbar)
+                val txt = findViewById<TextView>(R.id.head_vRight, mToolbar)
                 txt?.setText(right)
             }
         }
@@ -287,27 +274,27 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * 头部
      */
     protected val header: View
-        get() = toolbar!!
+        get() = mToolbar!!
 
     val headerHeight: Int
         get() {
-            if (toolbar != null) {
-                return toolbar!!.height
+            if (mToolbar != null) {
+                return mToolbar!!.height
             }
             return 0
         }
 
     protected val headerTitle: View
-        get() = findViewById(R.id.head_vTitle, toolbar)!!
+        get() = findViewById(R.id.head_vTitle, mToolbar)!!
 
     protected val headerLeft: View
-        get() = findViewById(R.id.head_vLeft, toolbar)!!
+        get() = findViewById(R.id.head_vLeft, mToolbar)!!
 
     protected val headerRight: View
-        get() = findViewById(R.id.head_vRight, toolbar)!!
+        get() = findViewById(R.id.head_vRight, mToolbar)!!
 
     protected val mainView: View
-        get() = flyMain!!
+        get() = mFlyMain!!
 
     /**
      * 启动Activity
@@ -356,7 +343,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
      * @param parent  parent
      */
     fun <T : View> findViewById(@IdRes id: Int, parent: View? = null): T? {
-        return parent?.findViewById(id) ?: contentView?.findViewById(id)
+        return parent?.findViewById(id) ?: mContentView?.findViewById(id)
     }
 
     /**
@@ -381,7 +368,7 @@ abstract class BaseFragment : Fragment(), android.view.View.OnClickListener, IFr
     override fun onRightClick() {}
 
     override fun onDestroy() {
-        client?.onDestroy()
+        mPresenter?.onDestroy()
         super.onDestroy()
     }
 }
