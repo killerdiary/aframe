@@ -205,7 +205,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
         }
     }
 
-    protected fun isFixedViewType(viewType: Int): Boolean {
+    protected open fun isFixedViewType(viewType: Int): Boolean {
         return viewType == TYPE_REFRESH || viewType in TYPE_HEADER..TYPE_HEADER_END || viewType in TYPE_FOOTER..TYPE_FOOTER_END || viewType == TYPE_EMPTY || viewType == TYPE_LOADMORE
     }
 

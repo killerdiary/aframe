@@ -44,10 +44,10 @@ interface IBaseActivity {
      */
     fun initData()
 
-    /**
-     * 请求数据
-     */
-    fun requestData()
+//    /**
+//     * 请求数据
+//     */
+//    fun requestData()
 
     /**
      * 更新UI

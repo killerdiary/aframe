@@ -1,7 +1,9 @@
 package com.hy.frame.app
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -19,21 +21,18 @@ import android.widget.TextView
 import com.hy.frame.R
 import com.hy.frame.bean.LoadCache
 import com.hy.frame.mvp.IBasePresenter
+import com.hy.frame.mvp.IBaseView
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
+import com.hy.frame.util.MyToast
 
 /**
  * 父类Fragment
  * author HeYan
  * time 2015/12/23 17:12
  */
-abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.OnClickListener, IBaseFragment {
-    protected var mApp: IBaseApplication? = null
-        get() {
-            if (field == null && activity is IBaseApplication)
-                field = activity as IBaseApplication
-            return field
-        }
+abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.OnClickListener, IBaseFragment, IBaseView {
+
     private var mContentView: View? = null
     private var mToolbar: Toolbar? = null
     private var mFlyMain: FrameLayout? = null
@@ -52,7 +51,12 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
         return false
     }
 
-    override fun getFragment(): Fragment  = this
+    override fun getFragment(): Fragment = this
+    override fun getCurApp(): IBaseApplication {
+        return (activity!! as IBaseView).getCurApp()
+    }
+
+    override fun getCurContext(): Context = context!!
 
     /**
      * 避免重复init
@@ -72,7 +76,7 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
             val v: View? = inflater.inflate(if (isSingleLayout()) getLayoutId() else R.layout.act_base, container, false)
             mFlyMain = findViewById(R.id.base_flyMain, v)
             mToolbar = findViewById(R.id.head_toolBar, v)
-            if (isSingleLayout() && mFlyMain != null)
+            if (!isSingleLayout() && mFlyMain != null)
                 View.inflate(context, getLayoutId(), mFlyMain)
             mContentView = v
             mInit = false
@@ -85,13 +89,15 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
     private fun initToolbar() {
         if (mToolbar == null) return
         mToolbar!!.setTitle(R.string.empty)
-        val statusBarHeight = (activity as IBaseActivity).getStatusBarHeight()
-        if (isTranslucentStatus() && statusBarHeight > 0) {
-            mToolbar!!.setPadding(0, statusBarHeight, 0, 0)
-            if (mToolbar!!.layoutParams != null) {
-                val params = mToolbar!!.layoutParams
-                params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
-                mToolbar!!.layoutParams = params
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            val statusBarHeight = (activity as IBaseActivity).getStatusBarHeight()
+            if (isTranslucentStatus() && statusBarHeight > 0) {
+                mToolbar!!.setPadding(0, statusBarHeight, 0, 0)
+                if (mToolbar!!.layoutParams != null) {
+                    val params = mToolbar!!.layoutParams
+                    params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
+                    mToolbar!!.layoutParams = params
+                }
             }
         }
     }
@@ -118,7 +124,15 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
         return true
     }
 
-    protected fun showLoading(msg: String = getString(R.string.loading)) {
+    override fun showToast(msg: String?) {
+        MyToast.show(context!!, msg)
+    }
+
+    override fun showLoading(resId: Int) {
+        showLoading(getString(resId))
+    }
+
+    override fun showLoading(msg: String) {
         if (initLoadView()) {
             val count = mFlyMain!!.childCount
             for (i in 0 until count) {
@@ -129,8 +143,23 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
         }
     }
 
-    //R.drawable.img_hint_net_fail
-    protected fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.ic_nodata) {
+    override fun showLoadingDialog(resId: Int) {
+        showLoadingDialog(getString(resId))
+    }
+
+    override fun showLoadingDialog(msg: String) {
+        (activity!! as IBaseView).showLoadingDialog(msg)
+    }
+
+    override fun hideLoadingDialog() {
+        (activity!! as IBaseView).hideLoadingDialog()
+    }
+
+    override fun showNoData(resId: Int, drawId: Int) {
+        showNoData(getString(resId), drawId)
+    }
+
+    override fun showNoData(msg: String, drawId: Int) {
         if (initLoadView()) {
             val count = mFlyMain!!.childCount
             for (i in 0 until count) {
@@ -155,7 +184,7 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
     /**
      * 显示内容View
      */
-    protected fun showCView() {
+    override fun showCView() {
         if (initLoadView()) {
             val count = mFlyMain!!.childCount
             for (i in 0 until count) {
@@ -179,14 +208,11 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
      * 设置标题
      */
     protected fun setTitle(title: CharSequence?) {
-        if (findViewById<View>(R.id.head_vTitle, mToolbar) == null) {
-            val v = View.inflate(context, R.layout.in_head_title, null)
-            val tlp = Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT)
-            tlp.gravity = Gravity.CENTER
-            mToolbar!!.addView(v, tlp)
+        if (mToolbar != null) {
+            if (findViewById<View>(R.id.head_vTitle, mToolbar) == null)
+                View.inflate(getCurContext(), R.layout.in_head_title, mToolbar)
+            findViewById<TextView>(R.id.head_vTitle, mToolbar)?.text = title
         }
-        val txtTitle = findViewById<TextView>(R.id.head_vTitle, mToolbar)
-        txtTitle?.text = title
     }
 
     protected fun hideHeader() {
@@ -195,78 +221,64 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
 
     @SuppressLint("ResourceType")
     protected fun setHeaderLeft(@DrawableRes left: Int) {
-        if (left > 0) {
-            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_left, mToolbar)
-                val img = findViewById<ImageView>(R.id.head_vLeft, v)
-                img?.setOnClickListener(this)
-                img?.setImageResource(left)
-            } else {
-                val img = findViewById<ImageView>(R.id.head_vLeft, mToolbar)
-                img?.setImageResource(left)
-            }
+        if (mToolbar != null && left > 0) {
+            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null)
+                View.inflate(getCurContext(), R.layout.in_head_left, mToolbar)
+            val img = findViewById<ImageView>(R.id.head_vLeft, mToolbar)
+            img?.setOnClickListener(this)
+            img?.setImageResource(left)
         }
     }
 
     @SuppressLint("ResourceType")
     protected fun setHeaderLeftTxt(@StringRes left: Int) {
-        if (left > 0) {
-            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_tleft, mToolbar)
-                val txt = findViewById<TextView>(R.id.head_vLeft, v)
-                txt?.setOnClickListener(this)
-                txt?.setText(left)
-            } else {
-                val txt = findViewById<TextView>(R.id.head_vLeft, mToolbar)
-                txt?.setText(left)
-            }
+        if (mToolbar != null && left > 0) {
+            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null)
+                View.inflate(getCurContext(), R.layout.in_head_tleft, mToolbar)
+            val txt = findViewById<TextView>(R.id.head_vLeft, mToolbar)
+            txt?.setOnClickListener(this)
+            txt?.setText(left)
         }
     }
 
     @SuppressLint("ResourceType")
     protected fun setHeaderRight(@DrawableRes right: Int) {
-        if (right > 0) {
-            if (findViewById<View>(R.id.head_vRight, mToolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_right, mToolbar)
-                val img = findViewById<ImageView>(R.id.head_vRight, v)
-                img?.setOnClickListener(this)
-                img?.setImageResource(right)
-            } else {
-                val img = findViewById<ImageView>(R.id.head_vRight, mToolbar)
-                img?.setImageResource(right)
-            }
+        if (mToolbar != null && right > 0) {
+            if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
+                View.inflate(getCurContext(), R.layout.in_head_right, mToolbar)
+            val img = findViewById<ImageView>(R.id.head_vRight, mToolbar)
+            img?.setOnClickListener(this)
+            img?.setImageResource(right)
         }
     }
 
     @SuppressLint("ResourceType")
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
-        val v = View.inflate(context, R.layout.in_head_right, null)
-        val img = findViewById<ImageView>(R.id.head_vRight, v)
-        img?.id = id
-        val array = activity!!.theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
-        val width = array.getDimensionPixelSize(0, 0)
-        array.recycle()
-        val params = Toolbar.LayoutParams(width, width)
-        //params.setMargins(0, 0, width * (rightCount - 1), 0);
-        params.gravity = Gravity.RIGHT
-        img?.layoutParams = params
-        mToolbar!!.addView(v)
-        img?.setOnClickListener(this)
-        img?.setImageResource(right)
+        if (mToolbar != null && right > 0) {
+            val v = View.inflate(getCurContext(), R.layout.in_head_right, null)
+            val img = findViewById<ImageView>(R.id.head_vRight, v)
+            img?.id = id
+            val array = activity!!.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
+            val width = array.getDimensionPixelSize(0, 0)
+            array.recycle()
+            val params = Toolbar.LayoutParams(width, width)
+            //params.setMargins(0, 0, width * (rightCount - 1), 0);
+            params.gravity = Gravity.RIGHT
+            img?.layoutParams = params
+            mToolbar!!.addView(v)
+            img?.setOnClickListener(this)
+            img?.setImageResource(right)
+        }
     }
 
     @SuppressLint("ResourceType")
     protected fun setHeaderRightTxt(@StringRes right: Int) {
-        if (right > 0) {
-            if (findViewById<View>(R.id.head_vRight, mToolbar) == null) {
-                val v = View.inflate(context, R.layout.in_head_tright, mToolbar)
-                val txt = findViewById<TextView>(R.id.head_vRight, v)
-                txt?.setOnClickListener(this)
-                txt?.setText(right)
-            } else {
-                val txt = findViewById<TextView>(R.id.head_vRight, mToolbar)
-                txt?.setText(right)
-            }
+        if (mToolbar != null && right > 0) {
+            if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
+                View.inflate(getCurContext(), R.layout.in_head_tright, mToolbar)
+            val txt = findViewById<TextView>(R.id.head_vRight, mToolbar)
+            txt?.setOnClickListener(this)
+            txt?.setText(right)
         }
     }
 

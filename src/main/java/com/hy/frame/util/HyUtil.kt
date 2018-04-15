@@ -10,18 +10,11 @@ import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import com.hy.frame.R
 import java.io.File
-import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 /**
  * 工具
@@ -29,9 +22,6 @@ import java.util.regex.Pattern
  * @time 2014年12月24日 下午1:43:34
  */
 object HyUtil {
-
-
-
 
 
     /**
@@ -88,7 +78,19 @@ object HyUtil {
         return null
     }
 
+    fun getNowMinutes(): Int {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = System.currentTimeMillis()
+        val hour = cal.get(Calendar.HOUR_OF_DAY)
+        val minute = cal.get(Calendar.MINUTE)
+        return hour * 60 + minute
+    }
 
+    fun getNowMinutes(str: String?): Int {
+        if (str.isNullOrEmpty() || !str!!.contains(":")) return 0
+        val strs = str!!.split(":")
+        return strs[0].toInt() * 60 + strs[1].toInt()
+    }
 
     /**
      * 获取控件的高度，如果获取的高度为0，则重新计算尺寸后再返回高度
@@ -172,12 +174,12 @@ object HyUtil {
      * 获取周几
      * @param week
      */
-    fun getWeekName(week: Int,context: Context): String {
+    fun getWeekName(week: Int, context: Context): String {
         when (week) {
             java.util.Calendar.SUNDAY -> context.getString(R.string.sunday)
             java.util.Calendar.MONDAY -> context.getString(R.string.monday)
             java.util.Calendar.TUESDAY -> context.getString(R.string.tuesday)
-            java.util.Calendar.WEDNESDAY ->context.getString(R.string.wednesday)
+            java.util.Calendar.WEDNESDAY -> context.getString(R.string.wednesday)
             java.util.Calendar.THURSDAY -> context.getString(R.string.thursday)
             java.util.Calendar.FRIDAY -> context.getString(R.string.friday)
             java.util.Calendar.SATURDAY -> context.getString(R.string.saturday)

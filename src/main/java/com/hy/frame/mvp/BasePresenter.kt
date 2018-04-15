@@ -10,7 +10,7 @@ import android.support.annotation.StringRes
  * @time 2018/4/6 18:14
  */
 abstract class BasePresenter<M : IBaseModel, V : IBaseView> : IBasePresenter {
-    private var mContext: Context? = null
+    protected var mContext: Context? = null
     protected var mView: V? = null
     protected var mModel: M? = null
 

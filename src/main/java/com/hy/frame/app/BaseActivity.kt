@@ -20,8 +20,11 @@ import android.widget.TextView
 import com.hy.frame.R
 import com.hy.frame.bean.LoadCache
 import com.hy.frame.mvp.IBasePresenter
+import com.hy.frame.mvp.IBaseView
+import com.hy.frame.ui.LoadingDialog
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
+import com.hy.frame.util.MyToast
 import com.hy.frame.util.StatusBarUtil
 
 /**
@@ -29,14 +32,15 @@ import com.hy.frame.util.StatusBarUtil
  * author HeYan
  * time 2015/12/23 16:40
  */
-abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.view.View.OnClickListener, IBaseActivity {
+abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.view.View.OnClickListener, IBaseActivity, IBaseView {
     protected var mApp: IBaseApplication? = null
-    protected var context: Context? = null
+    protected var mContext: Context? = null
     protected var lastSkipAct: String? = null //获取上一级的Activity名
 
     private var mToolbar: Toolbar? = null
     private var mFlyMain: FrameLayout? = null
     protected var mLoadCache: LoadCache? = null
+    protected var mLoadingDialog: LoadingDialog? = null
 
     @Nullable
     protected var mPresenter: P? = null//如果当前页面逻辑简单, Presenter 可以为 null
@@ -62,19 +66,18 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
         }
         mApp = application as IBaseApplication
         mApp?.getActivityCache()?.add(this)
-        context = this
+        mContext = this
     }
 
+    override fun getCurContext(): Context = mContext!!
+    override fun getCurApp(): IBaseApplication = mApp!!
+
     private fun initLayout() {
-        if (isSingleLayout()) {
-            setContentView(getLayoutId())
-            mToolbar = findViewById(R.id.head_toolBar)
-            mFlyMain = findViewById(R.id.base_flyMain)
-        } else {
-            setContentView(R.layout.act_base)
-            mToolbar = findViewById(R.id.head_toolBar)
-            mFlyMain = findViewById(R.id.base_flyMain)
-            View.inflate(context, getLayoutId(), mFlyMain)
+        setContentView(if (isSingleLayout()) getLayoutId() else R.layout.act_base)
+        mToolbar = findViewById(R.id.head_toolBar)
+        mFlyMain = findViewById(R.id.base_flyMain)
+        if (!isSingleLayout() && mFlyMain != null) {
+            View.inflate(mContext, getLayoutId(), mFlyMain)
         }
         initToolbar()
     }
@@ -101,7 +104,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     }
 
     override fun getStatusBarHeight(): Int {
-        return StatusBarUtil.getStatusBarHeight(context!!)
+        return StatusBarUtil.getStatusBarHeight(mContext!!)
     }
 
     protected fun showNavigation(drawId: Int) {
@@ -124,16 +127,24 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
         //You need to add the layout
         if (loadView == null) {
             if (mFlyMain!!.childCount > 0) {
-                loadView = View.inflate(context, R.layout.in_loading, null)
+                loadView = View.inflate(mContext, R.layout.in_loading, null)
                 mFlyMain!!.addView(loadView, 0)
             } else
-                loadView = View.inflate(context, R.layout.in_loading, mFlyMain)
+                loadView = View.inflate(mContext, R.layout.in_loading, mFlyMain)
         }
         mLoadCache = LoadCache(loadView)
         return true
     }
 
-    protected fun showLoading(msg: String = getString(R.string.loading)) {
+    override fun showToast(msg: String?) {
+        MyToast.show(mContext!!, msg)
+    }
+
+    override fun showLoading(resId: Int) {
+        showLoading(getString(resId))
+    }
+
+    override fun showLoading(msg: String) {
         if (initLoadView()) {
             val count = mFlyMain!!.childCount
             for (i in 0 until count) {
@@ -144,8 +155,26 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
         }
     }
 
-    //R.drawable.img_hint_net_fail
-    open fun showNoData(msg: String? = getString(R.string.hint_nodata), drawId: Int = R.mipmap.ic_nodata) {
+    override fun showLoadingDialog(resId: Int) {
+        showLoadingDialog(getString(resId))
+    }
+
+    override fun showLoadingDialog(msg: String) {
+        if (mLoadingDialog == null)
+            mLoadingDialog = LoadingDialog(mContext!!, msg)
+        mLoadingDialog?.show()
+    }
+
+    override fun hideLoadingDialog() {
+        if (mLoadingDialog != null)
+            mLoadingDialog?.dismiss()
+    }
+
+    override fun showNoData(resId: Int, drawId: Int) {
+        showNoData(getString(resId), drawId)
+    }
+
+    override fun showNoData(msg: String, drawId: Int) {
         if (initLoadView()) {
             val count = mFlyMain!!.childCount
             for (i in 0 until count) {
@@ -170,7 +199,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     /**
      * 显示内容View
      */
-    protected fun showCView() {
+    override fun showCView() {
         if (initLoadView()) {
             val count = mFlyMain!!.childCount
             for (i in 0 until count) {
@@ -197,7 +226,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     override fun setTitle(title: CharSequence?) {
         if (mToolbar != null) {
             if (findViewById<View>(R.id.head_vTitle, mToolbar) == null)
-                View.inflate(context, R.layout.in_head_title, mToolbar)
+                View.inflate(mContext, R.layout.in_head_title, mToolbar)
             findViewById<TextView>(R.id.head_vTitle, mToolbar)?.text = title
         }
     }
@@ -210,7 +239,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     protected fun setHeaderLeft(@DrawableRes left: Int) {
         if (mToolbar != null && left > 0) {
             if (findViewById<View>(R.id.head_vLeft, mToolbar) == null)
-                View.inflate(context, R.layout.in_head_left, mToolbar)
+                View.inflate(mContext, R.layout.in_head_left, mToolbar)
             val img = findViewById<ImageView>(R.id.head_vLeft, mToolbar)
             img?.setOnClickListener(this)
             img?.setImageResource(left)
@@ -221,7 +250,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     protected fun setHeaderLeftTxt(@StringRes left: Int) {
         if (mToolbar != null && left > 0) {
             if (findViewById<View>(R.id.head_vLeft, mToolbar) == null)
-                View.inflate(context, R.layout.in_head_tleft, mToolbar)
+                View.inflate(mContext, R.layout.in_head_tleft, mToolbar)
             val txt = findViewById<TextView>(R.id.head_vLeft, mToolbar)
             txt?.setOnClickListener(this)
             txt?.setText(left)
@@ -232,7 +261,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     protected fun setHeaderRight(@DrawableRes right: Int) {
         if (mToolbar != null && right > 0) {
             if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
-                View.inflate(context, R.layout.in_head_right, mToolbar)
+                View.inflate(mContext, R.layout.in_head_right, mToolbar)
             val img = findViewById<ImageView>(R.id.head_vRight, mToolbar)
             img?.setOnClickListener(this)
             img?.setImageResource(right)
@@ -243,7 +272,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     protected fun setHeaderRightTxt(@StringRes right: Int) {
         if (mToolbar != null && right > 0) {
             if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
-                View.inflate(context, R.layout.in_head_tright, mToolbar)
+                View.inflate(mContext, R.layout.in_head_tright, mToolbar)
             val txt = findViewById<TextView>(R.id.head_vRight, mToolbar)
             txt?.setOnClickListener(this)
             txt?.setText(right)
@@ -253,7 +282,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     @SuppressLint("ResourceType")
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
         if (mToolbar != null && right > 0) {
-            val v = View.inflate(context, R.layout.in_head_right, null)
+            val v = View.inflate(mContext, R.layout.in_head_right, null)
             val img = findViewById<ImageView>(R.id.head_vRight, v)
             img?.id = id
             val array = theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))

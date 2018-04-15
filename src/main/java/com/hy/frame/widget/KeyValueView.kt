@@ -1,9 +1,12 @@
 package com.hy.frame.widget
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.os.Build
 import android.support.annotation.StringRes
 import android.util.AttributeSet
 import android.view.Gravity
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,21 +17,27 @@ import com.hy.frame.R
  * author HeYan
  * time 2015/12/24 14:30
  */
-class KeyValueView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+class KeyValueView : LinearLayout{
+    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+        init(context, attrs, defStyleAttr)
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : super(context, attrs, defStyleAttr, defStyleRes) {
+        init(context, attrs, defStyleAttr)
+    }
 
     private var txtKey: TextView? = null
     private var txtValue: TextView? = null
     private var imgRight: ImageView? = null
     private var init: Boolean = false
 
-    init {
-        init(context, attrs, defStyleAttr, defStyleRes)
-    }
 
-    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
+    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
         if (init) return
         init = true
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.KeyValueView, defStyleAttr, defStyleRes) ?: return
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.KeyValueView, defStyleAttr, 0)
+                ?: return
 //        boolean edit = a.getBoolean(R.styleable.KeyValueView_kvEdit, false);
         val drawRight = a.getDrawable(R.styleable.KeyValueView_kvDrawRight)
         val key = a.getText(R.styleable.KeyValueView_kvKey)
@@ -54,6 +63,7 @@ class KeyValueView @JvmOverloads constructor(context: Context, attrs: AttributeS
         val drawRightWidth = a.getDimensionPixelSize(R.styleable.KeyValueView_kvDrawRightWidth, 0)
         val valueRight = a.getBoolean(R.styleable.KeyValueView_kvValueRight, false)
         a.recycle()
+        orientation = HORIZONTAL
         txtKey = TextView(context)
         if (key != null) txtKey!!.text = key
         if (keyColor != null) txtKey!!.setTextColor(keyColor)
@@ -110,6 +120,7 @@ class KeyValueView @JvmOverloads constructor(context: Context, attrs: AttributeS
         if (drawRight != null) {
             imgRight = ImageView(context)
             imgRight!!.setImageDrawable(drawRight)
+            //imgRight!!.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
             if (drawRightWidth > 0) {
                 imgRight!!.scaleType = ImageView.ScaleType.FIT_XY
                 addView(imgRight, LinearLayout.LayoutParams(drawRightWidth, drawRightWidth))
@@ -130,7 +141,7 @@ class KeyValueView @JvmOverloads constructor(context: Context, attrs: AttributeS
         setValue(resources.getString(resId))
     }
 
-    fun setValue(sequence: CharSequence) {
+    fun setValue(sequence: CharSequence?) {
         if (txtValue != null) txtValue!!.text = sequence
     }
 

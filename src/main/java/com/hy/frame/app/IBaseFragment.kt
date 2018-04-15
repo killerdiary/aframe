@@ -35,10 +35,10 @@ interface IBaseFragment {
      */
     fun initData()
 
-    /**
-     * 请求数据
-     */
-    fun requestData()
+//    /**
+//     * 请求数据
+//     */
+//    fun requestData()
 
     /**
      * 更新UI
@@ -59,6 +59,10 @@ interface IBaseFragment {
      * 头-右边图标点击
      */
     fun onRightClick()
+    /**
+     * 重启
+     */
+    fun onRestart()
     /**
      * 方便传递消息
      */

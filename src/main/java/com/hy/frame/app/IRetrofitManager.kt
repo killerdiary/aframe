@@ -1,7 +1,5 @@
 package com.hy.frame.app
 
-import com.hy.frame.mvp.IBaseService
-
 /**
  * RetrofitManager Interface
  *
@@ -10,4 +8,6 @@ import com.hy.frame.mvp.IBaseService
  */
 interface IRetrofitManager {
     fun <T> obtainRetrofitService(cls: Class<T>): T?
+
+    fun setToken(token: String?)
 }
