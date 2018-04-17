@@ -4,12 +4,12 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import com.hy.frame.app.BaseActivity
 import java.io.File
+
 
 /**
  * 拍照工具类 onRequestPermissionsResult
@@ -94,7 +94,8 @@ class CameraUtil {
         try {
             val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
             val values = ContentValues()
-            val contentUri = context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values) ?: return
+            val contentUri = context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
+                    ?: return
             intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, quality)
             intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, seconds)
@@ -115,19 +116,19 @@ class CameraUtil {
             MyLog.e(javaClass, "地址未初始化")
             return
         }
-        //        Intent intent = new Intent("com.android.camera.action.CROP");
-        //        intent.setDataAndType(uri, "image/*");
-        //        intent.putExtra("scaleUpIfNeeded", true);//黑边
-        //        intent.putExtra("crop", "true");
-        //        intent.putExtra("aspectX", aspectX);
-        //        intent.putExtra("aspectY", aspectY);
-        //        intent.putExtra("outputX", aspectX * unit);
-        //        intent.putExtra("outputY", aspectX * unit);
-        //        intent.putExtra("scale", true);
-        //        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        //        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        //        intent.putExtra("noFaceDetection", true); // no face detection
-        //        startActivityForResult(intent, Constant.FLAG_UPLOAD_IMAGE_CUT);
+        val intent = Intent("com.android.camera.action.CROP")
+        intent.setDataAndType(cacheUri, "image/*")
+        intent.putExtra("scaleUpIfNeeded", true)//黑边
+        intent.putExtra("crop", "true")
+        intent.putExtra("aspectX", aspectX)
+        intent.putExtra("aspectY", aspectY)
+        intent.putExtra("outputX", aspectX * unit)
+        intent.putExtra("outputY", aspectX * unit)
+        intent.putExtra("scale", true)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+        intent.putExtra("noFaceDetection", true) // no face detection
+        startActForResult(intent, FLAG_IMAGE_CUT)
 
         //        UCrop.Options options = new UCrop.Options();
         //        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
