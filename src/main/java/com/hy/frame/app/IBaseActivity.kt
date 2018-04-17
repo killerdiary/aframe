@@ -49,10 +49,10 @@ interface IBaseActivity {
 //     */
 //    fun requestData()
 
-    /**
-     * 更新UI
-     */
-    fun updateUI()
+//    /**
+//     * 更新UI
+//     */
+//    fun updateUI()
 
     /**
      * 控件点击事件

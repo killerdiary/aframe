@@ -45,10 +45,10 @@ interface IBaseView {
 //     */
 //    fun requestData()
 
-    /**
-     * 更新UI
-     */
-    fun updateUI()
+//    /**
+//     * 更新UI
+//     */
+//    fun updateUI()
 
     /**
      * 显示没有数据或错误页
