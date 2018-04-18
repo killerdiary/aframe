@@ -1,7 +1,6 @@
 package com.hy.frame.ui
 
 import android.content.Context
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -40,11 +39,10 @@ class PickerDialog(context: Context) : BaseDialog(context) {
 
     override fun initData() {
         if (visibleNumber > 0) {
-            if (visibleNumber <= 5) {
-                lwvList?.layoutParams?.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120f, context.resources.displayMetrics).toInt()
-            }
             lwvList?.setItemsVisibleCount(visibleNumber)
         }
+        if (datas != null && datas!!.size < 9)
+            lwvList?.setNotLoop()
         lwvList?.setItems(datas)
     }
 

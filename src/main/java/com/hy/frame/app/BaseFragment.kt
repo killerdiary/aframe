@@ -311,7 +311,7 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
     /**
      * 启动Activity
      */
-    protected fun startAct(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null) {
+    override fun startAct(cls: Class<*>, bundle: Bundle?, intent: Intent?) {
         var i = intent
         if (i == null)
             i = Intent()
@@ -322,7 +322,7 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
         startActivity(i)
     }
 
-    fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle? = null) {
+    override fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle?) {
         val i = Intent(activity, cls)
         i.putExtra(BaseActivity.LAST_ACT, this.javaClass.simpleName)
         if (bundle != null)

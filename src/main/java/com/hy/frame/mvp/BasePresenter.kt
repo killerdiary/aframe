@@ -9,22 +9,15 @@ import android.support.annotation.StringRes
  * @author HeYan
  * @time 2018/4/6 18:14
  */
-abstract class BasePresenter<M : IBaseModel, V : IBaseView> : IBasePresenter {
-    protected var mContext: Context? = null
-    protected var mView: V? = null
-    protected var mModel: M? = null
+abstract class BasePresenter<M : IBaseModel, V : IBaseView>(context: Context, view: V, model: M? = null) : IBasePresenter {
+    protected var mContext: Context = context
+    protected var mView: V = view
+    protected var mModel: M? = model
 
-    constructor(context: Context, view: V) : this(context, view, null)
-
-    constructor(context: Context, view: V, model: M?) {
-        this.mContext = context
-        this.mView = view
-        this.mModel = model
+    protected fun getString(@StringRes id: Int): String {
+        return mContext.resources.getString(id)
     }
 
-    protected fun getString(@StringRes id: Int):String{
-        return mContext!!.resources.getString(id)
-    }
     protected fun getStrings(vararg ids: Int): String {
         val sb = StringBuilder()
         for (id in ids) {
@@ -32,9 +25,9 @@ abstract class BasePresenter<M : IBaseModel, V : IBaseView> : IBasePresenter {
         }
         return sb.toString()
     }
+
     override fun onDestroy() {
         this.mModel?.onDestroy()
         this.mModel = null
-        this.mView = null
     }
 }

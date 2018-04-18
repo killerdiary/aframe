@@ -328,7 +328,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     /**
      * 启动Activity
      */
-    fun startAct(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null) {
+    override fun startAct(cls: Class<*>, bundle: Bundle?, intent: Intent?) {
         var i = intent
         if (i == null)
             i = Intent()
@@ -339,16 +339,15 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
         startActivity(i)
     }
 
+//    /**
+//     * 启动Activity，清空栈 并添加到栈顶，慎用
+//     */
+//    protected fun startActClear(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null) {
+//        mApp?.getActivityCache()?.clear()
+//        startAct(cls, bundle, intent)
+//    }
 
-    /**
-     * 启动Activity，清空栈 并添加到栈顶，慎用
-     */
-    protected fun startActClear(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null) {
-        mApp?.getActivityCache()?.clear()
-        startAct(cls, bundle, intent)
-    }
-
-    fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle? = null) {
+    override  fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle?) {
         val i = Intent(this, cls)
         i.putExtra(LAST_ACT, this.javaClass.simpleName)
         if (bundle != null)

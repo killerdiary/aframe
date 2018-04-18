@@ -1,5 +1,7 @@
 package com.hy.frame.app
 
+import android.content.Intent
+import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.view.View
 
@@ -34,6 +36,7 @@ interface IBaseActivity {
      * 状态栏高度
      */
     fun getStatusBarHeight(): Int
+
     /**
      * 初始化控件
      */
@@ -49,11 +52,13 @@ interface IBaseActivity {
 //     */
 //    fun requestData()
 
-//    /**
+    //    /**
 //     * 更新UI
 //     */
 //    fun updateUI()
+    fun startAct(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null)
 
+    fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle? = null)
     /**
      * 控件点击事件
      */
