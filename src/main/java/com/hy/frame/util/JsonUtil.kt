@@ -39,6 +39,7 @@ object JsonUtil {
             val items = ArrayList(java.util.Arrays.asList(*beans))
             items
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }
@@ -48,6 +49,7 @@ object JsonUtil {
         return try {
             Gson().fromJson(data, cls)
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }

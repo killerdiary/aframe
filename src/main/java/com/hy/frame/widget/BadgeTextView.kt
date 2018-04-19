@@ -6,6 +6,7 @@ import android.graphics.drawable.shapes.RoundRectShape
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import com.hy.frame.R
 
 /**
@@ -50,9 +51,10 @@ class BadgeTextView @JvmOverloads constructor(context: Context, attrs: Attribute
     fun setBadgeNumber(number: Int) {
         this.badgeNumber = number
         if (zeroHide && number == 0) {
-            visibility = GONE
+            visibility = View.GONE
             return
         }
+        visibility = View.VISIBLE
         if (number > maxNubmer)
             text = resources.getString(R.string.badge_overflow, maxNubmer)
         else
