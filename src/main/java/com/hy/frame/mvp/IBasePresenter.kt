@@ -1,5 +1,7 @@
 package com.hy.frame.mvp
 
+import android.content.Context
+
 /**
  * MVP中Presenter需要实现的Interface
  *
@@ -7,6 +9,7 @@ package com.hy.frame.mvp
  * @time 2018/4/4 9:41
  */
 interface IBasePresenter {
+    fun getContext(): Context
     /**
      * 释放资源
      */

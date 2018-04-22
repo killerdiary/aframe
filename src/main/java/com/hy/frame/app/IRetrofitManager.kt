@@ -9,5 +9,10 @@ package com.hy.frame.app
 interface IRetrofitManager {
     fun <T> obtainRetrofitService(cls: Class<T>): T?
 
-    fun setToken(token: String?)
+    fun setToken(token: String?): IRetrofitManager
+
+    /**
+     * destroy
+     */
+    fun onDestroy()
 }
