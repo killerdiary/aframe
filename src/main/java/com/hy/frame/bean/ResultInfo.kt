@@ -35,6 +35,12 @@ class ResultInfo {
     var requestType: Int = 0
     private var maps: MutableMap<String, String>? = null//其他
 
+    constructor(requestCode: Int) {
+        this.requestCode = requestCode
+    }
+
+    constructor()
+
 
     /**
      * 返回结果
@@ -51,10 +57,13 @@ class ResultInfo {
         this.obj = obj
     }
 
-    fun putValue(key: String, value: String) {
+    fun putValue(key: String, value: String?) {
         if (maps == null)
             maps = HashMap()
-        maps!!.put(key, value)
+        if (value == null)
+            maps!!.remove(key)
+        else
+            maps!![key] = value
     }
 
     fun getValue(key: String): String? {

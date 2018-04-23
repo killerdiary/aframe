@@ -7,7 +7,6 @@ import com.hy.frame.bean.ResultInfo
 interface IMyHttpListener {
     /**
      * 请求成功
-
      * @param result 请求结果信息
      */
     @MainThread
@@ -15,7 +14,6 @@ interface IMyHttpListener {
 
     /**
      * 请求失败
-
      * @param result 请求失败信息
      */
     @MainThread

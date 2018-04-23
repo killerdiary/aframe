@@ -3,6 +3,7 @@ package com.hy.frame.mvp
 import android.content.Context
 import com.hy.frame.R
 import com.hy.frame.app.IBaseApplication
+import com.hy.http.IMyHttpListener
 
 /**
  * MVP中View需要实现的Interface
@@ -14,6 +15,8 @@ interface IBaseView {
     fun getCurContext(): Context
 
     fun getCurApp(): IBaseApplication
+
+    fun getRequestListener(): IMyHttpListener
 
     fun showToast(msg: String?)
     /**
