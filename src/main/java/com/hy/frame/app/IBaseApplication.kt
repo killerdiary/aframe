@@ -62,8 +62,20 @@ interface IBaseApplication {
 
         /**
          * 清理activity栈
+         * finish and remove
          */
         fun clear()
+
+        /**
+         * activity栈数量
+         */
+        fun actSize(): Int
+
+        /**
+         * 获取activity
+         * @param index 位置
+         */
+        fun getAct(index: Int): Activity?
     }
 
     /**

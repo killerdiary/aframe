@@ -52,39 +52,33 @@ class MyWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         isVerticalFadingEdgeEnabled = true
         isVerticalScrollBarEnabled = false
         isHorizontalScrollBarEnabled = false
-        setWebViewClient(object : WebViewClient() {
+        webViewClient = object : WebViewClient() {
 
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 // If dialing phone (tel:5551212)
-                if (url.startsWith(WebView.SCHEME_TEL)) {
-                    try {
+                when {
+                    url.startsWith(WebView.SCHEME_TEL) -> try {
                         val intent = Intent(Intent.ACTION_DIAL)
                         intent.data = Uri.parse(url)
                         context.startActivity(intent)
                     } catch (e: android.content.ActivityNotFoundException) {
                         MyLog.e("Error dialing " + url + ": " + e.toString())
                     }
-
-                } else if (url.startsWith("geo:")) {
-                    try {
+                    url.startsWith("geo:") -> try {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(url)
                         context.startActivity(intent)
                     } catch (e: android.content.ActivityNotFoundException) {
                         MyLog.e("Error showing map " + url + ": " + e.toString())
                     }
-
-                } else if (url.startsWith(WebView.SCHEME_MAILTO)) {
-                    try {
+                    url.startsWith(WebView.SCHEME_MAILTO) -> try {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(url)
                         context.startActivity(intent)
                     } catch (e: android.content.ActivityNotFoundException) {
                         MyLog.e("Error sending email " + url + ": " + e.toString())
                     }
-
-                } else if (url.startsWith("sms:")) {
-                    try {
+                    url.startsWith("sms:") -> try {
                         val intent = Intent(Intent.ACTION_VIEW)
                         // Get address
                         var address: String? = null
@@ -109,28 +103,24 @@ class MyWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     } catch (e: android.content.ActivityNotFoundException) {
                         MyLog.e("Error sending sms " + url + ":" + e.toString())
                     }
-
-                } else if (url.startsWith("market:")) {
-                    try {
+                    url.startsWith("market:") -> try {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(url)
                         context.startActivity(intent)
                     } catch (e: android.content.ActivityNotFoundException) {
                         MyLog.e("Error loading Google Play Store: " + url + " " + e.toString())
                     }
-
-                } else if (url.endsWith(".apk")) {
-                    try {
+                    url.endsWith(".apk") -> try {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(url)
                         context.startActivity(intent)
                     } catch (e: android.content.ActivityNotFoundException) {
                         MyLog.e("Error dialing " + url + ": " + e.toString())
                     }
-
-                } else {
-                    MyLog.d("url-----> " + url)
-                    view.loadUrl(url)
+                    else -> {
+                        MyLog.d("url-----> " + url)
+                        view.loadUrl(url)
+                    }
                 }// All else
                 // If dialing phone (tel:5551212)
                 // Android Market
@@ -140,7 +130,7 @@ class MyWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 return true
             }
 
-        })
+        }
     }
 
     @SuppressLint("NewApi")

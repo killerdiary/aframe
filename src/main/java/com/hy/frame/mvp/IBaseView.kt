@@ -1,6 +1,8 @@
 package com.hy.frame.mvp
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import com.hy.frame.R
 import com.hy.frame.app.IBaseApplication
 import com.hy.http.IMyHttpListener
@@ -43,15 +45,8 @@ interface IBaseView {
      * 隐藏加载中
      */
     fun hideLoadingDialog()
-//    /**
-//     * 请求数据
-//     */
-//    fun requestData()
 
-//    /**
-//     * 更新UI
-//     */
-//    fun updateUI()
+//    fun addHeaderRight()
 
     /**
      * 显示没有数据或错误页
@@ -67,4 +62,8 @@ interface IBaseView {
      * 显示内容View
      */
     fun showCView()
+
+    fun startAct(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null)
+
+    fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle? = null, intent: Intent? = null)
 }

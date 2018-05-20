@@ -1,7 +1,5 @@
 package com.hy.frame.app
 
-import android.content.Intent
-import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.view.View
 
@@ -21,6 +19,11 @@ interface IBaseActivity {
      * 唯一布局ID
      */
     fun isSingleLayout(): Boolean
+
+    /**
+     * 是否竖屏
+     */
+    fun isPortrait(): Boolean
 
     /**
      * 判断是否拥有进入权限
@@ -56,9 +59,6 @@ interface IBaseActivity {
 //     * 更新UI
 //     */
 //    fun updateUI()
-    fun startAct(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null)
-
-    fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle? = null)
     /**
      * 控件点击事件
      */

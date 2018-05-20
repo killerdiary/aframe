@@ -1,7 +1,5 @@
 package com.hy.frame.app
 
-import android.content.Intent
-import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.view.View
 
@@ -37,8 +35,6 @@ interface IBaseFragment {
      */
     fun initData()
 
-    fun startAct(cls: Class<*>, bundle: Bundle? = null, intent: Intent? = null)
-    fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle? = null)
     /**
      * 控件点击事件
      */
@@ -53,14 +49,16 @@ interface IBaseFragment {
      * 头-右边图标点击
      */
     fun onRightClick()
+
     /**
      * 重启
      */
     fun onRestart()
+
     /**
      * 方便传递消息
      */
     fun sendMsg(flag: Int, obj: Any?)
 
-    fun getFragment():android.support.v4.app.Fragment
+    fun getFragment(): android.support.v4.app.Fragment
 }

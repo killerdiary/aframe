@@ -13,6 +13,7 @@ android {
         versionCode 2
         versionName "2.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,19 +30,42 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url "https://dl.bintray.com/thelasterstar/maven/" }
+        maven { url "https://jitpack.io" }
     }
 }
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
-    api "com.android.support:appcompat-v7:$supportVersion"
-    api "com.android.support:recyclerview-v7:$supportVersion"
+    //support-annotations support-core-utils support-fragment support-vector-drawable animated-vector-drawable
+    //api "com.android.support:appcompat-v7:$supportVersion"
+    //support-annotations support-compat support-core-ui
+    //api ("com.android.support:recyclerview-v7:$supportVersion")
+    //support-v4 appcompat-v7 recyclerview-v7 transition
     api "com.android.support:design:$supportVersion"
     api "com.android.support.constraint:constraint-layout:$constraintVersion"
-    api "com.github.bumptech.glide:glide:$glideVersion"
+    api ("com.github.bumptech.glide:glide:$glideVersion"){
+        exclude group: 'com.android.support'
+    }
     api "com.squareup.okhttp3:okhttp:$okhttpVersion"
     api "com.google.code.gson:gson:$gsonVersion"
-    api 'com.squareup.retrofit2:retrofit:2.4.0'
+    api 'io.reactivex.rxjava2:rxjava:2.1.9'
+    api ('io.reactivex.rxjava2:rxandroid:2.0.2'){
+        exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+    }
+    api ('com.squareup.retrofit2:retrofit:2.4.0') {
+        exclude group: 'com.android.support'
+        exclude group: 'com.squareup.okhttp3'
+    }
+    api ('com.squareup.retrofit2:adapter-rxjava2:2.4.0'){
+        exclude group: 'com.squareup.retrofit2', module: 'retrofit'
+        exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+    }
+    api ('com.squareup.retrofit2:converter-gson:2.4.0'){
+        exclude group: 'com.squareup.retrofit2', module: 'retrofit'
+        exclude group: 'com.google.code.gson', module: 'gson'
+    }
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
+    api 'com.android.support:multidex:1.0.3'
 //    implementation ("com.github.bumptech.glide:glide:4.6.1@aar") {
 //        transitive = true //关联 依赖
 //    }

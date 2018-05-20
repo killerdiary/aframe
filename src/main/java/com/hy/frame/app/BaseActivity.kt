@@ -3,6 +3,7 @@ package com.hy.frame.app
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.DrawableRes
@@ -17,6 +18,8 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.hy.frame.R
 import com.hy.frame.bean.LoadCache
 import com.hy.frame.mvp.IBasePresenter
@@ -73,6 +76,9 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     override fun getCurApp(): IBaseApplication = mApp!!
 
     private fun initLayout() {
+        if(isPortrait()){
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
         setContentView(if (isSingleLayout()) getLayoutId() else R.layout.act_base)
         mToolbar = findViewById(R.id.head_toolBar)
         mFlyMain = findViewById(R.id.base_flyMain)
@@ -259,31 +265,41 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
 
     @SuppressLint("ResourceType")
     protected fun setHeaderRight(@DrawableRes right: Int) {
-        if (mToolbar != null && right > 0) {
-            if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
-                View.inflate(mContext, R.layout.in_head_right, mToolbar)
-            val img = findViewById<ImageView>(R.id.head_vRight, mToolbar)
-            img?.setOnClickListener(this)
-            img?.setImageResource(right)
-        }
+        addHeaderRight(right, null, R.id.head_vRight)
     }
 
     @SuppressLint("ResourceType")
     protected fun setHeaderRightTxt(@StringRes right: Int) {
-        if (mToolbar != null && right > 0) {
-            if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
-                View.inflate(mContext, R.layout.in_head_tright, mToolbar)
-            val txt = findViewById<TextView>(R.id.head_vRight, mToolbar)
-            txt?.setOnClickListener(this)
-            txt?.setText(right)
-        }
+        addHeaderRight(right, getString(right), R.id.head_vRight)
+    }
+
+    protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
+        addHeaderRight(right, null, id)
+    }
+
+    protected fun addHeaderRightPath(@DrawableRes rightPath: String?, @IdRes id: Int) {
+        addHeaderRight(0, rightPath, id)
     }
 
     @SuppressLint("ResourceType")
-    protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
-        if (mToolbar != null && right > 0) {
+    private fun addHeaderRight(@DrawableRes right: Int, @DrawableRes rightPath: String?, @IdRes id: Int) {
+        if (mToolbar != null) {
+            var img: ImageView? = findViewById(id, mToolbar)
+            if (img != null) {
+                if (right == 0 && rightPath == null) {
+                    mToolbar?.removeView(img)
+                } else {
+                    if (right != 0) {
+                        img.setImageResource(right)
+                    } else {
+                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img)
+                    }
+                }
+                return
+            }
+            if (right == 0 && rightPath == null) return
             val v = View.inflate(mContext, R.layout.in_head_right, null)
-            val img = findViewById<ImageView>(R.id.head_vRight, v)
+            img = findViewById(R.id.head_vRight, v)
             img?.id = id
             val array = theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
             val width = array.getDimensionPixelSize(0, 0)
@@ -294,10 +310,13 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
             img?.layoutParams = params
             mToolbar!!.addView(v)
             img?.setOnClickListener(this)
-            img?.setImageResource(right)
+            if (right != 0) {
+                img?.setImageResource(right)
+            } else {
+                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img!!)
+            }
         }
     }
-
 
     /**
      * 头部
@@ -347,11 +366,14 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
 //        startAct(cls, bundle, intent)
 //    }
 
-    override  fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle?) {
-        val i = Intent(this, cls)
-        i.putExtra(LAST_ACT, this.javaClass.simpleName)
+    override fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle?, intent: Intent?) {
+        var i = intent
+        if (i == null)
+            i = Intent()
         if (bundle != null)
             i.putExtra(BUNDLE, bundle)
+        i.putExtra(LAST_ACT, this.javaClass.simpleName)
+        i.setClass(this, cls)
         startActivityForResult(i, requestCode)
     }
 

@@ -5,6 +5,8 @@ import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+import android.support.annotation.CallSuper
+import android.support.multidex.MultiDexApplication
 import android.text.TextUtils
 import com.hy.frame.util.MyLog
 import java.util.concurrent.CopyOnWriteArrayList
@@ -14,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * @author HeYan
  * @time 2014年12月17日 下午4:19:29
  */
-abstract class BaseApplication : Application(), IBaseApplication, IBaseApplication.IActivityCache, IBaseApplication.IDataCache {
+abstract class BaseApplication : MultiDexApplication(), IBaseApplication, IBaseApplication.IActivityCache, IBaseApplication.IDataCache {
 
     /**
      * Activity栈
@@ -44,11 +46,13 @@ abstract class BaseApplication : Application(), IBaseApplication, IBaseApplicati
 
     override fun getDataCache(): IBaseApplication.IDataCache = this
 
+    @CallSuper
     override fun initAppForMainProcess() {
         MyLog.isLoggable = isLoggable()
         MyLog.d(javaClass, "Application start! process:Main")
     }
 
+    @CallSuper
     override fun initAppForOtherProcess(process: String) {
         MyLog.isLoggable = isLoggable()
         MyLog.d(javaClass, "Application start! process:$process")
@@ -95,7 +99,7 @@ abstract class BaseApplication : Application(), IBaseApplication, IBaseApplicati
 
     override fun remove(activity: Activity) {
         if (acts != null && acts!!.isNotEmpty()) {
-            val act: Activity? = acts!!.firstOrNull { TextUtils.equals(it.javaClass.name, activity.javaClass.name) }
+            val act: Activity? = acts!!.firstOrNull { it == activity }
             if (act != null)
                 acts!!.remove(act)
         }
@@ -111,6 +115,20 @@ abstract class BaseApplication : Application(), IBaseApplication, IBaseApplicati
             }
             acts!!.clear()
         }
+    }
+
+    /**
+     * activity栈数量
+     */
+    override fun actSize(): Int {
+        return acts?.size ?: 0
+    }
+
+    override fun getAct(index: Int): Activity? {
+        if (acts != null && index < acts!!.size && index >= 0) {
+            return acts!![index]
+        }
+        return null
     }
 
     /**
@@ -146,4 +164,9 @@ abstract class BaseApplication : Application(), IBaseApplication, IBaseApplicati
                 .firstOrNull { it.pid == pid }
                 ?.processName
     }
+
+//    override fun attachBaseContext(base: Context?) {
+//        super.attachBaseContext(base)
+//        MultiDex.install(this)
+//    }
 }

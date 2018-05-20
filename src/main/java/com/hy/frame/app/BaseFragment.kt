@@ -18,6 +18,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.hy.frame.R
 import com.hy.frame.bean.LoadCache
 import com.hy.frame.mvp.IBasePresenter
@@ -243,22 +245,43 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
 
     @SuppressLint("ResourceType")
     protected fun setHeaderRight(@DrawableRes right: Int) {
-        if (mToolbar != null && right > 0) {
-            if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
-                View.inflate(getCurContext(), R.layout.in_head_right, mToolbar)
-            val img = findViewById<ImageView>(R.id.head_vRight, mToolbar)
-            img?.setOnClickListener(this)
-            img?.setImageResource(right)
-        }
+        addHeaderRight(right, null, R.id.head_vRight)
     }
 
     @SuppressLint("ResourceType")
+    protected fun setHeaderRightTxt(@StringRes right: Int) {
+        addHeaderRight(right, getString(right), R.id.head_vRight)
+    }
+
     protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
-        if (mToolbar != null && right > 0) {
+        addHeaderRight(right, null, id)
+    }
+
+    protected fun addHeaderRightPath(@DrawableRes rightPath: String?, @IdRes id: Int) {
+        addHeaderRight(0, rightPath, id)
+    }
+
+    @SuppressLint("ResourceType")
+    private fun addHeaderRight(@DrawableRes right: Int, @DrawableRes rightPath: String?, @IdRes id: Int) {
+        if (mToolbar != null) {
+            var img: ImageView? = findViewById(id, mToolbar)
+            if (img != null) {
+                if (right == 0 && rightPath == null) {
+                    mToolbar?.removeView(img)
+                } else {
+                    if (right != 0) {
+                        img.setImageResource(right)
+                    } else {
+                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img)
+                    }
+                }
+                return
+            }
+            if (right == 0 && rightPath == null) return
             val v = View.inflate(getCurContext(), R.layout.in_head_right, null)
-            val img = findViewById<ImageView>(R.id.head_vRight, v)
+            img = findViewById(R.id.head_vRight, v)
             img?.id = id
-            val array = activity!!.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
+            val array = getCurContext().obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
             val width = array.getDimensionPixelSize(0, 0)
             array.recycle()
             val params = Toolbar.LayoutParams(width, width)
@@ -267,18 +290,11 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
             img?.layoutParams = params
             mToolbar!!.addView(v)
             img?.setOnClickListener(this)
-            img?.setImageResource(right)
-        }
-    }
-
-    @SuppressLint("ResourceType")
-    protected fun setHeaderRightTxt(@StringRes right: Int) {
-        if (mToolbar != null && right > 0) {
-            if (findViewById<View>(R.id.head_vRight, mToolbar) == null)
-                View.inflate(getCurContext(), R.layout.in_head_tright, mToolbar)
-            val txt = findViewById<TextView>(R.id.head_vRight, mToolbar)
-            txt?.setOnClickListener(this)
-            txt?.setText(right)
+            if (right != 0) {
+                img?.setImageResource(right)
+            } else {
+                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img!!)
+            }
         }
     }
 
@@ -322,11 +338,14 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
         startActivity(i)
     }
 
-    override fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle?) {
-        val i = Intent(activity, cls)
-        i.putExtra(BaseActivity.LAST_ACT, this.javaClass.simpleName)
+    override fun startActForResult(cls: Class<*>, requestCode: Int, bundle: Bundle?, intent: Intent?) {
+        var i = intent
+        if (i == null)
+            i = Intent()
         if (bundle != null)
             i.putExtra(BaseActivity.BUNDLE, bundle)
+        i.putExtra(BaseActivity.LAST_ACT, this.javaClass.simpleName)
+        i.setClass(activity, cls)
         startActivityForResult(i, requestCode)
     }
 
