@@ -51,8 +51,8 @@ class ConfirmDialog(context: Context, val title: String, val message: String, va
         if (FormatUtil.isNoEmpty(confirm)) btnConfirm!!.text = confirm
         if (FormatUtil.isNoEmpty(cancel)) btnCancel!!.text = cancel
         btnCancel!!.visibility = if (hideCancel) View.GONE else View.VISIBLE
-        if (hideCancel)
-            btnConfirm?.setBackgroundResource(R.drawable.btn_selector)
+//        if (hideCancel)
+//            btnConfirm?.setBackgroundResource(R.drawable.btn_selector)
     }
 
 

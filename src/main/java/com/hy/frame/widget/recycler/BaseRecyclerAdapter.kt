@@ -25,7 +25,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     private var mFooterViews: MutableList<View>? = null
     private var emptyView: LoadCache? = null
     private var loadMoreView: LoadMoreView? = null
-    private var refreshView: RefreshView? = null
 
     fun addHeaderView(v: View, index: Int = -1) {
         if (mHeaderViews == null)
@@ -54,13 +53,24 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
      */
     fun setEmptyView(emptyView: LoadCache = LoadCache(inflate(R.layout.in_loading))) {
         if (this.emptyView != null) return
-        val vlp = emptyView.llyLoad!!.layoutParams ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val vlp = emptyView.llyLoad!!.layoutParams
+                ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         emptyView.llyLoad!!.layoutParams = vlp
-        emptyView.showNoData(context.resources.getString(R.string.hint_nodata), R.mipmap.ic_nodata)
+        emptyView.showNoData(context.getString(R.string.hint_nodata), R.drawable.v_warn)
         this.emptyView = emptyView
     }
 
     fun getEmptyView(): LoadCache? = emptyView
+
+    fun showNoData(msg: String? = context.getString(R.string.hint_nodata), drawId: Int = R.drawable.v_warn) {
+        if (this.emptyView == null) return
+        this.emptyView?.showNoData(msg, drawId)
+    }
+
+    fun showLoading(msg: String? = null) {
+        if (this.emptyView == null) return
+        this.emptyView?.showLoading(msg ?: context.getString(R.string.loading))
+    }
 
     /**
      * once
@@ -71,15 +81,15 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     }
 
     fun getLoadMoreView(): LoadMoreView? = loadMoreView
-    /**
-     * once
-     */
-    fun setRefreshView(refreshView: RefreshView = RefreshView(inflate(R.layout.in_lv_header))) {
-        if (this.refreshView != null) return
-        this.refreshView = refreshView
-    }
-
-    fun getRefreshView(): RefreshView? = refreshView
+//    /**
+//     * once
+//     */
+//    fun setRefreshView(refreshView: RefreshView = RefreshView(inflate(R.layout.in_lv_header))) {
+//        if (this.refreshView != null) return
+//        this.refreshView = refreshView
+//    }
+//
+//    fun getRefreshView(): RefreshView? = refreshView
 
     protected fun inflate(resId: Int): View {
         return LayoutInflater.from(context).inflate(resId, null)
@@ -97,8 +107,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
             if (emptyView != null)
                 count++
         } else {
-            if (refreshView != null)
-                count++
             if (loadMoreView != null)
                 count++
         }
@@ -125,15 +133,9 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
                 return TYPE_FOOTER + position - footerLimit
             return getCurViewType(position - headerCount)
         } else {
-            var headerTotalCount = headerCount
-            if (refreshView != null)
-                if (position == 0)
-                    return TYPE_REFRESH
-                else
-                    headerTotalCount++
-            if (position < headerTotalCount)
-                return TYPE_HEADER + position - (headerTotalCount - headerCount)
-            val footerLimit = headerTotalCount + dataCount
+            if (position < headerCount)
+                return TYPE_HEADER + position - (headerCount - headerCount)
+            val footerLimit = headerCount + dataCount
             if (position >= footerLimit)
                 return if (loadMoreView != null && position == footerLimit + getFooterCount()) TYPE_LOADMORE else TYPE_FOOTER + position - footerLimit
             return getCurViewType(position - headerCount)
@@ -149,8 +151,6 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
 
     @Deprecated("Deprecated")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder {
-        if (viewType == TYPE_REFRESH)
-            return BaseHolder(refreshView!!.v)
         if (viewType in TYPE_HEADER..TYPE_HEADER_END)
             return createHeaderView(parent, viewType - TYPE_HEADER)
         if (viewType == TYPE_EMPTY)
@@ -166,11 +166,7 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     override fun onBindViewHolder(holder: BaseHolder, position: Int) {
         val viewType = holder.itemViewType
         if (viewType in TYPE_ITEM..TYPE_ITEM_END)
-            @Suppress("UNCHECKED_CAST")
-            if (refreshView == null)
-                bindViewData(holder, position - getHeaderCount())
-            else
-                bindViewData(holder, position - getHeaderCount() - 1)
+            bindViewData(holder, position - getHeaderCount())
         else
             bindOtherViewData(holder, viewType)
     }
@@ -206,18 +202,15 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     }
 
     protected open fun isFixedViewType(viewType: Int): Boolean {
-        return viewType == TYPE_REFRESH || viewType in TYPE_HEADER..TYPE_HEADER_END || viewType in TYPE_FOOTER..TYPE_FOOTER_END || viewType == TYPE_EMPTY || viewType == TYPE_LOADMORE
+        return viewType in TYPE_HEADER..TYPE_HEADER_END || viewType in TYPE_FOOTER..TYPE_FOOTER_END || viewType == TYPE_EMPTY || viewType == TYPE_LOADMORE
     }
 
     /**
      * Cur True Position
      */
-    @Deprecated("Deprecated")
+    @Deprecated("Deprecated", ReplaceWith("position - getHeaderCount()"))
     fun getCurPosition(position: Int): Int {
-        val p = position - getHeaderCount()
-        if (getDataCount() > 0 && refreshView != null)
-            return p - 1
-        return p
+        return position - getHeaderCount()
     }
 
     fun getItem(position: Int): T {
@@ -338,16 +331,16 @@ abstract class BaseRecyclerAdapter<T> constructor(protected val context: Context
     }
 
     companion object {
-        val TYPE_ITEM = 0
-        val TYPE_ITEM_END = 99
-        val TYPE_REFRESH = 100
-        val TYPE_HEADER = 101
-        val TYPE_HEADER_END = 110
-        val TYPE_LOADMORE = 200
-        val TYPE_FOOTER = 201
-        val TYPE_FOOTER_END = 210
-        val TYPE_EMPTY = 300
-        val HEADER_SIZE_MAX = 10
-        val FOOTER_SIZE_MAX = 10
+        const val TYPE_ITEM = 0
+        const val TYPE_ITEM_END = 99
+        //const val TYPE_REFRESH = 100
+        const val TYPE_HEADER = 101
+        const val TYPE_HEADER_END = 110
+        const val TYPE_LOADMORE = 200
+        const val TYPE_FOOTER = 201
+        const val TYPE_FOOTER_END = 210
+        const val TYPE_EMPTY = 300
+        const val HEADER_SIZE_MAX = 10
+        const val FOOTER_SIZE_MAX = 10
     }
 }

@@ -33,17 +33,27 @@ import com.hy.frame.util.MyToast
  * author HeYan
  * time 2015/12/23 17:12
  */
-abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.OnClickListener, IBaseFragment, IBaseView {
+abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.View.OnClickListener, IBaseFragment, IBaseView {
 
     private var mContentView: View? = null
     private var mToolbar: Toolbar? = null
     private var mFlyMain: FrameLayout? = null
-    protected var mLoadCache: LoadCache? = null
-    protected var mShowCount: Int = 0
-    protected var mInit: Boolean = false
+    private var mLoadCache: LoadCache? = null
+    private var mShowCount: Int = 0
+    private var mInit: Boolean = false
 
     @Nullable
-    protected var mPresenter: P? = null//如果当前页面逻辑简单, Presenter 可以为 null
+    private var mPresenter: P? = null//如果当前页面逻辑简单, Presenter 可以为 null
+
+    protected fun getPresenter(): P? {
+        if (mPresenter == null)
+            mPresenter = buildPresenter()
+        if (mPresenter != null)
+            lifecycle.addObserver(mPresenter!!)
+        return mPresenter
+    }
+
+    protected abstract fun buildPresenter(): P?
 
     override fun isTranslucentStatus(): Boolean {
         if (activity != null && activity is IBaseActivity) {
@@ -272,7 +282,7 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
                     if (right != 0) {
                         img.setImageResource(right)
                     } else {
-                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img)
+                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.drawable.v_warn).error(R.drawable.v_warn)).load(rightPath).into(img)
                     }
                 }
                 return
@@ -293,7 +303,7 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
             if (right != 0) {
                 img?.setImageResource(right)
             } else {
-                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img!!)
+                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.drawable.v_warn).error(R.drawable.v_warn)).load(rightPath).into(img!!)
             }
         }
     }
@@ -397,9 +407,4 @@ abstract class BaseFragment<P : IBasePresenter> : Fragment(), android.view.View.
      * 头-右边图标点击
      */
     override fun onRightClick() {}
-
-    override fun onDestroy() {
-        mPresenter?.onDestroy()
-        super.onDestroy()
-    }
 }

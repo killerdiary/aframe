@@ -45,7 +45,7 @@ class BannerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         if (init) return
         init = true
         viewPager = ViewPager(context)
-        viewPager!!.setOnPageChangeListener(this)
+        viewPager!!.addOnPageChangeListener(this)
         val rlp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         rlp.alignWithParent = true
         rlp.addRule(RelativeLayout.ALIGN_TOP)

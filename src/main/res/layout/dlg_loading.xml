@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/loading_llyLoading"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -13,12 +14,13 @@
     android:paddingRight="20dip"
     android:paddingTop="10dip">
 
-    <ProgressBar
+
+    <com.hy.frame.widget.AVLoadingIndicatorView
         android:id="@+id/loading_proLoad"
-        android:layout_width="40dip"
-        android:layout_height="40dip"
-        android:indeterminate="false"
-        android:indeterminateDrawable="?attr/appLoadingDraw" />
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        app:indicatorColor="?attr/appProgressColor"
+        app:indicatorName="LineSpinFadeLoaderIndicator" />
 
     <TextView
         android:id="@+id/loading_txtLoadMsg"
@@ -26,6 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_normal"
-        android:text="加载中..." />
+        android:text="@string/loading"
+        android:textColor="@color/txt_gray"
+        android:textSize="@dimen/txt_small" />
 
 </LinearLayout>

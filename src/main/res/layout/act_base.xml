@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
     android:background="?attr/appBackground"
+    android:fitsSystemWindows="false"
     android:orientation="vertical">
 
     <include layout="@layout/in_header" />
 
     <FrameLayout
         android:id="@+id/base_flyMain"
-        android:background="?attr/appBackground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/appBackground">
 
     </FrameLayout>
 

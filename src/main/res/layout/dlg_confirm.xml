@@ -45,12 +45,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_picker_left_selector"
+            android:background="@drawable/btn_picker_selector"
             android:gravity="center"
             android:minWidth="60dp"
             android:padding="10dp"
+            android:layout_marginRight="@dimen/margin_normal"
             android:text="@string/cancel"
-            android:textColor="@color/txt_gray" />
+            android:textColor="@color/txt_gray_light" />
 
         <TextView
             android:id="@+id/confirm_btnConfirm"
@@ -58,7 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_picker_right_selector"
+            android:background="@drawable/btn_picker_selector"
             android:gravity="center"
             android:minWidth="60dp"
             android:padding="10dp"

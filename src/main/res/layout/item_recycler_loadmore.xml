@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/list_footer_loading"
-            android:textColor="@color/progress" />
+            android:textColor="?attr/appProgressColor" />
 
         <com.hy.frame.widget.AVLoadingIndicatorView
             android:id="@+id/recycler_loadmore_i_vIndicator"
@@ -28,9 +28,9 @@
             android:layout_toLeftOf="@+id/recycler_loadmore_i_txtMessage"
             android:layout_toStartOf="@+id/recycler_loadmore_i_txtMessage"
             android:visibility="gone"
-            app:indicatorColor="@color/progress" />
+            app:indicatorColor="?attr/appProgressColor" />
 
-        <com.hy.frame.widget.TintImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/recycler_loadmore_i_imgIndicator"
             android:layout_width="@dimen/recycler_indicator_width"
             android:layout_height="@dimen/recycler_indicator_width"
@@ -40,8 +40,8 @@
             android:layout_toLeftOf="@+id/recycler_loadmore_i_txtMessage"
             android:layout_toStartOf="@+id/recycler_loadmore_i_txtMessage"
             android:padding="@dimen/padding_normal"
-            android:src="@mipmap/ic_warn"
-            app:tint="@color/progress" />
+            app:srcCompat="@drawable/v_warn"
+            app:tint="?attr/appProgressColor" />
 
     </RelativeLayout>
 </LinearLayout>

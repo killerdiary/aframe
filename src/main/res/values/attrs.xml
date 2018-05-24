@@ -6,8 +6,7 @@
     <attr name="appHeaderHeight" format="dimension" />
     <attr name="appTitleColor" format="reference|color" />
     <attr name="appTitleBarBg" format="reference|color" />
-    <attr name="appLoadingDraw" format="reference" />
-    <attr name="appLoadingSmallDraw" format="reference" />
+    <attr name="appProgressColor" format="reference|color" />
     <declare-styleable name="RoundImageView">
         <attr name="rivRadius" format="dimension" />
     </declare-styleable>
@@ -61,11 +60,6 @@
         <attr name="kvValueMarginTop" format="dimension" />
         <attr name="kvValueMarginBottom" format="dimension" />
         <attr name="kvValueRight" format="boolean" />
-    </declare-styleable>
-    <declare-styleable name="RecyclerViewPager">
-        <attr name="rvp_triggerOffset" format="float" />
-        <attr name="rvp_flingFactor" format="float" />
-        <attr name="rvp_singlePageFling" format="boolean" />
     </declare-styleable>
     <declare-styleable name="GifView">
         <attr name="gif" format="reference" />
@@ -150,35 +144,5 @@
     </declare-styleable>
     <declare-styleable name="MyRadioGroup">
         <attr name="mrgMultiChoice" format="boolean" />
-    </declare-styleable>
-    <declare-styleable name="WaterDropView">
-        <attr name="wdvMaxCircleRadius" format="dimension" />
-        <attr name="wdvMinCircleRadius" format="dimension" />
-        <attr name="wdvWaterDropColor" format="color" />
-        <attr name="wdvTopCircleX" format="dimension" />
-        <attr name="wdvTopCircleY" format="dimension" />
-        <attr name="wdvBottomCircleX" format="dimension" />
-        <attr name="wdvBottomCircleY" format="dimension" />
-        <attr name="wdvPercent" format="float" />
-        <attr name="wdvStrokeWidth" format="dimension" />
-    </declare-styleable>
-    <declare-styleable name="OverflowLayout">
-        <attr name="oflHorizontalSpacing" format="dimension" />
-        <attr name="oflVerticalSpacing" format="dimension" />
-    </declare-styleable>
-    <declare-styleable name="WaveSideBar">
-        <attr name="wsbLazyRespond" format="boolean"/>
-        <attr name="wsbTextSize" format="dimension"/>
-        <attr name="wsbTextColor" format="color"/>
-        <attr name="wsbMaxOffset" format="dimension"/>
-        <attr name="wsbPosition" format="enum">
-            <enum name="right" value="0"/>
-            <enum name="left" value="1"/>
-        </attr>
-        <attr name="wsbTextAlignment" format="enum">
-            <enum name="center" value="0"/>
-            <enum name="left" value="1"/>
-            <enum name="right" value="2" />
-        </attr>
     </declare-styleable>
 </resources>

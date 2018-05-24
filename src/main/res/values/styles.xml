@@ -22,8 +22,7 @@
         <item name="appTitleSize">@dimen/txt_big</item>
         <item name="appTitleColor">@color/white</item>
         <item name="appTitleBarBg">@color/theme</item>
-        <item name="appLoadingDraw">@drawable/rotate_loading_circle</item>
-        <item name="appLoadingSmallDraw">@drawable/rotate_loading_circle</item>
+        <item name="appProgressColor">@color/progress</item>
         <!--标题栏颜色-->
         <item name="colorPrimary">?attr/appThemeColor</item>
         <!--状态栏颜色-->

@@ -14,9 +14,10 @@
         <gradient
             android:centerY="0.50"
             android:endColor="#AA01ABE8"
-            android:startColor="#33FFFFFF"
+            android:startColor="#00FFFFFF"
             android:type="sweep"
             android:useLevel="false" />
     </shape>
 
 </rotate>
+<!--for progressbar-->

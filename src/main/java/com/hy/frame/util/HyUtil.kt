@@ -300,30 +300,30 @@ object HyUtil {
         FileUtil.delAllFile(getCachePath(context, null))
     }
 
-    fun displayImage(requestManager: RequestManager?, imageView: ImageView?, url: String?) {
-        display(requestManager, imageView, url, R.drawable.def_empty, R.drawable.def_empty)
-    }
-
-    fun displayHead(requestManager: RequestManager?, imageView: ImageView?, url: String?) {
-        display(requestManager, imageView, url, R.drawable.def_empty, R.drawable.def_empty)
-    }
-
-    private fun display(requestManager: RequestManager?, imageView: ImageView?, url: String?, loading: Int, fail: Int, isGif: Boolean = false) {
-        if (requestManager == null || imageView == null || url.isNullOrEmpty()) {
-            imageView?.setImageResource(fail)
-            return
-        }
-        MyLog.d("display", url!!)
-        try {
-            var builder = if (isGif) requestManager.asGif() else requestManager.asBitmap()
-            builder = builder.load(url)
-            val options = RequestOptions.noTransformation().placeholder(loading).error(fail)
-            builder = builder.apply(options)
-            builder.into(imageView)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+//    fun displayImage(requestManager: RequestManager?, imageView: ImageView?, url: String?) {
+//        display(requestManager, imageView, url, R.drawable.def_empty, R.drawable.def_empty)
+//    }
+//
+//    fun displayHead(requestManager: RequestManager?, imageView: ImageView?, url: String?) {
+//        display(requestManager, imageView, url, R.drawable.def_empty, R.drawable.def_empty)
+//    }
+//
+//    private fun display(requestManager: RequestManager?, imageView: ImageView?, url: String?, loading: Int, fail: Int, isGif: Boolean = false) {
+//        if (requestManager == null || imageView == null || url.isNullOrEmpty()) {
+//            imageView?.setImageResource(fail)
+//            return
+//        }
+//        MyLog.d("display", url!!)
+//        try {
+//            var builder = if (isGif) requestManager.asGif() else requestManager.asBitmap()
+//            builder = builder.load(url)
+//            val options = RequestOptions.noTransformation().placeholder(loading).error(fail)
+//            builder = builder.apply(options)
+//            builder.into(imageView)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
 
 
 }

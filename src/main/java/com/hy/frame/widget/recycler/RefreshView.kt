@@ -1,8 +1,6 @@
 package com.hy.frame.widget.recycler
 
 import android.view.View
-import com.hy.frame.R
-import com.hy.frame.widget.WaterDropView
 
 /**
  * RefreshView

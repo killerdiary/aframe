@@ -18,7 +18,7 @@ interface IBaseView {
 
     fun getCurApp(): IBaseApplication
 
-    fun getRequestListener(): IMyHttpListener
+    fun getRequestListener(): IMyHttpListener?
 
     fun showToast(msg: String?)
     /**
@@ -46,17 +46,15 @@ interface IBaseView {
      */
     fun hideLoadingDialog()
 
-//    fun addHeaderRight()
+    /**
+     * 显示没有数据或错误页
+     */
+    fun showNoData(resId: Int = R.string.hint_nodata, drawId: Int = R.drawable.v_warn)
 
     /**
      * 显示没有数据或错误页
      */
-    fun showNoData(resId: Int = R.string.hint_nodata, drawId: Int = R.mipmap.ic_nodata)
-
-    /**
-     * 显示没有数据或错误页
-     */
-    fun showNoData(msg: String, drawId: Int = R.mipmap.ic_nodata)
+    fun showNoData(msg: String, drawId: Int = R.drawable.v_warn)
 
     /**
      * 显示内容View

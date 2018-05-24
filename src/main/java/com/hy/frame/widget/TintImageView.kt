@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
 import com.hy.frame.R
-import com.hy.frame.util.MyLog
 
 /**
  * 可以着色的ImageView
  * @author HeYan
  * @time 2017/5/9 9:52
  */
+@Deprecated("请直接使用AppCompatImageView代替", ReplaceWith("AppCompatImageView"))
 class TintImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : android.support.v7.widget.AppCompatImageView(context, attrs, defStyleAttr) {
 
     private var tint: ColorStateList? = null

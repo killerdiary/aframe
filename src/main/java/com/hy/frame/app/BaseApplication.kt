@@ -6,7 +6,10 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.support.annotation.CallSuper
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.multidex.MultiDexApplication
+import android.support.v7.app.AppCompatDelegate
+import android.support.v7.widget.AppCompatDrawableManager
 import android.text.TextUtils
 import com.hy.frame.util.MyLog
 import java.util.concurrent.CopyOnWriteArrayList
@@ -49,6 +52,8 @@ abstract class BaseApplication : MultiDexApplication(), IBaseApplication, IBaseA
     @CallSuper
     override fun initAppForMainProcess() {
         MyLog.isLoggable = isLoggable()
+        //开启Vector支持
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         MyLog.d(javaClass, "Application start! process:Main")
     }
 

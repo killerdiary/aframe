@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hy.frame.widget.TintImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.AppCompatImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/head_vLeft"
     android:layout_width="?attr/appHeaderHeight"
     android:layout_height="?attr/appHeaderHeight"
@@ -8,5 +9,6 @@
     android:background="@drawable/transparent_selector"
     android:contentDescription="@string/app_name"
     android:padding="@dimen/titlebar_margin"
-    android:src="@mipmap/ic_back"
+    app:srcCompat="@drawable/v_back"
+    app:tint="?appTitleColor"
     tools:ignore="RtlHardcoded" />

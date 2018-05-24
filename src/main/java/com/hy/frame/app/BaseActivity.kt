@@ -35,18 +35,28 @@ import com.hy.frame.util.StatusBarUtil
  * author HeYan
  * time 2015/12/23 16:40
  */
-abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.view.View.OnClickListener, IBaseActivity, IBaseView {
-    protected var mApp: IBaseApplication? = null
-    protected var mContext: Context? = null
-    protected var lastSkipAct: String? = null //获取上一级的Activity名
+abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), android.view.View.OnClickListener, IBaseActivity, IBaseView {
+    private var mApp: IBaseApplication? = null
+    private var mContext: Context? = null
+    private var lastSkipAct: String? = null //获取上一级的Activity名
 
     private var mToolbar: Toolbar? = null
     private var mFlyMain: FrameLayout? = null
-    protected var mLoadCache: LoadCache? = null
-    protected var mLoadingDialog: LoadingDialog? = null
+    private var mLoadCache: LoadCache? = null
+    private var mLoadingDialog: LoadingDialog? = null
 
     @Nullable
-    protected var mPresenter: P? = null//如果当前页面逻辑简单, Presenter 可以为 null
+    private var mPresenter: P? = null//如果当前页面逻辑简单, Presenter 可以为 null
+
+    protected fun getPresenter(): P? {
+        if (mPresenter == null)
+            mPresenter = buildPresenter()
+        if (mPresenter != null)
+            lifecycle.addObserver(mPresenter!!)
+        return mPresenter
+    }
+
+    protected abstract fun buildPresenter(): P?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,10 +83,11 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
     }
 
     override fun getCurContext(): Context = mContext!!
+
     override fun getCurApp(): IBaseApplication = mApp!!
 
     private fun initLayout() {
-        if(isPortrait()){
+        if (isPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
         setContentView(if (isSingleLayout()) getLayoutId() else R.layout.act_base)
@@ -292,7 +303,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
                     if (right != 0) {
                         img.setImageResource(right)
                     } else {
-                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img)
+                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.drawable.v_warn).error(R.drawable.v_warn)).load(rightPath).into(img)
                     }
                 }
                 return
@@ -313,7 +324,7 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
             if (right != 0) {
                 img?.setImageResource(right)
             } else {
-                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.mipmap.ic_warn).error(R.mipmap.ic_warn)).load(rightPath).into(img!!)
+                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.drawable.v_warn).error(R.drawable.v_warn)).load(rightPath).into(img!!)
             }
         }
     }
@@ -443,12 +454,6 @@ abstract class BaseActivity<P : IBasePresenter> : AppCompatActivity(), android.v
 
     override fun onBackPressed() {
         finish()
-    }
-
-    override fun onDestroy() {
-        mPresenter?.onDestroy()
-        mPresenter = null
-        super.onDestroy()
     }
 
     companion object {
