@@ -17,7 +17,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            //混淆
+            minifyEnabled true
+            //Zipalign优化
+            //zipAlignEnabled false
+            // 移除无用的resource文件 Resource shrinker cannot be used for libraries.
+            //shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -71,3 +76,5 @@ dependencies {
 //        transitive = true //关联 依赖
 //    }
 }
+
+apply from : "maven-release-aar.gradle"

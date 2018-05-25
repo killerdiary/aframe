@@ -1,6 +1,9 @@
 package com.hy.frame.app
 
+import android.support.annotation.DrawableRes
+import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
+import android.support.annotation.StringRes
 import android.view.View
 
 /**
@@ -61,4 +64,18 @@ interface IBaseFragment {
     fun sendMsg(flag: Int, obj: Any?)
 
     fun getFragment(): android.support.v4.app.Fragment
+
+    fun hideHeader()
+
+    fun setHeaderLeft(@DrawableRes left: Int)
+
+    fun setHeaderLeftTxt(@StringRes left: Int)
+
+    fun setHeaderRight(@DrawableRes right: Int)
+
+    fun setHeaderRightTxt(@StringRes right: Int)
+
+    fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int)
+
+    fun addHeaderRightPath(@DrawableRes rightPath: String?, @IdRes id: Int)
 }

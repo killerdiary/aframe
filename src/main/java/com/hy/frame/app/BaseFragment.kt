@@ -227,12 +227,12 @@ abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.V
         }
     }
 
-    protected fun hideHeader() {
+    override fun hideHeader() {
         if (mToolbar != null) mToolbar!!.visibility = View.GONE
     }
 
     @SuppressLint("ResourceType")
-    protected fun setHeaderLeft(@DrawableRes left: Int) {
+    override fun setHeaderLeft(@DrawableRes left: Int) {
         if (mToolbar != null && left > 0) {
             if (findViewById<View>(R.id.head_vLeft, mToolbar) == null)
                 View.inflate(getCurContext(), R.layout.in_head_left, mToolbar)
@@ -243,7 +243,7 @@ abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.V
     }
 
     @SuppressLint("ResourceType")
-    protected fun setHeaderLeftTxt(@StringRes left: Int) {
+    override fun setHeaderLeftTxt(@StringRes left: Int) {
         if (mToolbar != null && left > 0) {
             if (findViewById<View>(R.id.head_vLeft, mToolbar) == null)
                 View.inflate(getCurContext(), R.layout.in_head_tleft, mToolbar)
@@ -254,20 +254,20 @@ abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.V
     }
 
     @SuppressLint("ResourceType")
-    protected fun setHeaderRight(@DrawableRes right: Int) {
+    override fun setHeaderRight(@DrawableRes right: Int) {
         addHeaderRight(right, null, R.id.head_vRight)
     }
 
     @SuppressLint("ResourceType")
-    protected fun setHeaderRightTxt(@StringRes right: Int) {
+    override fun setHeaderRightTxt(@StringRes right: Int) {
         addHeaderRight(right, getString(right), R.id.head_vRight)
     }
 
-    protected fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
+    override fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
         addHeaderRight(right, null, id)
     }
 
-    protected fun addHeaderRightPath(@DrawableRes rightPath: String?, @IdRes id: Int) {
+    override fun addHeaderRightPath(@DrawableRes rightPath: String?, @IdRes id: Int) {
         addHeaderRight(0, rightPath, id)
     }
 

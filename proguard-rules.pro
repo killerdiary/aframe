@@ -54,3 +54,22 @@
 -dontwarn org.conscrypt.**
 # A resource is loaded with a relative path so the package of this class must be preserved.
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+#gson
+-dontwarn com.google.gson.**
+-keep class com.google.gson.**{*;}
+
+#arch
+-dontwarn android.arch.**
+-keep class android.arch.**{*;}
+
+#cameraview
+-dontwarn com.google.android.cameraview.**
+-keep class com.google.android.cameraview.**{*;}
+
+
+#util
+#-keep class com.hy.frame.util.**{*;}
+-keep class com.hy.frame.**{*;}
+-keep class com.hy.http.**{*;}
+-keep class com.lidroid.xutils.**{*;}
