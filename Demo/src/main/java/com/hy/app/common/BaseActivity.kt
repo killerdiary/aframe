@@ -42,7 +42,7 @@ abstract class BaseActivity : com.hy.frame.app.BaseActivity<IBasePresenter>(), I
      * @param right 右边图标
      */
     protected fun initHeaderBack(@StringRes title: Int, @DrawableRes right: Int = 0) {
-        setHeaderLeft(R.mipmap.ic_back)
+        setHeaderLeft(R.drawable.v_back)
         setHeaderRight(right)
         setTitle(title)
     }
@@ -53,7 +53,7 @@ abstract class BaseActivity : com.hy.frame.app.BaseActivity<IBasePresenter>(), I
      * @param right 右边文字
      */
     protected fun initHeaderBackTxt(@StringRes title: Int, @StringRes right: Int) {
-        setHeaderLeft(R.mipmap.ic_back)
+        setHeaderLeft(R.drawable.v_back)
         setHeaderRightTxt(right)
         setTitle(title)
     }
@@ -66,5 +66,7 @@ abstract class BaseActivity : com.hy.frame.app.BaseActivity<IBasePresenter>(), I
 
     }
 
-    override fun getRequestListener(): IMyHttpListener = this
+    override fun getRequestListener(): IMyHttpListener? = this
+
+    override fun buildPresenter(): IBasePresenter? = null
 }

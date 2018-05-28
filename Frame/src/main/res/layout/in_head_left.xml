@@ -8,7 +8,7 @@
     android:layout_gravity="left"
     android:background="@drawable/transparent_selector"
     android:contentDescription="@string/app_name"
-    android:padding="@dimen/titlebar_margin"
+    android:padding="@dimen/header_func_padding"
     app:srcCompat="@drawable/v_back"
     app:tint="?appTitleColor"
     tools:ignore="RtlHardcoded" />

@@ -90,7 +90,7 @@ abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), andro
         if (isPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-        setContentView(if (isSingleLayout()) getLayoutId() else R.layout.act_base)
+        setContentView(if (isSingleLayout()) getLayoutId() else R.layout.v_base)
         mToolbar = findViewById(R.id.head_toolBar)
         mFlyMain = findViewById(R.id.base_flyMain)
         if (!isSingleLayout() && mFlyMain != null) {

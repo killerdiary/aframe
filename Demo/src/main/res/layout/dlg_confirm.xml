@@ -48,7 +48,7 @@
         android:minWidth="60dp"
         android:padding="10dp"
         android:text="@string/confirm"
-        android:textColor="@color/theme" />
+        android:textColor="?attr/appThemeColor" />
 
     <TextView
         android:id="@+id/confirm_btnCancel"

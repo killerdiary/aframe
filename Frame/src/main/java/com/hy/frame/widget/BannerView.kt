@@ -14,7 +14,7 @@ import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.hy.frame.R
 import com.hy.frame.adapter.ViewPagerAdapter
-import com.hy.frame.util.DimensionUtil
+import com.hy.frame.util.ResUtil
 import com.hy.frame.util.MyLog
 import java.util.*
 
@@ -120,22 +120,22 @@ class BannerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         if (hidePoint) return
         if (llyPoint == null) {
             llyPoint = LinearLayout(context)
-            val prlp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, resources.getDimensionPixelSize(R.dimen.gallery_point_height))
+            val prlp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
             prlp.alignWithParent = true
             prlp.addRule(RelativeLayout.ALIGN_BOTTOM)
             llyPoint!!.gravity = Gravity.CENTER
-            val padding = DimensionUtil.dip2px(2f, context)
+            val padding = ResUtil.dip2px(context,2f)
             llyPoint!!.setPadding(padding, padding, padding, padding)
             addView(llyPoint, prlp)
         }
         val img = CircleImageView(context)
-        val width = DimensionUtil.dip2px(8f, context)
+        val width = ResUtil.dip2px(context,8f)
         val llp = LinearLayout.LayoutParams(width, width)
         if (pointResId != 0)
             img.setBackgroundResource(pointResId)
         else
             img.setBackgroundResource(R.drawable.vpager_point_selector)
-        val padding = DimensionUtil.dip2px(4f, context)
+        val padding = ResUtil.dip2px(context,4f)
         llp.setMargins(padding, padding, padding, padding)
         if (llyPoint!!.childCount == 0) {
             img.isSelected = true

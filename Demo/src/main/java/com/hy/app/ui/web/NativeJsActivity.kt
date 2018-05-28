@@ -24,10 +24,10 @@ import com.hy.frame.app.BaseDialog
 import com.hy.frame.app.IBaseFragment
 import com.hy.frame.bean.MyHandler
 import com.hy.frame.ui.LoadingDialog
-import com.hy.frame.util.DimensionUtil
 import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
 import com.hy.frame.util.MyToast
+import com.hy.frame.util.ResUtil
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -218,14 +218,14 @@ class NativeJsActivity : BaseActivity() {
 
         @JavascriptInterface
         fun getStatusBarHeight(): Int {
-            return DimensionUtil.px2dip(act.getStatusBarHeight().toFloat(), getContext()).toInt()
+            return ResUtil.px2dip(getContext(), act.getStatusBarHeight().toFloat()).toInt()
         }
 
         @JavascriptInterface
         fun getNavigationBarHeight(): Int {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                (DimensionUtil.px2dip( getContext().resources.getDimensionPixelSize(R.dimen.header_height).toFloat(),getContext()) + getStatusBarHeight()).toInt()
-            } else DimensionUtil.px2dip(  getContext().getResources().getDimensionPixelSize(R.dimen.header_height).toFloat(),getContext()).toInt()
+                (ResUtil.px2dip(getContext(), getContext().resources.getDimensionPixelSize(R.dimen.header_height).toFloat()) + getStatusBarHeight()).toInt()
+            } else ResUtil.px2dip(getContext(), getContext().getResources().getDimensionPixelSize(R.dimen.header_height).toFloat()).toInt()
         }
 
         /**

@@ -85,7 +85,7 @@ abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.V
         // MyLog.d(getClass(), "onCreateView");
         mShowCount++
         if (mContentView == null) {
-            val v: View? = inflater.inflate(if (isSingleLayout()) getLayoutId() else R.layout.act_base, container, false)
+            val v: View? = inflater.inflate(if (isSingleLayout()) getLayoutId() else R.layout.v_base, container, false)
             mFlyMain = findViewById(R.id.base_flyMain, v)
             mToolbar = findViewById(R.id.head_toolBar, v)
             if (!isSingleLayout() && mFlyMain != null)

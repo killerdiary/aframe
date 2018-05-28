@@ -8,7 +8,7 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true"
-        android:background="@color/theme"
+        android:background="?attr/appThemeColor"
         android:contentDescription="@string/app_name"
         android:padding="@dimen/padding_normal"
         android:src="@color/white" />

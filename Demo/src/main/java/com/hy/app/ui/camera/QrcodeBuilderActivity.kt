@@ -15,9 +15,9 @@ import com.google.zxing.oned.Code128Writer
 import com.google.zxing.qrcode.QRCodeWriter
 import com.hy.app.R
 import com.hy.app.common.BaseActivity
-import com.hy.frame.util.DimensionUtil
 import com.hy.frame.util.FormatUtil
 import com.hy.frame.util.MyToast
+import com.hy.frame.util.ResUtil
 import java.util.*
 import java.util.regex.Pattern
 
@@ -72,7 +72,7 @@ class QrcodeBuilderActivity : BaseActivity() {
             MyToast.show(getCurContext()!!, getString(R.string.camera_qrcode_builder_bar_format_hint))
             return
         }
-        val width = DimensionUtil.dip2px(300F, getCurContext())
+        val width = ResUtil.dip2px(getCurContext(), 300F)
         val bmp = createImage(content.toString(), width, width, isQrcode)
         imgQrcode?.setImageBitmap(bmp)
     }

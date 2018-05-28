@@ -5,30 +5,34 @@
     <style name="AppBaseTheme" parent="Base.Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/theme_bg</item>
-        <item name="android:textColor">@color/txt_black</item>
-        <item name="android:textColorPrimary">@color/txt_black</item>
-        <item name="android:textColorHighlight">@color/txt_gray_light</item>
-        <item name="android:textColorHint">@color/txt_gray</item>
-        <item name="android:textColorLink">@color/txt_blue</item>
-        <item name="android:textSize">@dimen/txt_default</item>
-        <item name="android:textStyle">normal</item>
-
-        <item name="colorControlHighlight">@color/btn_highlight</item>
+        <item name="textColorPrimary">@color/txt_black</item>
+        <item name="textColorHighlight">@color/txt_gray_light</item>
+        <item name="textColorHint">@color/txt_gray</item>
+        <item name="textColorLink">@color/blue</item>
+        <item name="textAppearance">@style/AppBaseTheme.TxtStyle</item>
         <item name="toolbarStyle">@style/AppBaseTheme.CurToolbar</item>
         <item name="appHeaderHeight">@dimen/header_height</item>
-        <item name="appBackground">@color/theme_bg</item>
-        <item name="appThemeColor">@color/theme</item>
-        <item name="appTitleSize">@dimen/txt_big</item>
+        <item name="appBackground">@color/whitesmoke</item>
+        <item name="appThemeColor">@color/colorPrimary</item>
+        <item name="appTitleSize">@dimen/txt_title</item>
         <item name="appTitleColor">@color/white</item>
-        <item name="appTitleBarBg">@color/theme</item>
-        <item name="appProgressColor">@color/progress</item>
+        <item name="appTitleBarBg">?attr/appThemeColor</item>
+        <item name="appProgressColor">@color/blue</item>
         <!--标题栏颜色-->
         <item name="colorPrimary">?attr/appThemeColor</item>
         <!--状态栏颜色-->
         <item name="colorPrimaryDark">?attr/appThemeColor</item>
-        <item name="colorAccent">@color/white</item>
-        <item name="background">?attr/appBackground</item>
+        <!--控制各个控件被选中时的颜色-->
+        <item name="colorAccent">?attr/appThemeColor</item>
+        <!--控件的默认色调-->
+        <item name="colorControlNormal">@color/white</item>
+        <!--控件激活时候的色调-->
+        <item name="colorControlActivated">@color/white</item>
+        <!--控件高亮-->
+        <item name="colorControlHighlight">@color/btn_highlight</item>
+        <!--按钮默认状态下的背景色-->
+        <item name="colorButtonNormal">?attr/appThemeColor</item>
+        <item name="windowBackground">?attr/appBackground</item>
     </style>
 
     <style name="AppBaseTheme.CurToolbar" parent="Widget.AppCompat.Toolbar">
@@ -37,8 +41,12 @@
     </style>
 
     <style name="AppBaseTheme.TxtStyle">
-        <item name="android:textColor">@color/txt_black</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColorHint">?android:textColorHint</item>
+        <item name="android:textColorHighlight">?android:textColorHighlight</item>
+        <item name="android:textColorLink">?android:textColorLink</item>
         <item name="android:textSize">@dimen/txt_default</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="AppBaseTheme.EditStyle" parent="AppBaseTheme.TxtStyle">

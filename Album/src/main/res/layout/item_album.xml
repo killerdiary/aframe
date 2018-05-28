@@ -31,7 +31,7 @@
         android:layout_margin="@dimen/padding_normal"
         android:textColor="@color/white"
         android:textSize="@dimen/txt_small"
-        app:badgeBackground="@color/theme"
+        app:badgeBackground="?attr/appThemeColor"
         app:badgeNubmer="1"
         app:badgeRadius="10dp"
         android:visibility="gone"

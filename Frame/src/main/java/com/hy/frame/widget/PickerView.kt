@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.hy.frame.R
+import com.hy.frame.util.ResUtil
 import java.util.*
 
 
@@ -168,7 +169,7 @@ class PickerView : View {
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mPaint!!.style = Style.FILL
         mPaint!!.textAlign = Align.CENTER
-        mPaint!!.color = resources.getColor(R.color.dimgray)
+        mPaint!!.color = ResUtil.getColor(context, R.color.gray)
         //第二个paint
         nPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         nPaint!!.style = Style.FILL

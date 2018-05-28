@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/recycler_loadmore_i_rlyLoadMore"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/lv_heigth">
+        android:layout_height="@dimen/recycler_loadmore_height">
 
         <TextView
             android:id="@+id/recycler_loadmore_i_txtMessage"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/list_footer_loading"
-            android:textColor="@color/progress" />
+            android:textColor="@color/blue" />
 
         <com.hy.frame.widget.AVLoadingIndicatorView
             android:id="@+id/recycler_loadmore_i_vIndicator"
@@ -28,7 +28,7 @@
             android:layout_toLeftOf="@+id/recycler_loadmore_i_txtMessage"
             android:layout_toStartOf="@+id/recycler_loadmore_i_txtMessage"
             android:visibility="gone"
-            app:indicatorColor="@color/progress" />
+            app:indicatorColor="@color/blue" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/recycler_loadmore_i_imgIndicator"
@@ -41,7 +41,7 @@
             android:layout_toStartOf="@+id/recycler_loadmore_i_txtMessage"
             android:padding="@dimen/padding_normal"
             app:srcCompat="@drawable/v_warn"
-            app:tint="@color/progress" />
+            app:tint="@color/blue" />
 
     </RelativeLayout>
 </LinearLayout>

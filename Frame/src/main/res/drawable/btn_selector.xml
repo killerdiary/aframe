@@ -3,9 +3,9 @@
     <item android:drawable="@color/btn_disable" android:state_enabled="false" />
     <item android:state_pressed="true">
         <layer-list>
-            <item android:drawable="@color/theme" />
+            <item android:drawable="?attr/appThemeColor" />
             <item android:drawable="@color/btn_highlight" />
         </layer-list>
     </item>
-    <item android:drawable="@color/theme" />
+    <item android:drawable="?attr/appThemeColor" />
 </selector>

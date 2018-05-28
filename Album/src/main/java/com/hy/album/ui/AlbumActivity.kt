@@ -45,7 +45,7 @@ class AlbumActivity : BaseActivity<IBasePresenter>(), IAdapterLongListener<Album
     override fun isSingleLayout(): Boolean = false
     override fun isTranslucentStatus(): Boolean = true
     override fun isPermissionDenied(): Boolean = false
-    override fun getLayoutId(): Int = R.layout.act_recycler
+    override fun getLayoutId(): Int = R.layout.v_recycler
 
     override fun initView() {
         rcyList = findViewById(R.id.recycler_rcyList)
