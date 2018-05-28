@@ -1,27 +1,29 @@
 // 1.maven-插件
-apply plugin: 'maven'
+//apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.killerdiary'
 
-// 2.maven-信息
-ext {// ext is a gradle closure allowing the declaration of global properties
-    PUBLISH_GROUP_ID = 'com.hy.frame'
-    PUBLISH_ARTIFACT_ID = 'Frame'
-    PUBLISH_VERSION = android.defaultConfig.versionName
-}
-
-// 3.maven-输出路径
-uploadArchives {
-    repositories.mavenDeployer {
-        //这里就是最后输出地址，在自己电脑上新建个文件夹，把文件夹路径粘贴在此
-        //注意”file://“ + 路径，有三个斜杠，别漏了
-        repository(url: "file:///H:/Project/Frame/Frame")
-
-        pom.project {
-            groupId project.PUBLISH_GROUP_ID
-            artifactId project.PUBLISH_ARTIFACT_ID
-            version project.PUBLISH_VERSION
-        }
-    }
-}
+//// 2.maven-信息
+//ext {// ext is a gradle closure allowing the declaration of global properties
+//    PUBLISH_GROUP_ID = 'com.hy.frame'
+//    PUBLISH_ARTIFACT_ID = 'Frame'
+//    PUBLISH_VERSION = android.defaultConfig.versionName
+//}
+//
+//// 3.maven-输出路径
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        //这里就是最后输出地址，在自己电脑上新建个文件夹，把文件夹路径粘贴在此
+//        //注意”file://“ + 路径，有三个斜杠，别漏了
+//        repository(url: "file:///H:/Project/Frame/Frame")
+//
+//        pom.project {
+//            groupId project.PUBLISH_GROUP_ID
+//            artifactId project.PUBLISH_ARTIFACT_ID
+//            version project.PUBLISH_VERSION
+//        }
+//    }
+//}
 
 //以下代码会生成jar包源文件，如果是不开源码，请不要输入这段
 //aar包内包含注释

@@ -34,6 +34,7 @@ allprojects {
 }
 dependencies {
     implementation project(':Frame')
+//    implementation 'com.github.killerdiary:aframe:v2.0'
     api("com.github.chrisbanes:PhotoView:$photoviewVersion") {
         exclude group: 'com.android.support'
     }
