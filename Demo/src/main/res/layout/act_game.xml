@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <GridView
+            android:id="@+id/game_gdvStart"
+            android:layout_width="200dip"
+            android:layout_height="200dip"
+            android:layout_marginTop="50dip"
+            android:cacheColorHint="@color/transparent"
+            android:horizontalSpacing="1dip"
+            android:listSelector="@color/transparent"
+            android:numColumns="4"
+            android:scrollbars="none"
+            android:verticalSpacing="1dip" />
+
+        <TextView
+            android:id="@+id/game_txtSteps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="0步" />
+
+        <GridView
+            android:id="@+id/game_gdvEnd"
+            android:layout_width="200dip"
+            android:layout_height="200dip"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:cacheColorHint="@color/transparent"
+            android:horizontalSpacing="1dip"
+            android:listSelector="@color/transparent"
+            android:numColumns="4"
+            android:scrollbars="none"
+            android:verticalSpacing="1dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/game_btnUp"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="上" />
+
+        <Button
+            android:id="@+id/game_btnDown"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="下" />
+
+        <Button
+            android:id="@+id/game_btnLeft"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="左" />
+
+        <Button
+            android:id="@+id/game_btnRight"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="右" />
+    </LinearLayout>
+</LinearLayout>

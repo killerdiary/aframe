@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/head_vTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="?attr/appHeaderHeight"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:singleLine="true"
+    android:text="@string/app_name"
+    android:textColor="?attr/appTitleColor"
+    android:textSize="?attr/appTitleSize"
+    android:textStyle="normal" />

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        cls="com.hy.app.ui.web.BrowserActivity"
+        android:title="@string/web_broswer" />
+    <item
+        cls="com.hy.app.ui.web.NativeJsActivity"
+        android:title="@string/web_nativejs" />
+
+    <item
+        cls="com.hy.app.ui.web.WebX5Activity"
+        android:title="@string/web_x5" />
+
+</menu>

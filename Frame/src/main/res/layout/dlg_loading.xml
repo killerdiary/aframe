@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/loading_llyLoading"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_dialog_bg"
+    android:gravity="center"
+    android:minHeight="100dip"
+    android:minWidth="160dip"
+    android:orientation="vertical"
+    android:paddingBottom="10dip"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingTop="10dip">
+
+
+    <com.hy.frame.widget.AVLoadingIndicatorView
+        android:id="@+id/loading_proLoad"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        app:indicatorColor="?attr/appProgressColor"
+        app:indicatorName="LineSpinFadeLoaderIndicator" />
+
+    <TextView
+        android:id="@+id/loading_txtLoadMsg"
+        style="@style/AppBaseTheme.TxtStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/loading"
+        android:textColor="@color/txt_gray"
+        android:textSize="@dimen/txt_small" />
+
+</LinearLayout>

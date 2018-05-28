@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        cls="com.hy.app.ui.list.RecyclerActivity"
+        android:title="@string/list_recycler" />
+    <item
+        cls="com.hy.app.ui.list.TestActivity"
+        android:title="@string/list_test" />
+    <item
+        cls="com.hy.app.ui.list.SwipeListActivity"
+        android:title="@string/list_swipe" />
+     <item
+        cls="com.hy.app.ui.list.SwipeRecyclerActivity"
+        android:title="@string/list_swipe" />
+     <item
+        cls="com.hy.app.ui.list.FloatActivity"
+        android:title="@string/list_float" />
+</menu>

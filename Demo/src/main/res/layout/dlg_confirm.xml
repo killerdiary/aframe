@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_dialog_bg"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_normal">
+
+    <TextView
+        android:id="@+id/confirm_txtTitle"
+        style="@style/txtDefaultStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="消息提示"
+        android:padding="@dimen/margin_normal"
+        android:singleLine="true"
+        android:textColor="@color/txt_gray"
+        android:textColorHint="@color/txt_gray"
+        android:textSize="@dimen/txt_medium" />
+
+    <TextView
+        android:id="@+id/confirm_txtContent"
+        style="@style/txtDefaultStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/confirm_txtTitle"
+        android:gravity="center"
+        android:hint="提示內容"
+        android:maxLines="10"
+        android:minLines="2"
+        android:padding="@dimen/margin_normal"
+        android:textColorHint="@color/txt_black" />
+
+
+    <TextView
+        android:id="@+id/confirm_btnConfirm"
+        style="@style/txtDefaultStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/confirm_txtContent"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:background="@drawable/item_selector"
+        android:gravity="center"
+        android:minWidth="60dp"
+        android:padding="10dp"
+        android:text="@string/confirm"
+        android:textColor="@color/theme" />
+
+    <TextView
+        android:id="@+id/confirm_btnCancel"
+        style="@style/txtDefaultStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/confirm_txtContent"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_toLeftOf="@+id/confirm_btnConfirm"
+        android:background="@drawable/item_selector"
+        android:gravity="center"
+        android:minWidth="60dp"
+        android:padding="10dp"
+        android:text="@string/cancel"
+        android:textColor="@color/txt_gray" />
+</RelativeLayout>

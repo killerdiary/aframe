@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="DB_NAME">DB_PinCar</string>
+    <string name="DB_VERSION">1</string>
+    <string name="API_HOST">http://www.hexingpinche.com</string>
+    <!--<string name="API_MQTT">tcp://www.24huo.com:1883</string>-->
+    <string name="API_MQTT">tcp://192.168.1.200:1883</string>
+</resources>

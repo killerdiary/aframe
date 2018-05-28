@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        cls="com.hy.app.ui.CmdActivity"
+        android:title="@string/cmd" />
+    <item
+        cls="com.hy.app.ui.TestActvity"
+        android:title="@string/test" />
+    <item
+        menu="menu_list"
+        android:title="@string/list" />
+    <item
+        menu="menu_camera"
+        android:title="@string/camera" />
+    <item
+        menu="menu_web"
+        android:title="@string/web" />
+</menu>

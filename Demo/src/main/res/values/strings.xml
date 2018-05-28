@@ -1,0 +1,46 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:override="true">Demo</string>
+    <string name="audio">录音测试</string>
+
+    <string name="load">加载测试</string>
+    <string name="cmd">命令测试</string>
+    <string name="radiogroup_test">RadioGroup测试</string>
+    <string name="webjs_test">JS和原生交互</string>
+    <string name="word_test">word测试</string>
+
+
+    <string name="test">test</string>
+    <string name="design">Design测试</string>
+
+    <string name="list">List</string>
+    <string name="list_swipe">侧滑列表</string>
+    <string name="recycler_list">Recycler列表</string>
+    <string name="list_swipe_custom">SwipeMenuView</string>
+    <string name="list_swipe_recycler">SwipeRecycler</string>
+    <string name="list_recycler">RecyclerView测试</string>
+    <string name="list_float">悬乎列表</string>
+    <string name="list_test">Test</string>
+    <string name="finger">指纹</string>
+
+    <string name="camera">Camera</string>
+    <string name="camera_scan">二维码扫描</string>
+    <string name="camera_scan_result">扫描结果</string>
+    <string name="camera_qrcode_builder">二维码生成</string>
+    <string name="camera_qrcode">二维码</string>
+    <string name="camera_barcode">条形码</string>
+    <string name="camera_qrcode_builder_hint">请输入要生成的内容</string>
+    <string name="camera_qrcode_builder_bar_format_hint">条形码只能是字母或数字</string>
+    <string name="option">选择</string>
+    <string name="camera_take">拍照</string>
+    <string name="camera_album">相册</string>
+    <string name="camera_album_pager_format">（%1$d/%2$d）</string>
+    <string name="camera_picture">图片选择</string>
+    <string name="camera_picture_more">多图选择</string>
+    <string name="camera_picture_single">单图选择</string>
+    <string name="camera_picture_more_format">多图选择（%1$d）</string>
+
+    <string name="web">Web</string>
+    <string name="web_broswer">Broswer</string>
+    <string name="web_nativejs">JS和原生交互</string>
+    <string name="web_x5">X5测试</string>
+</resources>

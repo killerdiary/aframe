@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="edit_height">46dip</dimen>
+    <dimen name="vpager_point_width">4dp</dimen>
+    <dimen name="vpager_point_margin_left">6dp</dimen>
+    <dimen name="recycler_indicator_width">30dp</dimen>
+</resources>

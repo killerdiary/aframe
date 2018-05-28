@@ -1,0 +1,48 @@
+<resources>
+    <!--dimen END-->
+    <dimen name="header_height">45dip</dimen>
+    <dimen name="header_func_width">60dip</dimen>
+    <dimen name="margin_normal">10dip</dimen>
+    <dimen name="titlebar_margin">12dip</dimen>
+    <dimen name="margin_default">20dip</dimen>
+    <dimen name="margin_big">40dip</dimen>
+    <dimen name="padding_normal">4dip</dimen>
+    <dimen name="padding_default">8dip</dimen>
+    <dimen name="web_refresh_progressbar_width">20dip</dimen>
+    <dimen name="web_refresh_progressbar_left">20dip</dimen>
+    <dimen name="txt_smaller">10sp</dimen>
+    <dimen name="txt_small">12sp</dimen>
+    <dimen name="txt_default">14sp</dimen>
+    <dimen name="txt_medium">16sp</dimen>
+    <dimen name="txt_big">18sp</dimen>
+    <dimen name="lv_heigth">80dip</dimen>
+    <dimen name="gallery_point_height">25dip</dimen>
+    <dimen name="btn_height">40dip</dimen>
+    <dimen name="btn_radius">@dimen/radius</dimen>
+    <dimen name="radius">5dip</dimen>
+    <dimen name="radius_small">2dip</dimen>
+    <!--dimen END-->
+
+    <dimen name="dp_066">0.66dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_6">6dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_14">14dp</dimen>
+    <dimen name="dp_18">18dp</dimen>
+    <dimen name="dp_22">22dp</dimen>
+    <dimen name="dp_36">36dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
+    <dimen name="dp_72">72dp</dimen>
+
+    <dimen name="sp_12">12sp</dimen>
+    <dimen name="sp_14">14sp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+
+    <dimen name="textandiconmargin">10dp</dimen>
+    <dimen name="btn_picker_height">36dp</dimen>
+    <dimen name="btn_picker_radius">18dp</dimen>
+
+    <dimen name="recycler_indicator_width">30dp</dimen>
+    <dimen name="recycler_loadmore_height">60dip</dimen>
+</resources>

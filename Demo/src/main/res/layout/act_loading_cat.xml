@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_loading_cat_bg"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="170dp"
+        android:layout_height="200dp"
+        android:background="@drawable/shape_loading_cat_bg">
+
+        <ImageView
+            android:id="@+id/loading_cat_imgMouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ico_loading_cat_mouse" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/loading_cat_imgHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/ico_loading_cat_head" />
+
+            <ImageView
+                android:id="@+id/loading_cat_imgLeftEye"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3.5dp"
+                android:layout_marginTop="12.5dp"
+                android:src="@mipmap/ico_loading_cat_eye" />
+
+            <com.hy.app.widget.load.EyelidView
+                android:id="@+id/loading_cat_evLeft"
+                android:layout_width="24dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="3.5dp"
+                android:layout_marginTop="12.5dp" />
+
+            <ImageView
+                android:id="@+id/loading_cat_imgRightEye"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="12.5dp"
+                android:src="@mipmap/ico_loading_cat_eye" />
+
+            <com.hy.app.widget.load.EyelidView
+                android:id="@+id/loading_cat_evRight"
+                android:layout_width="24dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="12.5dp" />
+        </RelativeLayout>
+
+        <com.hy.app.widget.load.GraduallyTextView
+            android:id="@+id/loading_cat_txtMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:text="L O A D I N G ..."
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

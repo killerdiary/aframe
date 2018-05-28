@@ -1,0 +1,15 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hy.album" >
+
+    <application android:theme="@style/AppBaseTheme">
+        <activity
+            android:name="com.hy.album.ui.AlbumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hy.album.ui.AlbumPagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hy.album.ui.MultImageActivity"
+            android:screenOrientation="portrait" />
+    </application>
+</manifest>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#333333"
+    android:fitsSystemWindows="false">
+
+    <com.hy.frame.qrcode.CameraScanView
+        android:id="@+id/camera_scan_cameraView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/head_toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/appHeaderHeight"
+        android:background="@color/translucence"
+        android:fitsSystemWindows="false" />
+
+</RelativeLayout>

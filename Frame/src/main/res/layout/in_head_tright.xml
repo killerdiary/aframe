@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/head_vRight"
+    style="@style/AppBaseTheme.TxtStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="right"
+    android:background="@drawable/transparent_selector"
+    android:gravity="center"
+    android:minWidth="?attr/appHeaderHeight"
+    android:padding="@dimen/padding_default"
+    android:text="@string/confirm"
+    android:textColor="?attr/appTitleColor"
+    tools:ignore="RtlHardcoded" />

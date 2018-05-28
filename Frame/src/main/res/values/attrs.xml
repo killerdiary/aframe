@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="appBackground" format="reference|color" />
+    <attr name="appThemeColor" format="reference|color" />
+    <attr name="appTitleSize" format="dimension" />
+    <attr name="appHeaderHeight" format="dimension" />
+    <attr name="appTitleColor" format="reference|color" />
+    <attr name="appTitleBarBg" format="reference|color" />
+    <attr name="appProgressColor" format="reference|color" />
+    <declare-styleable name="RoundImageView">
+        <attr name="rivRadius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="TintImageView">
+        <attr name="tivTint" format="reference|color" />
+    </declare-styleable>
+    <declare-styleable name="NavView">
+        <attr name="navHorizontal" format="boolean" />
+        <attr name="navChecked" format="boolean" />
+        <attr name="navDrawRight" format="reference" />
+        <attr name="navDrawRightWidth" format="dimension" />
+        <attr name="navDrawRightHeight" format="dimension" />
+        <attr name="navText" format="string" />
+        <attr name="navTextColor" format="reference|color" />
+        <attr name="navTextSize" format="dimension" />
+        <attr name="navDraw" format="reference|color" />
+        <attr name="navDrawTint" format="reference|color" />
+        <attr name="navDrawWidth" format="dimension" />
+        <attr name="navDrawHeight" format="dimension" />
+        <attr name="navTextRight" format="boolean" />
+        <attr name="navPadding" format="dimension" />
+        <attr name="navCenter" format="boolean" />
+        <attr name="navDrawPadding" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="CircleImageView">
+        <attr name="civBorderWidth" format="dimension" />
+        <attr name="civBorderColor" format="color" />
+        <attr name="civBorderOverlay" format="boolean" />
+        <attr name="civFillColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="KeyValueView">
+        <attr name="kvDrawRight" format="reference" />
+        <attr name="kvDrawRightWidth" format="dimension" />
+        <attr name="kvKey" format="string" />
+        <attr name="kvKeyColor" format="reference|color" />
+        <attr name="kvKeySize" format="dimension" />
+        <attr name="kvKeySign" format="string" />
+        <attr name="kvValue" format="string" />
+        <attr name="kvValueColor" format="reference|color" />
+        <attr name="kvValueSize" format="dimension" />
+        <attr name="kvValueHint" format="string" />
+        <attr name="kvValueHintColor" format="reference|color" />
+        <attr name="kvValuePadding" format="dimension" />
+        <attr name="kvValuePaddingLeft" format="dimension" />
+        <attr name="kvValuePaddingRight" format="dimension" />
+        <attr name="kvValuePaddingTop" format="dimension" />
+        <attr name="kvValuePaddingBottom" format="dimension" />
+        <attr name="kvValueMargin" format="dimension" />
+        <attr name="kvValueMarginLeft" format="dimension" />
+        <attr name="kvValueMarginRight" format="dimension" />
+        <attr name="kvValueMarginTop" format="dimension" />
+        <attr name="kvValueMarginBottom" format="dimension" />
+        <attr name="kvValueRight" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="GifView">
+        <attr name="gif" format="reference" />
+        <attr name="paused" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="AVLoadingIndicatorView">
+        <attr name="minWidth" format="dimension" />
+        <attr name="maxWidth" format="dimension" />
+        <attr name="minHeight" format="dimension" />
+        <attr name="maxHeight" format="dimension" />
+        <attr name="indicatorName" format="string" />
+        <attr name="indicatorColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="SwipeMenuLayout">
+        <attr name="leftViewId" format="reference" />
+        <attr name="rightViewId" format="reference" />
+        <attr name="contentViewId" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MyEditText">
+        <attr name="mEditDrawLeftWidth" format="dimension" />
+        <attr name="mEditDrawLeftHeight" format="dimension" />
+        <attr name="mEditDrawTopWidth" format="dimension" />
+        <attr name="mEditDrawTopHeight" format="dimension" />
+        <attr name="mEditDrawRightWidth" format="dimension" />
+        <attr name="mEditDrawRightHeight" format="dimension" />
+        <attr name="mEditDrawBottomWidth" format="dimension" />
+        <attr name="mEditDrawBottomHeight" format="dimension" />
+        <attr name="mEditDrawRight" format="reference" />
+        <attr name="mEditDrawRightStyle" format="enum">
+            <enum name="none" value="0" />
+            <enum name="eye" value="1" />
+            <enum name="clear" value="2" />
+            <enum name="normal" value="3" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="MyTextView">
+        <attr name="mTxtDrawLeftWidth" format="dimension" />
+        <attr name="mTxtDrawLeftHeight" format="dimension" />
+        <attr name="mTxtDrawTopWidth" format="dimension" />
+        <attr name="mTxtDrawTopHeight" format="dimension" />
+        <attr name="mTxtDrawRightWidth" format="dimension" />
+        <attr name="mTxtDrawRightHeight" format="dimension" />
+        <attr name="mTxtDrawBottomWidth" format="dimension" />
+        <attr name="mTxtDrawBottomHeight" format="dimension" />
+        <attr name="mTxtDrawCenter" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="SwipeMenuView">
+        <attr name="swipeEnable" format="boolean" />
+        <attr name="swipeIos" format="boolean" />
+        <attr name="swipeLeftSwipe" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="BadgeTextView">
+        <attr name="badgeNubmer" format="integer" />
+        <attr name="badgeMaxNubmer" format="integer" />
+        <attr name="badgeBackground" format="color" />
+        <attr name="badgeRadius" format="dimension" />
+        <attr name="badgeZeroHide" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="TimerButton">
+        <attr name="timerPrepareText" format="string" />
+        <attr name="timerStartText" format="string" />
+        <attr name="timerEndText" format="string" />
+    </declare-styleable>
+    <declare-styleable name="LoopWheelView">
+        <attr name="lwvTextSize" format="dimension" />
+        <attr name="lwvLineSpace" format="float" />
+        <attr name="lwvCenterTextColor" format="color" />
+        <attr name="lwvOuterTextColor" format="color" />
+        <attr name="lwvDividerColor" format="color" />
+        <attr name="lwvDividerHeight" format="dimension" />
+        <attr name="lwvItemsVisibleCount" format="integer" />
+        <attr name="lwvIsLoop" format="boolean" />
+        <attr name="lwvInitialPosition" format="integer" />
+        <attr name="lwvScaleX" format="float" />
+        <attr name="lwvGradientColor" format="color" />
+        <attr name="lwvUnitText" format="string" />
+        <attr name="lwvUnitTextColor" format="color" />
+        <attr name="lwvUnitTextSize" format="dimension" />
+        <attr name="lwvUnitPadding" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="MyRadioGroup">
+        <attr name="mrgMultiChoice" format="boolean" />
+    </declare-styleable>
+</resources>

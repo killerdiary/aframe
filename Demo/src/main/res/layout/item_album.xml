@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/album_i_imgPic"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:background="@color/divider_gray_light"
+        android:padding="1px"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/v_image" />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/padding_normal"
+        android:background="@drawable/shape_radio" />
+
+    <com.hy.frame.widget.BadgeTextView
+        android:id="@+id/album_i_txtBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/padding_normal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_small"
+        app:badgeBackground="@color/theme"
+        app:badgeNubmer="1"
+        app:badgeRadius="10dp"
+        android:visibility="gone"
+        app:badgeZeroHide="false"
+        tools:ignore="RelativeOverlap" />
+
+    <View
+        android:id="@+id/album_i_vMask"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:background="@drawable/transparent_selector" />
+
+    <View
+        android:id="@+id/album_i_vCheck"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>
