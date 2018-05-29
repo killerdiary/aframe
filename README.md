@@ -1,12 +1,18 @@
 # aframe
-Android Frame
+#### Android Frame
 
-使用方式
+#### 使用方式
+
+~~~
 dependencies{
-    api 'com.github.killerdiary:aframe:v2.3.1'
+    implementation 'com.github.killerdiary:aframe:v2.3.1'
 }
+~~~
 
-其他引用包
+
+### 其他引用包
+
+~~~
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
     implementation "com.android.support:design:$supportVersion"
@@ -43,5 +49,4 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
     implementation 'com.android.support:multidex:1.0.3'
 }
-
-
+~~~
