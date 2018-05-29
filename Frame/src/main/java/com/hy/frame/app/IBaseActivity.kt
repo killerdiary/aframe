@@ -3,7 +3,6 @@ package com.hy.frame.app
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
 import android.view.View
 
 /**
@@ -81,11 +80,11 @@ interface IBaseActivity {
 
     fun setHeaderLeft(@DrawableRes left: Int)
 
-    fun setHeaderLeftTxt(@StringRes left: Int)
+    fun setHeaderLeftTxt(left: String?)
 
     fun setHeaderRight(@DrawableRes right: Int)
 
-    fun setHeaderRightTxt(@StringRes right: Int)
+    fun setHeaderRightTxt(right: String?)
 
     fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int)
 

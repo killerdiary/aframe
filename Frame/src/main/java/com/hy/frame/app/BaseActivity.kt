@@ -264,13 +264,23 @@ abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), andro
     }
 
     @SuppressLint("ResourceType")
-    override fun setHeaderLeftTxt(@StringRes left: Int) {
-        if (mToolbar != null && left > 0) {
-            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null)
+    protected fun setHeaderLeftTxt(@StringRes left: Int) {
+        setHeaderRightTxt(if (left == 0) null else getString(left))
+    }
+
+    override fun setHeaderLeftTxt(left: String?) {
+        if (mToolbar != null) {
+            if (findViewById<View>(R.id.head_vLeft, mToolbar) == null) {
+                if (left.isNullOrEmpty()) return
                 View.inflate(mContext, R.layout.in_head_tleft, mToolbar)
+            }
             val txt = findViewById<TextView>(R.id.head_vLeft, mToolbar)
+            if (left.isNullOrEmpty()) {
+                mToolbar?.removeView(txt)
+                return
+            }
             txt?.setOnClickListener(this)
-            txt?.setText(left)
+            txt?.text = left
         }
     }
 
@@ -280,8 +290,24 @@ abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), andro
     }
 
     @SuppressLint("ResourceType")
-    override fun setHeaderRightTxt(@StringRes right: Int) {
-        addHeaderRight(right, getString(right), R.id.head_vRight)
+    protected fun setHeaderRightTxt(@StringRes right: Int) {
+        setHeaderRightTxt(if (right == 0) null else getString(right))
+    }
+
+    override fun setHeaderRightTxt(right: String?) {
+        if (mToolbar != null) {
+            if (findViewById<View>(R.id.head_vRight, mToolbar) == null) {
+                if (right.isNullOrEmpty()) return
+                View.inflate(mContext, R.layout.in_head_tright, mToolbar)
+            }
+            val txt = findViewById<TextView>(R.id.head_vRight, mToolbar)
+            if (right.isNullOrEmpty()) {
+                mToolbar?.removeView(txt)
+                return
+            }
+            txt?.setOnClickListener(this)
+            txt?.text = right
+        }
     }
 
     override fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int) {
