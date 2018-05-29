@@ -1,0 +1,33 @@
+<resources>
+    <!--dimen-->
+    <public name="vpager_point_width" type="dimen" />
+    <public name="vpager_point_margin_left" type="dimen" />
+    <!--dimen END-->
+    <!--color-->
+
+    <!--color END-->
+    <!--string-->
+    <public name="app_name" type="string" />
+    <public name="album" type="string" />
+    <public name="album_pager_format" type="string" />
+    <public name="album_more_format" type="string" />
+    <public name="album_single" type="string" />
+    <!--string END-->
+    <!--attr-->
+
+    <!--attr END-->
+    <!--layout-->
+    <public name="act_album_pager" type="layout" />
+    <public name="act_image_mult" type="layout" />
+    <public name="item_album" type="layout" />
+    <public name="item_album_image" type="layout" />
+    <public name="item_image_mult" type="layout" />
+    <public name="item_vpager_point" type="layout" />
+    <!--layout END-->
+    <!--drawable-->
+
+    <!--drawable END-->
+    <!--mipmap-->
+
+    <!--mipmap END-->
+</resources>

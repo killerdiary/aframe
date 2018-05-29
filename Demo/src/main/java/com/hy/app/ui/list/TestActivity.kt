@@ -47,7 +47,6 @@ class TestActivity : BaseActivity(), IAdapterListener<MenuInfo> {
     private fun updateUI() {
         if (adapter == null) {
             adapter = RecyclerAdapter(getCurContext()!!, datas!!, this)
-            adapter?.setRefreshView()
             rcyList?.adapter = adapter
         } else
             adapter?.refresh(datas)

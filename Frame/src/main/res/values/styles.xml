@@ -2,14 +2,14 @@
 
     <!--<style name="AppBaseTheme" parent="Base.Theme.AppCompat">-->
     <!--<style name="AppBaseTheme" parent="Theme.AppCompat.NoActionBar">-->
-    <style name="AppBaseTheme" parent="Base.Theme.AppCompat">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="textColorPrimary">@color/txt_black</item>
-        <item name="textColorHighlight">@color/txt_gray_light</item>
-        <item name="textColorHint">@color/txt_gray</item>
-        <item name="textColorLink">@color/blue</item>
-        <item name="textAppearance">@style/AppBaseTheme.TxtStyle</item>
+        <item name="android:textColorPrimary">@color/txt_black</item>
+        <item name="android:textColorHighlight">@color/txt_gray_light</item>
+        <item name="android:textColorHint">@color/txt_gray</item>
+        <item name="android:textColorLink">@color/blue</item>
+        <item name="android:textAppearance">@style/AppBaseTheme.TxtStyle</item>
         <item name="toolbarStyle">@style/AppBaseTheme.CurToolbar</item>
         <item name="appHeaderHeight">@dimen/header_height</item>
         <item name="appBackground">@color/whitesmoke</item>
@@ -32,7 +32,7 @@
         <item name="colorControlHighlight">@color/btn_highlight</item>
         <!--按钮默认状态下的背景色-->
         <item name="colorButtonNormal">?attr/appThemeColor</item>
-        <item name="windowBackground">?attr/appBackground</item>
+        <item name="android:windowBackground">?attr/appBackground</item>
     </style>
 
     <style name="AppBaseTheme.CurToolbar" parent="Widget.AppCompat.Toolbar">
@@ -41,10 +41,10 @@
     </style>
 
     <style name="AppBaseTheme.TxtStyle">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textColorHint">?android:textColorHint</item>
-        <item name="android:textColorHighlight">?android:textColorHighlight</item>
-        <item name="android:textColorLink">?android:textColorLink</item>
+        <item name="android:textColor">@color/txt_black</item>
+        <item name="android:textColorHint">@color/txt_gray</item>
+        <item name="android:textColorHighlight">@color/txt_gray_light</item>
+        <item name="android:textColorLink">@color/blue</item>
         <item name="android:textSize">@dimen/txt_default</item>
         <item name="android:textStyle">normal</item>
     </style>
@@ -74,9 +74,8 @@
         <item name="android:textColor">@color/txt_black</item>
     </style>
 
-    <style name="AppBaseTheme.DialogTheme" parent="ThemeOverlay.AppCompat.Dialog">
+    <style name="AppBaseTheme.DialogTheme" parent="Theme.AppCompat.Dialog">
         <item name="android:windowFrame">@null</item>
-
         <!-- 边框 -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/transparent</item>

@@ -11,6 +11,7 @@
 
         <Button
             android:id="@+id/button0"
+            style="@style/btnStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -18,16 +19,20 @@
 
         <Button
             android:id="@+id/button1"
+            style="@style/btnStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_normal"
             android:text="开启远程ADB" />
 
         <Button
             android:id="@+id/button2"
+            style="@style/btnStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_normal"
             android:text="netcfg" />
 
         <TextView

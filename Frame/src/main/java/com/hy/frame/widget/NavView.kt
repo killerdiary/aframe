@@ -3,6 +3,8 @@ package com.hy.frame.widget
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.support.v4.widget.ImageViewCompat
+import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.*
@@ -17,7 +19,7 @@ import com.hy.frame.util.ResUtil
 class NavView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs), Checkable {
     var llyContainer: LinearLayout? = null
         private set
-    var icoKey: TintImageView? = null
+    var icoKey: AppCompatImageView? = null
         private set
     var imgRight: ImageView? = null
         private set
@@ -59,7 +61,7 @@ class NavView @JvmOverloads constructor(context: Context, attrs: AttributeSet? =
         if (draw != null)
             icoKey!!.setImageDrawable(draw)
         if (drawTint != null)
-            icoKey!!.setColorFilter(drawTint)
+            ImageViewCompat.setImageTintList(icoKey!!, drawTint)
         llyContainer!!.addView(icoKey, LinearLayout.LayoutParams(if (drawWidth > 0) drawWidth else LinearLayout.LayoutParams.WRAP_CONTENT, if (drawHeight > 0) drawHeight else LinearLayout.LayoutParams.WRAP_CONTENT))
         txtKey = TextView(context)
         if (key != null)

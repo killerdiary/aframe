@@ -2,12 +2,9 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="appBackground">@color/whitesmoke</item>
         <item name="appThemeColor">@color/colorPrimary</item>
-        <item name="appTitleSize">@dimen/txt_big</item>
+        <item name="appTitleSize">@dimen/txt_title</item>
         <item name="appTitleColor">@color/white</item>
         <item name="appTitleBarBg">@color/colorPrimary</item>
         <item name="appProgressColor">?attr/appThemeColor</item>

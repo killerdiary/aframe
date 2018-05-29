@@ -38,7 +38,7 @@ object MyToast {
         try {
             if (toast != null)
                 toast!!.cancel()
-            val v = View.inflate(context, R.layout.toast, null)
+            val v = View.inflate(context, R.layout.v_toast, null)
             val txt = v.findViewById<TextView>(R.id.txtMsg)
             txt?.text = msg
             txt?.setCompoundDrawablesWithIntrinsicBounds(drawId, 0, 0, 0)

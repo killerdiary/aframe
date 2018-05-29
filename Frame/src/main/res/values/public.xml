@@ -139,12 +139,46 @@
     <!--layout END-->
     <!--drawable-->
     <public name="bg_toast" type="drawable" />
+    <public name="btn_picker_left_selector" type="drawable" />
+    <public name="btn_picker_right_selector" type="drawable" />
+    <public name="btn_picker_selector" type="drawable" />
     <public name="btn_selector" type="drawable" />
-    <public name="default_selector" type="drawable" />
+    <public name="item_selector" type="drawable" />
     <public name="rotate_loading_circle" type="drawable" />
+    <public name="shape_radio" type="drawable" />
+    <public name="transparent_selector" type="drawable" />
+    <public name="v_back" type="drawable" />
+    <public name="v_image" type="drawable" />
+    <public name="v_net_fail" type="drawable" />
+    <public name="v_switch_camera" type="drawable" />
+    <public name="v_warn" type="drawable" />
+    <public name="vpager_point_selector" type="drawable" />
     <!--drawable END-->
     <!--mipmap-->
     <public name="ic_camera_switch" type="mipmap" />
 
     <!--mipmap END-->
+    <!--style-->
+    <public name="AppBaseTheme" type="style" />
+    <public name="AppBaseTheme.CurToolbar" type="style" />
+    <public name="AppBaseTheme.TxtStyle" type="style" />
+    <public name="AppBaseTheme.EditStyle" type="style" />
+    <public name="AppBaseTheme.BtnStyle" type="style" />
+    <public name="AppBaseTheme.DialogTheme" type="style" />
+    <public name="AVLoadingIndicatorView" type="style" />
+    <public name="AVLoadingIndicatorView.Large" type="style" />
+    <public name="AVLoadingIndicatorView.Small" type="style" />
+    <public name="animBottomInBottomOutStyle" type="style" />
+    <public name="AppBaseTheme.ImageStyle" type="style" />
+    <!--style END-->
+    <!--anim-->
+    <public name="fade_in" type="anim" />
+    <public name="fade_out" type="anim" />
+    <public name="push_bottom_in" type="anim" />
+    <public name="push_bottom_out" type="anim" />
+    <public name="push_left_in" type="anim" />
+    <public name="push_left_out" type="anim" />
+    <public name="push_right_in" type="anim" />
+    <public name="push_right_out" type="anim" />
+    <!--anim END-->
 </resources>

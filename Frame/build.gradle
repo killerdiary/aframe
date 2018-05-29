@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "2.3.1"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -31,19 +31,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-        maven { url "https://jitpack.io" }
-    }
-}
+
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
     //support-annotations support-core-utils support-fragment support-vector-drawable animated-vector-drawable
-    //api "com.android.support:appcompat-v7:$supportVersion"
+//    api "com.android.support:appcompat-v7:$supportVersion"
     //support-annotations support-compat support-core-ui
     //api ("com.android.support:recyclerview-v7:$supportVersion")
     //support-v4 appcompat-v7 recyclerview-v7 transition

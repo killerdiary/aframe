@@ -73,3 +73,5 @@
 -keep class com.hy.frame.**{*;}
 -keep class com.hy.http.**{*;}
 -keep class com.lidroid.xutils.**{*;}
+
+-keep public class *extends java.lang.annotation.Annotation {*;}
