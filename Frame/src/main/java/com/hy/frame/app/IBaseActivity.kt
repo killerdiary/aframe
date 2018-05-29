@@ -89,5 +89,5 @@ interface IBaseActivity {
 
     fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int)
 
-    fun addHeaderRightPath(@DrawableRes rightPath: String?, @IdRes id: Int)
+    fun addHeaderRightPath(rightPath: String?, @IdRes id: Int)
 }

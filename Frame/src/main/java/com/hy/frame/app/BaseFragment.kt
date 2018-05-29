@@ -267,7 +267,7 @@ abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.V
         addHeaderRight(right, null, id)
     }
 
-    override fun addHeaderRightPath(@DrawableRes rightPath: String?, @IdRes id: Int) {
+    override fun addHeaderRightPath(rightPath: String?, @IdRes id: Int) {
         addHeaderRight(0, rightPath, id)
     }
 
