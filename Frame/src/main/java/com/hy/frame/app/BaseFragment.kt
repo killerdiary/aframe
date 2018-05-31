@@ -219,7 +219,7 @@ abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.V
     /**
      * 设置标题
      */
-    protected fun setTitle(title: CharSequence?) {
+    override fun setTitle(title: CharSequence?) {
         if (mToolbar != null) {
             if (findViewById<View>(R.id.head_vTitle, mToolbar) == null)
                 View.inflate(getCurContext(), R.layout.in_head_title, mToolbar)

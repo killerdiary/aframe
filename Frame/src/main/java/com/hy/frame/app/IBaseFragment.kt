@@ -78,4 +78,9 @@ interface IBaseFragment {
     fun addHeaderRight(@DrawableRes right: Int, @IdRes id: Int)
 
     fun addHeaderRightPath(rightPath: String?, @IdRes id: Int)
+
+    /**
+     * 设置标题
+     */
+    fun setTitle(title: CharSequence?)
 }
