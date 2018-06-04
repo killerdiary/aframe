@@ -329,7 +329,7 @@ abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), andro
                     if (right != 0) {
                         img.setImageResource(right)
                     } else {
-                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.drawable.v_warn).error(R.drawable.v_warn)).load(rightPath).into(img)
+                        Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.color.transparent).error(R.drawable.v_warn)).load(rightPath).into(img)
                     }
                 }
                 return
@@ -350,7 +350,7 @@ abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), andro
             if (right != 0) {
                 img?.setImageResource(right)
             } else {
-                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.drawable.v_warn).error(R.drawable.v_warn)).load(rightPath).into(img!!)
+                Glide.with(getCurContext()).asBitmap().apply(RequestOptions.noTransformation().placeholder(R.color.transparent).error(R.drawable.v_warn)).load(rightPath).into(img!!)
             }
         }
     }
