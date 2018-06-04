@@ -101,23 +101,26 @@ abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), andro
 
 
     private fun initToolbar() {
-        if (mToolbar == null) return
-        mToolbar!!.setTitle(R.string.empty)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val statusBarHeight = getStatusBarHeight()
-            if (isTranslucentStatus() && statusBarHeight > 0) {
+            if (isTranslucentStatus()) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                mToolbar!!.setPadding(0, statusBarHeight, 0, 0)
-                if (mToolbar!!.layoutParams != null) {
-                    val params = mToolbar!!.layoutParams
-                    params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
-                    mToolbar!!.layoutParams = params
+                if (mToolbar == null) return
+                mToolbar!!.setTitle(R.string.empty)
+                val statusBarHeight = getStatusBarHeight()
+                if( statusBarHeight > 0) {
+                    mToolbar!!.setPadding(0, statusBarHeight, 0, 0)
+                    if (mToolbar!!.layoutParams != null) {
+                        val params = mToolbar!!.layoutParams
+                        params.height = resources.getDimensionPixelSize(R.dimen.header_height) + statusBarHeight
+                        mToolbar!!.layoutParams = params
+                    }
                 }
             } else {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             }
         }
-        setSupportActionBar(mToolbar)
+        if (mToolbar != null)
+            setSupportActionBar(mToolbar)
     }
 
     override fun getStatusBarHeight(): Int {
