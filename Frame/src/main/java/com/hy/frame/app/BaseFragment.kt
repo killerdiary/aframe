@@ -316,7 +316,8 @@ abstract class BaseFragment<out P : IBasePresenter> : Fragment(), android.view.V
             if (right == 0 && rightPath == null) return
             val v = View.inflate(getCurContext(), R.layout.in_head_right, null)
             img = findViewById(R.id.head_vRight, v)
-            img?.id = id
+            if (id != 0)
+                img?.id = id
             val array = getCurContext().obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
             val width = array.getDimensionPixelSize(0, 0)
             array.recycle()

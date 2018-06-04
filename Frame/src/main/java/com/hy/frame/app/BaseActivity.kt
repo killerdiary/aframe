@@ -337,7 +337,8 @@ abstract class BaseActivity<out P : IBasePresenter> : AppCompatActivity(), andro
             if (right == 0 && rightPath == null) return
             val v = View.inflate(mContext, R.layout.in_head_right, null)
             img = findViewById(R.id.head_vRight, v)
-            img?.id = id
+            if (id != 0)
+                img?.id = id
             val array = theme.obtainStyledAttributes(intArrayOf(R.attr.appHeaderHeight))
             val width = array.getDimensionPixelSize(0, 0)
             array.recycle()
