@@ -1,12 +1,12 @@
 package com.hy.frame.util
 
 import android.content.Context
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.hy.frame.R
 
 /**

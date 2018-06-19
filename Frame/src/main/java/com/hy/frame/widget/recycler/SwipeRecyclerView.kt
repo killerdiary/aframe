@@ -1,13 +1,10 @@
 package com.hy.frame.widget.recycler
 
 import android.content.Context
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+
 import android.util.AttributeSet
 import android.view.View
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hy.frame.R
 
 

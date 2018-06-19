@@ -2,9 +2,9 @@ package com.hy.frame.util
 
 import android.content.Context
 import android.os.Build
-import android.support.annotation.ColorRes
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import androidx.annotation.ColorRes
 
 /**
  * 常用的Dimension转换

@@ -1,9 +1,9 @@
 package com.hy.frame.adapter
 
 import android.os.Parcelable
-import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 
 /**
  * View类型Pager适配器

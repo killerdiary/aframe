@@ -2,18 +2,11 @@ package com.hy.frame.util
 
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
-import android.net.Uri
-import android.os.Build
-import android.support.v4.content.FileProvider
 import android.text.TextUtils
 import android.view.View
-import android.widget.ImageView
-import com.bumptech.glide.RequestManager
-import com.bumptech.glide.request.RequestOptions
 import com.hy.frame.R
 import java.io.File
 import java.text.ParseException

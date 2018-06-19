@@ -3,9 +3,9 @@ package com.hy.frame.app
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.IdRes
 import android.view.View
 import android.view.WindowManager.LayoutParams
+import androidx.annotation.IdRes
 import com.hy.frame.R
 import com.hy.frame.util.HyUtil
 

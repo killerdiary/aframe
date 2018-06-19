@@ -1,9 +1,8 @@
 package com.hy.frame.widget.recycler
 
-import android.support.annotation.IdRes
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
 
 /**
  * BaseHolder

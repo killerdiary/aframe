@@ -9,7 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.util.AttributeSet
 import android.widget.ImageView
 import com.hy.frame.R

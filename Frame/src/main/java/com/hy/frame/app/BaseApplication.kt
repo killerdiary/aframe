@@ -5,12 +5,10 @@ import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
-import android.support.annotation.CallSuper
-import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.multidex.MultiDexApplication
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.AppCompatDrawableManager
 import android.text.TextUtils
+import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatDelegate
 import com.hy.frame.util.MyLog
 import java.util.concurrent.CopyOnWriteArrayList
 

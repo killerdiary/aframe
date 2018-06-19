@@ -1,10 +1,10 @@
 package com.hy.frame.app
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
 
 /**
  * @author HeYan
@@ -63,7 +63,7 @@ interface IBaseFragment {
      */
     fun sendMsg(flag: Int, obj: Any?)
 
-    fun getFragment(): android.support.v4.app.Fragment
+    fun getFragment(): Fragment
 
     fun hideHeader()
 

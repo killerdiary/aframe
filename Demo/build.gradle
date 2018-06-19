@@ -21,23 +21,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-        maven { url "https://jitpack.io" }
+        sourceCompatibility rootProject.javaVersion
+        targetCompatibility rootProject.javaVersion
     }
 }
 dependencies {
     implementation project(':Frame')
     implementation project(':Album')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:$supportVersion"
+    //com.github.killerdiary:Frame:v2.3.2
+    //com.github.killerdiary:Album:v2.3.2
+    //com.github.killerdiary:aframe:v2.3.2
+//    implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation 'com.google.zxing:core:3.3.0'
     implementation "com.android.support:gridlayout-v7:$supportVersion"
 }
