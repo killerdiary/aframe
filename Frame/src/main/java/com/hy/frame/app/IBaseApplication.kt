@@ -15,6 +15,10 @@ interface IBaseApplication {
      * Log 开关
      */
     fun isLoggable(): Boolean
+    /**
+     * 是否开启MultiDex，如需开启需要同时配置gradle defaultConfig {multiDexEnabled true}
+     */
+    fun isMultiDex(): Boolean
 
     /**
      * 主进程方法

@@ -24,14 +24,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-        maven { url "https://jitpack.io" }
-    }
-}
+
 dependencies {
     implementation project(':Frame')
 //    implementation 'com.github.killerdiary:aframe:v2.0'

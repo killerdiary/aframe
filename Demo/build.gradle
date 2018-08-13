@@ -2,8 +2,8 @@ apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 
 android {
-    compileSdkVersion  rootProject.ext.compileSdkVersion
-    buildToolsVersion  rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.hy.app.demo"
@@ -11,7 +11,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
         versionName "2.3.1"
-        multiDexEnabled true
+        multiDexEnabled true //开启dex支持 同时需要在Application中isMultiDex() = true
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -23,14 +23,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url "https://dl.bintray.com/thelasterstar/maven/" }
-        maven { url "https://jitpack.io" }
     }
 }
 dependencies {

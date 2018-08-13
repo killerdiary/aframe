@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "2.3.2"
+        versionCode 5
+        versionName "2.3.3"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -34,7 +34,7 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    api "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     //support-annotations support-core-utils support-fragment support-vector-drawable animated-vector-drawable
 //    api "com.android.support:appcompat-v7:$supportVersion"
     //support-annotations support-compat support-core-ui

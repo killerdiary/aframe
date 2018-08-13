@@ -9,6 +9,7 @@ import com.tencent.smtt.sdk.QbSdk
  * @time 2015/11/20 18:08
  */
 class MyApplication : com.hy.frame.app.BaseApplication() {
+    override fun isMultiDex(): Boolean = true
 
     override fun isLoggable(): Boolean = true
 
