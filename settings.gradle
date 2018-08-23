@@ -1,1 +1,1 @@
-include ':Frame',':Album',':Demo'
+include ':Frame',':Demo'
