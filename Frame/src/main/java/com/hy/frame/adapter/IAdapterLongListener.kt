@@ -10,7 +10,7 @@ import android.view.View
 interface IAdapterLongListener<in T> : IAdapterListener<T> {
 
     /**
-     * 点击事件
+     * 长按事件
      * @param v
      * @param item
      * @param position

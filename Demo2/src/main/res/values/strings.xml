@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">插件Demo</string>
+    <string name="menu_jar">jar插件</string>
+    <string name="menu_so">so插件</string>
+    <string name="menu_so_web">xwalk so插件化</string>
+    <string name="menu_apk">apk插件</string>
+    <string name="menu_test">测试</string>
+    <string name="menu_test_t1">启动好玩乐园</string>
+    <string name="menu_test_t2">发送用户信息</string>
+    <string name="menu_test_t3">发送鉴权结果-成功</string>
+    <string name="menu_test_t4">发送鉴权结果-失败</string>
+    <string name="menu_test_t5">直接打开当前游戏</string>
+    <string name="menu_test_t6">启动鉴权结果-成功</string>
+    <string name="menu_test_t7">启动鉴权结果-失败</string>
+    <string name="API_HOST">http://192.168.0.114:1000</string>
+    <string name="API_FILE_XWALK">/xwalk/23.53.589.4/armeabi-v7a.7z</string>
+    <string name="menu_proxy">代理服务器</string>
+    <string name="menu_proxy_start">开启代理</string>
+    <string name="menu_proxy_stop">关闭代理</string>
+
+    <string name="proxy_on">代理运行中，点击关闭</string>
+    <string name="proxy_off">代理已停止，点击开启</string>
+    <string name="service_text">代理正在运行，点击进入管理面板。</string>
+    <string name="proxy_started">代理运行中</string>
+    <string name="proxy_stopped">代理已停止</string>
+</resources>

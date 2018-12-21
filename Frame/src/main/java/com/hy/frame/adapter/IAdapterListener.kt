@@ -8,6 +8,7 @@ import android.view.View
  * @time 2017/5/23 9:57
  */
 interface IAdapterListener<in T> {
+
     /**
      * 点击事件
      * @param v

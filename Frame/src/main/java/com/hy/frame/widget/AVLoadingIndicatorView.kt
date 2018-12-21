@@ -130,7 +130,7 @@ class AVLoadingIndicatorView : View {
         }
         val drawableClassName = StringBuilder()
         if (!indicatorName!!.contains(".")) {
-            val defaultPackageName = javaClass.`package`.name
+            val defaultPackageName = javaClass.getPackage()?.name ?: return
             drawableClassName.append(defaultPackageName)
                     .append(".indicators")
                     .append(".")
@@ -141,7 +141,7 @@ class AVLoadingIndicatorView : View {
             val indicator = drawableClass.newInstance() as Indicator
             this.indicator = indicator
         } catch (e: ClassNotFoundException) {
-            Log.e(TAG, "Didn't find your class , check the name again !")
+            Log.e(TAG, "Didn't find your class , check the name again ! class=" + drawableClassName.toString())
         } catch (e: InstantiationException) {
             e.printStackTrace()
         } catch (e: IllegalAccessException) {

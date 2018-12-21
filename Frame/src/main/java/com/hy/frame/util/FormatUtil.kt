@@ -181,14 +181,14 @@ object FormatUtil {
     /**
      * 是否不为空
      */
-    fun isNoEmpty(datas: List<*>?): Boolean {
+    fun isNoEmpty(datas: MutableList<*>?): Boolean {
         return !isEmpty(datas)
     }
 
     /**
      * 是否为空
      */
-    fun isEmpty(datas: List<*>?): Boolean {
+    fun isEmpty(datas: MutableList<*>?): Boolean {
         if (datas == null) return true
         if (datas.isEmpty()) return true
         return false

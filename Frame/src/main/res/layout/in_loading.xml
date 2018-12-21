@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/base_llyLoad"
+    android:id="@id/base_llyLoad"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/appBackground"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -12,10 +13,10 @@
         android:layout_width="48dip"
         android:layout_height="48dip"
         app:indicatorColor="?attr/appProgressColor"
-        app:indicatorName="BallSpinFadeLoaderIndicator" />
+        app:indicatorName="BallBeatIndicator" />
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/base_imgMessage"
+        android:id="@id/base_imgMessage"
         style="@style/AppBaseTheme.ImageStyle"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -24,7 +25,7 @@
         app:tint="@color/txt_gray_light" />
 
     <TextView
-        android:id="@+id/base_txtMessage"
+        android:id="@id/base_txtMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_default"

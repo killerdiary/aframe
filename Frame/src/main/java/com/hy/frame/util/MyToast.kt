@@ -29,8 +29,7 @@ object MyToast {
             toast = Toast.makeText(context.applicationContext, msg, Toast.LENGTH_SHORT)
             toast!!.show()
         } catch (e: Exception) {
-            if (MyLog.isLoggable)
-                e.printStackTrace()
+            e.printStackTrace()
         }
     }
 
@@ -49,8 +48,7 @@ object MyToast {
             toast!!.view = v
             toast!!.show()
         } catch (e: Exception) {
-            if (MyLog.isLoggable)
-                e.printStackTrace()
+            e.printStackTrace()
         }
 
     }
@@ -66,8 +64,7 @@ object MyToast {
             toast!!.view = v
             toast!!.show()
         } catch (e: Exception) {
-            if (MyLog.isLoggable)
-                e.printStackTrace()
+            e.printStackTrace()
         }
 
     }

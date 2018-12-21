@@ -1,1 +1,3 @@
-<manifest package="com.hy.frame" />
+<manifest package="com.hy.frame">
+    <!--<application xmlns:android="http://schemas.android.com/apk/res/android" android:theme="@style/AppBaseTheme"/>-->
+</manifest>

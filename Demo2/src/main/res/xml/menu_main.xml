@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        menu="menu_jar"
+        android:title="@string/menu_jar" />
+    <item
+        menu="menu_so"
+        android:title="@string/menu_so" />
+    <item
+        menu="menu_apk"
+        android:title="@string/menu_apk" />
+    <item
+        menu="menu_jar"
+        android:title="@string/menu_jar" />
+    <item
+        menu="menu_so"
+        android:title="@string/menu_so" />
+    <item
+        menu="menu_apk"
+        android:title="@string/menu_apk" />
+    <item
+        cls="com.hy.demo2.ui.ProxyActivity"
+        android:title="@string/menu_proxy" />
+    <item
+        cls="com.hy.demo2.ui.TestActivity"
+        android:title="@string/menu_test" />
+
+</menu>

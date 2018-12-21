@@ -13,6 +13,7 @@ class MenuInfo {
     var icon: Int = 0
     var title: Int = 0
     private var data: MutableMap<String, String>? = null
+    var isSelected: Boolean = false
 
     fun getValue(key: String): String? {
         if (data != null) {

@@ -22,6 +22,8 @@
     <string name="loading">加载中&#8230;</string>
     <string name="hint_net_fail">网络连接失败，点击重试</string>
     <string name="hint_nodata">没有数据</string>
+    <string name="hint_frame_warn">使用该框架注意事项:</string>
+    <string name="hint_frame_warn_msg">1.使用Base类时，需配置application继承BaseApplication。\n2.配置application的theme继承AppBaseTheme</string>
     <string name="back">返回</string>
     <string name="confirm">确定</string>
     <string name="complete">完成</string>

@@ -2,6 +2,7 @@
 //apply plugin: 'maven'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.killerdiary'
+version = '2.5'
 
 //// 2.maven-信息
 //ext {// ext is a gradle closure allowing the declaration of global properties

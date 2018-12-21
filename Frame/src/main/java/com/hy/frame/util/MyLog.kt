@@ -9,7 +9,7 @@ import android.util.Log
  */
 object MyLog {
 
-    val TAG: String = "HyLog"
+    const val TAG: String = "HyLog"
     var isLoggable = false
 
     fun i(msg: Any) {

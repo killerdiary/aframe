@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        menu="menu_so"
+        android:title="@string/menu_so" />
+    <item
+        cls=""
+        android:title="@string/menu_so_web" />
+</menu>

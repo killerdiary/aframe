@@ -1,0 +1,191 @@
+ext.deps = [:]
+def versions = [:]
+versions.plugin_gradle = '3.4.0-alpha08'
+versions.plugin_github = "2.1"
+versions.plugin_kotlin = "1.3.10"
+
+versions.support = "28.0.0"
+versions.androidx = "1.0.0"
+versions.multidex = "1.0.3"
+versions.constraint = "1.1.3"
+
+versions.arch_core = "2.0.0"
+versions.room = "2.0.0"
+versions.lifecycle = "2.0.0"
+
+versions.dagger = "2.16"
+versions.junit = "4.12"
+versions.espresso = "3.1.0-alpha4"
+versions.retrofit = "2.3.0"
+versions.okhttp_logging_interceptor = "3.9.0"
+versions.mockwebserver = "3.8.1"
+versions.net_okhttp3 = "3.11.0"
+versions.apache_commons = "2.5"
+versions.mockito = "2.7.19"
+versions.mockito_all = "1.10.19"
+versions.mockito_android = "2.22.0"
+versions.dexmaker = "2.2.0"
+versions.constraint_layout = "2.0.0-alpha2"
+versions.glide = "4.8.0"
+versions.timber = "4.5.1"
+versions.gson = "2.8.2"
+
+versions.rxjava = "2.1.3"
+versions.rxandroid = "2.0.1"
+versions.atsl_runner = "1.1.0-alpha4"
+versions.atsl_rules = "1.1.0-alpha4"
+versions.hamcrest = "1.3"
+
+versions.paging = "2.1.0-alpha01"
+versions.navigation = "1.0.0-alpha06"
+versions.work = "1.0.0-alpha10"
+versions.xwalk = "23.53.589.4"
+def deps = [:]
+
+def plugin = [:]
+plugin.gradle = "com.android.tools.build:gradle:$versions.plugin_gradle"
+plugin.kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.plugin_kotlin"
+plugin.github = "com.github.dcendents:android-maven-gradle-plugin:$versions.plugin_github"
+deps.plugin = plugin
+
+def support = [:]
+support.design = "com.android.support:design:$versions.support"
+support.annotations = "com.android.support:support-annotations:$versions.support"
+support.appcompat = "com.android.support:appcompat-v7:$versions.support"
+support.recyclerview = "com.android.support:recyclerview-v7:$versions.support"
+support.cardview = "com.android.support:cardview-v7:$versions.support"
+support.v4 = "com.android.support:support-v4:$versions.support"
+support.core_utils = "com.android.support:support-core-utils:$versions.support"
+support.multidex = "com.android.support:multidex:$versions.multidex"
+support.constraint = "com.android.support.constraint:constraint-layout:$versions.constraint"
+deps.support = support
+
+def xwalk = [:]
+xwalk.runtime = "org.xwalk:xwalk_core_library:$versions.xwalk"
+deps.xwalk = xwalk
+
+def androidx = [:]
+androidx.annotations = "androidx.annotation:annotation:$versions.androidx"
+androidx.appcompat = "androidx.appcompat:appcompat:$versions.androidx"
+androidx.appcompat = "com.android.support:appcompat-v7:$versions.androidx"
+androidx.recyclerview = "androidx.recyclerview:recyclerview:$versions.androidx"
+androidx.cardview = "androidx.cardview:cardview:$versions.androidx"
+androidx.design = "com.google.android.material:material:$versions.androidx"
+androidx.v4 = "androidx.legacy:legacy-support-v4:$versions.androidx"
+androidx.core_utils = "androidx.legacy:legacy-support-core-utils:$versions.androidx"
+androidx.multidex = "androidx.multidex:multidex:$versions.multidex"
+deps.androidx = androidx
+
+def room = [:]
+room.runtime = "androidx.room:room-runtime:$versions.room"
+room.compiler = "androidx.room:room-compiler:$versions.room"
+room.rxjava2 = "androidx.room:room-rxjava2:$versions.room"
+room.testing = "androidx.room:room-testing:$versions.room"
+deps.room = room
+
+def json = [:]
+json.gson = "com.google.code.gson:gson:$versions.gson"
+deps.json = json
+
+def rxjava2 = [:]
+rxjava2.rxjava = "io.reactivex.rxjava2:rxjava:$versions.rxjava"
+rxjava2.rxandroid = "io.reactivex.rxjava2:rxandroid:$versions.rxandroid"
+deps.rxjava2 = rxjava2
+
+def lifecycle = [:]
+lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime:$versions.lifecycle"
+lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
+lifecycle.java8 = "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle"
+lifecycle.compiler = "androidx.lifecycle:lifecycle-compiler:$versions.lifecycle"
+deps.lifecycle = lifecycle
+
+def arch_core = [:]
+arch_core.testing = "androidx.arch.core:core-testing:$versions.arch_core"
+deps.arch_core = arch_core
+
+def retrofit = [:]
+retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"
+retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+retrofit.adapters = "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+retrofit.mock = "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
+deps.retrofit = retrofit
+
+def okhttp = [:]
+okhttp.runtime = "com.squareup.okhttp3:okhttp:$versions.net_okhttp3"
+okhttp.logging = "com.squareup.okhttp3:logging-interceptor:$versions.net_okhttp3"
+okhttp.mock = "com.squareup.okhttp3:mockwebserver:$versions.net_okhttp3"
+deps.okhttp = okhttp
+
+def dagger = [:]
+dagger.runtime = "com.google.dagger:dagger:$versions.dagger"
+dagger.android = "com.google.dagger:dagger-android:$versions.dagger"
+dagger.android_support = "com.google.dagger:dagger-android-support:$versions.dagger"
+dagger.compiler = "com.google.dagger:dagger-compiler:$versions.dagger"
+dagger.android_support_compiler = "com.google.dagger:dagger-android-processor:$versions.dagger"
+deps.dagger = dagger
+
+def espresso = [:]
+espresso.core = "androidx.test.espresso:espresso-core:$versions.espresso"
+espresso.contrib = "androidx.test.espresso:espresso-contrib:$versions.espresso"
+espresso.intents = "androidx.test.espresso:espresso-intents:$versions.espresso"
+deps.espresso = espresso
+
+def atsl = [:]
+atsl.runner = "androidx.test:runner:$versions.atsl_runner"
+atsl.rules = "androidx.test:rules:$versions.atsl_runner"
+deps.atsl = atsl
+
+def mockito = [:]
+mockito.core = "org.mockito:mockito-core:$versions.mockito"
+mockito.all = "org.mockito:mockito-all:$versions.mockito_all"
+mockito.android = "org.mockito:mockito-android:$versions.mockito_android"
+deps.mockito = mockito
+
+def kotlin = [:]
+kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.plugin_kotlin"
+kotlin.test = "org.jetbrains.kotlin:kotlin-test-junit:$versions.plugin_kotlin"
+kotlin.allopen = "org.jetbrains.kotlin:kotlin-allopen:$versions.plugin_kotlin"
+deps.kotlin = kotlin
+
+deps.paging_ktx = "androidx.paging:paging-runtime-ktx:$versions.paging"
+
+def glide = [:]
+glide.runtime = "com.github.bumptech.glide:glide:$versions.glide"
+glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
+deps.glide = glide
+
+deps.dexmaker = "com.linkedin.dexmaker:dexmaker-mockito:$versions.dexmaker"
+deps.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
+deps.timber = "com.jakewharton.timber:timber:$versions.timber"
+deps.junit = "junit:junit:$versions.junit"
+
+deps.hamcrest = "org.hamcrest:hamcrest-all:$versions.hamcrest"
+
+ext.deps = deps
+
+def buildVersion = [:]
+buildVersion.minSdkVersion = 14
+buildVersion.minSdkVersion44 = 19
+buildVersion.compileSdkVersion = 28
+buildVersion.targetSdkVersion = 28
+buildVersion.javaVersion = 1.8
+buildVersion.buildToolsVersion = "28.0.3"
+ext.buildVersion = buildVersion
+
+def work = [:]
+work.runtime = "android.arch.work:work-runtime:$versions.work"
+work.testing = "android.arch.work:work-testing:$versions.work"
+work.firebase = "android.arch.work:work-firebase:$versions.work"
+work.runtime_ktx = "android.arch.work:work-runtime-ktx:$versions.work"
+deps.work = work
+
+def navigation = [:]
+navigation.runtime = "android.arch.navigation:navigation-runtime:$versions.navigation"
+navigation.runtime_ktx = "android.arch.navigation:navigation-runtime-ktx:$versions.navigation"
+navigation.fragment = "android.arch.navigation:navigation-fragment:$versions.navigation"
+navigation.fragment_ktx = "android.arch.navigation:navigation-fragment-ktx:$versions.navigation"
+navigation.safe_args_plugin = "android.arch.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
+navigation.testing_ktx = "android.arch.navigation:navigation-testing-ktx:$versions.navigation"
+deps.navigation = navigation
+
+ext.deps = deps

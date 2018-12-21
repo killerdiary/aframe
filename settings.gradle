@@ -1,1 +1,2 @@
-include ':Frame'
+//include ':Frame', ':camera', ':dbutils', ':Cache', ':Demo'
+include ':Frame', ':Demo2', ':Frame_Mvp'

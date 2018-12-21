@@ -10,7 +10,7 @@ import android.view.ViewGroup
  * @author HeYan
  * @time 2014年7月26日 上午10:27:41
  */
-class ViewPagerAdapter(private var views: List<View>?) : PagerAdapter() {
+class ViewPagerAdapter(private var views: MutableList<View>?, private var titles: Array<String?>? = null) : PagerAdapter() {
 
     override fun getCount(): Int {
         return views?.size ?: 0
@@ -34,8 +34,15 @@ class ViewPagerAdapter(private var views: List<View>?) : PagerAdapter() {
         return null
     }
 
-    fun refresh(views: List<View>?) {
+    override fun getPageTitle(position: Int): CharSequence? {
+        if (titles != null)
+            return titles!![position]
+        return null
+    }
+
+    fun refresh(views: MutableList<View>?, titles: Array<String?>? = null) {
         this.views = views
+        this.titles = titles
         this.notifyDataSetChanged()
     }
 

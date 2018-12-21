@@ -161,9 +161,7 @@ object FileUtil {
 
     /**
      * 删除该路径下的所有文件
-
      * @param path
-     *
      * @return
      */
     fun delAllFile(path: String?) {

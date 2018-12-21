@@ -2,4 +2,13 @@
 <resources>
     <item name="swipe_vContent" type="id" />
     <item name="swipe_vMenu" type="id" />
+    <item name="head_toolBar" type="id" />
+    <item name="head_vLeft" type="id" />
+    <item name="head_vTitle" type="id" />
+    <item name="head_vRight" type="id" />
+    <item name="base_flyMain" type="id" />
+    <item name="base_llyLoad" type="id" />
+    <item name="base_proLoading" type="id" />
+    <item name="base_imgMessage" type="id" />
+    <item name="base_txtMessage" type="id" />
 </resources>

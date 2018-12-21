@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference
  * @author HeYan
  * @time 2017/9/14 9:53
  */
-class MyHandler(act: Activity, val listener: HandlerListener) : Handler(act.mainLooper) {
+class MyHandler(act: Activity, private val listener: HandlerListener) : Handler(act.mainLooper) {
     private val mActivity: WeakReference<Activity> = WeakReference(act)
 
     override fun handleMessage(msg: Message) {
