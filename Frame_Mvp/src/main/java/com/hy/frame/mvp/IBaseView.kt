@@ -10,7 +10,14 @@ import com.hy.frame.ui.ITemplateControl
  */
 interface IBaseView {
     /**
+     * 获取模板[com.hy.frame.ui.IBaseTemplateView]
+     */
+    fun getTemplateView(): com.hy.frame.ui.IBaseTemplateView
+    
+    /**
      * 获取模板[ITemplateControl]
      */
     fun getTemplateControl(): ITemplateControl?
+
+
 }
