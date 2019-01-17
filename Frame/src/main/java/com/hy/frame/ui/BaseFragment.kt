@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.support.v7.widget.Toolbar
 import com.hy.frame.R
 import com.hy.frame.app.IBaseApplication
 import com.hy.frame.util.HyUtil
@@ -27,6 +27,8 @@ abstract class BaseFragment : Fragment(), IBaseFragment {
     private var mFlyMain: FrameLayout? = null
 
     private var mTemplateControl: ITemplateControl? = null
+
+    override fun getTemplateView(): IBaseTemplateView? = this
 
     private var mLastTime: Long = 0
 

@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.IdRes
 import android.support.annotation.StringRes
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import android.support.v7.widget.Toolbar
 import com.hy.frame.R
 import com.hy.frame.app.IBaseApplication
 import com.hy.frame.util.HyUtil
@@ -49,6 +49,8 @@ abstract class BaseActivity : AppCompatActivity(), IBaseActivity {
     override fun getCurActivity(): AppCompatActivity = this
 
     override fun getTemplateControl(): ITemplateControl? = mTemplateControl
+
+    override fun getTemplateView(): IBaseTemplateView? = this
 
     override fun isFastClick(): Boolean {
         val curTime = System.currentTimeMillis()

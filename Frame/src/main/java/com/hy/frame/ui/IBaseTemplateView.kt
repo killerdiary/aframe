@@ -11,6 +11,11 @@ interface IBaseTemplateView : IBaseView {
     fun isSingleLayout(): Boolean
 
     /**
+     * 获取模板[IBaseTemplateView]
+     */
+    fun getTemplateView(): IBaseTemplateView?
+
+    /**
      * 获取模板[ITemplateControl]
      */
     fun getTemplateControl(): ITemplateControl?
