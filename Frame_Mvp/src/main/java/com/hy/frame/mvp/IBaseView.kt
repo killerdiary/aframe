@@ -1,7 +1,5 @@
 package com.hy.frame.mvp
 
-import com.hy.frame.ui.ITemplateControl
-
 /**
  * MVP中View需要实现的Interface
  *
@@ -13,11 +11,11 @@ interface IBaseView {
      * 获取模板[com.hy.frame.ui.IBaseTemplateView]
      */
     fun getTemplateView(): com.hy.frame.ui.IBaseTemplateView
-    
+
     /**
-     * 获取模板[ITemplateControl]
+     * 获取模板[com.hy.frame.ui.ITemplateControl]
      */
-    fun getTemplateControl(): ITemplateControl?
+    fun getTemplateControl(): com.hy.frame.ui.ITemplateControl?
 
 
 }

@@ -3,7 +3,6 @@ package com.hy.frame.net
 import com.hy.frame.mvp.IRetrofitManager
 import com.hy.frame.util.MyLog
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -57,12 +56,12 @@ class RetrofitManager : IRetrofitManager {
             oBuilder.addInterceptor(interceptor)
         }
         if (mLoggable) {
-            val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message -> MyLog.d("Retrofit", message) })
-            interceptor.level = HttpLoggingInterceptor.Level.BASIC
+            val interceptor = okhttp3.logging.HttpLoggingInterceptor(okhttp3.logging.HttpLoggingInterceptor.Logger { message -> MyLog.d(TAG, message) })
+            interceptor.level = okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
             oBuilder.addInterceptor(interceptor)
         }
         val rBuilder = Retrofit.Builder().baseUrl(mBaseUrl!!).client(oBuilder.build()).addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        if(mContentType == REQUEST_TYPE_JSON || mContentType == REQUEST_TYPE_JSONARRAY){
+        if (mContentType == REQUEST_TYPE_JSON || mContentType == REQUEST_TYPE_JSONARRAY) {
             rBuilder.addConverterFactory(GsonConverterFactory.create())
         }
         return rBuilder.build()
@@ -81,9 +80,10 @@ class RetrofitManager : IRetrofitManager {
     }
 
     companion object {
-        const val REQUEST_TYPE_JSON = 0
-        const val REQUEST_TYPE_JSONARRAY = 1
-        const val REQUEST_TYPE_STRING = 2
+        const val TAG: String = "Retrofit"
+        const val REQUEST_TYPE_STRING = 0
+        const val REQUEST_TYPE_JSON = 1
+        const val REQUEST_TYPE_JSONARRAY = 2
         const val REQUEST_TYPE_FILE = 3
     }
 }

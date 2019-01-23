@@ -29,6 +29,8 @@ interface IRetrofitManager {
 
     /**
      * 添加头信息
+     * @param key
+     * @param value 为空时 移除
      */
     fun addHeader(key: String, value: String?): IRetrofitManager
 

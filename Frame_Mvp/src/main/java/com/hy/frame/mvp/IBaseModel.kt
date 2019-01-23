@@ -8,7 +8,7 @@ package com.hy.frame.mvp
  */
 interface IBaseModel {
 
-    fun getRetrofitManager(): IRetrofitManager
+    fun getRetrofitManager(): IRetrofitManager?
 
     /**
      * destroy

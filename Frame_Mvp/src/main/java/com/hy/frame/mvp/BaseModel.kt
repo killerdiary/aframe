@@ -10,7 +10,7 @@ abstract class BaseModel(retrofitManager: IRetrofitManager) : IBaseModel {
 
     private var mRetrofitManager: IRetrofitManager? = retrofitManager
 
-    override fun getRetrofitManager(): IRetrofitManager = mRetrofitManager!!
+    override fun getRetrofitManager(): IRetrofitManager? = mRetrofitManager
 
     override fun onDestroy() {
         mRetrofitManager?.onDestroy()
