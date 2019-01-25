@@ -17,6 +17,16 @@ abstract class BaseFragment<out P : IBasePresenter> : com.hy.frame.ui.BaseFragme
      */
     protected abstract fun buildPresenter(): P?
 
+    /**
+     * 获取模板[com.hy.frame.ui.IBaseTemplateView]
+     */
+    override fun getTemplateView(): com.hy.frame.ui.IBaseTemplateView = this
+
+    /**
+     * 获取模板[com.hy.frame.ui.ITemplateControl]
+     */
+    override fun getTemplateControl(): com.hy.frame.ui.ITemplateControl? = getTemplateView().getTemplateControl()
+
     override fun onDestroy() {
         super.onDestroy()
         mPresenter?.onDestroy()
