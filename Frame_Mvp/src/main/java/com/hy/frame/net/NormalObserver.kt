@@ -7,7 +7,7 @@ import com.hy.frame.mvp.IMyHttpListener
 import com.hy.frame.util.MyLog
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
-import java.io.*
+import okhttp3.ResponseBody
 
 /**
  * title 普通请求 1.String 2. Json 3. File 文件下载 非主线程
@@ -15,7 +15,7 @@ import java.io.*
  * time 18-12-4 上午11:23
  * desc 非断点
  */
-open class NormalObserver<T>(requestCode: Int, listener: IMyHttpListener?, private val savePath: String?, private val isNeedProgress: Boolean = false) : Observer<T> {
+open class NormalObserver<T>(requestCode: Int, listener: IMyHttpListener?, private val savePath: String?, private val isNeedProgress: Boolean = false) : Observer<ResponseBody> {
 
     private val result = ResultInfo(requestCode)
     private val mListener: IMyHttpListener? = listener
@@ -29,8 +29,7 @@ open class NormalObserver<T>(requestCode: Int, listener: IMyHttpListener?, priva
         this.disposable = d
     }
 
-    override fun onNext(data: T) {
-
+    override fun onNext(data: ResponseBody) {
         onRequestError(result)
     }
 

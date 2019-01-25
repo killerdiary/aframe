@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion buildVersion.minSdkVersion
         targetSdkVersion buildVersion.targetSdkVersion
-        versionCode 10
-        versionName "2.6.2"
+        versionCode 11
+        versionName "2.6.5"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -36,8 +36,14 @@ dependencies {
     //必须
     implementation deps.kotlin.stdlib
     //必须
-    implementation deps.support.appcompat
-    implementation deps.support.design
+    implementation(deps.support.design) {
+        exclude module: 'support-annotations'
+        //exclude module: 'recyclerview-v7'
+    }
+    //implementation(deps.support.appcompat)
+    implementation(deps.support.annotations)
+    //implementation deps.support.appcompat
+    //implementation deps.support.design
     //未开启multidex，可以不导入
     implementation deps.support.multidex
     //api deps.support.recyclerview
@@ -47,12 +53,6 @@ dependencies {
     }
     //未使用时，可以不导入
     implementation deps.json.gson
-    //未使用时，可以不导入
-    implementation deps.rxjava2.rxjava
-    //未使用时，可以不导入
-    implementation (deps.rxjava2.rxandroid){
-        exclude module: 'rxjava'
-    }
 }
 
 //apply from : "maven-release-aar.gradle"

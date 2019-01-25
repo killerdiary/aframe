@@ -8,11 +8,7 @@ package com.hy.frame.mvp.contract
  * desc 无
  */
 interface ApiContract {
-    interface IView : com.hy.frame.mvp.IBaseView {
+    interface IView : com.hy.frame.mvp.IBaseView
 
-    }
-
-    interface IModel : com.hy.frame.mvp.IBaseModel, com.hy.frame.mvp.model.ApiService {
-
-    }
+    interface IModel : com.hy.frame.mvp.IBaseModel, com.hy.frame.mvp.model.ApiService
 }

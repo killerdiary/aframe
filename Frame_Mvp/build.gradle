@@ -7,8 +7,9 @@ android {
     defaultConfig {
         minSdkVersion buildVersion.minSdkVersion
         targetSdkVersion buildVersion.targetSdkVersion
-        versionCode 4
-        versionName "1.1.2"
+        versionCode 5
+        versionName "1.1.3"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -17,19 +18,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    compileOptions {
+        sourceCompatibility buildVersion.javaVersion
+        targetCompatibility buildVersion.javaVersion
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':Frame')
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //必须
     implementation deps.kotlin.stdlib
     //必须
-    implementation deps.support.appcompat
-    //implementation deps.support.constraint
-    implementation deps.support.design
+    implementation(deps.support.design) {
+        exclude module: 'support-annotations'
+        //exclude module: 'recyclerview-v7'
+    }
+    implementation(deps.support.annotations)
     //未开启multidex，可以不导入
     implementation deps.support.multidex
     //api deps.support.recyclerview
@@ -42,19 +47,19 @@ dependencies {
     //未使用时，可以不导入
     implementation deps.rxjava2.rxjava
     //未使用时，可以不导入
-    implementation (deps.rxjava2.rxandroid){
+    implementation(deps.rxjava2.rxandroid) {
         exclude module: 'rxjava'
     }
     implementation deps.retrofit.runtime
-    implementation(deps.retrofit.gson){
+    implementation(deps.retrofit.gson) {
         exclude module: 'gson'
         exclude module: 'retrofit'
     }
-    implementation(deps.retrofit.adapters){
+    implementation(deps.retrofit.adapters) {
         exclude module: 'rxjava'
         exclude module: 'retrofit'
     }
-    implementation(deps.okhttp.logging){
+    implementation(deps.okhttp.logging) {
         exclude module: 'okhttp'
     }
 }

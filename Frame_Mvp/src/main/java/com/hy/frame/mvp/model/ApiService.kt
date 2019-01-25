@@ -12,6 +12,9 @@ import retrofit2.http.*
  * desc 无
  */
 interface ApiService {
+    //解析:泛型嵌套
+    //无法实现: retrofit不支持二次泛型
+    //issues: https://github.com/square/retrofit/issues/2012
     /**
      * 通用get请求
      * @param url API地址
@@ -24,7 +27,7 @@ interface ApiService {
      * @return Observable<T>?
      */
     @GET
-    fun <T> get(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<T>?
+    fun get(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<ResponseBody>?
 
     /**
      * 通用post请求
@@ -33,7 +36,7 @@ interface ApiService {
      * @return Observable<T>?
      */
     @POST("{url}")
-    fun <T> post(@Url url: String, @Body params: Any): Observable<T>?
+    fun post(@Url url: String, @Body params: Any): Observable<ResponseBody>?
 
     /**
      * 通用post请求
@@ -43,7 +46,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("{url}")
-    fun <T> post(@Url url: String, @FieldMap params: MutableMap<String, String>): Observable<T>?
+    fun post(@Url url: String, @FieldMap params: MutableMap<String, String>): Observable<ResponseBody>?
 
 
     /**
@@ -60,7 +63,7 @@ interface ApiService {
      */
     @Multipart
     @POST
-    fun <T> upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @Part file: MultipartBody.Part): Observable<T>?
+    fun upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @Part file: MultipartBody.Part): Observable<ResponseBody>?
 
     /**
      * 通用多文件文件上传 TODO 待测试
@@ -78,7 +81,7 @@ interface ApiService {
      */
     @Multipart
     @POST
-    fun <T> upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @PartMap files: MutableMap<String, MultipartBody.Part>): Observable<T>?
+    fun upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @PartMap files: MutableMap<String, MultipartBody.Part>): Observable<ResponseBody>?
 
     /**
      * 通用文件下载
@@ -88,5 +91,5 @@ interface ApiService {
      */
     @Streaming
     @GET
-    fun <T> download(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<T>?
+    fun download(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<ResponseBody>?
 }

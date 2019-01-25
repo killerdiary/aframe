@@ -10,6 +10,4 @@ import com.hy.frame.mvp.model.ApiModel
  * time 19-1-18 下午12:17
  * desc 无
  */
-class ApiPresenter<out V : ApiContract.IView>(context: android.content.Context, view: V) : BasePresenter<V, ApiContract.IModel>(context, view, ApiModel()) {
-    
-}
+abstract class ApiPresenter<out V : ApiContract.IView>(context: android.content.Context, view: V) : BasePresenter<V, ApiContract.IModel>(context, view, ApiModel())

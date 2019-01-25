@@ -18,7 +18,7 @@ class ApiModel : BaseModel(RetrofitManager()), ApiContract.IModel {
     /**
      * [com.hy.frame.mvp.model.ApiService.get]
      */
-    override fun <T> get(url: String, params: MutableMap<String, String>?): Observable<T>? {
+    override fun get(url: String, params: MutableMap<String, String>?): Observable<ResponseBody>? {
         val service: ApiService? = getRetrofitManager()?.setContentType(RetrofitManager.REQUEST_TYPE_JSON)?.obtainService(ApiService::class.java)
         return service?.get(url, params)
     }
@@ -26,7 +26,7 @@ class ApiModel : BaseModel(RetrofitManager()), ApiContract.IModel {
     /**
      * [com.hy.frame.mvp.model.ApiService.post]
      */
-    override fun <T> post(url: String, params: MutableMap<String, String>): Observable<T>? {
+    override fun post(url: String, params: MutableMap<String, String>): Observable<ResponseBody>? {
         val service: ApiService? = getRetrofitManager()?.setContentType(RetrofitManager.REQUEST_TYPE_JSON)?.obtainService(ApiService::class.java)
         return service?.post(url, params)
     }
@@ -34,7 +34,7 @@ class ApiModel : BaseModel(RetrofitManager()), ApiContract.IModel {
     /**
      * [com.hy.frame.mvp.model.ApiService.post]
      */
-    override fun <T> post(url: String, params: Any): Observable<T>? {
+    override fun post(url: String, params: Any): Observable<ResponseBody>? {
         val service: ApiService? = getRetrofitManager()?.setContentType(RetrofitManager.REQUEST_TYPE_JSON)?.obtainService(ApiService::class.java)
         return service?.post(url, params)
     }
@@ -42,7 +42,7 @@ class ApiModel : BaseModel(RetrofitManager()), ApiContract.IModel {
     /**
      * [com.hy.frame.mvp.model.ApiService.upload]
      */
-    override fun <T> upload(url: String, params: MutableMap<String, String>?, file: MultipartBody.Part): Observable<T>? {
+    override fun upload(url: String, params: MutableMap<String, String>?, file: MultipartBody.Part): Observable<ResponseBody>? {
         val service: ApiService? = getRetrofitManager()?.setContentType(RetrofitManager.REQUEST_TYPE_JSON)?.obtainService(ApiService::class.java)
         return service?.upload(url, params, file)
     }
@@ -50,7 +50,7 @@ class ApiModel : BaseModel(RetrofitManager()), ApiContract.IModel {
     /**
      * [com.hy.frame.mvp.model.ApiService.upload]
      */
-    override fun <T> upload(url: String, params: MutableMap<String, String>?, files: MutableMap<String, MultipartBody.Part>): Observable<T>? {
+    override fun upload(url: String, params: MutableMap<String, String>?, files: MutableMap<String, MultipartBody.Part>): Observable<ResponseBody>? {
         val service: ApiService? = getRetrofitManager()?.setContentType(RetrofitManager.REQUEST_TYPE_JSON)?.obtainService(ApiService::class.java)
         return service?.upload(url, params, files)
     }
@@ -58,7 +58,7 @@ class ApiModel : BaseModel(RetrofitManager()), ApiContract.IModel {
     /**
      * [com.hy.frame.mvp.model.ApiService.download]
      */
-    override fun <T> download(url: String, params: MutableMap<String, String>?): Observable<T>? {
+    override fun download(url: String, params: MutableMap<String, String>?): Observable<ResponseBody>? {
         val service: ApiService? = getRetrofitManager()?.setContentType(RetrofitManager.REQUEST_TYPE_FILE)?.obtainService(ApiService::class.java)
         return service?.download(url, params)
     }
