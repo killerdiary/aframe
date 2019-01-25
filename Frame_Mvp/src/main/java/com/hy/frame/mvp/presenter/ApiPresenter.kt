@@ -11,5 +11,5 @@ import com.hy.frame.mvp.model.ApiModel
  * desc 无
  */
 class ApiPresenter<out V : ApiContract.IView>(context: android.content.Context, view: V) : BasePresenter<V, ApiContract.IModel>(context, view, ApiModel()) {
-
+    
 }

@@ -21,29 +21,29 @@ interface ApiService {
      *  eg: val params = HashMap<String,String>()
      *      params["name"] = "zhangsan"
      *      params["password"] = "123456"
-     * @return Observable<ResponseBody>?
+     * @return Observable<T>?
      */
     @GET
-    fun get(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<ResponseBody>?
+    fun <T> get(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<T>?
 
     /**
      * 通用post请求
      * @param url API地址 eg: 同上 [get]
      * @param params 参数 不能为空 需要添加converter-gson，会转换成json数据
-     * @return Observable<ResponseBody>?
+     * @return Observable<T>?
      */
     @POST("{url}")
-    fun post(@Url url: String, @Body params: Any): Observable<ResponseBody>?
+    fun <T> post(@Url url: String, @Body params: Any): Observable<T>?
 
     /**
      * 通用post请求
      * @param url API地址 eg: 同上 [get]
      * @param params 参数 不能为空 eg: 同上 [get]
-     * @return Observable<ResponseBody>?
+     * @return Observable<T>?
      */
     @FormUrlEncoded
     @POST("{url}")
-    fun post(@Url url: String, @FieldMap params: MutableMap<String, String>): Observable<ResponseBody>?
+    fun <T> post(@Url url: String, @FieldMap params: MutableMap<String, String>): Observable<T>?
 
 
     /**
@@ -56,11 +56,11 @@ interface ApiService {
      *      val file = java.io.File(imgPath)
      *      val body = RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), file)
      *      val part = MultipartBody.Part.createFormData("file", fileName, body)
-     * @return Observable<ResponseBody>?
+     * @return Observable<T>?
      */
     @Multipart
     @POST
-    fun upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @Part file: MultipartBody.Part): Observable<ResponseBody>?
+    fun <T> upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @Part file: MultipartBody.Part): Observable<T>?
 
     /**
      * 通用多文件文件上传 TODO 待测试
@@ -74,19 +74,19 @@ interface ApiService {
      *      val body = RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), file)
      *      val part1 = MultipartBody.Part.createFormData("file", fileName, body)
      *      params["file1"] = part1
-     * @return Observable<ResponseBody>?
+     * @return Observable<T>?
      */
     @Multipart
     @POST
-    fun upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @PartMap files: MutableMap<String, MultipartBody.Part>): Observable<ResponseBody>?
+    fun <T> upload(@Url url: String, @PartMap params: MutableMap<String, String>?, @PartMap files: MutableMap<String, MultipartBody.Part>): Observable<T>?
 
     /**
      * 通用文件下载
      * @param url API地址 eg: 同上
      * @param params 参数 可空 eg: 同上
-     * @return Observable<ResponseBody>?
+     * @return Observable<T>?
      */
     @Streaming
     @GET
-    fun download(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<ResponseBody>?
+    fun <T> download(@Url url: String, @QueryMap params: MutableMap<String, String>?): Observable<T>?
 }
