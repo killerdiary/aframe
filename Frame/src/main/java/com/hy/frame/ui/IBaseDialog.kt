@@ -6,7 +6,7 @@ package com.hy.frame.ui
  * @author HeYan
  * @time 2018/4/6 16:03
  */
-interface IBaseDialog: IBaseView {
+interface IBaseDialog: IBaseUI {
 
     /**
      * 初始化Window，窗口大小和配置

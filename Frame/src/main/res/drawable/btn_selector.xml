@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/btn_disable" android:state_enabled="false" />
+    <item android:state_selected="true">
+        <layer-list>
+            <item android:drawable="?attr/appThemeColor" />
+            <item android:drawable="@color/btn_highlight" />
+        </layer-list>
+    </item>
     <item android:state_pressed="true">
         <layer-list>
             <item android:drawable="?attr/appThemeColor" />

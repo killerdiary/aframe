@@ -8,13 +8,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.IdRes
 import android.support.annotation.StringRes
+import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
-import android.support.v7.widget.Toolbar
 import com.hy.frame.R
 import com.hy.frame.app.IBaseApplication
-import com.hy.frame.util.HyUtil
 import com.hy.frame.util.MyLog
 import com.hy.frame.util.StatusBarUtil
 
@@ -23,7 +22,7 @@ import com.hy.frame.util.StatusBarUtil
  * author HeYan
  * time 2015/12/23 16:40
  */
-abstract class BaseActivity : AppCompatActivity(), IBaseActivity {
+abstract class BaseActivity : AppCompatActivity(), IBaseActivity, IBaseTemplateUI {
 
     private var mApp: IBaseApplication? = null
     private var mContext: Context? = null
@@ -50,7 +49,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseActivity {
 
     override fun getTemplateControl(): ITemplateControl? = mTemplateControl
 
-    override fun getTemplateView(): IBaseTemplateView? = this
+    //override fun getTemplateView(): IBaseTemplateUI? = this
 
     override fun isFastClick(): Boolean {
         val curTime = System.currentTimeMillis()
@@ -187,7 +186,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseActivity {
             if (intent.hasExtra(BUNDLE)) {
                 return intent.getBundleExtra(BUNDLE)
             }
-            return null
+            return intent.extras
         }
 
     override fun finish() {
@@ -210,7 +209,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseActivity {
     }
 
     override fun onClick(v: View) {
-        if (HyUtil.isFastClick)
+        if (isFastClick())
             return
         onViewClick(v)
     }
@@ -219,13 +218,9 @@ abstract class BaseActivity : AppCompatActivity(), IBaseActivity {
         onBackPressed()
     }
 
-    override fun onRightClick() {
+    override fun onRightClick() {}
 
-    }
-
-    override fun onLoadViewClick() {
-
-    }
+    override fun onLoadViewClick() {}
 
     /**
      * 获取 控件

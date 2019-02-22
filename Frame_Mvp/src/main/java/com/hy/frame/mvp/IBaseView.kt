@@ -8,9 +8,9 @@ package com.hy.frame.mvp
  */
 interface IBaseView {
     /**
-     * 获取模板[com.hy.frame.ui.IBaseTemplateView]
+     * 获取模板[com.hy.frame.ui.IBaseTemplateUI]
      */
-    fun getTemplateView(): com.hy.frame.ui.IBaseTemplateView
+    fun getTemplateUI(): com.hy.frame.ui.IBaseTemplateUI
 
     /**
      * 获取模板[com.hy.frame.ui.ITemplateControl]

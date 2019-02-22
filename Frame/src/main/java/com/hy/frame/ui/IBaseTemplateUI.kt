@@ -4,16 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import com.hy.frame.app.IBaseApplication
 
-interface IBaseTemplateView : IBaseView {
+/**
+ * 供 Acitivity和Fragment使用
+ */
+interface IBaseTemplateUI : IBaseUI {
     /**
      * 是否启用唯一布局，否者使用公有模板[ITemplateControl]
      */
     fun isSingleLayout(): Boolean
-
-    /**
-     * 获取模板[IBaseTemplateView]
-     */
-    fun getTemplateView(): IBaseTemplateView?
 
     /**
      * 获取模板[ITemplateControl]

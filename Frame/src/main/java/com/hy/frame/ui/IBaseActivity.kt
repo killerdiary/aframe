@@ -5,7 +5,7 @@ package com.hy.frame.ui
  * @title 公有接口
  * @time 2015/11/20 11:30
  */
-interface IBaseActivity : IBaseTemplateView {
+interface IBaseActivity {
 
     /**
      * 屏幕方向，可以用Activity.setRequestedOrientation替代

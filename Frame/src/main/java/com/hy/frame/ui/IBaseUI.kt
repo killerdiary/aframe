@@ -10,7 +10,7 @@ import android.view.View
  * @author
  * @time 18-10-22 上午10:21
  */
-interface IBaseView : android.view.View.OnClickListener{
+interface IBaseUI : android.view.View.OnClickListener{
 
     fun getCurContext(): Context
 

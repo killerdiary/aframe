@@ -14,9 +14,7 @@ import com.hy.frame.R
  */
 interface ITemplateControl {
 
-    fun init(mActivity: IBaseActivity, mToolbar: Toolbar?, mFlyMain: FrameLayout?)
-
-    fun init(mFragment: IBaseFragment, mToolbar: Toolbar?, mFlyMain: FrameLayout?)
+    fun init(templateView: IBaseTemplateUI, mToolbar: Toolbar?, mFlyMain: FrameLayout?)
 
     /**
      * 设置标题

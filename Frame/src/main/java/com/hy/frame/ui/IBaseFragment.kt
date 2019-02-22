@@ -8,7 +8,7 @@ import android.view.View
  * @title 公有接口
  * @time 2015/11/20 11:30
  */
-interface IBaseFragment : IBaseTemplateView {
+interface IBaseFragment {
 
     /**
      * 重启

@@ -22,9 +22,7 @@ import com.hy.frame.util.MyToast
  */
 open class TemplateControl : ITemplateControl, View.OnClickListener {
 
-    var mActivity: IBaseActivity? = null
-    var mFragment: IBaseFragment? = null
-    var mTemplateView: IBaseTemplateView? = null
+    var mTemplateView: IBaseTemplateUI? = null
     var mToolbar: Toolbar? = null
     var mFlyMain: FrameLayout? = null
     var mLoadView: View? = null
@@ -34,24 +32,12 @@ open class TemplateControl : ITemplateControl, View.OnClickListener {
     var proLoading: View? = null
     var mLoadingDialog: LoadingDialog? = null
 
-    fun isFragment(): Boolean = mFlyMain != null
-
-    override fun init(mActivity: IBaseActivity, mToolbar: Toolbar?, mFlyMain: FrameLayout?) {
-        this.mActivity = mActivity
-        this.mTemplateView = mActivity
+    override fun init(templateView: IBaseTemplateUI, mToolbar: Toolbar?, mFlyMain: FrameLayout?) {
+        this.mTemplateView = templateView
         this.mToolbar = mToolbar
         this.mFlyMain = mFlyMain
         this.mToolbar?.setTitle(R.string.empty)
     }
-
-    override fun init(mFragment: IBaseFragment, mToolbar: Toolbar?, mFlyMain: FrameLayout?) {
-        this.mFragment = mFragment
-        this.mTemplateView = mFragment
-        this.mToolbar = mToolbar
-        this.mFlyMain = mFlyMain
-        this.mToolbar?.setTitle(R.string.empty)
-    }
-
 
     override fun setTitle(title: CharSequence?) {
         if (this.mTemplateView == null || this.mToolbar == null)
@@ -289,8 +275,6 @@ open class TemplateControl : ITemplateControl, View.OnClickListener {
     }
 
     override fun onDestroy() {
-        this.mActivity = null
-        this.mFragment = null
         this.mTemplateView = null
         this.mToolbar = null
         this.mFlyMain = null
@@ -302,9 +286,9 @@ open class TemplateControl : ITemplateControl, View.OnClickListener {
         this.mLoadingDialog = null
     }
 
-    fun getCurContext(): Context = this.mTemplateView!!.getCurContext()
+    private fun getCurContext(): Context = this.mTemplateView!!.getCurContext()
 
-    fun <T : View> findViewById(@IdRes id: Int, parent: View? = null): T? {
+    private fun <T : View> findViewById(@IdRes id: Int, parent: View? = null): T? {
         return this.mTemplateView?.findViewById(id, parent)
     }
 }

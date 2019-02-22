@@ -7,6 +7,23 @@
             <corners android:radius="@dimen/btn_picker_radius" />
         </shape>
     </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke android:width="1px" android:color="@color/btn_border" />
+                    <solid android:color="@color/white" />
+                    <corners android:radius="@dimen/btn_picker_radius" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/btn_highlight" />
+                    <corners android:radius="@dimen/btn_picker_radius" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
     <item android:state_pressed="true">
         <layer-list>
             <item>

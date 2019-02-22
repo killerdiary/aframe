@@ -2,33 +2,72 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <stroke android:width="1px" android:color="@color/btn_border" />
-            <solid android:color="@color/btn_disable" />
-            <corners android:bottomLeftRadius="@dimen/btn_picker_radius" android:bottomRightRadius="0dp" android:topLeftRadius="@dimen/btn_picker_radius" android:topRightRadius="0dp" />
+            <stroke android:width="1px"
+                    android:color="@color/btn_border"/>
+            <solid android:color="@color/btn_disable"/>
+            <corners android:bottomLeftRadius="@dimen/btn_picker_radius"
+                     android:bottomRightRadius="0dp"
+                     android:topLeftRadius="@dimen/btn_picker_radius"
+                     android:topRightRadius="0dp"/>
         </shape>
+    </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke android:width="1px"
+                            android:color="@color/btn_border"/>
+                    <solid android:color="@color/white"/>
+                    <corners android:bottomLeftRadius="@dimen/btn_picker_radius"
+                             android:bottomRightRadius="0dp"
+                             android:topLeftRadius="@dimen/btn_picker_radius"
+                             android:topRightRadius="0dp"/>
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/btn_highlight"/>
+                    <corners android:bottomLeftRadius="@dimen/btn_picker_radius"
+                             android:bottomRightRadius="0dp"
+                             android:topLeftRadius="@dimen/btn_picker_radius"
+                             android:topRightRadius="0dp"/>
+                </shape>
+            </item>
+        </layer-list>
     </item>
     <item android:state_pressed="true">
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="1px" android:color="@color/btn_border" />
-                    <solid android:color="@color/white" />
-                    <corners android:bottomLeftRadius="@dimen/btn_picker_radius" android:bottomRightRadius="0dp" android:topLeftRadius="@dimen/btn_picker_radius" android:topRightRadius="0dp" />
+                    <stroke android:width="1px"
+                            android:color="@color/btn_border"/>
+                    <solid android:color="@color/white"/>
+                    <corners android:bottomLeftRadius="@dimen/btn_picker_radius"
+                             android:bottomRightRadius="0dp"
+                             android:topLeftRadius="@dimen/btn_picker_radius"
+                             android:topRightRadius="0dp"/>
                 </shape>
             </item>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/btn_highlight" />
-                    <corners android:bottomLeftRadius="@dimen/btn_picker_radius" android:bottomRightRadius="0dp" android:topLeftRadius="@dimen/btn_picker_radius" android:topRightRadius="0dp" />
+                    <solid android:color="@color/btn_highlight"/>
+                    <corners android:bottomLeftRadius="@dimen/btn_picker_radius"
+                             android:bottomRightRadius="0dp"
+                             android:topLeftRadius="@dimen/btn_picker_radius"
+                             android:topRightRadius="0dp"/>
                 </shape>
             </item>
         </layer-list>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <stroke android:width="1px" android:color="@color/btn_border" />
-            <solid android:color="@color/white" />
-            <corners android:bottomLeftRadius="@dimen/btn_picker_radius" android:bottomRightRadius="0dp" android:topLeftRadius="@dimen/btn_picker_radius" android:topRightRadius="0dp" />
+            <stroke android:width="1px"
+                    android:color="@color/btn_border"/>
+            <solid android:color="@color/white"/>
+            <corners android:bottomLeftRadius="@dimen/btn_picker_radius"
+                     android:bottomRightRadius="0dp"
+                     android:topLeftRadius="@dimen/btn_picker_radius"
+                     android:topRightRadius="0dp"/>
         </shape>
     </item>
 </selector>

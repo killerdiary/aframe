@@ -1,6 +1,8 @@
 package com.hy.frame.mvp
 
-abstract class BaseFragment<out P : IBasePresenter> : com.hy.frame.ui.BaseFragment() {
+import com.hy.frame.ui.IBaseTemplateUI
+
+abstract class BaseFragment<out P : IBasePresenter> : com.hy.frame.ui.BaseFragment(), IBaseView {
 
     private var mPresenter: P? = null//如果当前页面逻辑简单, Presenter 可以为 null
 
@@ -12,20 +14,12 @@ abstract class BaseFragment<out P : IBasePresenter> : com.hy.frame.ui.BaseFragme
         return mPresenter
     }
 
+    override fun getTemplateUI(): IBaseTemplateUI  = this
+
     /**
      * 如果当前页面逻辑简单, Presenter 可以为 null
      */
     protected abstract fun buildPresenter(): P?
-
-    /**
-     * 获取模板[com.hy.frame.ui.IBaseTemplateView]
-     */
-    override fun getTemplateView(): com.hy.frame.ui.IBaseTemplateView = this
-
-    /**
-     * 获取模板[com.hy.frame.ui.ITemplateControl]
-     */
-    override fun getTemplateControl(): com.hy.frame.ui.ITemplateControl? = getTemplateView().getTemplateControl()
 
     override fun onDestroy() {
         super.onDestroy()

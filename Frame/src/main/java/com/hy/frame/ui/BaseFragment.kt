@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.support.v7.widget.Toolbar
 import com.hy.frame.R
 import com.hy.frame.app.IBaseApplication
 import com.hy.frame.util.HyUtil
@@ -19,7 +19,7 @@ import com.hy.frame.util.HyUtil
  * author HeYan
  * time 2015/12/23 17:12
  */
-abstract class BaseFragment : Fragment(), IBaseFragment {
+abstract class BaseFragment : Fragment(), IBaseFragment, IBaseTemplateUI {
 
     private var mContentView: View? = null
 
@@ -28,8 +28,6 @@ abstract class BaseFragment : Fragment(), IBaseFragment {
 
     private var mTemplateControl: ITemplateControl? = null
 
-    override fun getTemplateView(): IBaseTemplateView? = this
-
     private var mLastTime: Long = 0
 
 
@@ -37,8 +35,8 @@ abstract class BaseFragment : Fragment(), IBaseFragment {
     private var mInit: Boolean = false
     override fun isInit(): Boolean = mInit
     override fun isTranslucentStatus(): Boolean {
-        if (activity != null && activity is IBaseTemplateView) {
-            val template = activity as IBaseTemplateView
+        if (activity != null && activity is IBaseTemplateUI) {
+            val template = activity as IBaseTemplateUI
             return template.isTranslucentStatus()
         }
         return false
@@ -48,7 +46,7 @@ abstract class BaseFragment : Fragment(), IBaseFragment {
     override fun getCurContext(): Context = context!!
 
     override fun getCurApp(): IBaseApplication {
-        return (activity!! as IBaseTemplateView).getCurApp()
+        return (activity!! as IBaseTemplateUI).getCurApp()
     }
 
     override fun getCurActivity(): AppCompatActivity {
@@ -56,8 +54,8 @@ abstract class BaseFragment : Fragment(), IBaseFragment {
     }
 
     override fun getStatusBarHeight(): Int {
-        if (activity != null && activity is IBaseTemplateView) {
-            val template = activity as IBaseTemplateView
+        if (activity != null && activity is IBaseTemplateUI) {
+            val template = activity as IBaseTemplateUI
             return template.getStatusBarHeight()
         }
         return 0
@@ -179,22 +177,16 @@ abstract class BaseFragment : Fragment(), IBaseFragment {
     }
 
     override fun onClick(v: View) {
-        if (HyUtil.isFastClick)
+        if (isFastClick())
             return
         onViewClick(v)
     }
 
-    override fun onLeftClick() {
+    override fun onLeftClick() {}
 
-    }
+    override fun onRightClick() {}
 
-    override fun onRightClick() {
-
-    }
-
-    override fun onLoadViewClick() {
-
-    }
+    override fun onLoadViewClick() {}
 
     override fun <T : View> findViewById(id: Int): T? {
         return findViewById(id, null)
