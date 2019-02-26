@@ -5,32 +5,11 @@ import android.support.annotation.StringRes
 import android.view.KeyEvent
 import android.view.View
 import com.hy.demo2.R
+import com.hy.frame.mvp.IBasePresenter
 
-abstract class BaseActivity : com.hy.frame.ui.BaseActivity() {
-    override fun isPermissionDenied(): Boolean = false
-    override fun isSingleLayout(): Boolean = false
-    override fun isTranslucentStatus(): Boolean = false
-    /**
-     * 初始化头,默认返回按钮
-     * @param title 标题
-     * @param right 右边图标
-     */
-    protected fun initHeaderBack(@StringRes title: Int, @DrawableRes right: Int = 0) {
-        getTemplateControl()?.setHeaderLeft(R.drawable.v_back)
-        getTemplateControl()?.setHeaderRight(right)
-        setTitle(title)
-    }
+abstract class BaseActivity : BasePresenterActivity<IBasePresenter>() {
+    override fun buildPresenter(): IBasePresenter? = null
 
-    /**.
-     * 初始化头,默认返回按钮
-     * @param title 标题
-     * @param right 右边文字
-     */
-    protected fun initHeaderBackTxt(@StringRes title: Int, @StringRes right: Int) {
-        getTemplateControl()?.setHeaderLeft(R.drawable.v_back)
-        getTemplateControl()?.setHeaderRightTxt(getString(right))
-        setTitle(title)
-    }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
         var result = false

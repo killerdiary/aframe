@@ -9,8 +9,8 @@ android {
         minSdkVersion buildVersion.minSdkVersion
         targetSdkVersion buildVersion.targetSdkVersion
         applicationId "com.hy.demo2"
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
         resValue "string", "appName", APP_NAME
         vectorDrawables.useSupportLibrary = true
     }
@@ -38,6 +38,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':Frame')
+    implementation project(':Frame_Mvp')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //必须
     implementation deps.kotlin.stdlib
