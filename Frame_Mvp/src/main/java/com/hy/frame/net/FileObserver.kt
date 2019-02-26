@@ -2,8 +2,7 @@ package com.hy.frame.net
 
 import android.os.Handler
 import android.os.Looper
-import com.hy.frame.bean.ResultInfo
-import com.hy.frame.mvp.IMyHttpListener
+import com.hy.frame.bean.DownFile
 import com.hy.frame.util.MyLog
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
@@ -16,11 +15,11 @@ import java.io.*
  * time 18-12-4 上午11:23
  * desc 非断点
  */
-open class FileObserver(requestCode: Int, listener: IMyHttpListener?, private val savePath: String?, private val isNeedProgress: Boolean = false) : Observer<ResponseBody> {
+open class FileObserver(private val listener: ICallback?, private val savePath: String?, private val isNeedProgress: Boolean = false) : Observer<ResponseBody> {
 
-    private val result = ResultInfo(requestCode)
-    private val mListener: IMyHttpListener? = listener
+    private var disposable: Disposable? = null
 
+    private val dFile = DownFile()
 
     override fun onComplete() {
         MyLog.d(javaClass, "onComplete")
@@ -28,31 +27,33 @@ open class FileObserver(requestCode: Int, listener: IMyHttpListener?, private va
 
     override fun onSubscribe(d: Disposable) {
         //MyLog.e("onSubscribe$d")
+        this.disposable = d
     }
 
     override fun onNext(response: ResponseBody) {
-        val contentType = response.contentType().toString()
+        MyLog.d(javaClass, "onNext")
+        //val contentType = response.contentType().toString()
         if (savePath == null) {
-            result.errorCode = ResultInfo.CODE_ERROR_DEFAULT
-            result.msg = "未定义文件存储路径"
-            onRequestError(result)
+            onRequestError(0, "未定义文件存储路径")
             return
         }
         MyLog.d(javaClass, "savePath=$savePath")
+        dFile.filePath = savePath
+        dFile.state = DownFile.STATUS_START
+        val file = File(savePath)
+        val tempFile = File(savePath + "c")
         var inputStream: InputStream? = null
         var outputStream: OutputStream? = null
-        val file = File(savePath)
         try {
             val fileReader = ByteArray(1024)
             val fileSize: Long = response.contentLength()
             var downloadSize: Long = 0
             if (isNeedProgress) {
-                result.putValue(FILE_STATE, STATUS_PROGRESS.toString())
-                result.putValue(FILE_TYPE, contentType)
-                result.putValue(FILE_SIZE, fileSize.toString())
+                dFile.state = DownFile.STATUS_PROGRESS
+                dFile.fileSize = fileSize
             }
             inputStream = response.byteStream()
-            outputStream = FileOutputStream(file)
+            outputStream = FileOutputStream(tempFile)
             var read: Int
             while (true) {
                 read = inputStream?.read(fileReader) ?: -1
@@ -61,17 +62,19 @@ open class FileObserver(requestCode: Int, listener: IMyHttpListener?, private va
                 }
                 outputStream.write(fileReader, 0, read)
                 downloadSize += read
-                MyLog.d(javaClass, "file download:$downloadSize/$fileSize")
+                MyLog.d(javaClass, "file download:$downloadSize/$fileSize read=$read")
                 if (isNeedProgress) {
-                    result.putValue(FILE_SIZE_DOWNLOAD, downloadSize.toString())
-                    onRequestSuccess(result)
+                    dFile.downloadSize = downloadSize
+                    onRequestSuccess(DownFile.STATUS_PROGRESS, dFile)
                 }
             }
             outputStream.flush()
             if (isNeedProgress) {
-                result.putValue(FILE_STATE, STATUS_SUCCESS.toString())
+                dFile.state = DownFile.STATUS_SUCCESS
             }
-            onRequestSuccess(result)
+            tempFile.renameTo(file)
+            MyLog.d(javaClass, "file download:$downloadSize/$fileSize success")
+            onRequestSuccess(DownFile.STATUS_SUCCESS, dFile)
             return
         } catch (e: IOException) {
             e.printStackTrace()
@@ -83,33 +86,33 @@ open class FileObserver(requestCode: Int, listener: IMyHttpListener?, private va
                 e.printStackTrace()
             }
         }
-        onRequestError(result)
+        onRequestError(0, "网络异常，请稍后重试")
     }
 
     override fun onError(e: Throwable) {
         MyLog.e(javaClass, "onError$e")
-        result.errorCode = ResultInfo.CODE_ERROR_NET
-        result.msg = "网络异常，请稍后重试"
-        onRequestError(result)
+        onRequestError(0, "网络异常，请稍后重试")
     }
-    private fun onRequestError(result: ResultInfo){
+
+    private fun onRequestError(code: Int, msg: String?) {
+        MyLog.d(javaClass, "onRequestError")
         Handler(Looper.getMainLooper()).post {
-            mListener?.onRequestError(result)
+            listener?.onError(code, msg)
         }
+        this.disposable?.dispose()
     }
-    private fun onRequestSuccess(result: ResultInfo){
+
+    private fun onRequestSuccess(status: Int, file: DownFile) {
         Handler(Looper.getMainLooper()).post {
-            mListener?.onRequestSuccess(result)
+            listener?.onSuccess(file, null)
         }
+        if (status == DownFile.STATUS_SUCCESS)
+            this.disposable?.dispose()
     }
-    companion object {
-        const val FILE_STATE = "file_state"
-        const val FILE_TYPE = "file_type"
-        const val FILE_SIZE = "file_size"
-        const val FILE_SIZE_DOWNLOAD = "file_size_download"
-        const val STATUS_START = 0
-        const val STATUS_PROGRESS = 1
-        const val STATUS_SUCCESS = 2
-        const val STATUS_ERROR = -1
+
+    interface ICallback {
+        fun onSuccess(obj: DownFile, msg: String?)
+        fun onError(errorCode: Int, msg: String?)
     }
+    
 }

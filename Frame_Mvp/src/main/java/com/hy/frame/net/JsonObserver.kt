@@ -13,6 +13,7 @@ import io.reactivex.disposables.Disposable
  * @author
  * @time 18-10-25 下午12:02
  */
+@Deprecated("不建议使用", ReplaceWith("com.hy.frame.net.NormalObserver"))
 class JsonObserver<T>(requestCode: Int, listener: IMyHttpListener?, cls: Class<T>? = null, list: Boolean = false) : Observer<JsonObject> {
     private val result = ResultInfo(requestCode)
     private val mListener: IMyHttpListener? = listener

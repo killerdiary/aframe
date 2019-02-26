@@ -8,6 +8,7 @@ import okhttp3.Response
  * @author
  * @time 18-10-25 下午12:00
  */
+@Deprecated("不建议使用，用作参考", ReplaceWith("com.hy.frame.net.NormalObserver"))
 class HeaderInterceptor : Interceptor {
 
     private var headerParams: MutableMap<String, String>? = null //头信息
