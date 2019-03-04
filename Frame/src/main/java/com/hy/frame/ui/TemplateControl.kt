@@ -30,7 +30,7 @@ open class TemplateControl : ITemplateControl, View.OnClickListener {
     var txtMessage: TextView? = null
     var imgMessage: ImageView? = null
     var proLoading: View? = null
-    var mLoadingDialog: LoadingDialog? = null
+    var mLoadingDialog: ILoadingDialog? = null
 
     override fun init(templateView: IBaseTemplateUI, mToolbar: Toolbar?, mFlyMain: FrameLayout?) {
         this.mTemplateView = templateView
@@ -232,6 +232,10 @@ open class TemplateControl : ITemplateControl, View.OnClickListener {
         }
     }
 
+    override fun setLoadingDialog(loadingDialog: ILoadingDialog) {
+        this.mLoadingDialog = loadingDialog
+    }
+
     override fun showLoadingDialog(resId: Int) {
         showLoadingDialog(getCurContext().getString(resId))
     }
@@ -240,6 +244,7 @@ open class TemplateControl : ITemplateControl, View.OnClickListener {
         if (mLoadingDialog == null)
             mLoadingDialog = LoadingDialog(getCurContext(), msg)
         mLoadingDialog?.show()
+        mLoadingDialog?.updateMessage(msg)
     }
 
     override fun hideLoadingDialog() {

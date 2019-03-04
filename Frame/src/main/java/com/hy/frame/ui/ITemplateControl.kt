@@ -81,6 +81,8 @@ interface ITemplateControl {
      */
     fun showCView()
 
+    fun setLoadingDialog(loadingDialog: ILoadingDialog)
+
     /**
      * 显示加载中
      */
