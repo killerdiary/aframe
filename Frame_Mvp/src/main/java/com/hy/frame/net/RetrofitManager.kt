@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class RetrofitManager : IRetrofitManager {
 
@@ -50,6 +51,15 @@ class RetrofitManager : IRetrofitManager {
         if (mBaseUrl == null)
             return null
         val oBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
+        if (mContentType == REQUEST_TYPE_FILE) {
+            oBuilder.connectTimeout(60, TimeUnit.MINUTES)
+            oBuilder.readTimeout(60, TimeUnit.MINUTES)
+            oBuilder.writeTimeout(60, TimeUnit.MINUTES)
+        } else {
+            oBuilder.connectTimeout(30, TimeUnit.SECONDS)
+            oBuilder.readTimeout(30, TimeUnit.SECONDS)
+            oBuilder.writeTimeout(30, TimeUnit.SECONDS)
+        }
         if (headerParams != null && headerParams!!.isNotEmpty()) {
             val interceptor = HeaderInterceptor()
             interceptor.setHeaders(headerParams)
