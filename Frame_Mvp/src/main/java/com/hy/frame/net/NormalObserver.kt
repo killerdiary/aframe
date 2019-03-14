@@ -43,12 +43,13 @@ open class NormalObserver<T> : Observer<ResponseBody> {
     }
 
     override fun onNext(body: ResponseBody) {
-        MyLog.d("onNext$body")
+        this.disposable?.dispose()
         var code: Int = 0//0异常 1成功
         var msg = ""
         try {
             // 1. 通用模板
             val json = JsonParser().parse(body.string())
+            MyLog.d("onNext $json")
             if (json.isJsonObject && mListener != null && cls != null) {
                 //直接转换
                 mListener?.onSuccess(JsonUtil.getObjectFromJson(json, cls!!), msg)
@@ -92,6 +93,7 @@ open class NormalObserver<T> : Observer<ResponseBody> {
 
     override fun onError(e: Throwable) {
         MyLog.e("onError$e")
+        this.disposable?.dispose()
         onError(ResultInfo.CODE_ERROR_DEFAULT, "网络异常，请稍后重试")
     }
 
@@ -101,7 +103,6 @@ open class NormalObserver<T> : Observer<ResponseBody> {
         } else if (mListener != null) {
             mListener?.onError(code, msg)
         }
-        this.disposable?.dispose()
     }
 
     interface ICallback<T> {

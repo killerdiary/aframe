@@ -96,18 +96,18 @@ open class FileObserver(private val listener: ICallback?, private val savePath: 
 
     private fun onRequestError(code: Int, msg: String?) {
         MyLog.d(javaClass, "onRequestError")
+        this.disposable?.dispose()
         Handler(Looper.getMainLooper()).post {
             listener?.onError(code, msg)
         }
-        this.disposable?.dispose()
     }
 
     private fun onRequestSuccess(status: Int, file: DownFile) {
+        if (status == DownFile.STATUS_SUCCESS)
+            this.disposable?.dispose()
         Handler(Looper.getMainLooper()).post {
             listener?.onSuccess(file, null)
         }
-        if (status == DownFile.STATUS_SUCCESS)
-            this.disposable?.dispose()
     }
 
     interface ICallback {

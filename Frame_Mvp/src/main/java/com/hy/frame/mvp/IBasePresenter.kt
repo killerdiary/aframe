@@ -1,9 +1,6 @@
 package com.hy.frame.mvp
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.GenericLifecycleObserver
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
 
 /**
@@ -13,16 +10,15 @@ import android.content.Context
  * @time 2018/4/4 9:41
  */
 @SuppressLint("RestrictedApi")
-interface IBasePresenter : GenericLifecycleObserver {
+interface IBasePresenter {
     fun getContext(): Context
     /**
      * 释放资源
      */
     fun onDestroy()
 
-    override fun onStateChanged(source: LifecycleOwner?, event: Lifecycle.Event?) {
-        if (event != null && event == Lifecycle.Event.ON_DESTROY) {
-            onDestroy()
-        }
-    }
+    /**
+     * 请使用GenericLifecycleObserver
+     */
+    fun getLifecycleObserver(): android.arch.lifecycle.LifecycleObserver
 }

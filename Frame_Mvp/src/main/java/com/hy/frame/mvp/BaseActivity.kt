@@ -10,7 +10,7 @@ abstract class BaseActivity<out P : IBasePresenter> : com.hy.frame.ui.BaseActivi
         if (mPresenter == null)
             mPresenter = buildPresenter()
         if (mPresenter != null)
-            lifecycle.addObserver(mPresenter!!)
+            lifecycle.addObserver(mPresenter!!.getLifecycleObserver())
         return mPresenter
     }
 
@@ -20,9 +20,4 @@ abstract class BaseActivity<out P : IBasePresenter> : com.hy.frame.ui.BaseActivi
      * 如果当前页面逻辑简单, Presenter 可以为 null
      */
     protected abstract fun buildPresenter(): P?
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mPresenter?.onDestroy()
-    }
 }

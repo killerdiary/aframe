@@ -35,7 +35,7 @@ interface ApiService {
      * @param params 参数 不能为空 需要添加converter-gson，会转换成json数据
      * @return Observable<T>?
      */
-    @POST("{url}")
+    @POST
     fun post(@Url url: String, @Body params: Any): Observable<ResponseBody>?
 
     /**
@@ -45,7 +45,7 @@ interface ApiService {
      * @return Observable<T>?
      */
     @FormUrlEncoded
-    @POST("{url}")
+    @POST
     fun post(@Url url: String, @FieldMap params: MutableMap<String, String>): Observable<ResponseBody>?
 
 
